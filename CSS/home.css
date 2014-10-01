@@ -37,8 +37,8 @@ td.hours {
 	font-size:0.9em;
 }
 
-#schedule-title2 {
-	font-size: 1.6em;
+.large-title {
+	font-size: 1.4em;
 	font-weight: bold;
 }
 
