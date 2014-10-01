@@ -1,0 +1,105 @@
+#banner {
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 95px;
+    border-bottom-style: solid;
+    border-width: 5px;
+    background: #FFBD00 url("wave.jpg") no-repeat scroll center top;
+}
+
+#local-nav-bar{
+    display: block;
+    position: absolute;
+    top: 125px;
+    left: 0px;
+    width: 100px;
+    height: 545px;
+    border-right-style: solid;
+    border-width: 5px;
+    background-color: #FFBD00;
+}
+
+#global-nav-bar{
+    display: block;
+    position: absolute;
+    top: 95px;
+    left: 0px;
+    width: 100%;
+    height: 30px;
+    background-color: #000000;
+}
+
+#body{
+    display: block;
+    position: absolute;
+    top: 130px;
+    left: 110px;
+    width: 1075px;
+}
+
+#program-title{
+    position: absolute;
+    top: 10px;
+    left: 5px;
+    font-family: "Verdana", sans-serif;
+    font-size: 40px;
+
+}
+
+#local-list{
+    list-style-type: none;
+    margin: 0;
+    padding: 0; 
+    position: absolute;
+    top: 25px;
+    left: 0px;
+    overflow: hidden;
+}
+
+.nav-link:link, .nav-link:visited{
+    display: block;
+    text-decoration: none;
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    vertical-align: middle;
+    color: #000000
+}
+
+.nav-link:hover, .nav-link:active{
+    background-color: #FFDD20
+}
+
+#global-list{
+    list-style-type: none;
+    margin: 0;
+    padding: 0; 
+    position: absolute;
+    top: 0px;
+    left: 110px;
+    overflow: hidden;
+}
+
+.global-link-item{
+    float: left;
+}
+
+.global-link:link, .global-link:visited{
+    display: block;
+    width: 100px;
+    height: 30px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: "Verdana", sans-serif;
+}
+
+.global-link:hover, .global-link:active{
+    background-color: #303030
+}
