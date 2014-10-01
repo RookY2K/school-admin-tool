@@ -83,6 +83,17 @@
     overflow: hidden;
 }
 
+#logout{
+    list-style-type: none;
+    margin: 0;
+    padding: 0; 
+    position: absolute;
+    top: 0px;
+    left: 1150px;
+    overflow: hidden;
+}
+
+
 .global-link-item{
     float: left;
 }
