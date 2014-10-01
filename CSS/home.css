@@ -1,0 +1,53 @@
+#calender {
+	margin:20px 0px 20px 20px;
+}
+
+#schedule {
+	width: 80%;
+	padding:0px;
+	border-spacing: 1px;
+    border-collapse: separate;
+	font-family: helvetica; 
+	font-size: 0.8em;
+	/* empty-cells: hide; */
+	background-color: #d1d1d1;
+	text-align: center;
+}
+
+td.days  { 
+	width: 12.5%;
+	text-align: center;
+	background-color: #e7e7e7;
+	padding: 3px;
+}
+
+td.empty-cell {
+	background-color: #fff;
+}
+
+td.time {
+	width: 12.5%;
+	text-align: center;
+	background-color: #e7e7e7;
+	padding: 12px;
+}
+
+td.hours {
+	background-color: #fff;
+	font-size:0.9em;
+}
+
+#schedule-title2 {
+	font-size: 1.6em;
+	font-weight: bold;
+}
+
+.office-hour {
+	font-weight: bold;
+	color: #6f649e;
+}
+
+.class-hour {
+	font-weight: bold;
+	color: #66984b; 
+}
