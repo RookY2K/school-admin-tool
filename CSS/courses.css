@@ -1,0 +1,23 @@
+#course {
+	margin: 0px 20px;
+	font-family: helvetica; 
+}
+
+#classes {
+	text-align:center;
+	border-spacing: 1px;
+    border-collapse: separate;
+	background-color: #d1d1d1;
+	margin-bottom: 20px; 
+	font-size:0.8em;
+}
+
+.cell-header {
+	background-color: #e7e7e7;
+	padding: 1px;
+}
+
+.cell {
+	background-color: #fff;
+	padding: 4px;
+}

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Test Layout</title>
+		<link rel="stylesheet" type="text/css" href="./CSS/layout.css" />
+		<link rel="stylesheet" type="text/css" href="./CSS/courses.css" />
+	</head>
+	<body>
+	        <div id="banner">
+			<h1 id="program-title">UWM - Computer Science Administration</h1>
+		</div>
+	        
+		<div id="local-nav-bar">
+            <ul id="local-list">
+			</ul>
+		</div>
+
+		<div id="global-nav-bar">
+			<ul id="global-list">
+				<li class="global-link-item"><a class="global-link" href="home.html">Home</a></li>
+				<li class="global-link-item"><a class="global-link" href="profile.html">Profile</a></li>
+				<li class="global-link-item"><a class="global-link" href="courses.html">Courses</a></li>
+				<li class="global-link-item"><a class="global-link" href="users.html">Users</a></li>
+				<li class="global-link-item"><a class="global-link" href="admin.html">Admin</a></li>
+			</ul>
+
+			<ul id="logout">
+				<li class="global-link-item"><a class="global-link" href="index.html">Log Out</a></li>
+			</ul>
+		</div>
+        	
+		<div id="body">
+			<div id="course">
+				<h3>Courses</h3>
+				<form action="viewcourse.html" method="get">
+					<p>
+						<select>
+							<option value="compsci101">CompSci 101 - Introduction to PC Application Software</option>
+							<option value="compsci113">CompSci 113 - Introduction to Web Document Production</option>
+							<option value="compsci150">CompSci 150 - Survey of Computer Science</option>
+							<option value="compsci201">CompSci 201 -  Introductory Computer Programming</option>
+							<option value="compsci251">CompSci 251 - Intermediate Computer Programming</option>
+							<option value="compsc361">CompSci 361 - Introduction to Software Engineering</option>
+							<option value="more"> ... </option>
+						</select> 
+						<input type="submit" value="View Course"/>
+					</p>				
+					
+			</div>
+		</div>
+	</body>
+</html>
