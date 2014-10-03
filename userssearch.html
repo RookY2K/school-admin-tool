@@ -4,7 +4,7 @@
 		<meta charset="utf-8" />
 		<title>Test Layout</title>
 		<link rel="stylesheet" type="text/css" href="./CSS/layout.css" />
-		<link rel="stylesheet" type="text/css" href="./CSS/courses.css" />
+		<link rel="stylesheet" type="text/css" href="./CSS/users.css" />
 	</head>
 	<body>
 	        <div id="banner">
@@ -31,22 +31,39 @@
 		</div>
         	
 		<div id="body">
-			<div id="course">
-				<h3>Courses</h3>
-				<form action="viewcourse.html" method="get">
+			<div id="userspage">
+				<h3>Users</h3>
+				<form action="userssearch.html" method="get">
 					<p>
-						<select>
-							<option value="compsci101">CompSci 101 - Introduction to PC Application Software</option>
-							<option value="compsci113">CompSci 113 - Introduction to Web Document Production</option>
-							<option value="compsci150">CompSci 150 - Survey of Computer Science</option>
-							<option value="compsci201">CompSci 201 -  Introductory Computer Programming</option>
-							<option value="compsci251">CompSci 251 - Intermediate Computer Programming</option>
-							<option value="compsc361">CompSci 361 - Introduction to Software Engineering</option>
-							<option value="more"> ... </option>
-						</select> 
-						<input type="submit" value="View Course"/>
+						<input type="text" value="" />
+						<input type="submit" value="search" />
+					</p>
+					<p>
+						<input type="checkbox" name="admin" value="Admin" checked>Admin
+						<input type="checkbox" name="instructor" value="Instructor" checked>Instructor
+						<input type="checkbox" name="ta" value="TA" checked>TA
 					</p>
 				</form>
+				
+				<p>
+					The search for "rock" return 1 result(s).
+				</p>
+				
+				<table id="users">
+					<tr>
+						<td class="cell-header">Last Name</td>
+						<td class="cell-header">First Name</td>
+						<td class="cell-header">Email</td>
+						<td class="cell-header">User</td>
+					</tr>
+					<tr>
+						<td class="cell">Rock</td>
+						<td class="cell">Jayson</td>
+						<td class="cell">rock@uwm.edu</td>
+						<td class="cell">Instructor</td>
+					</tr>
+				</table>
+				
 			</div>
 		</div>
 	</body>

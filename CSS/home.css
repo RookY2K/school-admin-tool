@@ -1,5 +1,7 @@
 #calender {
 	margin:20px 0px 20px 20px;
+	font-family: helvetica; 
+	font-size: 0.8em;
 }
 
 #schedule {
@@ -7,9 +9,6 @@
 	padding:0px;
 	border-spacing: 1px;
     border-collapse: separate;
-	font-family: helvetica; 
-	font-size: 0.8em;
-	/* empty-cells: hide; */
 	background-color: #d1d1d1;
 	text-align: center;
 }
@@ -50,4 +49,8 @@ td.hours {
 .class-hour {
 	font-weight: bold;
 	color: #66984b; 
+}
+
+a:visited {
+	color: #000;
 }
