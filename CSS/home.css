@@ -1,15 +1,18 @@
+#welcome{
+	font-family: helvetica; 
+	margin-left: 10px;
+	background-color: #e7e7e7;
+	padding: 2px;
+	font-size:0.8em;
+}
+
 #calender {
 	margin: 0px;
 	font-family: helvetica; 
 	font-size: 0.8em;
 }
 
-#welcome{
-    margin-top: 0px;
-}
-
 #schedule {
-	width: 80%;
 	padding:0px;
 	border-spacing: 1px;
     border-collapse: separate;
@@ -29,10 +32,10 @@ td.empty-cell {
 }
 
 td.time {
-	width: 12.5%;
+	width: 10%;
 	text-align: center;
 	background-color: #e7e7e7;
-	padding: 12px;
+	padding:  10px 4px;
 }
 
 td.hours {
@@ -57,4 +60,9 @@ td.hours {
 
 a:visited {
 	color: #000;
+	text-decoration: none;
+}
+
+a:link {
+	text-decoration: none;
 }
