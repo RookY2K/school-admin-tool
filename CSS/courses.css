@@ -4,6 +4,10 @@
 	font-size:0.8em;
 }
 
+#course-header{
+    margin-top: 0px;
+}
+
 .classes {
 	text-align:center;
 	border-spacing: 1px;

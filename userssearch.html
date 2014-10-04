@@ -7,63 +7,70 @@
 		<link rel="stylesheet" type="text/css" href="./CSS/users.css" />
 	</head>
 	<body>
-	        <div id="banner">
-			<h1 id="program-title">UWM - Computer Science Administration</h1>
-		</div>
-	        
-		<div id="local-nav-bar">
-            <ul id="local-list">
-			</ul>
-		</div>
+        <div id="wrapper">
+            <div id="page">
+			    <div id="header">
+					<div id="banner">
+						<h1 id="program-title">UWM - Computer Science Administration</h1>
+					</div>
 
-		<div id="global-nav-bar">
-			<ul id="global-list">
-				<li class="global-link-item"><a class="global-link" href="home.html">Home</a></li>
-				<li class="global-link-item"><a class="global-link" href="profile.html">Profile</a></li>
-				<li class="global-link-item"><a class="global-link" href="courses.html">Courses</a></li>
-				<li class="global-link-item"><a class="global-link" href="users.html">Users</a></li>
-				<li class="global-link-item"><a class="global-link" href="admin.html">Admin</a></li>
-			</ul>
+					<div id="global-nav-bar">
+						<ul id="global-list">
+							<li class="global-link-item"><a class="global-link" href="home.html">Home</a></li>
+							<li class="global-link-item"><a class="global-link" href="profile.html">Profile</a></li>
+							<li class="global-link-item"><a class="global-link" href="courses.html">Courses</a></li>
+							<li class="global-link-item"><a class="global-link" href="users.html">Users</a></li>
+							<li class="global-link-item"><a class="global-link" href="admin.html">Admin</a></li>
+						</ul>
 
-			<ul id="logout">
-				<li class="global-link-item"><a class="global-link" href="index.html">Log Out</a></li>
-			</ul>
-		</div>
+						<ul id="logout">
+							<li class="global-link-item"><a class="global-link" href="index.html">Log Out</a></li>
+						</ul>
+					</div>
+				</div>
+				
+				<div id="content">	        
+					<div id="local-nav-bar">
+						<ul id="local-list">
+						</ul>
+					</div>
         	
-		<div id="body">
-			<div id="userspage">
-				<h3>Users</h3>
-				<form action="userssearch.html" method="get">
-					<p>
-						<input type="text" value="" />
-						<input type="submit" value="search" />
-					</p>
-					<p>
-						<input type="checkbox" name="admin" value="Admin" checked>Admin
-						<input type="checkbox" name="instructor" value="Instructor" checked>Instructor
-						<input type="checkbox" name="ta" value="TA" checked>TA
-					</p>
-				</form>
-				
-				<p>
-					The search for "rock" return 1 result(s).
-				</p>
-				
-				<table id="users">
-					<tr>
-						<td class="cell-header">Last Name</td>
-						<td class="cell-header">First Name</td>
-						<td class="cell-header">Email</td>
-						<td class="cell-header">User</td>
-					</tr>
-					<tr>
-						<td class="cell">Rock</td>
-						<td class="cell">Jayson</td>
-						<td class="cell">rock@uwm.edu</td>
-						<td class="cell">Instructor</td>
-					</tr>
-				</table>
-				
+					<div id="body">
+						<div id="userspage">
+							<h3 id="user-header">Users</h3>
+							<form action="userssearch.html" method="get">
+								<p>
+									<input type="text" value="" />
+									<input type="submit" value="search" />
+								</p>
+								<p>
+									<input type="checkbox" name="admin" value="Admin" checked>Admin
+									<input type="checkbox" name="instructor" value="Instructor" checked>Instructor
+									<input type="checkbox" name="ta" value="TA" checked>TA
+								</p>
+							</form>
+							
+							<p>
+								The search for "rock" returned 1 result(s).
+							</p>
+							
+							<table id="users">
+								<tr>
+									<td class="cell-header">Last Name</td>
+									<td class="cell-header">First Name</td>
+									<td class="cell-header">Email</td>
+									<td class="cell-header">User</td>
+								</tr>
+								<tr>
+									<td class="cell">Rock</td>
+									<td class="cell">Jayson</td>
+									<td class="cell">rock@uwm.edu</td>
+									<td class="cell">Instructor</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>

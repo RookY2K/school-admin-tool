@@ -4,6 +4,10 @@
 	font-size:0.8em;
 }
 
+#user-header{
+    margin-top: 0px;
+}
+
 #users {
 	text-align:center;
 	border-spacing: 1px;

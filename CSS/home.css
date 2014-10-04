@@ -1,7 +1,11 @@
 #calender {
-	margin:20px 0px 20px 20px;
+	margin: 0px;
 	font-family: helvetica; 
 	font-size: 0.8em;
+}
+
+#welcome{
+    margin-top: 0px;
 }
 
 #schedule {

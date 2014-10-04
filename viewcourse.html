@@ -7,105 +7,112 @@
 		<link rel="stylesheet" type="text/css" href="./CSS/courses.css" />
 	</head>
 	<body>
-	        <div id="banner">
-			<h1 id="program-title">UWM - Computer Science Administration</h1>
-		</div>
-	        
-		<div id="local-nav-bar">
-            <ul id="local-list">
-			</ul>
-		</div>
+        <div id="wrapper">
+            <div id="page">
+			    <div id="header">
+					<div id="banner">
+						<h1 id="program-title">UWM - Computer Science Administration</h1>
+					</div>
 
-		<div id="global-nav-bar">
-			<ul id="global-list">
-				<li class="global-link-item"><a class="global-link" href="home.html">Home</a></li>
-				<li class="global-link-item"><a class="global-link" href="profile.html">Profile</a></li>
-				<li class="global-link-item"><a class="global-link" href="courses.html">Courses</a></li>
-				<li class="global-link-item"><a class="global-link" href="users.html">Users</a></li>
-				<li class="global-link-item"><a class="global-link" href="admin.html">Admin</a></li>
-			</ul>
+					<div id="global-nav-bar">
+						<ul id="global-list">
+							<li class="global-link-item"><a class="global-link" href="home.html">Home</a></li>
+							<li class="global-link-item"><a class="global-link" href="profile.html">Profile</a></li>
+							<li class="global-link-item"><a class="global-link" href="courses.html">Courses</a></li>
+							<li class="global-link-item"><a class="global-link" href="users.html">Users</a></li>
+							<li class="global-link-item"><a class="global-link" href="admin.html">Admin</a></li>
+						</ul>
 
-			<ul id="logout">
-				<li class="global-link-item"><a class="global-link" href="index.html">Log Out</a></li>
-			</ul>
-		</div>
-        	
-		<div id="body">
-			<div id="course">
-				<h3>Courses</h3>
-				<form action="viewcourse.html" method="get">
-					<p>
-						<select>
-							<option value="compsci101">CompSci 101 - Introduction to PC Application Software</option>
-							<option value="compsci113">CompSci 113 - Introduction to Web Document Production</option>
-							<option value="compsci150">CompSci 150 - Survey of Computer Science</option>
-							<option value="compsci201">CompSci 201 -  Introductory Computer Programming</option>
-							<option value="compsci251">CompSci 251 - Intermediate Computer Programming</option>
-							<option value="compsc361" selected>CompSci 361 - Introduction to Software Engineering</option>
-							<option value="more"> ... </option>
-						</select> 
-						<input type="submit" value="View Course"/>
-					</p>				
-				</form>
-				
-				<h3>CompSci 361 - Introduction to Software Engineering</h3>
-				
-				<table class="classes">
-					<tr>
-						<td class="cell-header">Class</td>
-						<td class="cell-header">Hours</td>
-						<td class="cell-header">Dates</td>
-						<td class="cell-header">Meetings</td>
-						<td class="cell-header">Instructor</td>
-						<td class="cell-header">Room</td>
-					</tr>
-					<tr>
-						<td class="cell">CompSci 361</td>
-						<td class="cell">10:00am - 10:50am</td>
-						<td class="cell">09/02 -  12/11</td>
-						<td class="cell">Mon, Wed</td>
-						<td class="cell"><a href="profile.html">Rock, Jayson</a></td>
-						<td class="cell">EMS E145</td>
-					</tr>
-				</table>
-				
-				<br />
-				
-				<table class="classes">
-					<tr>
-						<td class="cell-header">Lab</td>
-						<td class="cell-header">Hours</td>
-						<td class="cell-header">Dates</td>
-						<td class="cell-header">Meetings</td>
-						<td class="cell-header">TA</td>
-						<td class="cell-header">Room</td>
-					</tr>
-					<tr>
-						<td class="cell">Lab 801</td>
-						<td class="cell">11:00am - 12:50pm</td>
-						<td class="cell">09/02 -  12/11</td>
-						<td class="cell">Wed</td>
-						<td class="cell"><input type="submit" value="Assign TA"/></td>
-						<td class="cell">EMS 942</td>
-					</tr>
-					<tr>
-						<td class="cell">Lab 802</td>
-						<td class="cell">1:00pm - 2:50pm</td>
-						<td class="cell">09/02 -  12/11</td>
-						<td class="cell">Wed</td>
-						<td class="cell"><a href="profile.html">Khunlertkit, Tanawat</a></td>
-						<td class="cell">EMS 942</td>
-					</tr>
-					<tr>
-						<td class="cell">Lab 803</td>
-						<td class="cell">11:00am - 12:50pm</td>
-						<td class="cell">09/02 -  12/11</td>
-						<td class="cell">Thu</td>
-						<td class="cell"><a href="profile.html">Khunlertkit, Tanawat</a></td>
-						<td class="cell">EMS 942</td>
-					</tr>
-				</table>
-				
+						<ul id="logout">
+							<li class="global-link-item"><a class="global-link" href="index.html">Log Out</a></li>
+						</ul>
+					</div>
+				</div>
+					
+				<div id="content">
+					<div id="local-nav-bar">
+						<ul id="local-list">
+						</ul>
+					</div>
+
+					<div id="body">
+						<div id="course">
+							<h3 id="course-header">Courses</h3>
+							<form action="viewcourse.html" method="get">
+								<p>
+									<select>
+										<option value="compsci101">CompSci 101 - Introduction to PC Application Software</option>
+										<option value="compsci113">CompSci 113 - Introduction to Web Document Production</option>
+										<option value="compsci150">CompSci 150 - Survey of Computer Science</option>
+										<option value="compsci201">CompSci 201 -  Introductory Computer Programming</option>
+										<option value="compsci251">CompSci 251 - Intermediate Computer Programming</option>
+										<option value="compsc361" selected>CompSci 361 - Introduction to Software Engineering</option>
+										<option value="more"> ... </option>
+									</select> 
+									<input type="submit" value="View Course"/>
+								</p>				
+							</form>
+							
+							<h3>CompSci 361 - Introduction to Software Engineering</h3>
+							
+							<table class="classes">
+								<tr>
+									<td class="cell-header">Class</td>
+									<td class="cell-header">Hours</td>
+									<td class="cell-header">Dates</td>
+									<td class="cell-header">Meetings</td>
+									<td class="cell-header">Instructor</td>
+									<td class="cell-header">Room</td>
+								</tr>
+								<tr>
+									<td class="cell">CompSci 361</td>
+									<td class="cell">10:00am - 10:50am</td>
+									<td class="cell">09/02 -  12/11</td>
+									<td class="cell">Mon, Wed</td>
+									<td class="cell"><a href="profile.html">Rock, Jayson</a></td>
+									<td class="cell">EMS E145</td>
+								</tr>
+							</table>
+							
+							<br />
+							
+							<table class="classes">
+								<tr>
+									<td class="cell-header">Lab</td>
+									<td class="cell-header">Hours</td>
+									<td class="cell-header">Dates</td>
+									<td class="cell-header">Meetings</td>
+									<td class="cell-header">TA</td>
+									<td class="cell-header">Room</td>
+								</tr>
+								<tr>
+									<td class="cell">Lab 801</td>
+									<td class="cell">11:00am - 12:50pm</td>
+									<td class="cell">09/02 -  12/11</td>
+									<td class="cell">Wed</td>
+									<td class="cell"><input type="submit" value="Assign TA"/></td>
+									<td class="cell">EMS 942</td>
+								</tr>
+								<tr>
+									<td class="cell">Lab 802</td>
+									<td class="cell">1:00pm - 2:50pm</td>
+									<td class="cell">09/02 -  12/11</td>
+									<td class="cell">Wed</td>
+									<td class="cell"><a href="profile.html">Khunlertkit, Tanawat</a></td>
+									<td class="cell">EMS 942</td>
+								</tr>
+								<tr>
+									<td class="cell">Lab 803</td>
+									<td class="cell">11:00am - 12:50pm</td>
+									<td class="cell">09/02 -  12/11</td>
+									<td class="cell">Thu</td>
+									<td class="cell"><a href="profile.html">Khunlertkit, Tanawat</a></td>
+									<td class="cell">EMS 942</td>
+								</tr>
+							</table>
+						</div>
+				    </div>
+				</div>
 			</div>
 		</div>
 	</body>
