@@ -1,5 +1,5 @@
 html {
-	background: gray;
+	background: lightgray;
 }
 
 #login{
@@ -11,7 +11,7 @@ html {
 	margin: auto;
 	width: 400px;
 	height: 300px;
-	background: white;
+	background: lightgoldenrodyellow;
 	border: solid;
 	border-width: 5px;
 }
