@@ -1,0 +1,42 @@
+#profile-table{
+    border-spacing: 15px;
+}
+
+.user-label{
+    text-align: right;
+    font-weight: bold;
+}
+
+.user-data{
+}
+
+#edit-link:link, #edit-link:visited{
+    text-align: right;
+	font-size: 12px;
+}
+
+#edit-link-cell{
+    text-align: right;
+}
+
+#courses-table {
+	text-align:center;
+	border-spacing: 1px;
+    border-collapse: separate;
+	background-color: #d1d1d1;
+	margin-bottom: 20px; 
+}
+
+#table-caption{
+    font-weight: bold;
+}
+
+th {
+	background-color: #e7e7e7;
+	padding: 1px;
+}
+
+.course-cell, .days-cell, .time-cell {
+	background-color: #ffffff;
+	padding: 4px;
+}

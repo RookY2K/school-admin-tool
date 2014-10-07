@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Edit Class Schedule</title>
+		<link rel="stylesheet" type="text/css" href="CSS/layout.css">
+		<link rel="stylesheet" type="text/css" href="CSS/edittacourses.css">
+	</head>
+	<body>
+        <div id="wrapper">
+            <div id="page">
+			    <div id="header">
+					<div id="banner">
+						<h1 id="program-title">UWM - Computer Science Administration</h1>
+					</div>
+	        
+					<div id="global-nav-bar">
+						<ul id="global-list">
+							<li class="global-link-item"><a class="global-link" href="home.html">Home</a></li>
+							<li class="global-link-item"><a class="global-link" href="profile.html">Profile</a></li>
+							<li class="global-link-item"><a class="global-link" href="courses.html">Courses</a></li>
+							<li class="global-link-item"><a class="global-link" href="users.html">Users</a></li>
+							<li class="global-link-item"><a class="global-link" href="admin.html">Admin</a></li>
+						</ul>
+
+						<ul id="logout">
+							<li class="global-link-item"><a class="global-link" href="index.html">Log Out</a></li>
+						</ul>
+					</div>
+			    </div>
+					
+				<div id="content">
+					<div id="local-nav-bar">
+						<ul id="local-list">
+						    <li><a class="nav-link" href="profile.html">User Profile</a></li>
+						    <li><a class="nav-link" href="officehour.html">Office Hours</a></li>
+							<li><a class="nav-link" href="taclasses.html">Class Schedule</a></li>
+						</ul>
+					</div>
+        	
+					<div id="body">
+					    <form id="edit-ta-courses" action="taclasses.html">
+					    <div id="table-div">
+                        <table id="courses-table">
+						<caption id="table-caption">Class Schedule</caption>
+						<tr>
+							<th>Course</th>
+							<th>Meeting Days</th>
+							<th>Meeting Time</th>
+							<th>Remove?</th>
+						</tr>
+                        <tr>
+							<td class="course-cell">COMPSCI 361</td>
+							<td class="days-cell">MW</td>
+							<td class="time-cell">10:00a-11:00a</td>
+							<td class="remove-cell"><input type="checkbox" name="remove" value="Row1"></td>
+                        </tr>
+						<tr>
+							<td class="course-cell">MATH 233</td>
+							<td class="days-cell">MWF</td>
+							<td class="time-cell">8:00a-9:15a</td>
+							<td class="remove-cell"><input type="checkbox" name="remove" value="Row2"></td>
+                        </tr>
+                        </table>
+						</div>
+						<div id="dropdown-div">
+						    Select to Add From List: <br>
+							<select name="course">
+							<option value="none" selected></option>
+							<option value="compsci101">CompSci 101 - Introduction to PC Application Software</option>
+							<option value="compsci113">CompSci 113 - Introduction to Web Document Production</option>
+							<option value="compsci150">CompSci 150 - Survey of Computer Science</option>
+							<option value="compsci201">CompSci 201 -  Introductory Computer Programming</option>
+							<option value="compsci251">CompSci 251 - Intermediate Computer Programming</option>
+							<option value="compsc361">CompSci 361 - Introduction to Software Engineering</option>
+							<option value="more"> ... </option>
+						</select> 
+						</div>
+						<br><br> <!-- Fix this later. -->
+						<input id="button" type="submit" value="Submit" />	
+						</form>
+						
+                    </div>                    
+			    </div>
+            </div>
+		</div>
+	</body>
+</html>

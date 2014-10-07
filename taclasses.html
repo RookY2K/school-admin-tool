@@ -2,9 +2,9 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>User Profile</title>
+		<title>Class Schedule</title>
 		<link rel="stylesheet" type="text/css" href="CSS/layout.css">
-		<link rel="stylesheet" type="text/css" href="CSS/profile.css">
+		<link rel="stylesheet" type="text/css" href="CSS/taclasses.css">
 	</head>
 	<body>
         <div id="wrapper">
@@ -39,21 +39,28 @@
 					</div>
         	
 					<div id="body">
-                        <table id="profile-table">
+					    <div id="table-div">
+                        <table id="courses-table">
+						<caption id="table-caption">Class Schedule</caption>
+						<tr>
+							<th>Course</th>
+							<th>Meeting Days</th>
+							<th>Meeting Time</th>
+						</tr>
                         <tr>
-							<td class="user-label">Name:</td><td class="user-data">FirstName LastNameski</td>
+							<td class="course-cell">COMPSCI 361</td>
+							<td class="days-cell">MW</td>
+							<td class="time-cell">10:00a-11:00a</td>
                         </tr>
-                        <tr>
-							<td class="user-label">Phone Number:</td><td class="user-data">888-867-5309</td>
-                        </tr>
-                        <tr>
-							<td class="user-label">Email Address:</td><td class="user-data">FakeEmail@fraud.gov</td>
-                        </tr>
-                        <tr>
-							<td class="user-label">Street Address:</td><td class="user-data">9876 W. Demo Ave. Milwaukee, WI 54321</td>
-							<td id="edit-link-cell"><a id="edit-link" href="editprofile.html">Edit Profile</a></td>
+						<tr>
+							<td class="course-cell">MATH 233</td>
+							<td class="days-cell">MWF</td>
+							<td class="time-cell">8:00a-9:15a</td>
                         </tr>
                         </table>
+						<a id="edit-link" href="EditTaCourses.html">Edit Courses</a></td>
+						</div>
+						
                     </div>                    
 			    </div>
             </div>
