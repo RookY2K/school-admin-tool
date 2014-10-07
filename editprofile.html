@@ -2,9 +2,9 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>User Profile</title>
+		<title>Edit User Profile</title>
 		<link rel="stylesheet" type="text/css" href="CSS/layout.css">
-		<link rel="stylesheet" type="text/css" href="CSS/profile.css">
+		<link rel="stylesheet" type="text/css" href="CSS/editprofile.css">
 	</head>
 	<body>
         <div id="wrapper">
@@ -39,20 +39,25 @@
 					</div>
         	
 					<div id="body">
-                        <table id="profile-table">
-                        <tr>
-							<td class="user-label">Name:</td><td class="user-data">FirstName LastNameski</td>
-                        </tr>
-                        <tr>
-							<td class="user-label">Phone Number:</td><td class="user-data">888-867-5309</td>
-                        </tr>
-                        <tr>
-							<td class="user-label">Email Address:</td><td class="user-data">FakeEmail@fraud.gov</td>
-                        </tr>
-                        <tr>
-							<td class="user-label">Street Address:</td><td class="user-data">9876 W. Demo Ave. Milwaukee, WI 54321</td>
-							<td id="edit-link-cell"><a id="edit-link" href="editprofile.html">Edit Profile</a></td>
-                        </tr>
+					    <form id="edit-profile-form" action="profile.html">
+							<table id="profile-table">
+							<tr>
+								<td class="user-label">Name:</td><td class="user-data"><input type = "text" name="FirstName" /></td>
+							</tr>
+							<tr>
+								<td class="user-label">Phone Number:</td><td class="user-data"><input type = "text" name="Phone" /></td>
+							</tr>
+							<tr>
+								<td class="user-label">Email Address:</td><td class="user-data"><input type = "text" name="Email" /></td>
+							</tr>
+							<tr>
+								<td class="user-label">Street Address:</td><td class="user-data"><input type = "text" name="StreetAddress" /></td>
+							</tr>
+							<tr>
+								<td class="user-label"></td><td class="edit-submit-cell"><input id="button" type="submit" value="Submit" /></td>
+							</tr>
+							
+						</form>
                         </table>
                     </div>                    
 			    </div>
