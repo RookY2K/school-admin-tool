@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Query Page</title>
+		<link rel="stylesheet" type="text/css" href="CSS/layout.css">
+		<link rel="stylesheet" type="text/css" href="CSS/queryPage.css">
+	</head>
+	<body>
+        <div id="wrapper">
+            <div id="page">
+			    <div id="header">
+                    <div id="banner">
+                        <h1 id="program-title">UWM - Computer Science Administration</h1>
+                    </div>
+                    
+                    <div id="global-nav-bar">
+                        <ul id="global-list">
+                            <li class="global-link-item"><a class="global-link" href="home.html">Home</a></li>
+                            <li class="global-link-item"><a class="global-link" href="profile.html">Profile</a></li>
+                            <li class="global-link-item"><a class="global-link" href="courses.html">Courses</a></li>
+                            <li class="global-link-item"><a class="global-link" href="users.html">Users</a></li>
+                            <li class="global-link-item"><a class="global-link" href="admin.html">Admin</a></li>
+                        </ul>
+
+                        <ul id="logout">
+                            <li class="global-link-item"><a class="global-link" href="index.html">Log Out</a></li>
+                        </ul>
+                    </div>
+			    </div>
+					
+				<div id="content">
+                    <div id="local-nav-bar">
+						<!--
+						<ul id="local-list">
+                            <li><a class="nav-link" href="index.html">TestNavBar1</a></li>
+                            <li><a class="nav-link" href="index.html">TestNavBar2</a></li>
+                            <li><a class="nav-link" href="index.html">TestNavBar3</a></li>
+                            <li><a class="nav-link" href="index.html">TestNavBar4</a></li>
+                            <li><a class="nav-link" href="index.html">TestNavBar5</a></li>
+                        </ul>
+						-->
+                    </div>
+                        
+                    <div id="body">
+                        <form id="query_box" method="post" action="queryResult.html">
+							<table id="query_table">
+								<tr>
+									<td><b>Type Data Store Query in text box below:</td>
+								</tr>
+								<tr> 
+									<td><textarea id="text_box"></textarea></td>
+								</tr>
+								<tr>
+									<td><input type="submit" id="submit_button" value="Submit"></td>
+								</tr>
+							</table>
+						</form>
+                    </div>                    
+			    </div>
+            </div>
+        </div>
+	</body>
+</html>
