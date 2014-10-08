@@ -88,10 +88,11 @@ body {
 }
 
 #global-list{
+	position: relative;
+	display: inline-block;
     list-style-type: none;
     margin: 0;
     padding: 0; 
-    overflow: hidden;
     float: left;
 }
 
@@ -105,7 +106,12 @@ body {
 
 
 .global-link-item{
+	position:relative;
     float: left;
+}
+
+.global-link {
+	display:block;
 }
 
 .global-link:link, .global-link:visited{
@@ -123,5 +129,36 @@ body {
 }
 
 .global-link:hover, .global-link:active{
-    background-color: #303030
+    background-color: #303030;
 }
+
+#global-nav-bar ul ul {
+	display:none;
+}
+
+#global-nav-bar ul li:hover > ul {
+	display: block;
+	margin: 0px;
+	padding: 0px;
+}
+
+#global-nav-bar ul li:hover > ul li {
+	float:none;
+	display:block;
+}
+
+#global-nav-bar ul li:hover > ul li a {
+	min-width:250px;
+}
+
+#global-nav-bar ul li ul {
+	position:absolute;
+	z-index: 100;
+}
+
+.global-dropdown-list {
+	background: #000000;
+}
+
+
+

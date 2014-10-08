@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Add Users</title>
+		<link rel="stylesheet" type="text/css" href="CSS/layout.css">
 		<link rel="stylesheet" type="text/css" href="CSS/AdminStyle.css">
 		<link rel="stylesheet" type="text/css" href="CSS/addUsers.css">
 	</head>
@@ -16,11 +17,32 @@
                     
                     <div id="global-nav-bar">
                         <ul id="global-list">
-                            <li class="global-link-item"><a class="global-link" href="home.html">Home</a></li>
-                            <li class="global-link-item"><a class="global-link" href="profile.html">Profile</a></li>
+                            <li class="global-link-item"><a class="global-link" href="home.html">Home</a>
+								<ul class="global-dropdown-list">
+									<li class="global-link-item"><a class="global-link" href="officehour.html">Office Hours</a></li>
+									<li class="global-link-item"><a class="global-link" href="taclasses.html">Class Schedule</a></li>
+									<li class="global-link-item"><a class="global-link" href="querypage.html">Queries</a></li>
+								</ul>
+							</li>
+							
+                            <li class="global-link-item"><a class="global-link" href="profile.html">Profile</a>
+								<ul class="global-dropdown-list">
+									<li class="global-link-item"><a class="global-link" href="profile.html">User Profile</a></li>
+									<li class="global-link-item"><a class="global-link" href="officehour.html">Office Hours</a></li>
+									<li class="global-link-item"><a class="global-link" href="taclasses.html">Class Schedule</a></li>
+								</ul>
+							</li>
+							
                             <li class="global-link-item"><a class="global-link" href="courses.html">Courses</a></li>
                             <li class="global-link-item"><a class="global-link" href="users.html">Users</a></li>
-                            <li class="global-link-item"><a class="global-link" href="admin.html">Admin</a></li>
+                            <li class="global-link-item"><a class="global-link" href="admin.html">Admin</a>
+								<ul class="global-dropdown-list">
+									<li class="global-link-item"><a class="global-link" href="addusers.html">Add Users</a></li>
+									<li class="global-link-item"><a class="global-link" href="assigncourses.html">Assign Courses</a></li>
+									<li class="global-link-item"><a class="global-link" href="index.html">Get Course Info</a></li>
+									<li class="global-link-item"><a class="global-link" href="index.html">Trigger New Semester</a></li>
+								</ul>
+							</li>
                         </ul>
 
                         <ul id="logout">
@@ -32,9 +54,10 @@
 				<div id="content">
                     <div id="local-nav-bar">
 						<ul id="local-list">
-				<li><a class="nav-link" href="assignCourses.html">Assign Courses</a></li>
-				<li><a class="nav-link" href="index.html">Get Course Info</a></li>
-				<li><a class="nav-link" href="index.html">Trigger New Semester</a></li>
+							<li><a class="nav-link" href="addUsers.html">Add Users</a></li>
+							<li><a class="nav-link" href="assignCourses.html">Assign Courses</a></li>
+							<li><a class="nav-link" href="index.html">Get Course Info</a></li>
+							<li><a class="nav-link" href="index.html">Trigger New Semester</a></li>
                         </ul>
                     </div>
                         
@@ -45,19 +68,19 @@
 					<table>
 					<tr>
 						<td class="cell"><label class="field" for="firstName">First Name:</label></td>
-						<td class="cell"><input type = "text" name="First Name" />
+						<td class="cell"><input type = "text" name="firstName" id="firstName"/>
 					</tr>
 					<tr>
 						<td class="cell"><label class="field" for="lastName">Last Name:</label></td>
-						<td class="cell"><input type = "text" name="Last Name" />
+						<td class="cell"><input type = "text" name="lastName" id="lastName"/>
 					</tr>
 					<tr>
 						<td class="cell"><label class="field" for="email">Email:</label></td>
-						<td class="cell"><input type = "text" name="Email" />
+						<td class="cell"><input type = "text" name="email" id="email"/>
 					</tr>
 					<tr>
 						<td class="cell"><label class="field" for="phoneNumber">Phone Number:</label></td>
-						<td class="cell"><input type = "text" name="Phone Number" />
+						<td class="cell"><input type = "text" name="phoneNumber" id="phoneNumber"/>
 					</tr>
 					<tr>
 						<td class="cell"><input type="submit" value="Create New User" /></td>

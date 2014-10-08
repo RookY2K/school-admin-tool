@@ -10,6 +10,11 @@
 .user-data{
 }
 
+#button{
+    display: block;
+	float: right;
+}
+
 #edit-link:link, #edit-link:visited{
     text-align: right;
 	font-size: 12px;
