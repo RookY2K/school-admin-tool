@@ -31,7 +31,7 @@ body {
 #banner {
     width: 100%;
     height: 95px;
-    background: #FFBD00 url("wave.jpg") no-repeat scroll center top;
+    background: #FFBD00 url("../images/wave.jpg") no-repeat scroll center top;
 }
 
 #local-nav-bar{

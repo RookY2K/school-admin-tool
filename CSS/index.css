@@ -17,7 +17,7 @@ html {
 }
 
 #login-title{
-	background: #FFBD00 url("wave.jpg") no-repeat scroll center top;
+	background: #FFBD00 url("../images/wave.jpg") no-repeat scroll center top;
 	font-weight: bold;
 	text-align: center;
 	font-size: 20px;
