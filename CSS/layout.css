@@ -7,7 +7,7 @@
 html, 
 body { 
     height: 100%; 
-    background-color: #B0B0B0;
+    background: #B0B0B0 url("../images/circuit-lines-vector.jpg") no-repeat scroll;
 }
 
 #page{   
