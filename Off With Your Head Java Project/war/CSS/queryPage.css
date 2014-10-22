@@ -1,0 +1,24 @@
+textarea {
+	resize: none;
+}
+
+#query_table {
+	padding: 10px;
+	width: 60%;
+}
+
+#query_box {
+	width: 100%;
+	height: 250px;
+	border: thin solid black; 
+}
+
+#text_box {
+	width: 98%;
+	height: 150px;
+}
+
+#submit_button {
+	float: right;
+}
+

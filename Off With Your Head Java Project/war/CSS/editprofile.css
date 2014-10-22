@@ -1,0 +1,25 @@
+#profile-table{
+    border-spacing: 15px;
+}
+
+.user-label{
+    text-align: right;
+    font-weight: bold;
+}
+
+.user-data{
+}
+
+#button{
+    display: block;
+	float: right;
+}
+
+#edit-link:link, #edit-link:visited{
+    text-align: right;
+	font-size: 12px;
+}
+
+#edit-link-cell{
+    text-align: right;
+}
