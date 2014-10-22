@@ -11,7 +11,7 @@ public class Login extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		// TODO: catch this logout
+		// TODO: Catch Logout
 		//if (request.getParameter("login") == "false") 
 		//		Logout();	
 		
@@ -21,7 +21,7 @@ public class Login extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException, ServletException {
 
-		// TODO: Test for Login
+		// TODO: Check login
 		// 		Login();
 
 		// will always fail for now
