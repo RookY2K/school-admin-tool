@@ -19,7 +19,12 @@
 	
 	${body}
 	
+	<br />
+	
+	<% for (String item : (String[]) request.getAttribute("var")) {
+			out.println(item);  %> <br /> <% } %>
+	
 	</div>
 </div>
 
-<%@ include file="footer.jsp" %> 
+<jsp:include page="footer.jsp" />

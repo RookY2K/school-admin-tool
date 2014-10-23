@@ -12,7 +12,12 @@ public class HelloWorld extends HttpServlet {
 			throws IOException, ServletException {
 		
 		request.setAttribute("body", "HELLO WORLD");
+		
+		String[] someRandomList = { "user1", "user2", "user3" };
+		request.setAttribute("var", someRandomList);
+		
 		request.getRequestDispatcher("helloworld.jsp").forward(request, response);	
+		
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
