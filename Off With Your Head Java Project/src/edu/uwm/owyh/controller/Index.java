@@ -12,6 +12,8 @@ public class Index extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
+		// TODO: actually check if user is login and if user is admin
+		
 		boolean isLogin = false;
 		boolean isAdmin = true;
 		
