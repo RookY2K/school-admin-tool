@@ -4,15 +4,17 @@
 </jsp:include>
 
 	<div id="body">
-		<% if (request.getParameter("login") != null) { %>
-		<span style="color:red;">Login Failed, check Username/Password!</span><br /> 
-		<% } %>
-	
+			
 		<form id="login" method="post" action="login" >
 			<table id=login_table>
 				<tr>
 					<td id="login-title" colspan="2">UWM - Computer Science Administration</td>
 				</tr>
+				<% if (request.getParameter("login") != null) { %>
+				 <tr>
+				 	<td style="color:red;" colspan="2">Login Failed, check Username/Password!</td>
+				 </tr> 
+				<% } %>
 				<tr>
 					<td id="user_name">User Name</td>
 					<td class="text_block"><input type="text" name="username"></td>
