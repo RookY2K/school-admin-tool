@@ -1,7 +1,7 @@
 package edu.uwm.owyh.model;
 
 public class User {
-	public enum AccessLevel {TA, INSTRUCTOR, ADMIN};
+	private enum AccessLevel {TA, INSTRUCTOR, ADMIN};
 	private String _userName;
 	private String _password;
 	AccessLevel _accessLevel;
