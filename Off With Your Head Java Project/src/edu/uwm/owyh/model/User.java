@@ -36,7 +36,7 @@ public class User {
 		return _accessLevel;
 	}
 	
-	public User getUser(String userName, String pwd, AccessLevel access){
+	public static User getUser(String userName, String pwd, AccessLevel access){
 		return new User(userName, pwd, access);
 	}
 }
