@@ -9,9 +9,9 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
 
-public class DataStore {
+public final class DataStore {
 	private DatastoreService _service;
-	private static DataStore _store = new DataStore();
+	private static DataStore _store = null;
 	
 	private DataStore(){
 		_service = DatastoreServiceFactory.getDatastoreService();
@@ -22,6 +22,8 @@ public class DataStore {
 	}
 	
 	public static DataStore getDataStore(){
+		if(_store == null)
+			_store = new DataStore();
 		return _store;
 	}
 	
