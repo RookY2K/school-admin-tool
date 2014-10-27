@@ -65,20 +65,18 @@ public class User {
 		return users;
 	}
 	
-	public boolean saveUser(DataStore store) {
-		if (store == null) return false;
+	public void saveUser() {
 		if (_userEntity == null)
 			_userEntity = createUserEntity();
+		DataStore store = DataStore.getDataStore();
 		store.insertEntity(_userEntity);
-		return true;
 	}
 	
-	public boolean removeUser(DataStore store) {
-		if (store == null) return false;
+	public void removeUser() {
 		if (_userEntity == null)
-			return false;
+			return;
+		DataStore store = DataStore.getDataStore();
 		store.deleteEntity(_userEntity);
-		return true;
 	}
 	
 	private Entity createUserEntity() {

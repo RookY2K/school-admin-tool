@@ -25,9 +25,8 @@ public class TestBasicUser {
 	@Test
 	public void testSaveUser() {
 		User user = User.getUser("admin", "owyh", User.AccessLevel.ADMIN);
-		assertFalse("Null Datastore used", user.saveUser(null));
-		assertTrue("DataStore Did Not Work", user.saveUser(datastore));
-		List<Entity> search = datastore.findEntities("users", null);
+		user.saveUser();	
+		List<Entity> search = datastore.findEntities("users", null);	
 		assertFalse("User Was Not Saved!", (search.size() == 0));
 			
 	}
@@ -35,11 +34,10 @@ public class TestBasicUser {
 	@Test
 	public void testRemoveUser() {
 		User user = User.getUser("admin", "owyh", User.AccessLevel.ADMIN);
-		user.saveUser(datastore);
+		user.saveUser();	
 		List<Entity> search = datastore.findEntities("users", null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));
-		assertFalse("Null Datastore Used", user.removeUser(null));
-		assertTrue("DataStore did not work!", user.removeUser(datastore));
+		user.removeUser();
 		search = datastore.findEntities("users", null);
 		assertTrue("User Was Not Removed", (search.size() == 0));	
 	}
