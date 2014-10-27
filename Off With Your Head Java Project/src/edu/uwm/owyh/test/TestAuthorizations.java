@@ -17,31 +17,56 @@ import org.junit.Test;
 import edu.uwm.owyh.model.*;
 import edu.uwm.owyh.model.User.AccessLevel;
 
-public class TestAuthorizations extends Auth{
+public class TestAuthorizations{
+	private final LocalServiceTestHelper helper =
+	        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 	private AccessLevel _level;
 	private String _userName;
 	private String _password;
-	Auth a1;
+	private DatastoreService _service;
+	private Auth _a1;
 
 	@Before
 	public void setUp() throws Exception {
+		helper.setUp();
 		_level = AccessLevel.ADMIN;
 		_userName = "vamaiuri@uwm.edu";
 		_password = "paSsw0rd$";
-		a1 = Auth.getAuth();
+		_service = DatastoreServiceFactory.getDatastoreService();
+		
+		Entity user = new Entity("users");
+		user.setProperty("username", _userName.toUpperCase());
+		user.setProperty("password", _password);
+		user.setProperty("accesslevel", _level.toString());
+		_service.put(user);
+		
+		_a1 = Auth.getAuth(null);
 	}
 
 	@Test
-	public void testGoodUser() {
-		assertTrue("Basic user verification failed!",  a1.verifyUser(_userName, _password));
+	public void testGoodLogin() {
+		assertTrue("Basic user verification failed!",  _a1.verifyLogin(_userName, _password));
 		String captitalUName = _userName.toUpperCase();
-		assertTrue("User verification failed with user name in all caps!", a1.verifyUser(captitalUName, _password));
+		assertTrue("User verification failed with user name in all caps!", _a1.verifyLogin(captitalUName, _password));
 		String lowerUName = _userName.toLowerCase();
-		assertTrue( "Verification failed with user name in all lowercase!", a1.verifyUser(lowerUName, _password));
+		assertTrue( "Verification failed with user name in all lowercase!", _a1.verifyLogin(lowerUName, _password));
+	}
+	
+	@Test
+	public void testBadLoginName() {
+		assertFalse("Login verification should have failed", _a1.verifyLogin("vamauiri@uwm.edu", _password));
+	}
+	
+	@Test
+	public void testBadPassword(){
+		assertFalse("Login should fail due to password being wrong password", _a1.verifyLogin(_userName, "notThePassword!"));
+		assertFalse("Login should fail due to password being case sensitive", _a1.verifyLogin(_userName, _password.toLowerCase()));
+		assertFalse("Login should fail due to password being case sensitive", _a1.verifyLogin(_userName, _password.toUpperCase()));
 	}
 	
 	@After
 	public void tearDown() throws Exception {
+		helper.tearDown();
 	}
 
 }

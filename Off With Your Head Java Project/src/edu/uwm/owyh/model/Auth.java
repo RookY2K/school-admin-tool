@@ -1,11 +1,38 @@
 package edu.uwm.owyh.model;
 
+import java.util.List;
+
 import edu.uwm.owyh.model.User.*;
+import edu.uwm.owyh.model.DataStore;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
 
 public class Auth {
 	private AccessLevel _goodAccess;
 	private String _goodUserName;
 	private String _goodPassword;
+	private static final String TABLE = "users"; 
+	
+	private Auth(HttpServletRequest request){
+		
+	}
+	
+	private Auth(){
+		_goodAccess = null;
+		_goodUserName = null;
+		_goodPassword = null;
+	}
+	private void setUserName(String userName){
+		_goodUserName = userName;
+	}
+	
+	private void setPassword(String password){
+		_goodPassword = password;
+	}
 	
 	private AccessLevel getAccessLevel(){
 		return _goodAccess;
@@ -19,11 +46,24 @@ public class Auth {
 		return _goodPassword;
 	}	
 	
-	public boolean verifyUser(String userName, String password){
-		return userName.equalsIgnoreCase(getUserName()) && password.equals(getPassword());
+	public boolean verifyLogin(String userName, String password){
+		if(userName == null || password == null)return false;
+		
+		DataStore store = DataStore.getDataStore();
+		Filter filter = new Query.FilterPredicate("username", Query.FilterOperator.EQUAL, userName.toUpperCase());
+		List<Entity> users = store.findEntities(TABLE, filter);
+		if(users.isEmpty()) return false;
+		Entity user = users.get(0);
+		
+		if(!user.getProperty("password").equals(password)) return false;
+		
+		
+		return true;
 	}
 	
-	public static Auth getAuth(){
+	public static Auth getAuth(HttpServletRequest request){
+		if(request != null)
+			return new Auth(request);
 		return new Auth();
 	}
 }
