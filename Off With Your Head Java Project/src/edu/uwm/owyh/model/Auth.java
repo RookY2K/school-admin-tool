@@ -14,8 +14,7 @@ import com.google.appengine.api.datastore.Query.Filter;
 public class Auth {
 	private AccessLevel _goodAccess;
 	private String _goodUserName;
-	private String _goodPassword;
-	private static final String TABLE = "users"; 
+	private String _goodPassword; 
 	
 	private Auth(HttpServletRequest request){
 		//TODO constructor for use in grabbing session variables rather than 
@@ -26,10 +25,6 @@ public class Auth {
 		_goodAccess = null;
 		_goodUserName = null;
 		_goodPassword = null;
-	}
-	
-	public static String getUserTable(){
-		return TABLE;
 	}
 	
 	private void setUserName(String userName){
@@ -57,7 +52,7 @@ public class Auth {
 		
 		DataStore store = DataStore.getDataStore();
 		Filter filter = new Query.FilterPredicate("username", Query.FilterOperator.EQUAL, userName.toUpperCase());
-		List<Entity> users = store.findEntities(TABLE, filter);
+		List<Entity> users = store.findEntities(User.getUserTable(), filter);
 		if(users.isEmpty()) return null;
 		Entity user = users.get(0);
 		

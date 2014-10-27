@@ -32,6 +32,7 @@ public class User {
 	private String _password;
 	AccessLevel _accessLevel;
 	private Entity _userEntity;
+	private static final String TABLE = "users";
 	
 	private User(String userName, String pwd, AccessLevel access){
 		_userName = userName;
@@ -45,6 +46,10 @@ public class User {
 		int getAccess = (int) user.getProperty("accesslevel");
 		_accessLevel = convertAccessLevel(getAccess);
 		_userEntity = user;
+	}
+	
+	public static String getUserTable(){
+		return TABLE;
 	}
 	
 	/**

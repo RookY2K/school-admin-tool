@@ -28,12 +28,6 @@ public final class DataStore {
 		return _store;
 	}
 	
-	/*
-	public  Entity findEntity(String table, Map<String,String> filter){
-		//TODO Finish stub
-		return null;
-	}*/
-	
 	/**
 	 * Returns a collection of entities based on filter from specified table
 	 * @param table
