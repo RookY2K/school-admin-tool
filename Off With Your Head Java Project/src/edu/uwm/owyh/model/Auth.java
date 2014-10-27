@@ -27,6 +27,11 @@ public class Auth {
 		_goodUserName = null;
 		_goodPassword = null;
 	}
+	
+	public static String getUserTable(){
+		return TABLE;
+	}
+	
 	private void setUserName(String userName){
 		_goodUserName = userName;
 	}

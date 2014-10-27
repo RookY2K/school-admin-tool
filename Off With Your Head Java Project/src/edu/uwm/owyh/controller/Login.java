@@ -15,6 +15,8 @@ import edu.uwm.owyh.model.Auth;
 @SuppressWarnings("serial")
 public class Login extends HttpServlet {
 	
+	HttpSession session;
+	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
@@ -44,7 +46,7 @@ public class Login extends HttpServlet {
 			resp.sendRedirect("/?login=bad");
 		else
 			//TODO Save username,accesslevel to session variables
-			//HttpSession session = req.getSession();
+			session = req.getSession();
 			resp.sendRedirect("/");
 		
 	}
