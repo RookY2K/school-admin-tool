@@ -2,7 +2,6 @@
     <jsp:param name="title" value="Login" />
     <jsp:param name="stylesheet" value="index.css" />
 </jsp:include>
-
 	<div id="body">
 			
 		<form id="login" method="post" action="login" >

@@ -18,7 +18,8 @@ public class Auth {
 	private static final String TABLE = "users"; 
 	
 	private Auth(HttpServletRequest request){
-		
+		//TODO constructor for use in grabbing session variables rather than 
+		//querying the datastore. 
 	}
 	
 	private Auth(){
@@ -26,6 +27,11 @@ public class Auth {
 		_goodUserName = null;
 		_goodPassword = null;
 	}
+	
+	public static String getUserTable(){
+		return TABLE;
+	}
+	
 	private void setUserName(String userName){
 		_goodUserName = userName;
 	}
@@ -46,19 +52,19 @@ public class Auth {
 		return _goodPassword;
 	}	
 	
-	public boolean verifyLogin(String userName, String password){
-		if(userName == null || password == null)return false;
+	public Entity verifyLogin(String userName, String password){
+		if(userName == null || password == null)return null;
 		
 		DataStore store = DataStore.getDataStore();
 		Filter filter = new Query.FilterPredicate("username", Query.FilterOperator.EQUAL, userName.toUpperCase());
 		List<Entity> users = store.findEntities(TABLE, filter);
-		if(users.isEmpty()) return false;
+		if(users.isEmpty()) return null;
 		Entity user = users.get(0);
 		
-		if(!user.getProperty("password").equals(password)) return false;
+		if(!user.getProperty("password").equals(password)) return null;
 		
 		
-		return true;
+		return user;
 	}
 	
 	public static Auth getAuth(HttpServletRequest request){
