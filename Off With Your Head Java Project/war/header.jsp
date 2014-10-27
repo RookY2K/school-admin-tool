@@ -5,6 +5,6 @@
 		<title>${param.title}</title>
 		<% if (request.getParameterValues("stylesheet") != null) { 
 		for (String style :  request.getParameterValues("stylesheet")) { %>
-		<link rel="stylesheet" type="text/css" href="CSS/<%=style %>"><% } } %>
+		<link rel="stylesheet" type="text/css" href="/CSS/<%=style %>"><% } } %>
 	</head>
 	<body>

@@ -41,8 +41,6 @@ public class TestBasicUser {
 		user.saveUser();
 		
 		List<Entity> search = datastore.findEntities("users", null);
-
-		System.out.print("test: " + search.size());
 		
 		assertFalse("User Was Not Saved!", (search.size() == 0));
 		

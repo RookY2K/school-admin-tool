@@ -1,4 +1,4 @@
-<jsp:include page="header.jsp">
+<jsp:include page="/header.jsp">
     <jsp:param name="title" value="Login" />
     <jsp:param name="stylesheet" value="index.css" />
 </jsp:include>
