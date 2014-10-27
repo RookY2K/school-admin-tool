@@ -1,5 +1,8 @@
 package edu.uwm.owyh.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.appengine.api.datastore.Entity;
 
 public class User {
@@ -53,6 +56,13 @@ public class User {
 	
 	public static User getUser(Entity user) {
 		return new User(user);
+	}
+	
+	public static List<User> getUserFromList(List<Entity> entities) {
+		List<User> users = new ArrayList<User>();
+		for (Entity item : entities)
+			users.add(User.getUser(item));
+		return users;
 	}
 	
 	public void saveUser() {
