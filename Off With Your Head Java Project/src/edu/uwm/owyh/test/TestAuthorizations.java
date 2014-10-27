@@ -37,7 +37,7 @@ public class TestAuthorizations{
 		Entity user = new Entity("users");
 		user.setProperty("username", _userName.toUpperCase());
 		user.setProperty("password", _password);
-		user.setProperty("accesslevel", _level.toString());
+		user.setProperty("accesslevel", _level.getVal());
 		_service.put(user);
 		
 		_a1 = Auth.getAuth(null);
@@ -45,23 +45,23 @@ public class TestAuthorizations{
 
 	@Test
 	public void testGoodLogin() {
-		assertTrue("Basic user verification failed!",  _a1.verifyLogin(_userName, _password));
+		assertTrue("Basic user verification failed!",  _a1.verifyLogin(_userName, _password) != null);
 		String captitalUName = _userName.toUpperCase();
-		assertTrue("User verification failed with user name in all caps!", _a1.verifyLogin(captitalUName, _password));
+		assertTrue("User verification failed with user name in all caps!", _a1.verifyLogin(captitalUName, _password) != null);
 		String lowerUName = _userName.toLowerCase();
-		assertTrue( "Verification failed with user name in all lowercase!", _a1.verifyLogin(lowerUName, _password));
+		assertTrue( "Verification failed with user name in all lowercase!", _a1.verifyLogin(lowerUName, _password) != null);
 	}
 	
 	@Test
 	public void testBadLoginName() {
-		assertFalse("Login verification should have failed", _a1.verifyLogin("vamauiri@uwm.edu", _password));
+		assertEquals("Login verification should have failed",null, _a1.verifyLogin("vamauiri@uwm.edu", _password));
 	}
 	
 	@Test
 	public void testBadPassword(){
-		assertFalse("Login should fail due to password being wrong password", _a1.verifyLogin(_userName, "notThePassword!"));
-		assertFalse("Login should fail due to password being case sensitive", _a1.verifyLogin(_userName, _password.toLowerCase()));
-		assertFalse("Login should fail due to password being case sensitive", _a1.verifyLogin(_userName, _password.toUpperCase()));
+		assertEquals("Login should fail due to password being wrong password",null, _a1.verifyLogin(_userName, "notThePassword!"));
+		assertEquals("Login should fail due to password being case sensitive",null, _a1.verifyLogin(_userName, _password.toLowerCase()));
+		assertEquals("Login should fail due to password being case sensitive",null, _a1.verifyLogin(_userName, _password.toUpperCase()));
 	}
 	
 	@After
