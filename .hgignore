@@ -6,6 +6,14 @@ syntax: glob
 *.suo
 /
 
+Off With Your Head Java Project/war/WEB-INF/lib/servlet-api.jar
+Off With Your Head Java Project/war/WEB-INF/lib/jsp-api.jar
+Off With Your Head Java Project/src/edu/uwm/owyh/controller/Login.java.orig
+Off With Your Head Java Project/.classpath.orig
+Off With Your Head Java Project/src/edu/uwm/owyh/model/User.java.orig
+Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/controller/Login.java.orig
+Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/model/User.java.orig
+Off With Your Head Java Project/war/WEB-INF/lib/appengine-local-runtime-shared.jar
 syntax: regexp
 ^(.*[\\/])?gen[\\/].*
 ^(.*[\\/])?bin[\\/].*

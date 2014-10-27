@@ -12,12 +12,14 @@ public class Index extends HttpServlet {
 			throws IOException, ServletException {
 		
 		// TODO: actually check if user is login and if user is admin
-		
 		boolean isLogin = false;
-		boolean isAdmin = false;
+		
+		if(request.getAttribute("login") != null){ 
+			isLogin = (boolean)request.getAttribute("login");
+		}
 		
 		if (isLogin) {
-			
+			boolean isAdmin = (boolean)request.getAttribute("admin");
 			if (isAdmin) 
 				request.getRequestDispatcher("admin/admin.jsp").forward(request, response);	
 			else 

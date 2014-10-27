@@ -11,13 +11,10 @@ import javax.servlet.http.HttpSession;
 import com.google.appengine.api.datastore.Entity;
 
 import edu.uwm.owyh.model.Auth;
+import edu.uwm.owyh.model.User.AccessLevel;
 
 @SuppressWarnings("serial")
 public class Login extends HttpServlet {
-	
-	HttpSession session;
-	
-	Auth auth;
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
@@ -32,24 +29,22 @@ public class Login extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
-		// TODO: Login
-		// String username = request.getParameter("username")
-		// String password = request.getParameter("password")
-		// 		Login(username, password);
-		boolean loginFail = true;
-		Entity user = null;
-		String username = req.getParameter("username");
-		String password = req.getParameter("password");
-		user = Auth.getAuth(null).verifyLogin(username,password);
+		// TODO: Login		
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		Entity user = Auth.getAuth(null).verifyLogin(username,password);
+		boolean isLogin = (user != null);
 		
-		loginFail = user == null;
-		
-		if (loginFail)
-			resp.sendRedirect("/?login=bad");
-		else
-			//TODO Save username,accesslevel to session variables
-			session = request.getSession();
-			response.sendRedirect("/");
-		
+		if (isLogin){
+			int accessVal = (int) user.getProperty("accesslevel");
+			AccessLevel access = AccessLevel.getAccessLevel(accessVal);
+			boolean isAdmin = access == AccessLevel.ADMIN;
+			HttpSession session = request.getSession();
+			session.setAttribute("username", username);
+			session.setAttribute("accesslevel", access);
+			response.sendRedirect("/?login=" + isLogin + "&admin=" + isAdmin);			
+		}else{					
+			response.sendRedirect("/?login=" + isLogin);
+		}
 	}
 }
