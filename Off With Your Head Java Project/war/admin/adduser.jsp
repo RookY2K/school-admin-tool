@@ -9,10 +9,7 @@
 <div id="content">
  	<div id="local-nav-bar">
 		<ul id="local-list">
-	      <li><a class="nav-link" href="admin/addUser">Add User</a></li>
-	      <li><a class="nav-link" href="admin/addCourses">Assign Courses</a></li>
-	      <li><a class="nav-link" href="admin/getCourseInfo">Get Course Info</a></li>
-	      <li><a class="nav-link" href="admin/triggerNewSemester">Trigger New Semester</a></li>
+	      <li><a class="nav-link" href="/admin/addUser">Add User</a></li>
 		</ul>
 	</div>
 	  	
