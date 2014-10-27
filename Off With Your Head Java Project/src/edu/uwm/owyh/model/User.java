@@ -62,6 +62,13 @@ public class User {
 		store.insertEntity(_userEntity);
 	}
 	
+	public void removeUser() {
+		if (_userEntity == null)
+			return;
+		DataStore store = DataStore.getDataStore();
+		store.deleteEntity(_userEntity);
+	}
+	
 	private Entity createUserEntity() {
 		Entity user = new Entity("users");
 		user.setProperty("username", _userName);

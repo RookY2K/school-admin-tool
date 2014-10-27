@@ -29,11 +29,28 @@ public class TestBasicUser {
 		user.saveUser();
 		
 		List<Entity> search = datastore.findEntities("users", null);
+		
+		assertFalse("User Was Not Saved!", (search.size() == 0));
+			
+	}
+	
+	@Test
+	public void testRemoveUser() {
+		User user = User.getUser("admin", "owyh", User.AccessLevel.ADMIN);
+		
+		user.saveUser();
+		
+		List<Entity> search = datastore.findEntities("users", null);
 
 		System.out.print("test: " + search.size());
 		
 		assertFalse("User Was Not Saved!", (search.size() == 0));
-			
+		
+		user.removeUser();
+		
+		search = datastore.findEntities("users", null);
+		
+		assertTrue("User Was Not Removed", (search.size() == 0));	
 	}
 	
 	@Before
