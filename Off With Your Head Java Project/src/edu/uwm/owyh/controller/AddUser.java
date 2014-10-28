@@ -31,21 +31,20 @@ public class AddUser extends HttpServlet {
 		
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");	
-		int access;
+
 		try {
-			access = Integer.parseInt(request.getParameter("accesslevel"));
+			int access = Integer.parseInt(request.getParameter("accesslevel"));
+			AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
+			
+			User newUser = User.getUser(email, password, accessLevel);
+			if (newUser.saveUser()) 
+				request.setAttribute("addNewUser", true);
+			else 
+				request.setAttribute("addNewUser", false);
 		}
 		catch (NumberFormatException e) {
-			access = 3;
-		}
-		
-		AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
-		
-		User newUser = User.getUser(email, password, accessLevel);
-		if (newUser.saveUser()) 
-			request.setAttribute("addNewUser", true);
-		else 
 			request.setAttribute("addNewUser", false);
+		}
 		
 		request.getRequestDispatcher("adduser.jsp").forward(request, response);	
 	}

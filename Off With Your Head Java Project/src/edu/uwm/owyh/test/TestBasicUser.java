@@ -52,6 +52,14 @@ public class TestBasicUser {
 	}
 	
 	@Test
+	public void testFindUser() {
+		User user = User.getUser("admin", "owyh", User.AccessLevel.ADMIN);
+		user.saveUser();	
+		User foundUser = User.findUser("admin");
+		assertTrue("User Was Not Found", (user.getUserName().equals(foundUser.getUserName())));	
+	}
+	
+	@Test
 	public void testEditUser(){
 		User user = User.getUser("admin", "owyh", User.AccessLevel.ADMIN);
 		user.saveUser();	

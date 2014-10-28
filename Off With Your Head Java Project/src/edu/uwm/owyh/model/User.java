@@ -48,7 +48,8 @@ public class User {
 	private User(Entity user) {
 		_userName = (String) user.getProperty("username");
 		_password = (String) user.getProperty("password");
-		int getAccess = (int) user.getProperty("accesslevel");
+		Long accessLong = (Long) user.getProperty("accesslevel");
+		int getAccess = accessLong.intValue();
 		_accessLevel = AccessLevel.getAccessLevel(getAccess);
 		_userEntity = user;
 	}
@@ -115,6 +116,14 @@ public class User {
 	
 	public static User getUser(Entity user) {
 		return new User(user);
+	}
+	
+	public static User findUser(String username) {
+		DataStore store = DataStore.getDataStore();
+		Filter filterUsername = new FilterPredicate("username", FilterOperator.EQUAL, username);
+		List<User> users = User.getUserFromList(store.findEntities(User.getUserTable(), filterUsername));
+		if (users.size() == 0) return null;
+		return users.get(0);
 	}
 	
 	public static List<User> getUserFromList(List<Entity> entities) {
