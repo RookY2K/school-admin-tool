@@ -59,6 +59,32 @@ public class TestBasicUser {
 		assertTrue("User Was Not Found", (user.getUserName().equals(foundUser.getUserName())));	
 	}
 	
+	public void testGetAllUser() {
+		// Incomplete Test, Update Later On
+		User user1 = User.getUser("admin1", "owyh", User.AccessLevel.ADMIN);
+		user1.saveUser();
+		User user2 = User.getUser("admin2", "owyh", User.AccessLevel.ADMIN);
+		user2.saveUser();
+		User user3 = User.getUser("admin3", "owyh", User.AccessLevel.ADMIN);
+		user3.saveUser();
+		User user4 = User.getUser("admin4", "owyh", User.AccessLevel.ADMIN);
+		user4.saveUser();
+		
+		List<User> users = User.getAllUser();
+		
+		boolean findUser1 = false, findUser2 = false, findUser3 = false, findUser4 = false;
+		
+		for (User item : users) {
+			if (item.getUserName() == user1.getUserName()) findUser1 = true;
+			else if (item.getUserName() != user2.getUserName()) findUser2 = true;
+			else if (item.getUserName() != user2.getUserName()) findUser3 = true;
+			else if (item.getUserName() != user3.getUserName()) findUser4 = true;	
+		}
+		
+		if (!findUser1 || !findUser2 || !findUser3 || !findUser4)
+			fail("did not find all USERS!");
+	}
+	
 	@Test
 	public void testEditUser(){
 		User user = User.getUser("admin", "owyh", User.AccessLevel.ADMIN);

@@ -126,6 +126,12 @@ public class User {
 		return users.get(0);
 	}
 	
+	public static List<User> getAllUser() {
+		DataStore store = DataStore.getDataStore();
+		List<User> users = User.getUserFromList(store.findEntities(User.getUserTable(), null));
+		return users;
+	}
+	
 	public static List<User> getUserFromList(List<Entity> entities) {
 		List<User> users = new ArrayList<User>();
 		for (Entity item : entities)

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.DataStore;
 import edu.uwm.owyh.model.User;
 
 @SuppressWarnings("serial")
@@ -23,8 +22,7 @@ public class UserList extends HttpServlet {
 		
 		// TODO: admin authentication
 		
-		DataStore store = DataStore.getDataStore();
-		List<User> users = User.getUserFromList(store.findEntities(User.getUserTable(), null));
+		List<User> users = User.getAllUser();
 
 		String[] username = new String[users.size()];
 		int[] accesslevel = new int[users.size()];
@@ -32,7 +30,6 @@ public class UserList extends HttpServlet {
 		for (int i = 0; i < users.size(); i++) {
 			username[i] = users.get(i).getUserName();
 			accesslevel[i] = users.get(i).getAccessLevel().getVal();
-			
 		}
 		
 		request.setAttribute("username", username);
@@ -58,8 +55,8 @@ public class UserList extends HttpServlet {
 		}
 		
 		response.setContentType("text/html");
-		response.getWriter().write("<meta http-equiv=\"refresh\" content=\"6; url=/userlist\">");
-		response.getWriter().write("Writing to Database, You be will automaticlly rediected in 6 seconds...");
+		response.getWriter().write("<meta http-equiv=\"refresh\" content=\"4; url=/userlist\">");
+		response.getWriter().write("Writing to Database, You be will automaticlly rediected in 4 seconds...");
 		
 		//response.sendRedirect("/userlist");	
 	}
