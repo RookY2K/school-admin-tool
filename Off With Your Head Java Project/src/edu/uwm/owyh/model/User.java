@@ -38,13 +38,14 @@ public class User {
 		_userName = userName;
 		_password = pwd;
 		_accessLevel = access;
+		_userEntity = createUserEntity();
 	}
 	
 	private User(Entity user) {
 		_userName = (String) user.getProperty("username");
 		_password = (String) user.getProperty("password");
 		int getAccess = (int) user.getProperty("accesslevel");
-		_accessLevel = convertAccessLevel(getAccess);
+		_accessLevel = AccessLevel.getAccessLevel(getAccess);
 		_userEntity = user;
 	}
 	
@@ -101,7 +102,7 @@ public class User {
 	 */
 	public void setAccessLevel(AccessLevel accessLevel){
 		_accessLevel = accessLevel;
-		_userEntity.setProperty("accesslevel", accessLevel.ordinal());
+		_userEntity.setProperty("accesslevel", accessLevel.getVal());
 	}
 	
 	public static User getUser(String userName, String pwd, AccessLevel access){
@@ -120,34 +121,21 @@ public class User {
 	}
 	
 	public void saveUser() {
-		if (_userEntity == null)
-			_userEntity = createUserEntity();
 		DataStore store = DataStore.getDataStore();
 		store.insertEntity(_userEntity);
 	}
 	
 	public void removeUser() {
-		if (_userEntity == null)
-			return;
 		DataStore store = DataStore.getDataStore();
 		store.deleteEntity(_userEntity);
 	}
 	
 	private Entity createUserEntity() {
-		Entity user = new Entity("users");
+		Entity user = new Entity(TABLE);
 		user.setProperty("username", _userName);
 		user.setProperty("password", _password);
-		user.setProperty("accesslevel", _accessLevel.ordinal());
+		user.setProperty("accesslevel", _accessLevel.getVal());
 		return user;
 	}
-	
-	private static AccessLevel convertAccessLevel(int access) {
-		// Entity cannot save Enumerators, must Convert
-		switch (access) {
-			case 0: return AccessLevel.TA;
-			case 1: return AccessLevel.INSTRUCTOR;
-			case 2: return AccessLevel.ADMIN;
-			default: return null;
-		}
-	}
+
 }
