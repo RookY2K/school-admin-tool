@@ -4,7 +4,7 @@
 </jsp:include>
 	<div id="body">
 			
-		<form id="login" method="post" action="login" >
+		<form id="login" method="post" action="initiallogin" >
 			<table id=login_table>
 				<tr>
 					<td id="login-title" colspan="2">UWM - Computer Science Administration</td>

@@ -54,7 +54,7 @@ public final class DataStore {
 	}
 	
 	/**
-	 * updates an existing entity with new propertys
+	 * updates an existing entity with new properties
 	 * @param ent - entity being updated
 	 * @return true if an entity is successfully updated
 	 */

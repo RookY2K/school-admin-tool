@@ -5,9 +5,13 @@
 }
 
 html, 
-body { 
-    height: 100%; 
-    background: #B0B0B0 url("../images/circuit-lines-vector.jpg") no-repeat scroll;
+body {
+	margin: auto 0;
+    height: 100%;
+    background-image: url("../images/circuit-lines-vector.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-attachment: fixed;
 }
 
 #page{   
