@@ -76,6 +76,34 @@ public class User {
 		return _accessLevel;
 	}
 	
+	/**
+	 * Mutator for username
+	 * @param userName
+	 */
+	//Disallowing this for now. 
+	//public void setUserName(String userName){ 
+	//	_userName = userName;
+	//  _userEntity.setProperty("username", userName);
+	//}
+	
+	/**
+	 * Mutator for Password
+	 * @param password
+	 */
+	public void setPassword(String password){
+		_password = password;
+		_userEntity.setProperty("password", password);
+	}
+	
+	/**
+	 * Mutator for Access Level
+	 * @param accessLevel
+	 */
+	public void setAccessLevel(AccessLevel accessLevel){
+		_accessLevel = accessLevel;
+		_userEntity.setProperty("accesslevel", accessLevel.ordinal());
+	}
+	
 	public static User getUser(String userName, String pwd, AccessLevel access){
 		return new User(userName, pwd, access);
 	}

@@ -42,6 +42,26 @@ public class TestBasicUser {
 		assertTrue("User Was Not Removed", (search.size() == 0));	
 	}
 	
+	@Test
+	public void testEditUser(){
+		User user = User.getUser("admin", "owyh", User.AccessLevel.ADMIN);
+		user.saveUser();	
+		List<Entity> search = datastore.findEntities("users", null);
+		assertFalse("User Was Not Saved!", (search.size() == 0));
+		
+		//user.setUserName("newAdminName"); //Unsure if we actually want.
+		user.setPassword("newPassword");
+		user.setAccessLevel(User.AccessLevel.INSTRUCTOR);
+		user.saveUser();
+		
+		//assertEquals(user.getUserName(), "newAdminName"); //Do we actually want to allow username to change?
+		assertEquals(user.getPassword(), "newPassword");
+		assertEquals(user.getAccessLevel(), User.AccessLevel.INSTRUCTOR);
+		
+		search = datastore.findEntities("users", null);
+		assertTrue("User Was Saved Improperly", (search.size() == 1));
+	}
+	
 	@Before
 	public void setUp() {
 		helper.setUp();
