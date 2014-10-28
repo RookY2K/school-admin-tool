@@ -11,12 +11,12 @@
 				</tr>
 				<tr>
 					<td id="app_key">Application Key</td>
-					<td class="text_block"><input type="text" name="appkey"></td>
+					<td class="text_block"><input type="text" name="appkey"  required /></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
 					<td>
-						<input type="submit" id="submit_button" value="Submit">
+						<input type="submit" id="submit_button" value="Submit" />
 					</td>
 				</tr>			
 				<tr>

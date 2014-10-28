@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+
 
 public class User {
 	public enum AccessLevel {
@@ -120,9 +124,20 @@ public class User {
 		return users;
 	}
 	
-	public void saveUser() {
+	public boolean saveUser() {
 		DataStore store = DataStore.getDataStore();
+		
+		if (_userName.equals("") || _password.equals("") || _accessLevel == null)
+			return false;
+
+		Filter filterUsername = new FilterPredicate("username", FilterOperator.EQUAL, _userName);
+		List<Entity> users = store.findEntities(TABLE, filterUsername);
+		
+		if (users.size() > 0 && users.get(0).getKey() != _userEntity.getKey())
+			return false;
+		
 		store.insertEntity(_userEntity);
+		return true;
 	}
 	
 	public void removeUser() {

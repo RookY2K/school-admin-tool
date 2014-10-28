@@ -28,7 +28,16 @@ public class TestBasicUser {
 		user.saveUser();	
 		List<Entity> search = datastore.findEntities("users", null);	
 		assertFalse("User Was Not Saved!", (search.size() == 0));
-			
+		
+		User user2 = User.getUser("admin", "owyh", User.AccessLevel.ADMIN);
+		user2.saveUser();
+		search = datastore.findEntities("users", null);
+		assertFalse("Two User of the same name was SAVED!", (search.size() == 2));
+		
+		User user3 = User.getUser("admin2", "owyh", User.AccessLevel.ADMIN);
+		user3.saveUser();
+		search = datastore.findEntities("users", null);
+		assertTrue("Two User of different name was NOT SAVED!", (search.size() == 2));
 	}
 	
 	@Test

@@ -16,16 +16,16 @@
 				<% } %>
 				<tr>
 					<td id="user_name">User Name</td>
-					<td class="text_block"><input type="text" name="username"></td>
+					<td class="text_block"><input type="text" name="username"  required /></td>
 				</tr>
 				<tr>
 					<td id="password">Password</td>
-					<td class="text_block"><input type="password" name="password"></td>
+					<td class="text_block"><input type="password" name="password"  required /></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
 					<td>
-						<input type="submit" id="login_button" value="Log In">
+						<input type="submit" id="login_button" value="Log In" />
 						&nbsp;<a href="passwordReset.html">Forgot Password?</a>
 					</td>
 				</tr>			
