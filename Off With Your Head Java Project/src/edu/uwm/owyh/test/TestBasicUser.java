@@ -28,7 +28,16 @@ public class TestBasicUser {
 		user.saveUser();	
 		List<Entity> search = datastore.findEntities("users", null);	
 		assertFalse("User Was Not Saved!", (search.size() == 0));
-			
+		
+		User user2 = User.getUser("admin", "owyh", User.AccessLevel.ADMIN);
+		user2.saveUser();
+		search = datastore.findEntities("users", null);
+		assertFalse("Two User of the same name was SAVED!", (search.size() == 2));
+		
+		User user3 = User.getUser("admin2", "owyh", User.AccessLevel.ADMIN);
+		user3.saveUser();
+		search = datastore.findEntities("users", null);
+		assertTrue("Two User of different name was NOT SAVED!", (search.size() == 2));
 	}
 	
 	@Test
@@ -40,6 +49,40 @@ public class TestBasicUser {
 		user.removeUser();
 		search = datastore.findEntities("users", null);
 		assertTrue("User Was Not Removed", (search.size() == 0));	
+	}
+	
+	@Test
+	public void testFindUser() {
+		User user = User.getUser("admin", "owyh", User.AccessLevel.ADMIN);
+		user.saveUser();	
+		User foundUser = User.findUser("admin");
+		assertTrue("User Was Not Found", (user.getUserName().equals(foundUser.getUserName())));	
+	}
+	
+	public void testGetAllUser() {
+		// Incomplete Test, Update Later On
+		User user1 = User.getUser("admin1", "owyh", User.AccessLevel.ADMIN);
+		user1.saveUser();
+		User user2 = User.getUser("admin2", "owyh", User.AccessLevel.ADMIN);
+		user2.saveUser();
+		User user3 = User.getUser("admin3", "owyh", User.AccessLevel.ADMIN);
+		user3.saveUser();
+		User user4 = User.getUser("admin4", "owyh", User.AccessLevel.ADMIN);
+		user4.saveUser();
+		
+		List<User> users = User.getAllUser();
+		
+		boolean findUser1 = false, findUser2 = false, findUser3 = false, findUser4 = false;
+		
+		for (User item : users) {
+			if (item.getUserName() == user1.getUserName()) findUser1 = true;
+			else if (item.getUserName() != user2.getUserName()) findUser2 = true;
+			else if (item.getUserName() != user2.getUserName()) findUser3 = true;
+			else if (item.getUserName() != user3.getUserName()) findUser4 = true;	
+		}
+		
+		if (!findUser1 || !findUser2 || !findUser3 || !findUser4)
+			fail("did not find all USERS!");
 	}
 	
 	@Test

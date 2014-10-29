@@ -11,12 +11,12 @@
 							</ul>
 						</li>
 						
-	                    <li class="global-link-item"><a class="global-link" href="profile.html">Profile</a>
+	                    <li class="global-link-item"><a class="global-link" href="/profile">Profile</a>
 							<ul class="global-dropdown-list">
 							</ul>
 						</li>
 	
-	                     <li class="global-link-item"><a class="global-link" href="users.html">Users</a></li>
+	                     <li class="global-link-item"><a class="global-link" href="/userlist">Users</a></li>
 	                     <li class="global-link-item"><a class="global-link" href="/">Admin</a>
 							<ul class="global-dropdown-list">
 								<li class="global-link-item"><a class="global-link" href="/admin/addUser">Add Users</a></li>							</ul>

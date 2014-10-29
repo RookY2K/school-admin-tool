@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+
 
 public class User {
 	public enum AccessLevel {
@@ -44,7 +48,8 @@ public class User {
 	private User(Entity user) {
 		_userName = (String) user.getProperty("username");
 		_password = (String) user.getProperty("password");
-		int getAccess = (int) user.getProperty("accesslevel");
+		Long accessLong = (Long) user.getProperty("accesslevel");
+		int getAccess = accessLong.intValue();
 		_accessLevel = AccessLevel.getAccessLevel(getAccess);
 		_userEntity = user;
 	}
@@ -113,6 +118,20 @@ public class User {
 		return new User(user);
 	}
 	
+	public static User findUser(String username) {
+		DataStore store = DataStore.getDataStore();
+		Filter filterUsername = new FilterPredicate("username", FilterOperator.EQUAL, username);
+		List<User> users = User.getUserFromList(store.findEntities(User.getUserTable(), filterUsername));
+		if (users.size() == 0) return null;
+		return users.get(0);
+	}
+	
+	public static List<User> getAllUser() {
+		DataStore store = DataStore.getDataStore();
+		List<User> users = User.getUserFromList(store.findEntities(User.getUserTable(), null));
+		return users;
+	}
+	
 	public static List<User> getUserFromList(List<Entity> entities) {
 		List<User> users = new ArrayList<User>();
 		for (Entity item : entities)
@@ -120,9 +139,20 @@ public class User {
 		return users;
 	}
 	
-	public void saveUser() {
+	public boolean saveUser() {
 		DataStore store = DataStore.getDataStore();
+		
+		if (_userName.equals("") || _password.equals("") || _accessLevel == null)
+			return false;
+
+		Filter filterUsername = new FilterPredicate("username", FilterOperator.EQUAL, _userName);
+		List<Entity> users = store.findEntities(TABLE, filterUsername);
+		
+		if (users.size() > 0 && users.get(0).getKey() != _userEntity.getKey())
+			return false;
+		
 		store.insertEntity(_userEntity);
+		return true;
 	}
 	
 	public void removeUser() {
