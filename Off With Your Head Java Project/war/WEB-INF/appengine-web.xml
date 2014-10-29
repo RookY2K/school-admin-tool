@@ -7,6 +7,9 @@
     Allows App Engine to send multiple requests to one instance in parallel:
   -->
   <threadsafe>true</threadsafe>
+  
+  <!--  Allows App Enginge to modify session variables -->
+  <sessions-enabled>true</sessions-enabled>
 
   <!-- Configure java.util.logging -->
   <system-properties>
