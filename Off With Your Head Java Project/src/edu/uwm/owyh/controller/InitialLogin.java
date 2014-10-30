@@ -35,6 +35,6 @@ public class InitialLogin extends HttpServlet{
 			if(store.findEntities("softwarekey", filter).isEmpty())
 				request.getRequestDispatcher("initiallogin.jsp").forward(request, response);
 			else
-				response.sendRedirect("/admin/addUser");
+				response.sendRedirect("/admin/addAdmin");
 		}
 }

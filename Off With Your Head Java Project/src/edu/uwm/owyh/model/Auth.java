@@ -51,7 +51,7 @@ public class Auth {
 		if(userName == null || password == null)return null;
 		
 		DataStore store = DataStore.getDataStore();
-		Filter filter = new Query.FilterPredicate("username", Query.FilterOperator.EQUAL, userName.toUpperCase());
+		Filter filter = new Query.FilterPredicate("toupperusername", Query.FilterOperator.EQUAL, userName.toUpperCase());
 		List<Entity> users = store.findEntities(User.getUserTable(), filter);
 		if(users.isEmpty()) return null;
 		Entity user = users.get(0);

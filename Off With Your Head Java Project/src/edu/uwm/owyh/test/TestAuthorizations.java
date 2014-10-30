@@ -35,7 +35,8 @@ public class TestAuthorizations{
 		_service = DatastoreServiceFactory.getDatastoreService();
 		
 		Entity user = new Entity("users");
-		user.setProperty("username", _userName.toUpperCase());
+		user.setProperty("username", _userName);
+		user.setProperty("toupperusername", _userName.toUpperCase());
 		user.setProperty("password", _password);
 		user.setProperty("accesslevel", _level.getVal());
 		_service.put(user);

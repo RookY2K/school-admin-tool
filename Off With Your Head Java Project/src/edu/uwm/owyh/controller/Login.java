@@ -36,7 +36,8 @@ public class Login extends HttpServlet {
 		boolean isLogin = (user != null);
 		
 		if (isLogin){
-			int accessVal = (int) user.getProperty("accesslevel");
+			Long accessLong = (Long)user.getProperty("accesslevel");
+			int accessVal = accessLong.intValue();
 			AccessLevel access = AccessLevel.getAccessLevel(accessVal);
 			boolean isAdmin = access == AccessLevel.ADMIN;
 			HttpSession session = request.getSession();

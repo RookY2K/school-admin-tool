@@ -142,7 +142,7 @@ public class User {
 	public boolean saveUser() {
 		DataStore store = DataStore.getDataStore();
 		
-		if (_userName.equals("") || _password.equals("") || _accessLevel == null)
+		if (_userName.trim().equals("") || _password.equals("") || _accessLevel == null)
 			return false;
 
 		Filter filterUsername = new FilterPredicate("username", FilterOperator.EQUAL, _userName);
@@ -163,6 +163,7 @@ public class User {
 	private Entity createUserEntity() {
 		Entity user = new Entity(TABLE);
 		user.setProperty("username", _userName);
+		user.setProperty("toupperusername", _userName.toUpperCase());
 		user.setProperty("password", _password);
 		user.setProperty("accesslevel", _accessLevel.getVal());
 		return user;
