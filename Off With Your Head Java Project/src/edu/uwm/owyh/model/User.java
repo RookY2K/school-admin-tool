@@ -148,7 +148,12 @@ public class User {
 		Filter filterUsername = new FilterPredicate("username", FilterOperator.EQUAL, _userName);
 		List<Entity> users = store.findEntities(TABLE, filterUsername);
 		
-		if (users.size() > 0 && users.get(0).getKey() != _userEntity.getKey())
+		if (users.size() > 0)
+		{
+		    if(users.get(0).getKey().equals(_userEntity.getKey()) == false)
+		        return(false);
+		}
+		else
 			return false;
 		
 		store.insertEntity(_userEntity);

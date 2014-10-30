@@ -1,5 +1,5 @@
 <jsp:include page="/header.jsp">
-    <jsp:param name="title" value="Hello World" />
+    <jsp:param name="title" value="Admin" />
     <jsp:param name="stylesheet" value="layout.css" />
     <jsp:param name="stylesheet" value="AdminStyle.css" />
 </jsp:include>
@@ -11,11 +11,9 @@
 		<ul id="local-list">
 	      <li><a class="nav-link" href="/admin/addUser">Add User</a></li>
 		</ul>
-	</div>>
+	</div>
 	  	
 	<div id="body">
-	
-
 	
 	</div>
 </div>
