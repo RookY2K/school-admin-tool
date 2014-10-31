@@ -38,7 +38,7 @@ public class AddAdmin extends HttpServlet{
 				HttpSession session = request.getSession();
 				session.setAttribute("username", email);
 				session.setAttribute("accesslevel", accessLevel);
-				response.sendRedirect("admin.jsp");		
+				request.getRequestDispatcher("admin.jsp").forward(request, response);	
 			}else{ 
 				request.setAttribute("addNewUser", false);
 				request.getRequestDispatcher("addadmin.jsp").forward(request, response);
