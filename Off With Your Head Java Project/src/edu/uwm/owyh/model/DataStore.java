@@ -7,6 +7,7 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 
@@ -49,6 +50,7 @@ public final class DataStore {
 	 */
 	public boolean insertEntity(Entity ent){
 		if(ent == null) return false;
+		if(entityExists(ent.getKey())) return false;
 		getService().put(ent);		
 		return true;
 	}
@@ -60,13 +62,7 @@ public final class DataStore {
 	 */
 	public boolean updateEntity(Entity ent){
 		if(ent == null) return false;
-		try{
-			getService().get(ent.getKey());
-		}catch(EntityNotFoundException enf){
-			return false;
-		}catch(IllegalArgumentException iae){
-			return false;
-		}
+		if(!entityExists(ent.getKey())) return false;
 		
 		getService().put(ent);
 		
@@ -80,15 +76,18 @@ public final class DataStore {
 	 */
 	public boolean deleteEntity(Entity ent){
 		if(ent == null) return false;
-		try{
-			getService().get(ent.getKey());
-		}catch(EntityNotFoundException enf){
-			return false;
-		}catch(IllegalArgumentException iae){
-			return false;
-		}
+		if(!entityExists(ent.getKey())) return false;
 		
 		getService().delete(ent.getKey());
 		return true;
+	}
+	
+	private boolean entityExists(Key entKey){
+		Filter filter = new Query.FilterPredicate(Entity.KEY_RESERVED_PROPERTY, Query.FilterOperator.EQUAL, entKey);
+		Query query = new Query().setFilter(filter).setKeysOnly();
+		
+		Entity result = getService().prepare(query).asSingleEntity();
+		
+		return result != null;		
 	}
 }

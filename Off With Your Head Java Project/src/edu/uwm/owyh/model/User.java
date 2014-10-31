@@ -34,7 +34,7 @@ public class User {
 	}	
 	private String _userName;
 	private String _password;
-	AccessLevel _accessLevel;
+	private AccessLevel _accessLevel;
 	private Entity _userEntity;
 	private static final String TABLE = "users";
 	
@@ -64,6 +64,12 @@ public class User {
 	 */
 	public String getUserName(){
 		return _userName;
+	}
+	
+	public String getToUpperUserName(){
+		if(_userName == null) return null;
+		else
+			return _userName.toUpperCase();
 	}
 	
 	/**
@@ -120,7 +126,7 @@ public class User {
 	
 	public static User findUser(String username) {
 		DataStore store = DataStore.getDataStore();
-		Filter filterUsername = new FilterPredicate("username", FilterOperator.EQUAL, username);
+		Filter filterUsername = new FilterPredicate("toupperusername", FilterOperator.EQUAL, username.toUpperCase());
 		List<User> users = User.getUserFromList(store.findEntities(User.getUserTable(), filterUsername));
 		if (users.size() == 0) return null;
 		return users.get(0);
@@ -145,16 +151,18 @@ public class User {
 		if (_userName.trim().equals("") || _password.equals("") || _accessLevel == null)
 			return false;
 
-		Filter filterUsername = new FilterPredicate("username", FilterOperator.EQUAL, _userName);
+		Filter filterUsername = new FilterPredicate("toupperusername", FilterOperator.EQUAL, getToUpperUserName());
 		List<Entity> users = store.findEntities(TABLE, filterUsername);
 		
 		if (users.size() > 0)
 		{
-		    if(users.get(0).getKey().equals(_userEntity.getKey()) == false)
-		        return(false);
+		    if(!users.get(0).getKey().equals(_userEntity.getKey())){
+		    	return false;
+		    }else{
+		    	store.updateEntity(_userEntity);
+		    }
+		        
 		}
-		else
-			return false;
 		
 		store.insertEntity(_userEntity);
 		return true;

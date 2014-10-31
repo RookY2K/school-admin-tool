@@ -14,6 +14,9 @@ Off With Your Head Java Project/src/edu/uwm/owyh/model/User.java.orig
 Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/controller/Login.java.orig
 Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/model/User.java.orig
 Off With Your Head Java Project/war/WEB-INF/lib/appengine-local-runtime-shared.jar
+Off With Your Head Java Project/war/WEB-INF/appengine-web.xml.orig
+Off With Your Head Java Project/war/WEB-INF/web.xml.orig
+RemoteSystemsTempFiles/.project
 syntax: regexp
 ^(.*[\\/])?gen[\\/].*
 ^(.*[\\/])?bin[\\/].*

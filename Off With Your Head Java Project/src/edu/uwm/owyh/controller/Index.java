@@ -17,35 +17,45 @@ public class Index extends HttpServlet {
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		/*HttpSession session = request.getSession();
+		HttpSession session = request.getSession();
 		
 		if(session.getAttribute("username")!= null){
 			if(session.getAttribute("accesslevel") == AccessLevel.ADMIN){
-				request.getRequestDispatcher("/admin/admin.jsp").forward(request,response);
+				response.sendRedirect("/admin/admin.jsp");
+				return;
+			}else{
+				response.sendRedirect("home.jsp");
+				return;
 			}
-		}*/
+		}
 		
 		DataStore store = DataStore.getDataStore();
 		int userCount = store.findEntities(User.getUserTable(), null).size();
 		
-		if(userCount == 0) response.sendRedirect("/initiallogin");
+		if(userCount == 0){
+			request.getRequestDispatcher("/initiallogin").forward(request, response);
+			return;
+		}
 		// TODO: actually check if user is login and if user is admin
 		boolean isLogin = false;
 		
-		if(request.getParameter("login") != null){ 
-			isLogin = request.getParameter("login").equalsIgnoreCase("true");
+		if(request.getAttribute("login") != null){ 
+			isLogin = (boolean)request.getAttribute("isLogin");
 		}
 		
 		if (isLogin) {
-			boolean isAdmin = request.getParameter("admin").equalsIgnoreCase("true");
-			if (isAdmin) 
-				request.getRequestDispatcher("/admin/admin.jsp").forward(request, response);	
-			else 
-				request.getRequestDispatcher("home.jsp").forward(request, response);
-
+			boolean isAdmin = (boolean)request.getAttribute("isAdmin");
+			if (isAdmin) {
+				response.sendRedirect("/admin/admin.jsp");
+				return;
+			}	
+			else{
+				response.sendRedirect("home.jsp");
+				return;
+			}
 		}
 		else {
-			request.getRequestDispatcher("index.jsp").forward(request, response);	
+			response.sendRedirect("index.jsp");	
 		}
 				
 		

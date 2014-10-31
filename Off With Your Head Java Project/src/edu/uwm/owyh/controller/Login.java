@@ -19,11 +19,11 @@ public class Login extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		if (request.getParameter("login") == "false") {
+		if ((boolean) request.getAttribute("isLogout")) {
 			// TODO user requested logout, Destroy Session!
 		}
 		
-		response.sendRedirect("/");	
+		request.getRequestDispatcher("/").forward(request, response);
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -34,18 +34,20 @@ public class Login extends HttpServlet {
 		String password = request.getParameter("password");
 		Entity user = Auth.getAuth(null).verifyLogin(username,password);
 		boolean isLogin = (user != null);
+		request.setAttribute("isLogin", isLogin);
 		
 		if (isLogin){
 			Long accessLong = (Long)user.getProperty("accesslevel");
 			int accessVal = accessLong.intValue();
 			AccessLevel access = AccessLevel.getAccessLevel(accessVal);
-			boolean isAdmin = access == AccessLevel.ADMIN;
+			request.setAttribute("isAdmin", access == AccessLevel.ADMIN);
 			HttpSession session = request.getSession();
 			session.setAttribute("username", username);
 			session.setAttribute("accesslevel", access);
-			response.sendRedirect("/?login=" + isLogin + "&admin=" + isAdmin);			
+			
+			request.getRequestDispatcher("/").forward(request, response);			
 		}else{					
-			response.sendRedirect("/?login=" + isLogin);
+			request.getRequestDispatcher("/").forward(request, response);
 		}
 	}
 }

@@ -13,6 +13,18 @@
 					<td id="app_key">Application Key</td>
 					<td class="text_block"><input type="text" name="appkey"  required /></td>
 				</tr>
+				<%
+					String isKey = request.getParameter("isKey");
+					if(isKey != null){
+						if(request.getParameter("isKey").equals("false")){ %>
+				<tr>
+					<td>&nbsp;</td>
+					<td style="color:red;">That key was not valid!</td>
+				</tr>
+				<%
+						}
+					}
+				%>
 				<tr>
 					<td>&nbsp;</td>
 					<td>
