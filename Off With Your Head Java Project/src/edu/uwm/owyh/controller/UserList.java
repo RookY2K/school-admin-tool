@@ -15,12 +15,11 @@ import edu.uwm.owyh.model.User;
 @SuppressWarnings("serial")
 public class UserList extends HttpServlet {
 	
-	Auth auth;
-	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		// TODO: admin authentication
+		Auth auth = Auth.getAuth(request);
+		auth.verifyUser(response);
 		
 		List<User> users = User.getAllUser();
 
@@ -41,7 +40,8 @@ public class UserList extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		// TODO: admin authentication
+		Auth auth = Auth.getAuth(request);
+		auth.verifyAdmin(response);
 		
 		@SuppressWarnings("unchecked")
 		Map<String, Object> item = request.getParameterMap();

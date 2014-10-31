@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.User;
@@ -24,8 +25,6 @@ public class AddAdmin extends HttpServlet{
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-
-		// TODO: admin authentication
 		
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");	
@@ -36,7 +35,10 @@ public class AddAdmin extends HttpServlet{
 			
 			User newUser = User.getUser(email, password, accessLevel);
 			if (newUser.saveUser()){
-				response.sendRedirect("admin.jsp");		
+				HttpSession session = request.getSession();
+				session.setAttribute("username", email);
+				session.setAttribute("accesslevel", accessLevel);
+				request.getRequestDispatcher("admin.jsp").forward(request, response);	
 			}else{ 
 				request.setAttribute("addNewUser", false);
 				request.getRequestDispatcher("addadmin.jsp").forward(request, response);

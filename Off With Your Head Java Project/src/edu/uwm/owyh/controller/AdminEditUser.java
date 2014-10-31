@@ -1,8 +1,6 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,11 +16,14 @@ public class AdminEditUser extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		// TODO: admin authentication
+		response.sendRedirect("/userlist");
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		
+		Auth auth = Auth.getAuth(request);
+		auth.verifyAdmin(response);
 		
 	    String name = request.getParameter("username");
 	    String password = request.getParameter("password");

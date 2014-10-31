@@ -19,8 +19,8 @@ public class Login extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		if ((boolean) request.getAttribute("isLogout")) {
-			// TODO user requested logout, Destroy Session!
+		if (request.getParameter("login").equals("logout")) {
+			Auth.destroySession(request);
 		}
 		
 		request.getRequestDispatcher("/").forward(request, response);
@@ -28,8 +28,7 @@ public class Login extends HttpServlet {
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-
-		// TODO: Login		
+		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		Entity user = Auth.getAuth(null).verifyLogin(username,password);

@@ -1,7 +1,6 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -15,16 +14,17 @@ import edu.uwm.owyh.model.User;
 @SuppressWarnings("serial")
 public class UserListEditButton extends HttpServlet {
 	
-	Auth auth;
-	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		// TODO: admin authentication
+		response.sendRedirect("/userlist");	
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		
+		Auth auth = Auth.getAuth(request);
+		auth.verifyAdmin(response);
 		
 		@SuppressWarnings("unchecked")
 		Map<String, Object> item = request.getParameterMap();

@@ -19,7 +19,8 @@ public class AddUser extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		// TODO: admin authentication
+		Auth auth = Auth.getAuth(request);
+		auth.verifyUser(response);
 
 		request.getRequestDispatcher("adduser.jsp").forward(request, response);	
 	}
@@ -27,7 +28,8 @@ public class AddUser extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
-		// TODO: admin authentication
+		Auth auth = Auth.getAuth(request);
+		auth.verifyAdmin(response);
 		
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");	

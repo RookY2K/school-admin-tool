@@ -1,37 +1,23 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
 
 import edu.uwm.owyh.model.DataStore;
-import edu.uwm.owyh.model.User;
 
 @SuppressWarnings("serial")
 public class InitialLogin extends HttpServlet{
 			
 		public void doGet(HttpServletRequest request, HttpServletResponse response)
 				throws IOException, ServletException {
-			//String url = "/initialLogin.jsp";
-			
-			//String path = request.getRequestURL().toString();
-			//url = response.encodeRedirectURL(url);
-			DataStore store = DataStore.getDataStore();
-			int userCount = store.findEntities(User.getUserTable(), null).size();
-			
-			if(userCount > 0){
-				request.getRequestDispatcher("/").forward(request, response);
-				return;
-			}
-			
-			response.sendRedirect(request.getContextPath() + "/initiallogin.jsp");	
-			return;
+			request.getRequestDispatcher("initiallogin.jsp").forward(request, response);			
 		}
 		
 		public void doPost(HttpServletRequest request, HttpServletResponse response)
