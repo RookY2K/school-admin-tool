@@ -24,7 +24,7 @@
 					</ul>
 	
 	                 <ul id="logout">
-	                     <li class="global-link-item"><a class="global-link" href="/login?login=false">Log Out</a></li>
+	                     <li class="global-link-item"><a class="global-link" href="/login?login=logout">Log Out</a></li>
 	                 </ul>
 	             </div>
 	   		</div>
