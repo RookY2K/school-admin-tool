@@ -151,10 +151,8 @@ public class User {
 		if (users.size() > 0)
 		{
 		    if(users.get(0).getKey().equals(_userEntity.getKey()) == false)
-		        return(false);
+		        return false;
 		}
-		else
-			return false;
 		
 		store.insertEntity(_userEntity);
 		return true;

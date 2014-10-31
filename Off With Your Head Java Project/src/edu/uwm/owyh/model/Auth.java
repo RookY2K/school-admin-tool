@@ -1,11 +1,14 @@
 package edu.uwm.owyh.model;
 
+import java.io.IOException;
 import java.util.List;
 
-import edu.uwm.owyh.model.User.*;
 import edu.uwm.owyh.model.DataStore;
+import edu.uwm.owyh.model.User.AccessLevel;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
@@ -17,8 +20,10 @@ public class Auth {
 	private String _goodPassword; 
 	
 	private Auth(HttpServletRequest request){
-		//TODO constructor for use in grabbing session variables rather than 
-		//querying the datastore. 
+		HttpSession session = request.getSession();
+		if (session.getAttribute("username") == null) return;
+		_goodUserName = (String) session.getAttribute("username");
+		_goodAccess = (AccessLevel) session.getAttribute("accesslevel");
 	}
 	
 	private Auth(){
@@ -60,6 +65,29 @@ public class Auth {
 		
 		
 		return user;
+	}
+	
+	public boolean verifyUser() {
+		return (_goodUserName != null);
+	}
+	
+	public boolean verifyAdmin() {
+		if ((_goodUserName == null)) return false;
+		return (_goodAccess == AccessLevel.ADMIN);
+	}
+	
+	public void verifyUser(HttpServletResponse response) throws IOException {
+		if (_goodUserName == null) response.sendRedirect("/");
+	}
+	
+	public void verifyAdmin(HttpServletResponse response) throws IOException {
+		if (_goodUserName == null || _goodAccess != AccessLevel.ADMIN) response.sendRedirect("/");
+	}
+	
+	public static void destroySession(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		session.removeAttribute("username");
+		session.removeAttribute("acesslevel");
 	}
 	
 	public static Auth getAuth(HttpServletRequest request){
