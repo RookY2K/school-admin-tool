@@ -39,7 +39,7 @@ public class Index extends HttpServlet {
 			}
 		}
 		else {
-			response.sendRedirect("index.jsp");
+			response.sendRedirect(request.getContextPath() + "/index.jsp");
 			return;
 		}		
 	}
