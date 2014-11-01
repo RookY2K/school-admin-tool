@@ -1,6 +1,7 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 
+import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.DataStore;
 
 @SuppressWarnings("serial")
@@ -18,8 +20,16 @@ public class InitialLogin extends HttpServlet{
 			
 		public void doGet(HttpServletRequest request, HttpServletResponse response)
 				throws IOException, ServletException {
-			response.sendRedirect(request.getContextPath() + "/initiallogin.jsp");
-			return;
+			Boolean noUsers = (Boolean)request.getAttribute("noUsers");
+			
+			if(noUsers != null && noUsers.booleanValue()){
+				Auth.setSessionVariable(request, "noUsers", noUsers);
+				response.sendRedirect(request.getContextPath() + "/initiallogin.jsp");
+				return;
+			}else{
+				request.getRequestDispatcher("/").forward(request, response);
+				return;
+			}
 		}
 		
 		public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -29,23 +39,18 @@ public class InitialLogin extends HttpServlet{
 			Entity softwareKey = new Entity("softwarekey");
 			softwareKey.setProperty("keyValue", "63D07BtB09");
 			store.insertEntity(softwareKey);*/
-			boolean isKey = false;
+
 			String userEnteredKey = request.getParameter("appkey");
-			//TODO Add ability to query on software key added by user
-			//TODO Redirect to correct controller
 			Filter filter = new Query.FilterPredicate("keyValue", Query.FilterOperator.EQUAL, userEnteredKey);
-			isKey = !(store.findEntities("softwarekey",filter).isEmpty());
+			boolean isKey = !(store.findEntities("softwarekey",filter).isEmpty());
 			
 			if(!isKey){
 				request.setAttribute("isKey", isKey);
 				request.getRequestDispatcher(request.getContextPath() + "/initiallogin.jsp").forward(request, response);;
 				return;
 			}else{
-				//request.setAttribute("isAddAdmin", true);
-				HttpSession session = request.getSession();
-				session.setAttribute("isAddAdmin", true);
+				Auth.setSessionVariable(request, "isAddAdmin", true);
 				response.sendRedirect("/admin/addAdmin");
-				//request.getRequestDispatcher(request.getContextPath() + "/admin/addAdmin").forward(request, response);
 				return;
 			}
 		}

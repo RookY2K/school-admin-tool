@@ -1,7 +1,18 @@
-<jsp:include page="/header.jsp">
+<%@ page import="edu.uwm.owyh.model.Auth" %>
+<jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Initial Login" />
     <jsp:param name="stylesheet" value="initiallogin.css" />
 </jsp:include>
+	<%
+		Boolean isKey = (Boolean)request.getAttribute("isKey");
+		Boolean noUsers = (Boolean)Auth.getSessionVariable(request, "noUsers");
+		
+		if(isKey == null && (noUsers == null || !noUsers.booleanValue())){
+			response.sendRedirect(request.getContextPath() + "/");
+		}else{
+			Auth.removeSessionVariable(request, "noUsers");
+		}
+	%>
 	<div id="body">
 			
 		<form id="login" method="post" action="initiallogin" >
@@ -14,7 +25,6 @@
 					<td class="text_block"><input type="text" name="appkey"  required /></td>
 				</tr>
 				<%
-					Boolean isKey = (Boolean)request.getAttribute("isKey");
 					if(isKey != null && !isKey.booleanValue()){
 				%>
 				<tr>

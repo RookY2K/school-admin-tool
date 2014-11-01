@@ -1,12 +1,12 @@
 <%@ page import="edu.uwm.owyh.model.User" %>
 
-<jsp:include page="/header.jsp">
+<jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Hello World" />
     <jsp:param name="stylesheet" value="layout.css" />
     <jsp:param name="stylesheet" value="AdminStyle.css" />
 </jsp:include>
 
-<jsp:include page="/layout.jsp" />
+<jsp:include page="/WEB-INF/templates/layout.jsp" />
 
 <div id="content">
  	<div id="local-nav-bar">
@@ -59,4 +59,4 @@
 	</div>
 </div>
 
-<jsp:include page="/footer.jsp" />
+<jsp:include page="/WEB-INF/templates/footer.jsp" />

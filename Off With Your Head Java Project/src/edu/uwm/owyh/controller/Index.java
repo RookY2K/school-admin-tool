@@ -13,19 +13,18 @@ import edu.uwm.owyh.model.User;
 @SuppressWarnings("serial")
 public class Index extends HttpServlet {
 	
-	Auth auth;
-	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
 		DataStore store = DataStore.getDataStore();
 		int userCount = store.findEntities(User.getUserTable(), null).size();	
 		if(userCount == 0){
+			request.setAttribute("noUsers", true);
 			request.getRequestDispatcher("/initiallogin").forward(request, response);
 			return;
 		}
 		
-		auth = Auth.getAuth(request);
+		Auth auth = Auth.getAuth(request);
 		boolean isLogin = auth.verifyUser();
 		boolean isAdmin = auth.verifyAdmin();
 		
@@ -43,5 +42,10 @@ public class Index extends HttpServlet {
 			response.sendRedirect("index.jsp");
 			return;
 		}		
+	}
+	
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		doGet(request,response);
 	}
 }

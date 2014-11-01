@@ -2,9 +2,8 @@ package edu.uwm.owyh.model;
 
 import java.io.IOException;
 import java.util.List;
-
-import edu.uwm.owyh.model.DataStore;
-import edu.uwm.owyh.model.User.AccessLevel;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,43 +13,48 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 
+import edu.uwm.owyh.model.User.AccessLevel;
+
 public class Auth {
 	private AccessLevel _goodAccess;
 	private String _goodUserName;
 	private String _goodPassword; 
 	
 	private Auth(HttpServletRequest request){
-		HttpSession session = request.getSession();
-		if (session.getAttribute("username") == null) return;
-		_goodUserName = (String) session.getAttribute("username");
-		_goodAccess = (AccessLevel) session.getAttribute("accesslevel");
+		if (getSessionVariable(request, "username") == null) return;
+		_goodUserName = (String) getSessionVariable(request, "username");
+		_goodAccess = (AccessLevel) getSessionVariable(request, "accesslevel");
 	}
 	
 	private Auth(){
 		_goodAccess = null;
 		_goodUserName = null;
 		_goodPassword = null;
-	}
-	
-	private void setUserName(String userName){
-		_goodUserName = userName;
-	}
-	
-	private void setPassword(String password){
-		_goodPassword = password;
-	}
-	
-	private AccessLevel getAccessLevel(){
-		return _goodAccess;
-	}
-	
-	private String getUserName(){
-		return _goodUserName;
-	}
-	
-	private String getPassword(){
-		return _goodPassword;
 	}	
+	
+	public static Object getSessionVariable(HttpServletRequest request, String key){
+		if(request == null || key == null) return null;
+		
+		HttpSession session = request.getSession();
+		
+		return session.getAttribute(key);
+	}
+	
+	public static void setSessionVariable(HttpServletRequest request, String key, Object attribute){
+		if(request == null || key == null) return;
+		
+		HttpSession session = request.getSession();
+		
+		session.setAttribute(key, attribute);
+	}
+	
+	public static void removeSessionVariable(HttpServletRequest request, String key){
+		if(request == null || key == null) return;
+		
+		HttpSession session = request.getSession();
+		
+		session.removeAttribute(key);
+	}
 	
 	public Entity verifyLogin(String userName, String password){
 		if(userName == null || password == null)return null;
@@ -85,9 +89,8 @@ public class Auth {
 	}
 	
 	public static void destroySession(HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		session.removeAttribute("username");
-		session.removeAttribute("acesslevel");
+		removeSessionVariable(request, "username");
+		removeSessionVariable(request, "accesslevel");
 	}
 	
 	public static Auth getAuth(HttpServletRequest request){

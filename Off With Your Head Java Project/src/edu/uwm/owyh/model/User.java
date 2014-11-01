@@ -9,7 +9,7 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 
-public class User {
+public class User{
 	public enum AccessLevel {
 		TA(3), INSTRUCTOR(2), ADMIN(1);
 		private int value;
