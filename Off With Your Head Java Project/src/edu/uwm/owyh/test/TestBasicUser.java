@@ -95,11 +95,19 @@ public class TestBasicUser {
 		//user.setUserName("newAdminName"); //Unsure if we actually want.
 		user.setPassword("newPassword");
 		user.setAccessLevel(User.AccessLevel.INSTRUCTOR);
+		user.setName("First M. Last");
+		user.setPhone("(414)-555-4321");
+		user.setEmail(user.getUserName());
+		user.setAddress("This is my address");
 		user.saveUser();
 		
 		//assertEquals(user.getUserName(), "newAdminName"); //Do we actually want to allow username to change?
 		assertEquals(user.getPassword(), "newPassword");
 		assertEquals(user.getAccessLevel(), User.AccessLevel.INSTRUCTOR);
+		assertEquals(user.getName(), "First M. Last");
+		assertEquals(user.getPhone(), "(414)-555-4321");
+		assertEquals(user.getEmail(), user.getUserName());
+		assertEquals(user.getAddress(), "This is my address");
 		
 		search = datastore.findEntities("users", null);
 		assertTrue("User Was Saved Improperly", (search.size() == 1));

@@ -34,6 +34,11 @@ public class User {
 	}	
 	private String _userName;
 	private String _password;
+	private String _name;
+	private String _phone;
+	private String _address;
+	private String _email;
+	
 	private AccessLevel _accessLevel;
 	private Entity _userEntity;
 	private static final String TABLE = "users";
@@ -43,6 +48,10 @@ public class User {
 		_password = pwd;
 		_accessLevel = access;
 		_userEntity = createUserEntity();
+		_email = userName;
+		_name = "";
+		_phone = "";
+		_address = "";
 	}
 	
 	private User(Entity user) {
@@ -51,6 +60,10 @@ public class User {
 		Long accessLong = (Long) user.getProperty("accesslevel");
 		int getAccess = accessLong.intValue();
 		_accessLevel = AccessLevel.getAccessLevel(getAccess);
+		_email = (String) user.getProperty("email");
+		_name = (String) user.getProperty("name");
+		_phone = (String) user.getProperty("phone");
+		_address = (String) user.getProperty("address");
 		_userEntity = user;
 	}
 	
@@ -89,6 +102,38 @@ public class User {
 	}
 	
 	/**
+	 * Accessor method for name
+	 * @return _name
+	 */
+	public String getName(){
+		return _name;
+	}
+	
+	/**
+	 * Accessor method for email
+	 * @return _email
+	 */
+	public String getEmail(){
+		return _email;
+	}
+	
+	/**
+	 * Accessor method for phone
+	 * @return _phone
+	 */
+	public String getPhone(){
+		return _phone;
+	}
+	
+	/**
+	 * Accessor method for address
+	 * @return _address
+	 */
+	public String getAddress(){
+		return _address;
+	}
+	
+	/**
 	 * Mutator for username
 	 * @param userName
 	 */
@@ -114,6 +159,42 @@ public class User {
 	public void setAccessLevel(AccessLevel accessLevel){
 		_accessLevel = accessLevel;
 		_userEntity.setProperty("accesslevel", accessLevel.getVal());
+	}
+	
+	/**
+	 * Mutator for name
+	 * @param name
+	 */
+	public void setName(String name){
+		_name = name;
+		_userEntity.setProperty("name", name);
+	}
+	
+	/**
+	 * Mutator for Email
+	 * @param email
+	 */
+	public void setEmail(String email){
+		_email = email;
+		_userEntity.setProperty("email", email);
+	}
+	
+	/**
+	 * Mutator for phone
+	 * @param phone
+	 */
+	public void setPhone(String phone){
+		_phone = phone;
+		_userEntity.setProperty("phone", phone);
+	}
+	
+	/**
+	 * Mutator for address
+	 * @param address
+	 */
+	public void setAddress(String address){
+		_address = address;
+		_userEntity.setProperty("address", address);
 	}
 	
 	public static User getUser(String userName, String pwd, AccessLevel access){
@@ -179,6 +260,10 @@ public class User {
 		user.setProperty("toupperusername", _userName.toUpperCase());
 		user.setProperty("password", _password);
 		user.setProperty("accesslevel", _accessLevel.getVal());
+		user.setProperty("name", _name);
+		user.setProperty("email", _email);
+		user.setProperty("phone", _phone);
+		user.setProperty("address", _address);
 		return user;
 	}
 
