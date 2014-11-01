@@ -2,14 +2,14 @@ package edu.uwm.owyh.model;
 
 import java.util.List;
 
-import edu.uwm.owyh.model.User.*;
-import edu.uwm.owyh.model.DataStore;
-
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
+
+import edu.uwm.owyh.model.User.AccessLevel;
 
 public class Auth {
 	private AccessLevel _goodAccess;
@@ -65,5 +65,19 @@ public class Auth {
 		if(request != null)
 			return new Auth(request);
 		return new Auth();
+	}
+	
+	
+	public boolean verifyUserIsLoggedIn(HttpServletRequest request)
+	{
+		HttpSession s = request.getSession();
+		
+		if (s.getAttribute("username") == null)
+		{
+			return false;
+		}
+		
+		else
+			return true;
 	}
 }
