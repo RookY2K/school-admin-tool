@@ -20,23 +20,28 @@ public class Index extends HttpServlet {
 		
 		DataStore store = DataStore.getDataStore();
 		int userCount = store.findEntities(User.getUserTable(), null).size();	
-		if(userCount == 0) response.sendRedirect("/initiallogin");
+		if(userCount == 0){
+			request.getRequestDispatcher("/initiallogin").forward(request, response);
+			return;
+		}
 		
 		auth = Auth.getAuth(request);
 		boolean isLogin = auth.verifyUser();
 		boolean isAdmin = auth.verifyAdmin();
 		
 		if (isLogin) {
-			if (isAdmin) 
-				request.getRequestDispatcher("/admin/admin.jsp").forward(request, response);	
-			else 
-				request.getRequestDispatcher("home.jsp").forward(request, response);
-
+			if (isAdmin){ 
+				response.sendRedirect(request.getContextPath() + "/admin/admin.jsp");
+				return;
+			}
+			else{
+				response.sendRedirect(request.getContextPath() + "/home.jsp");
+				return;
+			}
 		}
 		else {
-			response.sendRedirect("index.jsp");	
-		}
-				
-		
+			response.sendRedirect("index.jsp");
+			return;
+		}		
 	}
 }

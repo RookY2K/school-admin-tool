@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
@@ -17,7 +18,8 @@ public class InitialLogin extends HttpServlet{
 			
 		public void doGet(HttpServletRequest request, HttpServletResponse response)
 				throws IOException, ServletException {
-			request.getRequestDispatcher("initiallogin.jsp").forward(request, response);			
+			response.sendRedirect(request.getContextPath() + "/initiallogin.jsp");
+			return;
 		}
 		
 		public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -31,19 +33,19 @@ public class InitialLogin extends HttpServlet{
 			String userEnteredKey = request.getParameter("appkey");
 			//TODO Add ability to query on software key added by user
 			//TODO Redirect to correct controller
-			List<Entity> keyEntities = store.findEntities("softwarekey",null);
+			Filter filter = new Query.FilterPredicate("keyValue", Query.FilterOperator.EQUAL, userEnteredKey);
+			isKey = !(store.findEntities("softwarekey",filter).isEmpty());
 			
-			for(Entity keyEnt : keyEntities){
-				if(keyEnt.getProperty("keyValue").equals(userEnteredKey)){
-					isKey = true;
-					break;
-				}
-			}
 			if(!isKey){
-				response.sendRedirect(request.getContextPath() + "/initiallogin.jsp?isKey=false");
+				request.setAttribute("isKey", isKey);
+				request.getRequestDispatcher(request.getContextPath() + "/initiallogin.jsp").forward(request, response);;
 				return;
 			}else{
-				request.getRequestDispatcher("/admin/addAdmin").forward(request, response);
+				//request.setAttribute("isAddAdmin", true);
+				HttpSession session = request.getSession();
+				session.setAttribute("isAddAdmin", true);
+				response.sendRedirect("/admin/addAdmin");
+				//request.getRequestDispatcher(request.getContextPath() + "/admin/addAdmin").forward(request, response);
 				return;
 			}
 		}

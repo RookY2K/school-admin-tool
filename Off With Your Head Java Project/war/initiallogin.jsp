@@ -14,15 +14,14 @@
 					<td class="text_block"><input type="text" name="appkey"  required /></td>
 				</tr>
 				<%
-					String isKey = request.getParameter("isKey");
-					if(isKey != null){
-						if(request.getParameter("isKey").equals("false")){ %>
+					Boolean isKey = (Boolean)request.getAttribute("isKey");
+					if(isKey != null && !isKey.booleanValue()){
+				%>
 				<tr>
 					<td>&nbsp;</td>
 					<td style="color:red;">That key was not valid!</td>
 				</tr>
 				<%
-						}
 					}
 				%>
 				<tr>

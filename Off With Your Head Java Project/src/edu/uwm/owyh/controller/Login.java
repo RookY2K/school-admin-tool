@@ -39,14 +39,15 @@ public class Login extends HttpServlet {
 			Long accessLong = (Long)user.getProperty("accesslevel");
 			int accessVal = accessLong.intValue();
 			AccessLevel access = AccessLevel.getAccessLevel(accessVal);
-			request.setAttribute("isAdmin", access == AccessLevel.ADMIN);
+			//request.setAttribute("isAdmin", access == AccessLevel.ADMIN);
 			HttpSession session = request.getSession();
 			session.setAttribute("username", username);
 			session.setAttribute("accesslevel", access);
 			
-			request.getRequestDispatcher("/").forward(request, response);			
-		}else{					
-			request.getRequestDispatcher("/").forward(request, response);
-		}
+			//request.getRequestDispatcher("/").forward(request, response);			
+		}//else{					
+			//request.getRequestDispatcher("/").forward(request, response);
+		//}
+		response.sendRedirect(request.getContextPath() + "/");
 	}
 }

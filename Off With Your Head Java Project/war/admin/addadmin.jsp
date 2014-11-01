@@ -4,6 +4,12 @@
     <jsp:param name="stylesheet" value="addAdmin.css" />
 </jsp:include>
 	<div id="body">
+		<%
+			Boolean isAddAdmin = (Boolean)session.getAttribute("isAddAdmin");
+			if(isAddAdmin == null){
+				response.sendRedirect(request.getContextPath() + "/");
+			}
+		%>
 
 		<form id="addAdmin" action="/admin/addAdmin" method="post">
 			<table id="addAdmin-table">

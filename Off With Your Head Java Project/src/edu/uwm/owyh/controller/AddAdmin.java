@@ -8,19 +8,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.User;
 import edu.uwm.owyh.model.User.AccessLevel;
 
 @SuppressWarnings("serial")
 public class AddAdmin extends HttpServlet{
 	
-	Auth auth;
-	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		HttpSession session = request.getSession();
+		Boolean isAddAdmin = (Boolean)session.getAttribute("isAddAdmin");
 		
-		request.getRequestDispatcher("addadmin.jsp").forward(request, response);	
+		if(isAddAdmin != null && isAddAdmin.booleanValue()){
+			response.sendRedirect(request.getContextPath() + "/admin/addadmin.jsp");
+			return;
+		}else{
+			request.getRequestDispatcher("/").forward(request,response);
+		}
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -38,7 +42,8 @@ public class AddAdmin extends HttpServlet{
 				HttpSession session = request.getSession();
 				session.setAttribute("username", email);
 				session.setAttribute("accesslevel", accessLevel);
-				request.getRequestDispatcher("admin.jsp").forward(request, response);	
+				session.removeAttribute("isAddAdmin");
+				response.sendRedirect(request.getContextPath() + "/admin/admin.jsp");	
 			}else{ 
 				request.setAttribute("addNewUser", false);
 				request.getRequestDispatcher("addadmin.jsp").forward(request, response);
