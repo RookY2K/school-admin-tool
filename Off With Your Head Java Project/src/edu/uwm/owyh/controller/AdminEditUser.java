@@ -25,17 +25,25 @@ public class AdminEditUser extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		auth.verifyAdmin(response);
 		
-	    String name = request.getParameter("username");
+	    String username = request.getParameter("username");
 	    String password = request.getParameter("password");
 	    String accesslevel = request.getParameter("accesslevel");
+	    String name = request.getParameter("name");
+	    String phone = request.getParameter("phone");
+	    String address = request.getParameter("address");
+	    String email = request.getParameter("email");
 			
-		User user = User.findUser(name);
+		User user = User.findUser(username);
 		if (user != null)
 		{
 			if(password.isEmpty() == false) 
 		        user.setPassword(password);
 			
 			user.setAccessLevel(AccessLevel.getAccessLevel(Integer.parseInt(accesslevel)));
+			user.setName(name);
+			user.setPhone(phone);
+			user.setEmail(email);
+			user.setAddress(address);
 			
 			user.saveUser();
 			

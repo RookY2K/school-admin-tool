@@ -23,7 +23,7 @@
 					   <legend> <%= user.getUserName() %> </legend>
 					   <table>
 					   <tr>
-						   <td class="cell"><label class="field" for="email">Password: </label></td>
+						   <td class="cell"><label class="field" for="password">Password: </label></td>
 						   <td class="cell"><input type = "text" name="password" id="password" value="<%=user.getPassword() %>" required />
 					   </tr>
 					   <tr>
@@ -36,12 +36,22 @@
 							   </select>
 						   </td>
 					   </tr>
-					   <!--
 					   <tr>
-					       <td class="cell"><label class="field" for="email">Email: </label></td>
-						   <td class="cell"><input type = "text" name="email" id="email" required />
+						   <td class="cell"><label class="field" for="name">Name: </label></td>
+						   <td class="cell"><input type = "text" name="name" id="name" value="<%=user.getName() %>" required />
 					   </tr>
-					   -->
+					   <tr>
+						   <td class="cell"><label class="field" for="email">Email: </label></td>
+						   <td class="cell"><input type = "text" name="email" id="email" value="<%=user.getEmail() %>" required />
+					   </tr>
+					   <tr>
+						   <td class="cell"><label class="field" for="phone">Phone: </label></td>
+						   <td class="cell"><input type = "text" name="phone" id="phone" value="<%=user.getPhone() %>" required />
+					   </tr>
+					   <tr>
+						   <td class="cell"><label class="field" for="address">Address: </label></td>
+						   <td class="cell"><input type = "text" name="address" id="address" value="<%=user.getAddress() %>" required />
+					   </tr>
 					   <tr>
 						   <td class="cell" colspan="2"><input type="submit" value="Edit this user"/></td>
 					   </tr>
