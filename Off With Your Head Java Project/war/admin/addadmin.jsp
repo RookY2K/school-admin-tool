@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.User" %>
+<%@ page import="edu.uwm.owyh.model.Person" %>
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Add Admin" />
     <jsp:param name="stylesheet" value="addAdmin.css" />
@@ -36,7 +36,7 @@
 				<td class="cell">AccessLevel:</td>
 				<td class="cell"> 
 					<select name="accesslevel">
-					  <option value="<% out.print(User.AccessLevel.ADMIN.getVal()); %>" selected>ADMIN</option>
+					  <option value="<% out.print(Person.AccessLevel.ADMIN.getVal()); %>" selected>ADMIN</option>
 					</select>
 				</td>
 			</tr>

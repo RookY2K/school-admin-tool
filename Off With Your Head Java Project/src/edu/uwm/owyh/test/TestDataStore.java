@@ -85,7 +85,7 @@ public class TestDataStore {
     	
     	filter = new Query.FilterPredicate(key, Query.FilterOperator.EQUAL, value);
     	
-    	List<Entity> entities = store.findEntities(table, filter);
+    	List<Entity> entities = store.findEntities(table, filter, null);
     	
     	assertEquals(1,entities.size());
     	assertEquals(entities.get(0), e2);
@@ -112,7 +112,7 @@ public class TestDataStore {
     	
     	filter = Query.CompositeFilterOperator.or(filters);
     	
-    	List<Entity> entities = store.findEntities(table, filter);
+    	List<Entity> entities = store.findEntities(table, filter, null);
     	
     	assertEquals(2, entities.size());
     	assertTrue(entities.contains(e2));
@@ -129,7 +129,7 @@ public class TestDataStore {
     	service.put(e3);
     	service.put(e4);
     	
-    	List<Entity> entities = store.findEntities(table, null);
+    	List<Entity> entities = store.findEntities(table, null, null);
     	
     	assertEquals(4, entities.size());
     }

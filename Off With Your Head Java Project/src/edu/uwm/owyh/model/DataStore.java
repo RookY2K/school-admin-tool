@@ -5,7 +5,6 @@ import java.util.List;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
@@ -33,12 +32,15 @@ public final class DataStore {
 	 * Returns a collection of entities based on filter from specified table
 	 * @param table
 	 * @param filter
+	 * @param ancestor
 	 * @return Collection<Entity> matching filter
 	 * @throws IllegalArgumentException if the filter is illegally constructed.
 	 */
-	public List<Entity> findEntities(String table,Filter filter) throws IllegalArgumentException{
+	public List<Entity> findEntities(String table,Filter filter, Key ancestor) throws IllegalArgumentException{
 		DatastoreService service = getService();
-		Query query = new Query(table).setFilter(filter);
+		Query query = new Query(table, ancestor).setFilter(filter);
+		
+		if(ancestor != null) query.setAncestor(ancestor);
 		
 		return service.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	}

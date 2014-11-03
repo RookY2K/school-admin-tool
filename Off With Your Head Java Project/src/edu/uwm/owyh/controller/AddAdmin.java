@@ -8,8 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import edu.uwm.owyh.model.User;
-import edu.uwm.owyh.model.User.AccessLevel;
+import edu.uwm.owyh.model.Person;
+import edu.uwm.owyh.model.Client;
+import edu.uwm.owyh.model.Person.AccessLevel;
+import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
 public class AddAdmin extends HttpServlet{
@@ -37,8 +39,8 @@ public class AddAdmin extends HttpServlet{
 			int access = Integer.parseInt(request.getParameter("accesslevel"));
 			AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
 			
-			User newUser = User.getUser(email, password, accessLevel);
-			if (newUser.saveUser()){
+			Person newUser = UserFactory.getUser(email, password, accessLevel);
+			if (newUser.addPerson()){
 				HttpSession session = request.getSession();
 				session.setAttribute("username", email);
 				session.setAttribute("accesslevel", accessLevel);

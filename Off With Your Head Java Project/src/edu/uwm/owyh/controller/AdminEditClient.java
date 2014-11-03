@@ -8,11 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.User;
-import edu.uwm.owyh.model.User.AccessLevel;
+import edu.uwm.owyh.model.Person;
+import edu.uwm.owyh.model.Client;
+import edu.uwm.owyh.model.Person.AccessLevel;
+import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
-public class AdminEditUser extends HttpServlet {
+public class AdminEditClient extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
@@ -28,16 +30,17 @@ public class AdminEditUser extends HttpServlet {
 	    String name = request.getParameter("username");
 	    String password = request.getParameter("password");
 	    String accesslevel = request.getParameter("accesslevel");
-			
-		User user = User.findUser(name);
+	    
+	    Person user = UserFactory.getUser(name, null, null);
 		if (user != null)
 		{
-			if(password.isEmpty() == false) 
-		        user.setPassword(password);
+			if(!password.isEmpty()){
+				user.setPassword(password);
+			}
 			
 			user.setAccessLevel(AccessLevel.getAccessLevel(Integer.parseInt(accesslevel)));
 			
-			user.saveUser();
+			user.editPerson();
 			
 			response.setContentType("text/html");
 			response.getWriter().write("<meta http-equiv=\"refresh\" content=\"4; url=/userlist\">");

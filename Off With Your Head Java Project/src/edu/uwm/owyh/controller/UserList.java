@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.User;
+import edu.uwm.owyh.model.Person;
+import edu.uwm.owyh.model.Client;
+import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
 public class UserList extends HttpServlet {
@@ -21,14 +23,16 @@ public class UserList extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		auth.verifyUser(response);
 		
-		List<User> users = User.getAllUser();
-
-		String[] username = new String[users.size()];
-		int[] accesslevel = new int[users.size()];
+		Person helper = UserFactory.getUser("test@uwm.edu", null, null);
 		
-		for (int i = 0; i < users.size(); i++) {
-			username[i] = users.get(i).getUserName();
-			accesslevel[i] = users.get(i).getAccessLevel().getVal();
+		List<Person> clients = helper.getAllPersons();
+
+		String[] username = new String[clients.size()];
+		int[] accesslevel = new int[clients.size()];
+		
+		for (int i = 0; i < clients.size(); i++) {
+			username[i] = clients.get(i).getUserName();
+			accesslevel[i] = clients.get(i).getAccessLevel().getVal();
 		}
 		
 		request.setAttribute("username", username);
@@ -43,14 +47,16 @@ public class UserList extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		auth.verifyAdmin(response);
 		
+		Person helper = UserFactory.getUser("helper@uwm.edu", null, null);
+		
 		@SuppressWarnings("unchecked")
 		Map<String, Object> item = request.getParameterMap();
 		
 		if (item.keySet().size() > 0) {
 			for (String key : item.keySet()) {
-				User user = User.findUser(key);
+				Person user = helper.findPerson(key);
 				if (user != null)
-					user.removeUser();
+					user.removePerson();
 			}
 		}
 		

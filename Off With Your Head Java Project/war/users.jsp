@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.User" %>
+<%@ page import="edu.uwm.owyh.model.Person" %>
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="User List" />
@@ -31,11 +31,11 @@
 			<tr>
 				<td class="cell"><%=username[i] %></td>
 				<td class="cell">
-				<% if (accesslevel[i] == User.AccessLevel.TA.getVal()) { %>
+				<% if (accesslevel[i] == Person.AccessLevel.TA.getVal()) { %>
 					TA
-				<% } if (accesslevel[i] == User.AccessLevel.INSTRUCTOR.getVal()) { %>
+				<% } if (accesslevel[i] == Person.AccessLevel.INSTRUCTOR.getVal()) { %>
 					INSTRUCTOR
-				<% } if (accesslevel[i] == User.AccessLevel.ADMIN.getVal()) {  %>
+				<% } if (accesslevel[i] == Person.AccessLevel.ADMIN.getVal()) {  %>
 					ADMIN
 				<% } %>
 				</td>

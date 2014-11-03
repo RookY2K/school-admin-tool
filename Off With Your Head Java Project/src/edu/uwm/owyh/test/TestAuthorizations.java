@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.uwm.owyh.model.*;
-import edu.uwm.owyh.model.User.AccessLevel;
+import edu.uwm.owyh.model.Person.AccessLevel;
 
 public class TestAuthorizations{
 	private final LocalServiceTestHelper helper =
@@ -33,7 +33,7 @@ public class TestAuthorizations{
 		_password = "paSsw0rd$";
 		_service = DatastoreServiceFactory.getDatastoreService();
 		
-		Entity user = new Entity("users");
+		Entity user = new Entity(Client.getClientTable(), Person.USERKEY);
 		user.setProperty("username", _userName);
 		user.setProperty("toupperusername", _userName.toUpperCase());
 		user.setProperty("password", _password);

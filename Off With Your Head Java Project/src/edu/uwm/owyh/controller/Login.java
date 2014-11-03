@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import com.google.appengine.api.datastore.Entity;
 
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.User.AccessLevel;
+import edu.uwm.owyh.model.Person.AccessLevel;
 
 @SuppressWarnings("serial")
 public class Login extends HttpServlet {

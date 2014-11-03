@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.DataStore;
-import edu.uwm.owyh.model.User;
+import edu.uwm.owyh.model.Client;
+import edu.uwm.owyh.model.Person;
 @SuppressWarnings("serial")
 public class Index extends HttpServlet {
 	
@@ -17,7 +18,7 @@ public class Index extends HttpServlet {
 			throws IOException, ServletException {
 		
 		DataStore store = DataStore.getDataStore();
-		int userCount = store.findEntities(User.getUserTable(), null).size();	
+		int userCount = store.findEntities(Client.getClientTable(), null, Person.USERKEY).size();	
 		if(userCount == 0){
 			request.setAttribute("noUsers", true);
 			request.getRequestDispatcher("/initiallogin").forward(request, response);

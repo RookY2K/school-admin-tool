@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.User;
+import edu.uwm.owyh.model.Person;
+import edu.uwm.owyh.model.Client;
+import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
 public class UserListEditButton extends HttpServlet {
@@ -29,9 +31,10 @@ public class UserListEditButton extends HttpServlet {
 		@SuppressWarnings("unchecked")
 		Map<String, Object> item = request.getParameterMap();
 		
+		Person helper = UserFactory.getUser("helper@uwm.edu", null, null, null);
 		if (item.keySet().size() > 0) {
 			for (String key : item.keySet()) {
-				User user = User.findUser(key);
+				Person user = helper.findPerson(key);
 				if (user != null)
 				{
 					request.setAttribute("user", user);

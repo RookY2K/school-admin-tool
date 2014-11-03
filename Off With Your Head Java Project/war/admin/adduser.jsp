@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.User" %>
+<%@ page import="edu.uwm.owyh.model.Person" %>
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Hello World" />
@@ -43,9 +43,9 @@
 					<td class="cell"><label class="field" for="accesslevel">AccessLevel: </label></td>
 					<td class="cell"> 
 						<select name="accesslevel">
-						  <option value="<% out.print(User.AccessLevel.TA.getVal()); %>">TA</option>
-						  <option value="<% out.print(User.AccessLevel.INSTRUCTOR.getVal()); %>">INSTRUCTOR</option>
-						  <option value="<% out.print(User.AccessLevel.ADMIN.getVal()); %>">ADMIN</option>
+						  <option value="<% out.print(Person.AccessLevel.TA.getVal()); %>">TA</option>
+						  <option value="<% out.print(Person.AccessLevel.INSTRUCTOR.getVal()); %>">INSTRUCTOR</option>
+						  <option value="<% out.print(Person.AccessLevel.ADMIN.getVal()); %>">ADMIN</option>
 						</select>
 					</td>
 				</tr>

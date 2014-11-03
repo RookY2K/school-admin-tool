@@ -2,8 +2,6 @@ package edu.uwm.owyh.model;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +11,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 
-import edu.uwm.owyh.model.User.AccessLevel;
+import edu.uwm.owyh.model.Person.AccessLevel;
 
 public class Auth {
 	private AccessLevel _goodAccess;
@@ -61,7 +59,7 @@ public class Auth {
 		
 		DataStore store = DataStore.getDataStore();
 		Filter filter = new Query.FilterPredicate("toupperusername", Query.FilterOperator.EQUAL, userName.toUpperCase());
-		List<Entity> users = store.findEntities(User.getUserTable(), filter);
+		List<Entity> users = store.findEntities(Client.getClientTable(), filter, Person.USERKEY);
 		if(users.isEmpty()) return null;
 		Entity user = users.get(0);
 		

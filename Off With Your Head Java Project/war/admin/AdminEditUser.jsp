@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.User" %>
+<%@ page import="edu.uwm.owyh.model.Person" %>
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Edit User" />
@@ -16,8 +16,10 @@
 	</div>
 	  	
 	<div id="body">
-	    <% User user =(User)(request.getAttribute("user"));
-	       if(user != null) { %>
+	    <%
+	    	Person user =(Person)(request.getAttribute("user"));
+	    	       if(user != null) {
+	    %>
 		       <form action="/admin/adminEditUser" method="post">
 				   <fieldset>
 					   <legend> <%= user.getUserName() %> </legend>
@@ -30,9 +32,9 @@
 						   <td class="cell"><label class="field" for="accesslevel">AccessLevel: </label></td>
 						   <td class="cell"> 
 							   <select name="accesslevel">
-							     <option value="<% out.print(User.AccessLevel.TA.getVal()); %>" <% if(user.getAccessLevel() == User.AccessLevel.TA) {%> selected <% } %>>TA</option>
-							     <option value="<% out.print(User.AccessLevel.INSTRUCTOR.getVal()); %>" <% if(user.getAccessLevel() == User.AccessLevel.INSTRUCTOR) {%> selected <% } %>>INSTRUCTOR</option>
-							     <option value="<% out.print(User.AccessLevel.ADMIN.getVal()); %>" <% if(user.getAccessLevel() == User.AccessLevel.ADMIN) {%> selected <% } %>>ADMIN</option>
+							     <option value="<% out.print(Person.AccessLevel.TA.getVal()); %>" <% if(user.getAccessLevel() == Person.AccessLevel.TA) {%> selected <% } %>>TA</option>
+							     <option value="<% out.print(Person.AccessLevel.INSTRUCTOR.getVal()); %>" <% if(user.getAccessLevel() == Person.AccessLevel.INSTRUCTOR) {%> selected <% } %>>INSTRUCTOR</option>
+							     <option value="<% out.print(Person.AccessLevel.ADMIN.getVal()); %>" <% if(user.getAccessLevel() == Person.AccessLevel.ADMIN) {%> selected <% } %>>ADMIN</option>
 							   </select>
 						   </td>
 					   </tr>

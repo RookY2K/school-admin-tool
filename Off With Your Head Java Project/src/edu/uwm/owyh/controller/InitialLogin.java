@@ -1,13 +1,11 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
@@ -42,7 +40,7 @@ public class InitialLogin extends HttpServlet{
 
 			String userEnteredKey = request.getParameter("appkey");
 			Filter filter = new Query.FilterPredicate("keyValue", Query.FilterOperator.EQUAL, userEnteredKey);
-			boolean isKey = !(store.findEntities("softwarekey",filter).isEmpty());
+			boolean isKey = !(store.findEntities("softwarekey",filter, null).isEmpty());
 			
 			if(!isKey){
 				request.setAttribute("isKey", isKey);

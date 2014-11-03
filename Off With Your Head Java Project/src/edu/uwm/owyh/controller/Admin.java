@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import edu.uwm.owyh.model.User.AccessLevel;
+import edu.uwm.owyh.model.Person.AccessLevel;
 
 @SuppressWarnings("serial")
 public class Admin extends HttpServlet {
