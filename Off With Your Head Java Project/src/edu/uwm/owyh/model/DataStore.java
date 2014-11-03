@@ -1,5 +1,6 @@
 package edu.uwm.owyh.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -10,7 +11,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 
-public final class DataStore {
+public final class DataStore implements Serializable{
 	private DatastoreService _service;
 	private static DataStore _store = null;
 	

@@ -31,14 +31,14 @@ public class UserListEditButton extends HttpServlet {
 		@SuppressWarnings("unchecked")
 		Map<String, Object> item = request.getParameterMap();
 		
-		Person helper = UserFactory.getUser("helper@uwm.edu", null, null, null);
+		Person helper = UserFactory.getUser(true);
 		if (item.keySet().size() > 0) {
 			for (String key : item.keySet()) {
 				Person user = helper.findPerson(key);
 				if (user != null)
 				{
 					request.setAttribute("user", user);
-					request.getRequestDispatcher("/Admin/AdminEditUser.jsp").forward(request, response);
+					request.getRequestDispatcher("/admin/AdminEditUser.jsp").forward(request, response);
 				}
 				else
 					response.sendRedirect("/userlist");

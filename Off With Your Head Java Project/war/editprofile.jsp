@@ -1,4 +1,5 @@
-<%@ page import="edu.uwm.owyh.model.User" %>
+<%@ page import="edu.uwm.owyh.model.Person" %>
+<%@ page import="edu.uwm.owyh.model.Auth" %>
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Edit User" />
@@ -20,7 +21,7 @@
 	</div>
 
 	<div id="body">
-	    <% User user =(User)(request.getAttribute("user"));
+	    <% Person user =(Person)Auth.getSessionVariable(request, "user");
 	       if(user != null) { %>
 		       <form action="/editprofile" method="post">
 				   <fieldset>

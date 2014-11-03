@@ -21,6 +21,7 @@ Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/controller/Init
 Off With Your Head Java Project/src/edu/uwm/owyh/controller/InitialLogin.java.orig
 Off With Your Head Java Project/src/edu/uwm/owyh/controller/Index.java.orig
 Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/controller/Index.java.orig
+Off With Your Head Java Project/war/admin/AdminEditUser.jsp.orig
 syntax: regexp
 ^(.*[\\/])?gen[\\/].*
 ^(.*[\\/])?bin[\\/].*

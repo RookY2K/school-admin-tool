@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import edu.uwm.owyh.model.Person;
 import edu.uwm.owyh.model.Person.AccessLevel;
 
 @SuppressWarnings("serial")
@@ -16,9 +17,9 @@ public class Admin extends HttpServlet {
 			throws IOException, ServletException {
 		
 		HttpSession session = request.getSession();
-		
-		if(session.getAttribute("username")!= null){
-			if(session.getAttribute("accesslevel") == AccessLevel.ADMIN){
+		Person user = (Person)session.getAttribute("user");
+		if(user != null){
+			if(user.getAccessLevel().equals(AccessLevel.ADMIN)){
 				response.sendRedirect("/admin/admin.jsp");
 			}else{
 				response.sendRedirect("home.jsp");

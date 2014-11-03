@@ -1,7 +1,7 @@
-<%@ page import="edu.uwm.owyh.model.User" %>
-
+<%@ page import="edu.uwm.owyh.model.Person" %>
+<%@ page import="edu.uwm.owyh.model.Auth" %>
 <jsp:include page="/WEB-INF/templates/header.jsp">
-    <jsp:param name="title" value="User List" />
+    <jsp:param name="title" value="Profile" />
     <jsp:param name="stylesheet" value="layout.css" />
     <jsp:param name="stylesheet" value="profile.css" />
 </jsp:include>
@@ -20,7 +20,7 @@
 	</div>
 
 	<div id="body">
-	  <% User user =(User)(request.getAttribute("user"));
+	  <% Person user =(Person) Auth.getSessionVariable(request, "user");
 	       if(user != null) { %>
 			<table id="profile-table">
 				<tr>

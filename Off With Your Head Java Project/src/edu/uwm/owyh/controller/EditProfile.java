@@ -8,18 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.User;
+import edu.uwm.owyh.model.Person;
+import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
 public class EditProfile extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		User user = User.findUser((String)Auth.getSessionVariable(request, "username"));
+		Person user = (Person)Auth.getSessionVariable(request, "user");
 		if (user != null)
 		{
-			request.setAttribute("user", user);
-			request.getRequestDispatcher("editprofile.jsp").forward(request, response);
+			response.sendRedirect(request.getContextPath() + "/editprofile.jsp");
 		}
 		else
 		{
@@ -38,8 +38,8 @@ public class EditProfile extends HttpServlet {
 	    String phone = request.getParameter("phone");
 	    String address = request.getParameter("address");
 	    String email = request.getParameter("email");
-			
-		User user = User.findUser((String)Auth.getSessionVariable(request, "username"));
+		
+	    Person user = (Person) request.getSession().getAttribute("user");
 		if (user != null)
 		{
 			user.setName(name);
@@ -47,16 +47,9 @@ public class EditProfile extends HttpServlet {
 			user.setEmail(email);
 			user.setAddress(address);
 			
-			user.saveUser();
-			
-			response.setContentType("text/html");
-			response.getWriter().write("<meta http-equiv=\"refresh\" content=\"4; url=/profile\">");
-			response.getWriter().write("Writing to Database, You be will automaticlly rediected in 4 seconds...");
+			user.editPerson();
 		}
-		else
-		{
-			response.sendRedirect("/profile");
-		}
+		response.sendRedirect(request.getContextPath() + "/profile");
 			
 	}
 }

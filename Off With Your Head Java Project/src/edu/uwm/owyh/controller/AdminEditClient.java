@@ -30,8 +30,8 @@ public class AdminEditClient extends HttpServlet {
 	    String name = request.getParameter("username");
 	    String password = request.getParameter("password");
 	    String accesslevel = request.getParameter("accesslevel");
-	    
-	    Person user = UserFactory.getUser(name, null, null);
+	    Person helper = UserFactory.getUser(true);
+	    Person user = helper.findPerson(name);
 		if (user != null)
 		{
 			if(!password.isEmpty()){
@@ -42,14 +42,8 @@ public class AdminEditClient extends HttpServlet {
 			
 			user.editPerson();
 			
-			response.setContentType("text/html");
-			response.getWriter().write("<meta http-equiv=\"refresh\" content=\"4; url=/userlist\">");
-			response.getWriter().write("Writing to Database, You be will automaticlly rediected in 4 seconds...");
 		}
-		else
-		{
-			response.sendRedirect("/userlist");
-		}
-			
+		
+		response.sendRedirect(request.getContextPath() + "/userlist");
 	}
 }

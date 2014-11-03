@@ -3,11 +3,11 @@
  */
 package edu.uwm.owyh.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
@@ -16,14 +16,14 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
  * @author Vince Maiuri
  *
  */
-public class ContactCard implements Person {
+public class ContactCard implements Person, Serializable {
 	private String _name;
 	private String _phone;
 	private String _address;
 	private String _email;
 	private Entity _contactEntity;
 	private Entity _parentClient;
-	private static final String PHONEPATTERN = "^((\\(\\d{3}\\))|(\\d{3}))[-\\.\\s]?\\d{3}[-\\.\\s]?\\d{4}$";
+	private static final String PHONEPATTERN = "^((\\(\\d{3}\\))|(\\d{3}))[-\\.\\s]{0,1}\\d{3}[-\\.\\s]{0,1}\\d{4}$";
 	private static final String TABLE = "contactCards";
 	
 	private ContactCard(String name, String phone, String address, String email){
@@ -62,6 +62,14 @@ public class ContactCard implements Person {
 		_address = (String) contact.getProperty("address");
 		_contactEntity = contact;
 		_parentClient = getParentClient();
+	}
+	
+	private ContactCard(){
+		//returns ContactCard object with default (null) instance variables
+	}
+	
+	protected static Person getContactCard(){
+		return new ContactCard();
 	}
 	
 	protected static Person getContactCard(Entity contact){
@@ -153,7 +161,7 @@ public class ContactCard implements Person {
 	 */
 	@Override
 	public void setAccessLevel(AccessLevel accessLevel) {
-		_parentClient.setProperty("accesslevel", accessLevel);
+		_parentClient.setProperty("accesslevel", accessLevel.getVal());
 	}
 
 	/* (non-Javadoc)

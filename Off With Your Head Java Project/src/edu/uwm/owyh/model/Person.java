@@ -1,15 +1,12 @@
 package edu.uwm.owyh.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
 
-public interface Person {
+public interface Person extends Serializable{
 	public static final Key USERKEY = KeyFactory.createKey("rootKey", "root");
 	public static final String EMAILPATTERN = "^\\w+@uwm.edu$";
 	public enum AccessLevel {

@@ -8,8 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.User;
-import edu.uwm.owyh.model.User.AccessLevel;
+import edu.uwm.owyh.model.Person;
+import edu.uwm.owyh.model.Person.AccessLevel;
+import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
 public class AdminEditUser extends HttpServlet {
@@ -25,36 +26,34 @@ public class AdminEditUser extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		auth.verifyAdmin(response);
 		
-	    String username = request.getParameter("username");
-	    String password = request.getParameter("password");
 	    String accesslevel = request.getParameter("accesslevel");
 	    String name = request.getParameter("name");
 	    String phone = request.getParameter("phone");
 	    String address = request.getParameter("address");
-	    String email = request.getParameter("email");
-			
-		User user = User.findUser(username);
+	    String userName = request.getParameter("username");
+		
+	    Person helper = UserFactory.getUser(true);
+		Person user = helper.findPerson(userName);
 		if (user != null)
 		{
-			if(password.isEmpty() == false) 
-		        user.setPassword(password);
-			
 			user.setAccessLevel(AccessLevel.getAccessLevel(Integer.parseInt(accesslevel)));
 			user.setName(name);
 			user.setPhone(phone);
-			user.setEmail(email);
 			user.setAddress(address);
 			
-			user.saveUser();
-			
-			response.setContentType("text/html");
-			response.getWriter().write("<meta http-equiv=\"refresh\" content=\"4; url=/userlist\">");
-			response.getWriter().write("Writing to Database, You be will automaticlly rediected in 4 seconds...");
-		}
-		else
-		{
-			response.sendRedirect("/userlist");
-		}
-			
+			if(user.editPerson()){
+				request.setAttribute("user", user);
+				request.setAttribute("isEdited", true);
+				Person client = (Person)request.getSession().getAttribute("user");
+				if(user.getUserName().equalsIgnoreCase(client.getUserName())){
+					//Auth.removeSessionVariable(request, "user");
+					Auth.setSessionVariable(request, "user", user);
+				}
+			}else{
+				request.setAttribute("user", user);
+				request.setAttribute("isEdited", false);
+			}
+		}	
+		request.getRequestDispatcher(request.getContextPath() + "/admin/AdminEditUser.jsp").forward(request,response);	
 	}
 }

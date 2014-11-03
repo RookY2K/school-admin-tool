@@ -16,18 +16,36 @@
 	</div>
 	  	
 	<div id="body">
+		<% if (request.getAttribute("isEdited") != null) {
+				boolean isEdited = (Boolean) request.getAttribute("isEdited");
+				if (isEdited) { %>
+					<span style="color:red;">Edit Was Successfully!</span>
+				<% }
+				else { %>
+					<span style="color:red;">Edit Failed! Check Phone number!</span>
+				<% }
+			} %>
+	
 	    <% Person user =(Person)(request.getAttribute("user"));
 	       if(user != null) { %>
 		       <form action="/admin/adminEditUser" method="post">
 				   <fieldset>
-					   <legend> <%= user.getUserName() %> </legend>
+					   <legend> <%= user.getName() %> </legend>
 					   <table>
 					   <tr>
-						   <td class="cell"><label class="field" for="email">Password: </label></td>
-						   <td class="cell"><input type = "text" name="password" id="password" value="<%=user.getPassword() %>" required />
+						   <td class="cell"><label class="field" for="name">Name: </label></td>
+						   <td class="cell"><input type = "text" name="name" id="name" value="<%=user.getName() %>" required />
 					   </tr>
 					   <tr>
-						   <td class="cell"><label class="field" for="accesslevel">AccessLevel: </label></td>
+						   <td class="cell"><label class="field" for="address">Address: </label></td>
+						   <td class="cell"><input type = "text" name="address" id="address" value="<%=user.getAddress() %>" />
+					   </tr>
+					   <tr>
+						   <td class="cell"><label class="field" for="phone">Phone Number: </label></td>
+						   <td class="cell"><input type = "text" name="phone" id="phone" value="<%=user.getPhone() %>" />
+					   </tr>	
+					   <tr>
+						   <td class="cell"><label class="field" for="accesslevel">Role: </label></td>
 						   <td class="cell"> 
 							   <select name="accesslevel">
 							     <option value="<% out.print(Person.AccessLevel.TA.getVal()); %>" <% if(user.getAccessLevel() == Person.AccessLevel.TA) {%> selected <% } %>>TA</option>

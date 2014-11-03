@@ -8,13 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
+import edu.uwm.owyh.model.ContactCard;
 import edu.uwm.owyh.model.Person;
 import edu.uwm.owyh.model.Client;
 import edu.uwm.owyh.model.Person.AccessLevel;
 import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
-public class AddClient extends HttpServlet {
+public class AddContactInfo extends HttpServlet {
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
@@ -22,7 +23,7 @@ public class AddClient extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		auth.verifyUser(response);
 
-		response.sendRedirect(request.getContextPath() + "/admin/adduser.jsp");	
+		response.sendRedirect(request.getContextPath() + "/admin/addContactInfo.jsp");	
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -31,23 +32,29 @@ public class AddClient extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		auth.verifyAdmin(response);
 		
+		String name = request.getParameter("name");
 		String email = request.getParameter("email");
-		String password = request.getParameter("password");	
-
+		String address = request.getParameter("address");
+		String phone = request.getParameter("phone");
+		AccessLevel accessLevel = null;
 		try {
 			int access = Integer.parseInt(request.getParameter("accesslevel"));
-			AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
-			
-			Person newUser = UserFactory.getUser(email, password, accessLevel);
-			if (newUser.addPerson()) 
-				request.setAttribute("addNewUser", true);
-			else 
-				request.setAttribute("addNewUser", false);
-		}
-		catch (NumberFormatException e) {
+			accessLevel = AccessLevel.getAccessLevel(access);
+		}catch (NumberFormatException e) {
+			//Should not happen
 			request.setAttribute("addNewUser", false);
-		}
+		}	
 		
-		request.getRequestDispatcher("adduser.jsp").forward(request, response);	
+		Person newUser = UserFactory.getUser(name, phone, address, email);
+		if(accessLevel != null) newUser.setAccessLevel(accessLevel);
+		
+		if (newUser.addPerson()) {
+			request.setAttribute("addNewUser", true);
+		}
+		else {
+			request.setAttribute("addNewUser", false);
+		}		
+		
+		request.getRequestDispatcher("addContactInfo.jsp").forward(request, response);	
 	}
 }

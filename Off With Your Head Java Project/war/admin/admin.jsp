@@ -9,7 +9,7 @@
 <div id="content">
  	<div id="local-nav-bar">
 		<ul id="local-list">
-	      <li><a class="nav-link" href="/admin/addUser">Add User</a></li>
+	      <li><a class="nav-link" href="/admin/addClient">Add User</a></li>
 		</ul>
 	</div>
 	  	

@@ -20,4 +20,10 @@ public class UserFactory {
 	public static Person getUser(String name, String phone, String address, String email){
 		return ContactCard.getContactCard(name, phone, address, email);
 	}
+	
+	public static Person getUser(boolean isClient){
+		if(isClient) return Client.getClient();
+		
+		return ContactCard.getContactCard();
+	}
 }

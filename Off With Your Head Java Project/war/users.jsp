@@ -20,15 +20,18 @@
 	
 		<table id="users">
 			<tr>
+				<td class="cell-header">Name</td>
 				<td class="cell-header">Email</td>
-				<td class="cell-header">Access Level</td>
+				<td class="cell-header">Role</td>
 				<td class="cell-header" colspan="2">Modify</td>
 			</tr>		
- 	<% String[] username = (String[]) request.getAttribute("username");
+ 	<% String[] name = (String[]) request.getAttribute("name");
+ 	   String[] username = (String[]) request.getAttribute("username");
 	   int[] accesslevel = (int[]) request.getAttribute("accesslevel");
 	
 		for (int i = 0; i < username.length; i++) { %>
 			<tr>
+				<td class="cell"><%=name[i] %></td>
 				<td class="cell"><%=username[i] %></td>
 				<td class="cell">
 				<% if (accesslevel[i] == Person.AccessLevel.TA.getVal()) { %>

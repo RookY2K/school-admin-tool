@@ -1,6 +1,7 @@
 package edu.uwm.owyh.model;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +20,10 @@ public class Auth {
 	private String _goodPassword; 
 	
 	private Auth(HttpServletRequest request){
-		if (getSessionVariable(request, "username") == null) return;
-		_goodUserName = (String) getSessionVariable(request, "username");
-		_goodAccess = (AccessLevel) getSessionVariable(request, "accesslevel");
+		Person user = (Person)getSessionVariable(request, "user");
+		if (user == null) return;
+		_goodUserName = user.getUserName();
+		_goodAccess = user.getAccessLevel();
 	}
 	
 	private Auth(){
@@ -86,9 +88,14 @@ public class Auth {
 		if (_goodUserName == null || _goodAccess != AccessLevel.ADMIN) response.sendRedirect("/");
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void destroySession(HttpServletRequest request) {
-		removeSessionVariable(request, "username");
-		removeSessionVariable(request, "accesslevel");
+		HttpSession session = request.getSession();
+		Enumeration<String> attributeNames = session.getAttributeNames();
+		
+		while(attributeNames.hasMoreElements()){
+			removeSessionVariable(request, attributeNames.nextElement());
+		}
 	}
 	
 	public static Auth getAuth(HttpServletRequest request){

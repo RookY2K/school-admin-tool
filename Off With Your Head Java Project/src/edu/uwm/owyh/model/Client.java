@@ -1,17 +1,16 @@
 package edu.uwm.owyh.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 
-public class Client implements Person{
+public class Client implements Person,Serializable{
 		
 	private String _userName;
 	private String _password;
@@ -58,6 +57,11 @@ public class Client implements Person{
 		}
 		_clientEntity = client;
 		_childContact = getChildContact();		
+	}
+	
+	private Client(){
+		//Default constructor that returns a Client object with default (null) 
+		//instance variables
 	}
 	
 	/* (non-Javadoc)
@@ -176,6 +180,10 @@ public class Client implements Person{
 		_childContact.setProperty("address", address);
 	}
 	
+	protected static Person getClient(){
+		return  new Client();
+	}
+	
 	protected static Person getClient(String userName, String pwd, AccessLevel access){
 		return new Client(userName, pwd, access);
 	}
@@ -205,33 +213,7 @@ public class Client implements Person{
 		return clients;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.uwm.owyh.model.Person#saveUser()
-	 */
-	/*@Override
-	public boolean savePerson() {
-		DataStore store = DataStore.getDataStore();
 		
-		if (_userName.trim().equals("") || _password.equals("") || _accessLevel == null)
-			return false;
-
-		Filter filterUsername = new FilterPredicate("toupperusername", FilterOperator.EQUAL, getToUpperUserName());
-		List<Entity> users = store.findEntities(getClientTable(), filterUsername);
-		
-		if (users.size() > 0)
-		{
-		    if(!users.get(0).getKey().equals(_clientEntity.getKey())){
-		    	return false;
-		    }else{
-		    	store.updateEntity(_clientEntity);
-		    }
-		        
-		}
-		
-		store.insertEntity(_clientEntity);
-		return true;
-	}*/
-	
 	/* (non-Javadoc)
 	 * @see edu.uwm.owyh.model.Person#removeUser()
 	 */
@@ -280,7 +262,8 @@ public class Client implements Person{
 		// -- if not, return false
 		if(user == null) return false;
 		//2 Else, updateEntity (return based on update's return)
-		if(!ContactCard.checkPhone((String)_childContact.getProperty("phone"))) return false;
+		String phone = (String)_childContact.getProperty("phone");
+		if(phone != null && !ContactCard.checkPhone(phone)) return false;
 		if(!store.updateEntity(_clientEntity)) return false;
 		
 		return store.updateEntity(_childContact);		

@@ -23,18 +23,21 @@ public class UserList extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		auth.verifyUser(response);
 		
-		Person helper = UserFactory.getUser("test@uwm.edu", null, null);
+		Person helper = UserFactory.getUser(true);
 		
 		List<Person> clients = helper.getAllPersons();
 
+		String[] name = new String[clients.size()];
 		String[] username = new String[clients.size()];
 		int[] accesslevel = new int[clients.size()];
 		
 		for (int i = 0; i < clients.size(); i++) {
+			name[i] = clients.get(i).getName();
 			username[i] = clients.get(i).getUserName();
 			accesslevel[i] = clients.get(i).getAccessLevel().getVal();
 		}
 		
+		request.setAttribute("name", name);
 		request.setAttribute("username", username);
 		request.setAttribute("accesslevel", accesslevel);
 		
@@ -47,7 +50,7 @@ public class UserList extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		auth.verifyAdmin(response);
 		
-		Person helper = UserFactory.getUser("helper@uwm.edu", null, null);
+		Person helper = UserFactory.getUser(true);
 		
 		@SuppressWarnings("unchecked")
 		Map<String, Object> item = request.getParameterMap();
@@ -60,10 +63,6 @@ public class UserList extends HttpServlet {
 			}
 		}
 		
-		response.setContentType("text/html");
-		response.getWriter().write("<meta http-equiv=\"refresh\" content=\"4; url=/userlist\">");
-		response.getWriter().write("Writing to Database, You be will automaticlly rediected in 4 seconds...");
-		
-		//response.sendRedirect("/userlist");	
+		response.sendRedirect(request.getContextPath() + "/userlist");	
 	}
 }
