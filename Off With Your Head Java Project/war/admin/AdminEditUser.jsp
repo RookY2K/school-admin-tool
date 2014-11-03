@@ -16,10 +16,8 @@
 	</div>
 	  	
 	<div id="body">
-	    <%
-	    	Person user =(Person)(request.getAttribute("user"));
-	    	       if(user != null) {
-	    %>
+	    <% Person user =(Person)(request.getAttribute("user"));
+	       if(user != null) { %>
 		       <form action="/admin/adminEditUser" method="post">
 				   <fieldset>
 					   <legend> <%= user.getUserName() %> </legend>
