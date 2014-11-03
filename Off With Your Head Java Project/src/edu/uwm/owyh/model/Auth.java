@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.uwm.owyh.model.User.*;
+import edu.uwm.owyh.model.DataStore;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +21,8 @@ import edu.uwm.owyh.model.User.AccessLevel;
 public class Auth {
 	private AccessLevel _goodAccess;
 	private String _goodUserName;
-	private String _goodPassword; 
+	private String _goodPassword;
+	private static final String TABLE = "users"; 
 	
 	private Auth(HttpServletRequest request){
 		if (getSessionVariable(request, "username") == null) return;
@@ -32,6 +35,10 @@ public class Auth {
 		_goodUserName = null;
 		_goodPassword = null;
 	}	
+	}
+	private void setUserName(String userName){
+		_goodUserName = userName;
+	}	
 	
 	public static Object getSessionVariable(HttpServletRequest request, String key){
 		if(request == null || key == null) return null;
@@ -39,6 +46,13 @@ public class Auth {
 		HttpSession session = request.getSession();
 		
 		return session.getAttribute(key);
+	}
+	private void setPassword(String password){
+		_goodPassword = password;
+	}
+	
+	private AccessLevel getAccessLevel(){
+		return _goodAccess;
 	}
 	
 	public static void setSessionVariable(HttpServletRequest request, String key, Object attribute){
@@ -55,6 +69,15 @@ public class Auth {
 		HttpSession session = request.getSession();
 		
 		session.removeAttribute(key);
+	}
+	
+	private String getUserName(){
+		return _goodUserName;
+	}
+	
+	private String getPassword()
+	{
+		return _goodPassword;
 	}
 	
 	public Entity verifyLogin(String userName, String password){
