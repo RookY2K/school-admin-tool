@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -97,5 +98,28 @@ public class Auth {
 		if(request != null)
 			return new Auth(request);
 		return new Auth();
+	}
+	
+	public boolean verifyUserIsLoggedIn(HttpServletRequest request)
+	{
+		HttpSession session = request.getSession();
+			
+		if (session.getAttribute("username") == null)
+		{
+			return false;
+		}
+		
+		else
+			return true;
+	}
+	
+	public void redirectAccessLevel(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException 
+	{
+		verifyAdmin(response);
+	}
+	
+	public void redirectInvalidLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException 
+	{
+		verifyUser(response);
 	}
 }

@@ -21,6 +21,7 @@ public class AddUser extends HttpServlet {
 		
 		Auth auth = Auth.getAuth(request);
 		auth.verifyUser(response);
+		auth.verifyAdmin(response);
 
 		request.getRequestDispatcher("adduser.jsp").forward(request, response);	
 	}

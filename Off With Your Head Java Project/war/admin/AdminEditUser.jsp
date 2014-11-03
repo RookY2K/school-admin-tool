@@ -1,4 +1,6 @@
 <%@ page import="edu.uwm.owyh.model.User" %>
+<%@ page import="edu.uwm.owyh.model.Auth" %>
+
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Edit User" />

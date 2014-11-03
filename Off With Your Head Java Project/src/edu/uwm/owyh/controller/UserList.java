@@ -56,7 +56,7 @@ public class UserList extends HttpServlet {
 		
 		response.setContentType("text/html");
 		response.getWriter().write("<meta http-equiv=\"refresh\" content=\"4; url=/userlist\">");
-		response.getWriter().write("Writing to Database, You be will automaticlly rediected in 4 seconds...");
+		response.getWriter().write("Writing to Database, You be will automaticlly redirected in 4 seconds...");
 		
 		//response.sendRedirect("/userlist");	
 	}
