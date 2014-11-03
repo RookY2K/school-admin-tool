@@ -77,6 +77,24 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/userlisteditbutton</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>Profile</servlet-name>
+		<servlet-class>edu.uwm.owyh.controller.Profile</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Profile</servlet-name>
+		<url-pattern>/profile</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>EditProfile</servlet-name>
+		<servlet-class>edu.uwm.owyh.controller.EditProfile</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EditProfile</servlet-name>
+		<url-pattern>/editprofile</url-pattern>
+	</servlet-mapping>
+	
 	
 	<servlet>
 		<servlet-name>HelloWorld</servlet-name>

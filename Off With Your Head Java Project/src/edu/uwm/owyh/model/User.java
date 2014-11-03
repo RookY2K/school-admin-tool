@@ -34,10 +34,10 @@ public class User{
 	}	
 	private String _userName;
 	private String _password;
-	private String _name;
-	private String _phone;
-	private String _address;
-	private String _email;
+	private String _name = "";
+	private String _phone = "";
+	private String _address = "";
+	private String _email = "";
 	
 	private AccessLevel _accessLevel;
 	private Entity _userEntity;
@@ -47,11 +47,12 @@ public class User{
 		_userName = userName;
 		_password = pwd;
 		_accessLevel = access;
-		_userEntity = createUserEntity();
 		_email = userName;
 		_name = "";
 		_phone = "";
 		_address = "";
+		_userEntity = createUserEntity();
+
 	}
 	
 	private User(Entity user) {
