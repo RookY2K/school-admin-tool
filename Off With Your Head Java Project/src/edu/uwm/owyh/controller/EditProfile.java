@@ -47,8 +47,8 @@ public class EditProfile extends HttpServlet {
 			user.setPhone(phone);
 			user.setEmail(email);
 			user.setAddress(address);
-			
-			user.editPerson();
+			if (user.editPerson())
+				Auth.setSessionVariable(request, "user", user);
 		}
 		response.sendRedirect(request.getContextPath() + "/profile");
 			

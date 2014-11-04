@@ -20,7 +20,7 @@
 	</div>
 
 	<div id="body">
-	  <% Person user =(Person) Auth.getSessionVariable(request, "user");
+	  <% Person user = (Person) request.getAttribute("user");
 	       if(user != null) { %>
 			<table id="profile-table">
 				<tr>
@@ -36,7 +36,23 @@
 					<td class="user-label">Street Address:</td><td class="user-data"><%=user.getAddress() %></td>
 				</tr>
 				<tr>
-					<td id="edit-link-cell"><a id="edit-link" href="/editprofile">Edit Profile</a></td>
+				<% Person me = (Person) Auth.getSessionVariable(request, "user");
+					if (me != null && me.getUserName().equals(user.getUserName())) {
+				%>
+					<td id="edit-link-cell">
+						<form action="/editprofile" method="get">
+							<input type="submit" value="Edit My Profile"/></a>
+						</form>
+					</td>
+				<% } else { %>
+					
+					<td id="edit-link-cell">
+						<form action="/userlisteditbutton" method="post">
+							<input type="submit" value="Edit User Profile" name="<% out.print(user.getUserName()); %>" />
+						</form>
+					</td>
+					
+				<% } %>
 				</tr>
 			</table>
 		  <% } %>

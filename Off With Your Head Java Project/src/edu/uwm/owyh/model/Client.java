@@ -10,6 +10,7 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 
+@SuppressWarnings("serial")
 public class Client implements Person,Serializable{
 		
 	private String _userName;
