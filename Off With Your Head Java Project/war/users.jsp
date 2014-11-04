@@ -17,6 +17,12 @@
 	<div id="body">
 	
 		User List
+		
+		<% if (request.getParameter("error") != null) { %>
+			<p class="error-message">You My Not Delete Yourself</p>
+		<% } else if (request.getParameter("deleted") != null) { %>
+			<p class="good-message">A User was Deleted!</p>
+		<% } %>
 	
 		<table id="users">
 			<tr>

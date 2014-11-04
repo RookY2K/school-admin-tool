@@ -20,7 +20,7 @@ public class UserList extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		if (! auth.verifyAdmin(response)) return;
+		if (! auth.verifyUser(response)) return;
 		
 		Person helper = UserFactory.getUser(true);
 		
@@ -50,6 +50,7 @@ public class UserList extends HttpServlet {
 		if (! auth.verifyAdmin(response)) return;
 		
 		Person helper = UserFactory.getUser(true);
+		Person me = (Person) Auth.getSessionVariable(request, "user");
 		
 		@SuppressWarnings("unchecked")
 		Map<String, Object> item = request.getParameterMap();
@@ -57,8 +58,17 @@ public class UserList extends HttpServlet {
 		if (item.keySet().size() > 0) {
 			for (String key : item.keySet()) {
 				Person user = helper.findPerson(key);
-				if (user != null)
-					user.removePerson();
+				if (user != null) {
+					if (user.getUserName().equals(me.getUserName())) {
+						response.sendRedirect(request.getContextPath() + "/userlist?error");	
+						return;
+					}
+					else {
+						user.removePerson();
+						response.sendRedirect(request.getContextPath() + "/userlist?deleted");	
+						return;	
+					}
+				}
 			}
 		}
 		

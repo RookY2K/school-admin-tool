@@ -1,7 +1,7 @@
 <%@ page import="edu.uwm.owyh.model.Person" %>
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
-    <jsp:param name="title" value="Hello World" />
+    <jsp:param name="title" value="Add Contact" />
     <jsp:param name="stylesheet" value="layout.css" />
     <jsp:param name="stylesheet" value="AdminStyle.css" />
 </jsp:include>
@@ -24,7 +24,7 @@
 					<span class="good-message">Contact Info Was Added To The DataStore!</span>
 				<% }
 				else { %>
-					<span class="error-message">Add Contact Info Failed! Check Email and Phone number!</span>
+					<span class="error-message">Add Contact Info Failed! You Must Use A Valid UWM Email and a Phone Number With Area Code!</span>
 				<% }
 			} %>
 	

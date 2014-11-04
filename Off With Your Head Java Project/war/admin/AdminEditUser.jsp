@@ -29,7 +29,7 @@
 	       if(user != null) { %>
 		       <form action="/admin/adminEditUser" method="post">
 				   <fieldset>
-					   <legend> <%= user.getName() %> </legend>
+					   <legend> <%= user.getUserName() %> </legend>
 					   <table>
 					   <tr>
 						   <td class="cell"><label class="field" for="name">Name: </label></td>
