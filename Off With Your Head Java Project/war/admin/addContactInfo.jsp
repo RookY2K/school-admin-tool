@@ -8,7 +8,16 @@
 </jsp:include>
 
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
-
+<%
+	String name = "";
+	String email = "";
+	String address = "";
+	String phonenumber = "";
+	String accessLevel = "";
+	String taAccess = Integer.toString(Person.AccessLevel.TA.getVal());
+	String instructorAccess = Integer.toString(Person.AccessLevel.INSTRUCTOR.getVal());
+	String adminAccess = Integer.toString(Person.AccessLevel.ADMIN.getVal());
+%>
 <div id="content">
  	<div id="local-nav-bar">
 		<ul id="local-list">
@@ -24,30 +33,28 @@
 			boolean addNewUser = (Boolean) request.getAttribute("addNewUser");
 			if (addNewUser) { 
 		%>
-		<span class="good-message">Contact Info Was Added To The DataStore!</span>
+		<span class="good-message">User Contact Was Added!</span>
 		<%	
 			}else{
 				List<String> errors = (List<String>)request.getAttribute("errors");
 				for(String error:errors){
 		%>
-		<span class="error-message"><%=error%></span>
+		<span class="error-message"><%=error%><br /></span>
 		<% 
 				}
 			}
 		}
 		%>
 			
-		<%
-			String name = "";
-			String email = "";
-			String address = "";
-			String phonenumber = "";
+		<%			
 			if(request.getAttribute("badUserInfo") != null) {
 				Person user = (Person) request.getAttribute("badUserInfo");
-				name = user.getProperty("name");
-				email = user.getProperty("email");
-				address = user.getProperty("address");
-				phonenumber = user.getProperty("phone");
+				name = user.getProperty("name").toString();
+				email = user.getProperty("email").toString();
+				address = user.getProperty("address").toString();
+				phonenumber = user.getProperty("phone").toString();
+				int access = ((Person.AccessLevel)user.getProperty("accesslevel")).getVal();
+				accessLevel = Integer.toString(access); 
 			}
 		
 		%>
@@ -66,20 +73,20 @@
 				</tr>
 				<tr>
 					<td class="cell"><label class="field" for="address">Address: </label></td>
-					<td class="cell"><input type = "text" name="address" id="address" value=<%=address%> />
+					<td class="cell"><input type = "text" name="address" id="address" value="<%=address%>" />
 				</tr>
 				<tr>
 					<td class="cell"><label class="field" for="phone">Phone number: </label></td>
-					<td class="cell"><input type = "text" name="phone" id="phone" value=<%=phonenumber%>/>
+					<td class="cell"><input type = "text" name="phone" id="phone" value="<%=phonenumber%>"/>
 				</tr>
 				<tr>
 					<td class="cell"><label class="field" for="accesslevel">Role: </label></td>
 					<td class="cell"> 
 						<select name="accesslevel" required>
 						  <option value="">Please Select</option>
-						  <option value="<% out.print(Person.AccessLevel.TA.getVal()); %>">TA</option>
-						  <option value="<% out.print(Person.AccessLevel.INSTRUCTOR.getVal()); %>">INSTRUCTOR</option>
-						  <option value="<% out.print(Person.AccessLevel.ADMIN.getVal()); %>">ADMIN</option>
+						  <option value="<%=taAccess%>" <%if(taAccess.equals(accessLevel)){%>selected<%}%>>TA</option>
+						  <option value="<%=instructorAccess%>"<%if(instructorAccess.equals(accessLevel)){%>selected<%}%>>INSTRUCTOR</option>
+						  <option value="<%=adminAccess%>"<%if(adminAccess.equals(accessLevel)){%>selected<%}%>>ADMIN</option>
 						</select>
 					</td>
 				</tr>

@@ -7,7 +7,13 @@
 </jsp:include>
 
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
-
+<%
+	String userName = "";
+	Person user = (Person)request.getAttribute("user");
+	if(user != null){
+		userName = user.getUserName();
+	}
+%>
 <div id="content">
 	<div id="local-nav-bar">
 		<ul id="local-list">
@@ -18,9 +24,7 @@
 	
 		User List
 		
-		<% if (request.getParameter("error") != null) { %>
-			<p class="error-message">You My Not Delete Yourself</p>
-		<% } else if (request.getParameter("deleted") != null) { %>
+		<% if (request.getParameter("deleted") != null) { %>
 			<p class="good-message">A User was Deleted!</p>
 		<% } %>
 	
@@ -51,12 +55,17 @@
 				<form action="/profile" method="post">
 				<td class="cell"><input type="submit" value="View Profile" name="<%=username[i] %>"/></td>
 				</form>
+				<%if(!userName.equalsIgnoreCase(username[i])){%>
 				<form action="/userlist" method="post">
 				<td class="cell"><input type="submit" value="Delete User" name="<%=username[i] %>"/></td>
 				</form>
+				<%}else{%>
+				<td class="cell"></td>
+				<%}%>
 				<form action="/userlisteditbutton" method="post">
 				<td class="cell"><input type="submit" value="Edit User" name="<%=username[i] %>"/></td>
 				</form>
+				
 			</tr>
 		<%
 	} %>

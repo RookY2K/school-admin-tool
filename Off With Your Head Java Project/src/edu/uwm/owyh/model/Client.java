@@ -111,14 +111,15 @@ public class Client implements Person,Serializable{
 
 	private String setProperty(String propertyKey, Object object) {
 		String error = "";
-		error = checkProperty(propertyKey, object);
+		Object obj = object;
+		if(propertyKey == "accesslevel"){
+			obj = ((AccessLevel)object).getVal();
+		}
+		_clientEntity.setProperty(propertyKey, obj);
+		
+		error = checkProperty(propertyKey, obj);
 		
 		if(!error.equals("")) return error;
-		
-		if(propertyKey == "accesslevel"){
-			object = ((AccessLevel)object).getVal();
-		}
-		_clientEntity.setProperty(propertyKey, object);
 		
 		return error;
 	}
@@ -165,7 +166,6 @@ public class Client implements Person,Serializable{
 				
 		if(!error.equals("")){
 			errors.add(error);
-			return errors;
 		}
 		
 		setProperty("toupperusername", userName.toUpperCase());
@@ -184,7 +184,6 @@ public class Client implements Person,Serializable{
 		if(errors.isEmpty()){
 			if(!store.insertEntity(_clientEntity)){
 				errors.add("Error: Datastore insert failed for unexpected reason!");
-				return errors;
 			}
 		}		
 		

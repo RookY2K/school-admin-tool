@@ -46,7 +46,7 @@ public class AddContactInfo extends HttpServlet {
 				Library.propertySetBuilder("name",request.getParameter("name")
 						                  ,"phone",request.getParameter("phone")
 						                  ,"address",request.getParameter("address")
-						                  ,"accesslever",accessLevel);
+						                  ,"accesslevel",accessLevel);
 		
 		Person newUser = UserFactory.getUser();
 		List<String> errors = newUser.addPerson(request.getParameter("email"), properties);
@@ -59,6 +59,6 @@ public class AddContactInfo extends HttpServlet {
 			request.setAttribute("badUserInfo", newUser);
 		}		
 		
-		request.getRequestDispatcher("addContactInfo.jsp").forward(request, response);	
+		request.getRequestDispatcher(request.getContextPath() + "/admin/addContactInfo.jsp").forward(request, response);	
 	}
 }

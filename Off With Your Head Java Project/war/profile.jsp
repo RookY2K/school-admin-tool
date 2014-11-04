@@ -30,7 +30,7 @@
 					<td class="user-label">Phone Number:</td><td class="user-data"><%=user.getProperty("phone") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Email Address:</td><td class="user-data"><%=user.getEmail() %></td>
+					<td class="user-label">Email Address:</td><td class="user-data"><%=user.getProperty("email") %></td>
 				</tr>
 				<tr>
 					<td class="user-label">Street Address:</td><td class="user-data"><%=user.getProperty("address") %></td>

@@ -22,10 +22,9 @@ public class UserList extends HttpServlet {
 		
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyUser(response)) return;
-		
-		Person helper = UserFactory.getUser();
-		
-		List<Person> clients = helper.getAllPersons();
+		Person user = (Person)Auth.getSessionVariable(request, "user");
+			
+		List<Person> clients = user.getAllPersons();
 
 		String[] name = new String[clients.size()];
 		String[] username = new String[clients.size()];
@@ -37,6 +36,7 @@ public class UserList extends HttpServlet {
 			accesslevel[i] = ((AccessLevel) clients.get(i).getProperty("accesslevel")).getVal();
 		}
 		
+		request.setAttribute("user", user);
 		request.setAttribute("name", name);
 		request.setAttribute("username", username);
 		request.setAttribute("accesslevel", accesslevel);
