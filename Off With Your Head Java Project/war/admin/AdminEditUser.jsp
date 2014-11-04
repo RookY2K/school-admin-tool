@@ -21,7 +21,7 @@
 			boolean isEdited = (Boolean) request.getAttribute("isEdited");
 			if (isEdited) { 
 		%>
-					<span class="good-message">Edit Was Successfully!</span>
+		<span class="good-message">Edit Was Successfully!</span>
 		<% 
 			}else { 
 				List<String> errors = (List<String>)request.getAttribute("errors");

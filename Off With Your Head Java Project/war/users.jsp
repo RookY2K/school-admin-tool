@@ -17,13 +17,19 @@
 	<div id="body">
 	
 		User List
+		
+		<% if (request.getParameter("error") != null) { %>
+			<p class="error-message">You My Not Delete Yourself</p>
+		<% } else if (request.getParameter("deleted") != null) { %>
+			<p class="good-message">A User was Deleted!</p>
+		<% } %>
 	
 		<table id="users">
 			<tr>
 				<td class="cell-header">Name</td>
 				<td class="cell-header">Email</td>
 				<td class="cell-header">Role</td>
-				<td class="cell-header" colspan="2">Modify</td>
+				<td class="cell-header" colspan="3">Modify</td>
 			</tr>		
  	<% String[] name = (String[]) request.getAttribute("name");
  	   String[] username = (String[]) request.getAttribute("username");
@@ -42,6 +48,9 @@
 					ADMIN
 				<% } %>
 				</td>
+				<form action="/profile" method="post">
+				<td class="cell"><input type="submit" value="View Profile" name="<%=username[i] %>"/></td>
+				</form>
 				<form action="/userlist" method="post">
 				<td class="cell"><input type="submit" value="Delete User" name="<%=username[i] %>"/></td>
 				</form>

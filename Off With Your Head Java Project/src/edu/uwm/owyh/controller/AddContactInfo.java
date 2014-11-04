@@ -56,6 +56,7 @@ public class AddContactInfo extends HttpServlet {
 		else {
 			request.setAttribute("errors",errors);
 			request.setAttribute("addNewUser", false);
+			request.setAttribute("badUserInfo", newUser);
 		}		
 		
 		request.getRequestDispatcher("addContactInfo.jsp").forward(request, response);	

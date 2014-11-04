@@ -36,6 +36,21 @@
 			}
 		}
 		%>
+			
+		<%
+			String name = "";
+			String email = "";
+			String address = "";
+			String phonenumber = "";
+			if(request.getAttribute("badUserInfo") != null) {
+				Person user = (Person) request.getAttribute("badUserInfo");
+				name = user.getProperty("name");
+				email = user.getProperty("email");
+				address = user.getProperty("address");
+				phonenumber = user.getProperty("phone");
+			}
+		
+		%>
 	
 		<form action="/admin/addContactInfo" method="post">
 			<fieldset>
@@ -43,19 +58,19 @@
 				<table>
 				<tr>
 					<td class="cell"><label class="field" for="name">Name: </label></td>
-					<td class="cell"><input type = "text" name="name" id="name" required/>
+					<td class="cell"><input type = "text" name="name" id="name" value="<%=name %>" required/>
 				</tr>
 				<tr>
 					<td class="cell"><label class="field" for="email">Email: </label></td>
-					<td class="cell"><input type = "text" name="email" id="email" required />
+					<td class="cell"><input type = "text" name="email" id="email" value="<%=email %>" required />
 				</tr>
 				<tr>
 					<td class="cell"><label class="field" for="address">Address: </label></td>
-					<td class="cell"><input type = "text" name="address" id="address" />
+					<td class="cell"><input type = "text" name="address" id="address" value=<%=address%> />
 				</tr>
 				<tr>
 					<td class="cell"><label class="field" for="phone">Phone number: </label></td>
-					<td class="cell"><input type = "text" name="phone" id="phone" />
+					<td class="cell"><input type = "text" name="phone" id="phone" value=<%=phonenumber%>/>
 				</tr>
 				<tr>
 					<td class="cell"><label class="field" for="accesslevel">Role: </label></td>
