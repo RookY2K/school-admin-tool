@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
 public class Profile extends HttpServlet {
@@ -17,14 +16,10 @@ public class Profile extends HttpServlet {
 			throws IOException, ServletException {
 		
 		/* Find the logged in user. They're the only ones who can view thier profile. */
-		Person user = (Person)request.getSession().getAttribute("user");
+		Person user = (Person)Auth.getSessionVariable(request, "user");
 		if (user != null)
 		{
-			String phoneString = user.getPhone();
-			/*request.getSession().setAttribute("user", user);
-			request.setAttribute("user", user);*/
-			response.sendRedirect(request.getContextPath() + "/profile.jsp");
-			//request.getRequestDispatcher("profile.jsp").forward(request, response);
+			response.sendRedirect(request.getContextPath() + "/profile.jsp");		
 		}
 		else
 		{

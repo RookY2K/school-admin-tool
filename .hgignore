@@ -29,6 +29,9 @@ Off With Your Head Java Project/war/admin/addadmin.jsp.orig
 Off With Your Head Java Project/src/edu/uwm/owyh/model/Auth.java.orig
 Off With Your Head Java Project/war/admin/adduser.jsp.orig
 Off With Your Head Java Project/war/admin/admin.jsp.orig
+Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/controller/Admin.java.orig
+Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/controller/UserList.java.orig
+Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/model/Auth.java.orig
 syntax: regexp
 ^(.*[\\/])?gen[\\/].*
 ^(.*[\\/])?bin[\\/].*

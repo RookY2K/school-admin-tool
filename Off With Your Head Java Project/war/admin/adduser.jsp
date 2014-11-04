@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.model.Person" %>
+<%@ page import="java.util.List" %> 
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Add User" />
@@ -17,15 +18,22 @@
 
 	<div id="body">
 	
-		<% if (request.getAttribute("addNewUser") != null) {
-				boolean addNewUser = (Boolean) request.getAttribute("addNewUser");
-				if (addNewUser) { %>
-					<span style="color:red;">New User Was Added To The DataStore!</span>
-				<% }
-				else { %>
-					<span style="color:red;">Add New User Failed! Check Email and Password!</span>
-				<% }
-			} %>
+		<% 
+		if (request.getAttribute("addNewUser") != null) {
+			boolean addNewUser = (Boolean) request.getAttribute("addNewUser");
+			if (addNewUser) { 
+		%>
+		<span style="color:red;">New User Was Added!</span>
+		<%	}else {
+				List<String> errors = (List<String>)request.getAttribute("errors");
+				for(String error:errors){
+		%>
+		<span style="color:red;"><%=error%></span>
+		<% 
+				}
+			}
+		}
+		%>
 	
 		<form action="/admin/addUser" method="post">
 			<fieldset>

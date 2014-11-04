@@ -6,13 +6,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.google.appengine.api.datastore.Entity;
 
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.Person.AccessLevel;
 import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
@@ -38,10 +36,9 @@ public class Login extends HttpServlet {
 		request.setAttribute("isLogin", isLogin);
 		
 		if (isLogin){
-			Person user = UserFactory.getUser(userEntity);
+			Person user = UserFactory.getUser().findPerson(username);
 			
-			HttpSession session = request.getSession();
-			session.setAttribute("user", user);						
+			Auth.setSessionVariable(request, "user", user);					
 		}
 		response.sendRedirect(request.getContextPath() + "/");
 	}

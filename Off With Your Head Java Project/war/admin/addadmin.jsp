@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.model.Person" %>
+<%@ page import="java.util.List" %>
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Add Admin" />
     <jsp:param name="stylesheet" value="addAdmin.css" />
@@ -16,14 +17,21 @@
 			<tr>
 				<td id="addAdmin-title" colspan="2">UWM - Computer Science Administration</td>
 			</tr>
-			<% if (request.getAttribute("addNewUser") != null) {
+			<% 
+			if (request.getAttribute("addNewUser") != null) {
 				boolean addNewUser = (Boolean) request.getAttribute("addNewUser");
-				if (!addNewUser) { %>
+				if (!addNewUser) {
+					List<String> errors = (List<String>)request.getAttribute("errors");
+					for(String error:errors){
+			%>
 			<tr>
-				<td colspan="2" style="color:red;">Add New User Failed! Check Email and Password!</td>		
+				<td colspan="2" style="color:red;"><%=error%></td>		
 			</tr>
-				<% }
-			} %>			
+			<% 
+					}
+				}
+			} 
+			%>			
 			<tr>
 				<td class="cell">Email:</td>
 				<td class="cell"><input type ="text" name="email" id="email" required />

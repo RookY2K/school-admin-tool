@@ -24,16 +24,16 @@
 	       if(user != null) { %>
 			<table id="profile-table">
 				<tr>
-					<td class="user-label">Name:</td><td class="user-data"><%=user.getName() %></td>
+					<td class="user-label">Name:</td><td class="user-data"><%=user.getProperty("name") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Phone Number:</td><td class="user-data"><%=user.getPhone() %></td>
+					<td class="user-label">Phone Number:</td><td class="user-data"><%=user.getProperty("phone") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Email Address:</td><td class="user-data"><%=user.getEmail() %></td>
+					<td class="user-label">Email Address:</td><td class="user-data"><%=user.getProperty("email") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Street Address:</td><td class="user-data"><%=user.getAddress() %></td>
+					<td class="user-label">Street Address:</td><td class="user-data"><%=user.getProperty("address") %></td>
 				</tr>
 				<tr>
 					<td id="edit-link-cell"><a id="edit-link" href="/editprofile">Edit Profile</a></td>

@@ -1,15 +1,17 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.Client;
 import edu.uwm.owyh.model.Person.AccessLevel;
 import edu.uwm.owyh.model.UserFactory;
 
@@ -37,14 +39,18 @@ public class AddClient extends HttpServlet {
 		try {
 			int access = Integer.parseInt(request.getParameter("accesslevel"));
 			AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
-			
-			Person newUser = UserFactory.getUser(email, password, accessLevel);
-			if (newUser.addPerson()) 
+			Map<String, Object> properties = Library.propertySetBuilder("password",password,"accesslevel",accessLevel);
+			Person newUser = UserFactory.getUser();
+			List<String> errors = newUser.addPerson(email, properties);
+			if (errors.isEmpty()) 
 				request.setAttribute("addNewUser", true);
-			else 
+			else{
 				request.setAttribute("addNewUser", false);
+				request.setAttribute("errors", errors);
+			}
 		}
 		catch (NumberFormatException e) {
+			//Shouldn't happen
 			request.setAttribute("addNewUser", false);
 		}
 		

@@ -19,7 +19,7 @@
 	                     <li class="global-link-item"><a class="global-link" href="/userlist">Users</a></li>
 	                     <li class="global-link-item"><a class="global-link" href="/">Admin</a>
 							<ul class="global-dropdown-list">
-								<li class="global-link-item"><a class="global-link" href="/admin/addContactInfo">Add User Contact Info</a></li>
+								<li class="global-link-item"><a class="global-link" href="/admin/addContactInfo">Add User Contact</a></li>
 								<!--<li class="global-link-item"><a class="global-link" href="/admin/addClient">Edit User Login</a></li>  -->	
 						    </ul>
 						</li>

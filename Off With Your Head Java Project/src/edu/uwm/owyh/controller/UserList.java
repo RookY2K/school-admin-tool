@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.Client;
+import edu.uwm.owyh.model.Person.AccessLevel;
 import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
@@ -23,7 +23,7 @@ public class UserList extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		auth.verifyUser(response);
 		
-		Person helper = UserFactory.getUser(true);
+		Person helper = UserFactory.getUser();
 		
 		List<Person> clients = helper.getAllPersons();
 
@@ -32,9 +32,9 @@ public class UserList extends HttpServlet {
 		int[] accesslevel = new int[clients.size()];
 		
 		for (int i = 0; i < clients.size(); i++) {
-			name[i] = clients.get(i).getName();
+			name[i] = (String) clients.get(i).getProperty("name");
 			username[i] = clients.get(i).getUserName();
-			accesslevel[i] = clients.get(i).getAccessLevel().getVal();
+			accesslevel[i] = ((AccessLevel) clients.get(i).getProperty("accesslevel")).getVal();
 		}
 		
 		request.setAttribute("name", name);
@@ -50,7 +50,7 @@ public class UserList extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		auth.verifyAdmin(response);
 		
-		Person helper = UserFactory.getUser(true);
+		Person helper = UserFactory.getUser();
 		
 		@SuppressWarnings("unchecked")
 		Map<String, Object> item = request.getParameterMap();
@@ -59,7 +59,7 @@ public class UserList extends HttpServlet {
 			for (String key : item.keySet()) {
 				Person user = helper.findPerson(key);
 				if (user != null)
-					user.removePerson();
+					user.removePerson(key);
 			}
 		}
 		

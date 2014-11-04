@@ -1,15 +1,17 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
 public class EditProfile extends HttpServlet {
@@ -32,24 +34,24 @@ public class EditProfile extends HttpServlet {
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		Auth auth = Auth.getAuth(request);
+		auth.verifyUser(response);
 		
-        
-	    String name = request.getParameter("name");
-	    String phone = request.getParameter("phone");
-	    String address = request.getParameter("address");
-	    String email = request.getParameter("email");
+		Person user = (Person) Auth.getSessionVariable(request, "user");
+	    Map<String, Object> properties = 
+	    		Library.propertySetBuilder("name",request.getParameter("name")
+	    				                  ,"phone",request.getParameter("phone")
+	    				                  ,"address",request.getParameter("address"));
 		
-	    Person user = (Person) request.getSession().getAttribute("user");
-		if (user != null)
+	    List<String> errors = user.editPerson(request.getParameter("email"), properties);
+	    		
+	    if (!errors.isEmpty())
 		{
-			user.setName(name);
-			user.setPhone(phone);
-			user.setEmail(email);
-			user.setAddress(address);
+			request.setAttribute("errors", errors);
+			request.getRequestDispatcher(request.getContextPath()+"/editprofile.jsp").forward(request,response);
 			
-			user.editPerson();
+		}else{
+			response.sendRedirect(request.getContextPath() + "/profile");			
 		}
-		response.sendRedirect(request.getContextPath() + "/profile");
-			
 	}
 }

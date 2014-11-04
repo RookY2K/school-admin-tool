@@ -12,7 +12,7 @@
 <div id="content">
  	<div id="local-nav-bar">
 		<ul id="local-list">
-	      <li><a class="nav-link" href="/admin/addClient">Add User</a></li>
+	      <li><a class="nav-link" href="/admin/addContactInfo">Add User Contact</a></li>
 		</ul>
 	</div>
 	  	

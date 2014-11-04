@@ -1,15 +1,17 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.Client;
 import edu.uwm.owyh.model.Person.AccessLevel;
 import edu.uwm.owyh.model.UserFactory;
 
@@ -26,24 +28,22 @@ public class AdminEditClient extends HttpServlet {
 		
 		Auth auth = Auth.getAuth(request);
 		auth.verifyAdmin(response);
-		
-	    String name = request.getParameter("username");
-	    String password = request.getParameter("password");
-	    String accesslevel = request.getParameter("accesslevel");
-	    Person helper = UserFactory.getUser(true);
-	    Person user = helper.findPerson(name);
-		if (user != null)
+	
+	    int access = Integer.parseInt(request.getParameter("accesslevel"));
+	    AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
+	    
+	    Map<String, Object> properties = 
+	    		Library.propertySetBuilder("password", request.getParameter("password")
+	    				                  ,"accesslevel", accessLevel);
+	    Person user = UserFactory.getUser();
+	    List<String> errors = user.editPerson(request.getParameter("username"), properties);
+	    
+		if (errors.isEmpty())
 		{
-			if(!password.isEmpty()){
-				user.setPassword(password);
-			}
-			
-			user.setAccessLevel(AccessLevel.getAccessLevel(Integer.parseInt(accesslevel)));
-			
-			user.editPerson();
-			
-		}
-		
-		response.sendRedirect(request.getContextPath() + "/userlist");
+			response.sendRedirect(request.getContextPath() + "/userlist");
+		}else{
+			request.setAttribute("errors", errors);
+			//TODO forward to correct jsp page
+		}		
 	}
 }

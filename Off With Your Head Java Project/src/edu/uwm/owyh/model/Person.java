@@ -2,6 +2,7 @@ package edu.uwm.owyh.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -9,6 +10,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 public interface Person extends Serializable{
 	public static final Key USERKEY = KeyFactory.createKey("rootKey", "root");
 	public static final String EMAILPATTERN = "^\\w+@uwm.edu$";
+	public static final String PHONEPATTERN = "^((\\(\\d{3}\\))|(\\d{3}))[-\\.\\s]{0,1}\\d{3}[-\\.\\s]{0,1}\\d{4}$";
 	public enum AccessLevel {
 		TA(3), INSTRUCTOR(2), ADMIN(1);
 		private int value;
@@ -36,91 +38,17 @@ public interface Person extends Serializable{
 	 * Accessor for user name
 	 * @return _userName
 	 */
-	public abstract String getUserName();
-
-	public abstract String getToUpperUserName();
-
-	/**
-	 * Accessor for password
-	 * @return _password
-	 */
-	public abstract String getPassword();
-
-	/**
-	 * Accessor method for Access level
-	 * @return _accessLevel
-	 */
-	public abstract AccessLevel getAccessLevel();
-
-	/**
-	 * Accessor method for name
-	 * @return _name
-	 */
-	public abstract String getName();
-
-	/**
-	 * Accessor method for email
-	 * @return _email
-	 */
-	public abstract String getEmail();
-
-	/**
-	 * Accessor method for phone
-	 * @return _phone
-	 */
-	public abstract String getPhone();
-
-	/**
-	 * Accessor method for address
-	 * @return _address
-	 */
-	public abstract String getAddress();
-
-	/**
-	 * Mutator for Password
-	 * @param password
-	 */
-	public abstract void setPassword(String password);
-
-	/**
-	 * Mutator for Access Level
-	 * @param accessLevel
-	 */
-	public abstract void setAccessLevel(AccessLevel accessLevel);
-
-	/**
-	 * Mutator for name
-	 * @param name
-	 */
-	public abstract void setName(String name);
-
-	/**
-	 * Mutator for Email
-	 * @param email
-	 */
-	public abstract void setEmail(String email);
-
-	/**
-	 * Mutator for phone
-	 * @param phone
-	 */
-	public abstract void setPhone(String phone);
-
-	/**
-	 * Mutator for address
-	 * @param address
-	 */
-	public abstract void setAddress(String address);
-
-	//public abstract boolean savePerson();
+	abstract String getUserName();
 	
-	public abstract boolean addPerson();
+	abstract Object getProperty(String propertyKey);
 	
-	public abstract boolean editPerson();
+	abstract List<String> addPerson(String userName, Map<String,Object> properties);
+	
+	abstract List<String> editPerson(String userName, Map<String,Object> properties);
 
-	public abstract void removePerson();
+	abstract boolean removePerson(String userName);
 	
-	public abstract Person findPerson(String identifier);
+	abstract Person findPerson(String userName);
 	
-	public abstract List<Person> getAllPersons();
+	abstract List<Person> getAllPersons();
 }

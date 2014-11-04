@@ -1,12 +1,15 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Person;
 import edu.uwm.owyh.model.Person.AccessLevel;
@@ -26,34 +29,30 @@ public class AdminEditUser extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		auth.verifyAdmin(response);
 		
-	    String accesslevel = request.getParameter("accesslevel");
-	    String name = request.getParameter("name");
-	    String phone = request.getParameter("phone");
-	    String address = request.getParameter("address");
-	    String userName = request.getParameter("username");
+		int access = Integer.parseInt(request.getParameter("accesslevel"));
+		AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
+	    Person user = UserFactory.getUser();
+		Map<String, Object> properties = 
+				Library.propertySetBuilder("accesslevel",accessLevel
+						                  ,"name", request.getParameter("name")
+						                  ,"phone", request.getParameter("phone")
+						                  ,"address", request.getParameter("address"));
 		
-	    Person helper = UserFactory.getUser(true);
-		Person user = helper.findPerson(userName);
-		if (user != null)
+		List<String> errors = user.editPerson(request.getParameter("username"), properties);
+		if (errors.isEmpty())
 		{
-			user.setAccessLevel(AccessLevel.getAccessLevel(Integer.parseInt(accesslevel)));
-			user.setName(name);
-			user.setPhone(phone);
-			user.setAddress(address);
-			
-			if(user.editPerson()){
-				request.setAttribute("user", user);
-				request.setAttribute("isEdited", true);
-				Person client = (Person)request.getSession().getAttribute("user");
+			request.setAttribute("user", user);
+			request.setAttribute("isEdited", true);
+			Person client = (Person)Auth.getSessionVariable(request, "user");
 				if(user.getUserName().equalsIgnoreCase(client.getUserName())){
-					//Auth.removeSessionVariable(request, "user");
 					Auth.setSessionVariable(request, "user", user);
 				}
-			}else{
-				request.setAttribute("user", user);
-				request.setAttribute("isEdited", false);
-			}
-		}	
+		}else{
+			request.setAttribute("errors", errors);
+			request.setAttribute("user", user);
+			request.setAttribute("isEdited", false);
+		}
+			
 		request.getRequestDispatcher(request.getContextPath() + "/admin/AdminEditUser.jsp").forward(request,response);	
 	}
 }

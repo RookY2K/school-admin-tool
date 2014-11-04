@@ -1,16 +1,17 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.ContactCard;
 import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.Client;
 import edu.uwm.owyh.model.Person.AccessLevel;
 import edu.uwm.owyh.model.UserFactory;
 
@@ -32,10 +33,6 @@ public class AddContactInfo extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		auth.verifyAdmin(response);
 		
-		String name = request.getParameter("name");
-		String email = request.getParameter("email");
-		String address = request.getParameter("address");
-		String phone = request.getParameter("phone");
 		AccessLevel accessLevel = null;
 		try {
 			int access = Integer.parseInt(request.getParameter("accesslevel"));
@@ -45,13 +42,19 @@ public class AddContactInfo extends HttpServlet {
 			request.setAttribute("addNewUser", false);
 		}	
 		
-		Person newUser = UserFactory.getUser(name, phone, address, email);
-		if(accessLevel != null) newUser.setAccessLevel(accessLevel);
+		Map<String, Object> properties = 
+				Library.propertySetBuilder("name",request.getParameter("name")
+						                  ,"phone",request.getParameter("phone")
+						                  ,"address",request.getParameter("address")
+						                  ,"accesslever",accessLevel);
 		
-		if (newUser.addPerson()) {
+		Person newUser = UserFactory.getUser();
+		List<String> errors = newUser.addPerson(request.getParameter("email"), properties);
+		if (errors.isEmpty()) {
 			request.setAttribute("addNewUser", true);
 		}
 		else {
+			request.setAttribute("errors",errors);
 			request.setAttribute("addNewUser", false);
 		}		
 		

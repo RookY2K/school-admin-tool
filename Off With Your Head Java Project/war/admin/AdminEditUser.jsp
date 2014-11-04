@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.model.Person" %>
+<%@ page import="java.util.List" %>
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Edit User" />
@@ -16,41 +17,49 @@
 	</div>
 	  	
 	<div id="body">
-		<% if (request.getAttribute("isEdited") != null) {
-				boolean isEdited = (Boolean) request.getAttribute("isEdited");
-				if (isEdited) { %>
-					<span style="color:red;">Edit Was Successfully!</span>
-				<% }
-				else { %>
-					<span style="color:red;">Edit Failed! Check Phone number!</span>
-				<% }
-			} %>
+		<% 
+		if (request.getAttribute("isEdited") != null) {
+			boolean isEdited = (Boolean) request.getAttribute("isEdited");
+			if (isEdited) { 
+		%>
+		<span style="color:red;">Edit Was Successfully!</span>
+		<% 
+			}else { 
+				List<String> errors = (List<String>)request.getAttribute("errors");
+				for(String error:errors){
+		%>
+		<span style="color:red;"><%=error%></span>
+		<% 
+				}
+			}
+		}
+		%>
 	
 	    <% Person user =(Person)(request.getAttribute("user"));
 	       if(user != null) { %>
 		       <form action="/admin/adminEditUser" method="post">
 				   <fieldset>
-					   <legend> <%= user.getName() %> </legend>
+					   <legend> <%= user.getProperty("name") %> </legend>
 					   <table>
 					   <tr>
 						   <td class="cell"><label class="field" for="name">Name: </label></td>
-						   <td class="cell"><input type = "text" name="name" id="name" value="<%=user.getName() %>" required />
+						   <td class="cell"><input type = "text" name="name" id="name" value="<%=user.getProperty("name") %>" required />
 					   </tr>
 					   <tr>
 						   <td class="cell"><label class="field" for="address">Address: </label></td>
-						   <td class="cell"><input type = "text" name="address" id="address" value="<%=user.getAddress() %>" />
+						   <td class="cell"><input type = "text" name="address" id="address" value="<%=user.getProperty("address") %>" />
 					   </tr>
 					   <tr>
 						   <td class="cell"><label class="field" for="phone">Phone Number: </label></td>
-						   <td class="cell"><input type = "text" name="phone" id="phone" value="<%=user.getPhone() %>" />
+						   <td class="cell"><input type = "text" name="phone" id="phone" value="<%=user.getProperty("phone") %>" />
 					   </tr>	
 					   <tr>
 						   <td class="cell"><label class="field" for="accesslevel">Role: </label></td>
 						   <td class="cell"> 
 							   <select name="accesslevel">
-							     <option value="<% out.print(Person.AccessLevel.TA.getVal()); %>" <% if(user.getAccessLevel() == Person.AccessLevel.TA) {%> selected <% } %>>TA</option>
-							     <option value="<% out.print(Person.AccessLevel.INSTRUCTOR.getVal()); %>" <% if(user.getAccessLevel() == Person.AccessLevel.INSTRUCTOR) {%> selected <% } %>>INSTRUCTOR</option>
-							     <option value="<% out.print(Person.AccessLevel.ADMIN.getVal()); %>" <% if(user.getAccessLevel() == Person.AccessLevel.ADMIN) {%> selected <% } %>>ADMIN</option>
+							     <option value="<% out.print(Person.AccessLevel.TA.getVal()); %>" <% if(user.getProperty("accesslevel") == Person.AccessLevel.TA) {%> selected <% } %>>TA</option>
+							     <option value="<% out.print(Person.AccessLevel.INSTRUCTOR.getVal()); %>" <% if(user.getProperty("accesslevel") == Person.AccessLevel.INSTRUCTOR) {%> selected <% } %>>INSTRUCTOR</option>
+							     <option value="<% out.print(Person.AccessLevel.ADMIN.getVal()); %>" <% if(user.getProperty("accesslevel") == Person.AccessLevel.ADMIN) {%> selected <% } %>>ADMIN</option>
 							   </select>
 						   </td>
 					   </tr>

@@ -23,7 +23,7 @@ public class Auth {
 		Person user = (Person)getSessionVariable(request, "user");
 		if (user == null) return;
 		_goodUserName = user.getUserName();
-		_goodAccess = user.getAccessLevel();
+		_goodAccess = (AccessLevel) user.getProperty("accesslevel");
 	}
 	
 	private Auth(){
