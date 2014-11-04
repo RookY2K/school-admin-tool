@@ -65,6 +65,9 @@ public class Auth {
 		if(users.isEmpty()) return null;
 		Entity user = users.get(0);
 		
+		/* TODO: user password should never be null. and yet it was, so temporary fix */
+		if (user.getProperty("password") == null) return null;
+		
 		if(!user.getProperty("password").equals(password)) return null;
 		
 		
