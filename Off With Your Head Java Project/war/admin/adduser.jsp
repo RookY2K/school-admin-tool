@@ -1,7 +1,7 @@
 <%@ page import="edu.uwm.owyh.model.Person" %>
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
-    <jsp:param name="title" value="Hello World" />
+    <jsp:param name="title" value="Add User" />
     <jsp:param name="stylesheet" value="layout.css" />
     <jsp:param name="stylesheet" value="AdminStyle.css" />
 </jsp:include>
@@ -14,7 +14,7 @@
 	      <li><a class="nav-link" href="/admin/addClient">Add User</a></li>
 		</ul>
 	</div>
-	  	
+
 	<div id="body">
 	
 		<% if (request.getAttribute("addNewUser") != null) {

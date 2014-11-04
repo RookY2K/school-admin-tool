@@ -1,3 +1,6 @@
+<%@ page import="edu.uwm.owyh.model.Auth" %>
+
+
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Admin" />
     <jsp:param name="stylesheet" value="layout.css" />
