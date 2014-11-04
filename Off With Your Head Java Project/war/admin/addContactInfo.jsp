@@ -27,6 +27,21 @@
 					<span class="error-message">Add Contact Info Failed! You Must Use A Valid UWM Email and a Phone Number With Area Code!</span>
 				<% }
 			} %>
+			
+		<%
+			String name = "";
+			String email = "";
+			String address = "";
+			String phonenumber = "";
+			if(request.getAttribute("badUserInfo") != null) {
+				Person user = (Person) request.getAttribute("badUserInfo");
+				name = user.getName();
+				email = user.getEmail();
+				address = user.getAddress();
+				phonenumber = user.getPhone();
+			}
+		
+		%>
 	
 		<form action="/admin/addContactInfo" method="post">
 			<fieldset>
@@ -34,11 +49,11 @@
 				<table>
 				<tr>
 					<td class="cell"><label class="field" for="name">Name: </label></td>
-					<td class="cell"><input type = "text" name="name" id="name" required/>
+					<td class="cell"><input type = "text" name="name" id="name" value="<%=name %>" required/>
 				</tr>
 				<tr>
 					<td class="cell"><label class="field" for="email">Email: </label></td>
-					<td class="cell"><input type = "text" name="email" id="email" required />
+					<td class="cell"><input type = "text" name="email" id="email" value="<%=email %>" required />
 				</tr>
 				<tr>
 					<td class="cell"><label class="field" for="accesslevel">Role: </label></td>
@@ -52,11 +67,11 @@
 				</tr>
 				<tr>
 					<td class="cell"><label class="field" for="address">Address: </label></td>
-					<td class="cell"><input type = "text" name="address" id="address" />
+					<td class="cell"><input type = "text" name="address" id="address" value="<%=address %>" />
 				</tr>
 				<tr>
 					<td class="cell"><label class="field" for="phone">Phone number: </label></td>
-					<td class="cell"><input type = "text" name="phone" id="phone" />
+					<td class="cell"><input type = "text" name="phone" id="phone" value="<%=phonenumber %>" />
 				</tr>
 				<tr>
 					<td class="cell" colspan="2"><input type="submit" value="Submit Contact Info" /></td>
