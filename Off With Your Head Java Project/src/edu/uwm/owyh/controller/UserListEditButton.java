@@ -25,7 +25,7 @@ public class UserListEditButton extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		auth.verifyAdmin(response);
+		if (! auth.verifyAdmin(response)) return;
 		
 		@SuppressWarnings("unchecked")
 		Map<String, Object> item = request.getParameterMap();

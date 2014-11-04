@@ -21,7 +21,7 @@ public class UserList extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		auth.verifyUser(response);
+		if (! auth.verifyAdmin(response)) return;
 		
 		Person helper = UserFactory.getUser();
 		
@@ -48,7 +48,7 @@ public class UserList extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		auth.verifyAdmin(response);
+		if (! auth.verifyAdmin(response)) return;
 		
 		Person helper = UserFactory.getUser();
 		

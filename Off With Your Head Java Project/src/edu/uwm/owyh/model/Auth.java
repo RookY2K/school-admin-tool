@@ -80,12 +80,20 @@ public class Auth {
 		return (_goodAccess == AccessLevel.ADMIN);
 	}
 	
-	public void verifyUser(HttpServletResponse response) throws IOException {
-		if (_goodUserName == null) response.sendRedirect("/");
+	public boolean verifyUser(HttpServletResponse response) throws IOException {
+		if (_goodUserName == null) {
+			response.sendRedirect("/");
+			return false;
+		}
+		return true;
 	}
 	
-	public void verifyAdmin(HttpServletResponse response) throws IOException {
-		if (_goodUserName == null || _goodAccess != AccessLevel.ADMIN) response.sendRedirect("/");
+	public boolean verifyAdmin(HttpServletResponse response) throws IOException {
+		if (_goodUserName == null || _goodAccess != AccessLevel.ADMIN) {
+			response.sendRedirect("/");
+			return false;
+		}
+		return true;
 	}
 	
 	@SuppressWarnings("unchecked")

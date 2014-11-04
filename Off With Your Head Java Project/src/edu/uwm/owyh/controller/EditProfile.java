@@ -34,9 +34,9 @@ public class EditProfile extends HttpServlet {
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		Auth auth = Auth.getAuth(request);
-		auth.verifyUser(response);
 		
+		Auth auth = Auth.getAuth(request);
+		if (! auth.verifyAdmin(response)) return;
 		Person user = (Person) Auth.getSessionVariable(request, "user");
 	    Map<String, Object> properties = 
 	    		Library.propertySetBuilder("name",request.getParameter("name")

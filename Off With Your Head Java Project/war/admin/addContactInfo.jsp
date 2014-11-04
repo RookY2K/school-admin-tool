@@ -24,13 +24,13 @@
 			boolean addNewUser = (Boolean) request.getAttribute("addNewUser");
 			if (addNewUser) { 
 		%>
-		<span style="color:red;">Contact Info Was Saved!</span>
+		<span class="good-message">Contact Info Was Added To The DataStore!</span>
 		<%	
 			}else{
 				List<String> errors = (List<String>)request.getAttribute("errors");
 				for(String error:errors){
 		%>
-		<span style="color:red;"><%=error%></span>
+		<span class="error-message"><%=error%></span>
 		<% 
 				}
 			}

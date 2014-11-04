@@ -12,7 +12,6 @@
 <div id="content">
  	<div id="local-nav-bar">
 		<ul id="local-list">
-	      <li><a class="nav-link" href="/admin/addUser">Add User</a></li>
 		</ul>
 	</div>
 	  	
@@ -22,13 +21,13 @@
 			boolean isEdited = (Boolean) request.getAttribute("isEdited");
 			if (isEdited) { 
 		%>
-		<span style="color:red;">Edit Was Successfully!</span>
+					<span class="good-message">Edit Was Successfully!</span>
 		<% 
 			}else { 
 				List<String> errors = (List<String>)request.getAttribute("errors");
 				for(String error:errors){
 		%>
-		<span style="color:red;"><%=error%></span>
+		<span class="error-message"><%=error%></span>
 		<% 
 				}
 			}

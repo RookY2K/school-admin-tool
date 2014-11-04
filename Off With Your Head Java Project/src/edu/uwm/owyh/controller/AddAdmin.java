@@ -35,6 +35,8 @@ public class AddAdmin extends HttpServlet{
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
+		// TODO: prevent direct access input, when initial admin already exist
+		
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");	
 

@@ -23,12 +23,12 @@
 			boolean addNewUser = (Boolean) request.getAttribute("addNewUser");
 			if (addNewUser) { 
 		%>
-		<span style="color:red;">New User Was Added!</span>
+		<span class="good-message">New User Was Added!</span>
 		<%	}else {
 				List<String> errors = (List<String>)request.getAttribute("errors");
 				for(String error:errors){
 		%>
-		<span style="color:red;"><%=error%></span>
+		<span class="error-message"><%=error%></span>
 		<% 
 				}
 			}

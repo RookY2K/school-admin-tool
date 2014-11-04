@@ -27,7 +27,7 @@ public class AdminEditUser extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		auth.verifyAdmin(response);
+		if (! auth.verifyAdmin(response)) return;
 		
 		int access = Integer.parseInt(request.getParameter("accesslevel"));
 		AccessLevel accessLevel = AccessLevel.getAccessLevel(access);

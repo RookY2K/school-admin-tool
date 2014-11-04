@@ -11,7 +11,7 @@
 				</tr>
 				<% if (request.getParameter("login") != null) { %>
 				 <tr>
-				 	<td style="color:red;" colspan="2">Login Failed, check Username/Password!</td>
+				 	<td colspan="2"><span style="color:red;">Login Failed, check Username/Password!</span></td>
 				 </tr> 
 				<% } %>
 				<tr>
