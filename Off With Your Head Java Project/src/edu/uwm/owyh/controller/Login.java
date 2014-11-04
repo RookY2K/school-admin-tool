@@ -12,7 +12,6 @@ import com.google.appengine.api.datastore.Entity;
 
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.Person.AccessLevel;
 import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
@@ -41,8 +40,11 @@ public class Login extends HttpServlet {
 			Person user = UserFactory.getUser(userEntity);
 			
 			HttpSession session = request.getSession();
-			session.setAttribute("user", user);						
+			session.setAttribute("user", user);	
+			response.sendRedirect(request.getContextPath() + "/");
 		}
-		response.sendRedirect(request.getContextPath() + "/");
+		else {
+			response.sendRedirect(request.getContextPath() + "/index.jsp?login=false");
+		}
 	}
 }

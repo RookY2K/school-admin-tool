@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
 public class EditProfile extends HttpServlet {
@@ -33,6 +32,8 @@ public class EditProfile extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
+		Auth auth = Auth.getAuth(request);
+		if (! auth.verifyAdmin(response)) return;
         
 	    String name = request.getParameter("name");
 	    String phone = request.getParameter("phone");

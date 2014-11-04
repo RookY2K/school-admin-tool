@@ -25,7 +25,7 @@ public class AdminEditClient extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		auth.verifyAdmin(response);
+		if (! auth.verifyAdmin(response)) return;
 		
 	    String name = request.getParameter("username");
 	    String password = request.getParameter("password");

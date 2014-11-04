@@ -11,7 +11,6 @@
 <div id="content">
  	<div id="local-nav-bar">
 		<ul id="local-list">
-	      <li><a class="nav-link" href="/admin/addUser">Add User</a></li>
 		</ul>
 	</div>
 	  	
@@ -19,10 +18,10 @@
 		<% if (request.getAttribute("isEdited") != null) {
 				boolean isEdited = (Boolean) request.getAttribute("isEdited");
 				if (isEdited) { %>
-					<span style="color:red;">Edit Was Successfully!</span>
+					<span class="good-message">Edit Was Successfully!</span>
 				<% }
 				else { %>
-					<span style="color:red;">Edit Failed! Check Phone number!</span>
+					<span class="error-message">Edit Failed! Check Phone number!</span>
 				<% }
 			} %>
 	

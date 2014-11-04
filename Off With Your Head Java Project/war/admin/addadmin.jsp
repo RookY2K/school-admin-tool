@@ -20,7 +20,7 @@
 				boolean addNewUser = (Boolean) request.getAttribute("addNewUser");
 				if (!addNewUser) { %>
 			<tr>
-				<td colspan="2" style="color:red;">Add New User Failed! Check Email and Password!</td>		
+				<td colspan="2" style="color:red;">You must use a correct UWM email.</td>		
 			</tr>
 				<% }
 			} %>			

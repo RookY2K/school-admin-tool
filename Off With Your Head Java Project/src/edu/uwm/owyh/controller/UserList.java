@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.Client;
 import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
@@ -21,7 +20,7 @@ public class UserList extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		auth.verifyUser(response);
+		if (! auth.verifyAdmin(response)) return;
 		
 		Person helper = UserFactory.getUser(true);
 		
@@ -48,7 +47,7 @@ public class UserList extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		auth.verifyAdmin(response);
+		if (! auth.verifyAdmin(response)) return;
 		
 		Person helper = UserFactory.getUser(true);
 		

@@ -20,10 +20,10 @@
 		<% if (request.getAttribute("addNewUser") != null) {
 				boolean addNewUser = (Boolean) request.getAttribute("addNewUser");
 				if (addNewUser) { %>
-					<span style="color:red;">New User Was Added To The DataStore!</span>
+					<span class="good-message">New User Was Added To The DataStore!</span>
 				<% }
 				else { %>
-					<span style="color:red;">Add New User Failed! Check Email and Password!</span>
+					<span class="error-message">Add New User Failed! Check Email and Password!</span>
 				<% }
 			} %>
 	

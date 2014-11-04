@@ -164,5 +164,11 @@ body {
 	background: #000000;
 }
 
+.error-message {
+	color: red;
+}
 
+.good-message {
+	color: green;
+}
 

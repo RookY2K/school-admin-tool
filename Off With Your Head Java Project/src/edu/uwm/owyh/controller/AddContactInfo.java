@@ -21,7 +21,7 @@ public class AddContactInfo extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		auth.verifyUser(response);
+		if (! auth.verifyAdmin(response)) return;
 
 		response.sendRedirect(request.getContextPath() + "/admin/addContactInfo.jsp");	
 	}
@@ -30,7 +30,7 @@ public class AddContactInfo extends HttpServlet {
 			throws IOException, ServletException {
 
 		Auth auth = Auth.getAuth(request);
-		auth.verifyAdmin(response);
+		if (! auth.verifyAdmin(response)) return;
 		
 		String name = request.getParameter("name");
 		String email = request.getParameter("email");
