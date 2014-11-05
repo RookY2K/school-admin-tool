@@ -1,5 +1,7 @@
 <%@ page import="edu.uwm.owyh.model.Person" %>
 <%@ page import="java.util.List" %>
+<%! @SuppressWarnings("unchecked") %>
+
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Add Admin" />
     <jsp:param name="stylesheet" value="addAdmin.css" />

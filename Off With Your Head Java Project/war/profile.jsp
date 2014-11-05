@@ -41,7 +41,7 @@
 				%>
 					<td id="edit-link-cell">
 						<form action="/editprofile" method="get">
-							<input type="submit" value="Edit My Profile"/></a>
+							<input type="submit" value="Edit My Profile"/>
 						</form>
 					</td>
 				<% } else { %>

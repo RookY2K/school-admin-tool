@@ -26,7 +26,7 @@
 					<td>&nbsp;</td>
 					<td>
 						<input type="submit" id="login_button" value="Log In" />
-						&nbsp;<a href="passwordReset.html">Forgot Password?</a>
+						<!-- &nbsp;<a href="passwordReset.html">Forgot Password?</a> -->
 					</td>
 				</tr>			
 				<tr>

@@ -12,6 +12,10 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 
 public final class DataStore implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6140486133032202313L;
 	private DatastoreService _service;
 	private static DataStore _store = null;
 	

@@ -17,7 +17,6 @@ import edu.uwm.owyh.model.Person.AccessLevel;
 public class Auth {
 	private AccessLevel _goodAccess;
 	private String _goodUserName;
-	private String _goodPassword; 
 	
 	private Auth(HttpServletRequest request){
 		Person user = (Person)getSessionVariable(request, "user");
@@ -29,7 +28,6 @@ public class Auth {
 	private Auth(){
 		_goodAccess = null;
 		_goodUserName = null;
-		_goodPassword = null;
 	}	
 	
 	public static Object getSessionVariable(HttpServletRequest request, String key){

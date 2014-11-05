@@ -21,6 +21,7 @@ public class InitialLogin extends HttpServlet{
 			Boolean noUsers = (Boolean)request.getAttribute("noUsers");
 			
 			if(noUsers != null && noUsers.booleanValue()){
+												
 				Auth.setSessionVariable(request, "noUsers", noUsers);
 				response.sendRedirect(request.getContextPath() + "/initiallogin.jsp");
 				return;
@@ -33,8 +34,10 @@ public class InitialLogin extends HttpServlet{
 		public void doPost(HttpServletRequest request, HttpServletResponse response)
 				throws IOException, ServletException {
 			DataStore store = DataStore.getDataStore();
+			
 			/* DO NOT DELETE
-			Entity softwareKey = new Entity("softwarekey");
+			Key software = KeyFactory.createKey("softwarekey", "appkey");
+			Entity softwareKey = new Entity(software);
 			softwareKey.setProperty("keyValue", "63D07BtB09");
 			store.insertEntity(softwareKey);*/
 

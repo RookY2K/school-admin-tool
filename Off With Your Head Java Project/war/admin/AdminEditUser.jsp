@@ -1,6 +1,6 @@
 <%@ page import="edu.uwm.owyh.model.Person" %>
 <%@ page import="java.util.List" %>
-
+<%! @SuppressWarnings("unchecked") %>
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Edit User" />
     <jsp:param name="stylesheet" value="layout.css" />

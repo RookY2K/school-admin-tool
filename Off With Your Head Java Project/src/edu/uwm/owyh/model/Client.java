@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
@@ -40,7 +42,10 @@ public class Client implements Person,Serializable{
 		DataStore store = DataStore.getDataStore();
 		Filter filter = new FilterPredicate("toupperusername", FilterOperator.EQUAL, userName.toUpperCase());
 		List<Entity> users = store.findEntities(getClientTable(), filter, USERKEY);
-		if(users.isEmpty()) return new Entity(getClientTable(),USERKEY);
+		if(users.isEmpty()) {
+			Key user = KeyFactory.createKey(USERKEY,getClientTable(), userName);
+			return new Entity(user);
+		}
 		return users.get(0);
 	}
 

@@ -51,6 +51,7 @@ public class EditProfile extends HttpServlet {
 			request.getRequestDispatcher(request.getContextPath()+"/editprofile.jsp").forward(request,response);
 			
 		}else{
+			Auth.setSessionVariable(request, "user", user);
 			response.sendRedirect(request.getContextPath() + "/profile");			
 		}
 	}
