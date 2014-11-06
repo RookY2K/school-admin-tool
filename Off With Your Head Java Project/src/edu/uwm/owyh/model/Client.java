@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.jdo.annotations.*;
+
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -231,6 +233,121 @@ public class Client implements Person,Serializable{
 		setClient(userName);
 		
 		return store.deleteEntity(_clientEntity);
+		
+	}
+	
+	@PersistenceCapable
+	private static class UserEntity{
+		
+		@PrimaryKey
+		@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
+		Key key;
+		
+		@Persistent
+		private String userName;		
+		@Persistent
+		private String password;
+		@Persistent
+		private String email;
+		@Persistent
+		private String phone;
+		@Persistent
+		private Integer accessLevel;
+		@Persistent
+		private String address;
+		@Persistent
+		
+		private void createKey(String userName){
+			key = KeyFactory.createKey(USERKEY, UserEntity.class.getSimpleName(), userName);
+		}
+		
+		private String name;
+		/**
+		 * @return the userName
+		 */
+		private String getUserName() {
+			return userName;
+		}
+		/**
+		 * @param userName the userName to set
+		 */
+		private void setUserName(String userName) {
+			this.userName = userName;
+		}
+		/**
+		 * @return the password
+		 */
+		private String getPassword() {
+			return password;
+		}
+		/**
+		 * @param password the password to set
+		 */
+		private void setPassword(String password) {
+			this.password = password;
+		}
+		/**
+		 * @return the email
+		 */
+		private String getEmail() {
+			return email;
+		}
+		/**
+		 * @param email the email to set
+		 */
+		private void setEmail(String email) {
+			this.email = email;
+		}
+		/**
+		 * @return the phone
+		 */
+		private String getPhone() {
+			return phone;
+		}
+		/**
+		 * @param phone the phone to set
+		 */
+		private void setPhone(String phone) {
+			this.phone = phone;
+		}
+		/**
+		 * @return the accessLevel
+		 */
+		private Integer getAccessLevel() {
+			return accessLevel;
+		}
+		/**
+		 * @param accessLevel the accessLevel to set
+		 */
+		private void setAccessLevel(Integer accessLevel) {
+			this.accessLevel = accessLevel;
+		}
+		/**
+		 * @return the address
+		 */
+		private String getAddress() {
+			return address;
+		}
+		/**
+		 * @param address the address to set
+		 */
+		private void setAddress(String address) {
+			this.address = address;
+		}
+		/**
+		 * @return the name
+		 */
+		private String getName() {
+			return name;
+		}
+		/**
+		 * @param name the name to set
+		 */
+		private void setName(String name) {
+			this.name = name;
+		}
+		
+		
 	}
 
 }
