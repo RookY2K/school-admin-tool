@@ -34,9 +34,14 @@ public class AdminEditUser extends HttpServlet {
 	    Person user = UserFactory.getUser();
 		Map<String, Object> properties = 
 				Library.propertySetBuilder("accesslevel",accessLevel
-						                  ,"name", request.getParameter("name")
+						                  ,"firstname", request.getParameter("firstname")
+						                  ,"lastname",request.getParameter("lastname")
 						                  ,"phone", request.getParameter("phone")
-						                  ,"address", request.getParameter("address"));
+						                  ,"streetaddress", request.getParameter("streetaddress")
+						                  ,"city",request.getParameter("city")
+						                  ,"state",request.getParameter("state")
+						                  ,"zip",request.getParameter("zip")
+						                  );
 		
 		List<String> errors = user.editPerson(request.getParameter("username"), properties);
 		if (errors.isEmpty())
@@ -44,9 +49,11 @@ public class AdminEditUser extends HttpServlet {
 			request.setAttribute("user", user);
 			request.setAttribute("isEdited", true);
 			Person client = (Person)Auth.getSessionVariable(request, "user");
-				if(user.getUserName().equalsIgnoreCase(client.getUserName())){
-					Auth.setSessionVariable(request, "user", user);
-				}
+			String userName = (String)user.getProperty("userName");
+			String clientName = (String)client.getProperty("userName");
+			if(userName.equalsIgnoreCase(clientName)){
+				Auth.setSessionVariable(request, "user", user);
+			}
 		}else{
 			request.setAttribute("errors", errors);
 			request.setAttribute("user", user);

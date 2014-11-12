@@ -1,6 +1,7 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +39,15 @@ public class AddAdmin extends HttpServlet{
 		// TODO: prevent direct access input, when initial admin already exist
 		
 		String email = request.getParameter("email");
-		String password = request.getParameter("password");	
-
+		String password = request.getParameter("password");
+		String copyPassword = request.getParameter("passwordcopy");
+		if(!password.equals(copyPassword)){
+			List<String> errors = new ArrayList<String>();
+			errors.add("Passwords do not match!");
+			forwardForError(request, response, errors);
+			return;
+		}
+		
 		try {
 			int access = Integer.parseInt(request.getParameter("accesslevel"));
 			AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
@@ -47,20 +55,17 @@ public class AddAdmin extends HttpServlet{
 			Map<String, Object> properties = 
 					Library.propertySetBuilder("password",password
 											  ,"accesslevel",accessLevel
-											  ,"name", ""
-											  ,"address",""
-											  ,"phone","");
+											  );
 			
 			Person newUser = UserFactory.getUser();
 			List<String> errors = newUser.addPerson(email, properties);
+			
 			if (errors.isEmpty()){
 				Auth.setSessionVariable(request, "user", newUser);
 				Auth.removeSessionVariable(request, "isAddAdmin");
 				response.sendRedirect(request.getContextPath() + "/editprofile.jsp");	
 			}else{ 
-				request.setAttribute("addNewUser", false);
-				request.setAttribute("errors", errors);
-				request.getRequestDispatcher("addadmin.jsp").forward(request, response);
+				forwardForError(request, response, errors);
 			}
 		}
 		catch (NumberFormatException e) {
@@ -69,5 +74,14 @@ public class AddAdmin extends HttpServlet{
 		}
 		
 			
+	}
+
+	private void forwardForError(HttpServletRequest request,
+			HttpServletResponse response, List<String> errors)
+			throws ServletException, IOException {
+		
+		request.setAttribute("addNewUser", false);
+		request.setAttribute("errors", errors);
+		request.getRequestDispatcher("addadmin.jsp").forward(request, response);
 	}
 }

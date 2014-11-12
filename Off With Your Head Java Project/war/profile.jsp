@@ -1,5 +1,9 @@
 <%@ page import="edu.uwm.owyh.model.Person" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
+<%@ page import="edu.uwm.owyh.library.Library"%>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
+
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Profile" />
     <jsp:param name="stylesheet" value="layout.css" />
@@ -7,6 +11,29 @@
 </jsp:include>
 
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
+
+<%
+	Person user = (Person)request.getAttribute("user");
+	Map<String,Object> properties = null;
+	
+	if(user != null){
+		properties = Library.propertySetBuilder("firstname", user.getProperty("firstname")
+				                               ,"lastname",user.getProperty("lastname")
+				                               ,"phone",user.getProperty("phone")
+				                               ,"email",user.getProperty("email")
+				                               ,"streetaddress",user.getProperty("streetaddress")
+				                               ,"city",user.getProperty("city")
+				                               ,"state",user.getProperty("state")
+				                               ,"zip",user.getProperty("zip")
+				                               );
+		
+		Set<String> keySet = properties.keySet();
+		String val = "";
+		for(String key : keySet){
+			if(properties.get(key) == null) properties.put(key, val);
+		}
+	}
+%>
 
 <div id="content">
 	<div id="local-nav-bar">
@@ -20,20 +47,21 @@
 	</div>
 
 	<div id="body">
-	  <% Person user = (Person) request.getAttribute("user");
-	       if(user != null) { %>
+	  <% 
+	       if(user != null && properties != null) { %>
 			<table id="profile-table">
 				<tr>
-					<td class="user-label">Name:</td><td class="user-data"><%=user.getProperty("name") %></td>
+					<td class="user-label">Name:</td><td class="user-data"><%=properties.get("firstname") + " " + properties.get("lastname") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Phone Number:</td><td class="user-data"><%=user.getProperty("phone") %></td>
+					<td class="user-label">Phone Number:</td><td class="user-data"><%=properties.get("phone") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Email Address:</td><td class="user-data"><%=user.getProperty("email") %></td>
+					<td class="user-label">Email Address:</td><td class="user-data"><%=properties.get("email") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Street Address:</td><td class="user-data"><%=user.getProperty("address") %></td>
+					<td class="user-label">Address:</td><td class="user-data"><%=properties.get("streetaddress")%> <br/>
+					                                                          <%=properties.get("city") + ", " + properties.get("state") + " " + properties.get("zip")%></td>
 				</tr>
 				<tr>
 				<% Person me = (Person) Auth.getSessionVariable(request, "user");

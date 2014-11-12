@@ -22,26 +22,32 @@
 	  	
 	<div id="body">
 	
-		User List
+		<!-- User List  -->
 		
 		<% if (request.getParameter("deleted") != null) { %>
-			<p class="good-message">A User was Deleted!</p>
+			<br /><span class="good-message">A user was successfully deleted!</span>
 		<% } %>
-	
+		<form>
+			<fieldset>
+				<legend>User List</legend>
+			
 		<table id="users">
 			<tr>
-				<td class="cell-header">Name</td>
+				<td class="cell-header">Last Name</td>
+				<td class="cell-header">First Name</td>
 				<td class="cell-header">Email</td>
 				<td class="cell-header">Role</td>
 				<td class="cell-header" colspan="3">Modify</td>
 			</tr>		
- 	<% String[] name = (String[]) request.getAttribute("name");
+ 	<% String[] firstname = (String[]) request.getAttribute("firstname");
+ 	   String[] lastname = (String[]) request.getAttribute("lastname");
  	   String[] username = (String[]) request.getAttribute("username");
 	   int[] accesslevel = (int[]) request.getAttribute("accesslevel");
 	
 		for (int i = 0; i < username.length; i++) { %>
 			<tr>
-				<td class="cell"><%=name[i] %></td>
+				<td class="cell"><%=lastname[i] %></td>
+				<td class="cell"><%=firstname[i] %></td>
 				<td class="cell"><%=username[i] %></td>
 				<td class="cell">
 				<% if (accesslevel[i] == Person.AccessLevel.TA.getVal()) { %>
@@ -69,7 +75,9 @@
 			</tr>
 		<%
 	} %>
-		</table>	
+		</table>
+		</fieldset>
+		</form>	
 	
 	
 	</div>

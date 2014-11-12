@@ -1,20 +1,23 @@
 package edu.uwm.owyh.test;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-
-import static org.junit.Assert.*;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.uwm.owyh.model.*;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+
+import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.model.Auth;
+import edu.uwm.owyh.model.DataStore;
+import edu.uwm.owyh.model.Person;
 import edu.uwm.owyh.model.Person.AccessLevel;
+import edu.uwm.owyh.model.UserFactory;
 
 public class TestAuthorizations{
 	private final LocalServiceTestHelper helper =
@@ -22,7 +25,7 @@ public class TestAuthorizations{
 	private AccessLevel _level;
 	private String _userName;
 	private String _password;
-	private DatastoreService _service;
+	private DataStore _service;
 	private Auth _a1;
 
 	@Before
@@ -31,14 +34,14 @@ public class TestAuthorizations{
 		_level = AccessLevel.ADMIN;
 		_userName = "vamaiuri@uwm.edu";
 		_password = "paSsw0rd$";
-		_service = DatastoreServiceFactory.getDatastoreService();
+		_service = DataStore.getDataStore();
 		
-		Entity user = new Entity(Client.getClientTable(), Person.USERKEY);
-		user.setProperty("username", _userName);
-		user.setProperty("toupperusername", _userName.toUpperCase());
-		user.setProperty("password", _password);
-		user.setProperty("accesslevel", _level.getVal());
-		_service.put(user);
+		
+		Person user = UserFactory.getUser();
+		Map<String,Object> properties = Library.propertySetBuilder("password", _password
+				                                                  ,"accesslevel", _level
+				                                                  );
+		user.addPerson(_userName, properties);
 		
 		_a1 = Auth.getAuth(null);
 	}

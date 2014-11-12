@@ -16,8 +16,7 @@ public class Admin extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		auth.verifyUser(response);
-		auth.verifyAdmin(response);
+		if(!auth.verifyAdmin(response)) return;
 		
 		response.sendRedirect(request.getContextPath() + "/admin/admin.jsp");
 	}

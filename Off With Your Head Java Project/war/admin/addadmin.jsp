@@ -35,12 +35,16 @@
 			} 
 			%>			
 			<tr>
-				<td class="cell">Email:</td>
-				<td class="cell"><input type ="text" name="email" id="email" required />
+				<td class="cell">Username:</td>
+				<td class="cell"><input type ="email" name="email" id="email" pattern="^\w+@uwm.edu$" placeholder="somename@uwm.edu" required />
 			</tr>
 			<tr>
 				<td class="cell">Password: </td>
-				<td class="cell"><input type = "text" name="password" id="password" required />
+				<td class="cell"><input type = "password" name="password" id="password" required />
+			</tr>
+			<tr>
+				<td class="cell">Re-Enter Password: </td>
+				<td class="cell"><input type = "password" name="passwordcopy" id="passwordcopy" required />
 			</tr>
 			<tr>
 				<td class="cell">AccessLevel:</td>

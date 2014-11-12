@@ -2,13 +2,14 @@ package edu.uwm.owyh.controller;
 
 import java.io.IOException;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.Filter;
 
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.DataStore;
@@ -40,10 +41,17 @@ public class InitialLogin extends HttpServlet{
 			Entity softwareKey = new Entity(software);
 			softwareKey.setProperty("keyValue", "63D07BtB09");
 			store.insertEntity(softwareKey);*/
+			
+//			SoftwareKey appkey = new SoftwareKey();
+//			appkey.setUnlock("63D07BtB09");
+//			store.insertEntity(appkey, appkey.getId());
 
 			String userEnteredKey = request.getParameter("appkey");
-			Filter filter = new Query.FilterPredicate("keyValue", Query.FilterOperator.EQUAL, userEnteredKey);
-			boolean isKey = !(store.findEntities("softwarekey",filter, null).isEmpty());
+			String filter = "unlock== '" + userEnteredKey + "'";
+//			Filter filter = new Query.FilterPredicate("keyValue", Query.FilterOperator.EQUAL, userEnteredKey);
+			boolean isKey = !(store.findEntities(SoftwareKey.class, filter).isEmpty()); 
+					
+//					!(store.findEntities("softwarekey",filter).isEmpty());
 			
 			if(!isKey){
 				request.setAttribute("isKey", isKey);
@@ -53,6 +61,28 @@ public class InitialLogin extends HttpServlet{
 				Auth.setSessionVariable(request, "isAddAdmin", true);
 				response.sendRedirect("/admin/addAdmin");
 				return;
+			}
+		}
+		
+		@PersistenceCapable
+		private static class SoftwareKey{
+			
+			@PrimaryKey
+			@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+			private Long id;
+			@Persistent
+			private String unlock;
+			
+			private Long getId(){
+				return id;
+			}
+			
+			private String getUnlock(){
+				return unlock;
+			}
+			
+			private void setUnlock(String key){
+				unlock = key;
 			}
 		}
 }

@@ -8,7 +8,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 public interface Person extends Serializable{
-	public static final Key USERKEY = KeyFactory.createKey("rootKey", "root");
+//	public static final Key USERKEY = KeyFactory.createKey("rootKey", "root");
 	public static final String EMAILPATTERN = "^\\w+@uwm.edu$";
 	public static final String PHONEPATTERN = "^((\\(\\d{3}\\))|(\\d{3}))[-\\.\\s]{0,1}\\d{3}[-\\.\\s]{0,1}\\d{4}$";
 	public enum AccessLevel {

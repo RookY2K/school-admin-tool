@@ -18,17 +18,10 @@ public class EditProfile extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		Person user = (Person)Auth.getSessionVariable(request, "user");
-		if (user != null)
-		{
-			response.sendRedirect(request.getContextPath() + "/editprofile.jsp");
-		}
-		else
-		{
-			/* Should never get here, but this implies user isn't logged. 
-			 * Redirect to index. */
-			response.sendRedirect("/");
-		}
+		Auth auth = Auth.getAuth(request);
+		if(! auth.verifyUser(response)) return;
+		
+		response.sendRedirect(request.getContextPath() + "/editprofile.jsp");		
 			
 	}
 	
@@ -39,9 +32,14 @@ public class EditProfile extends HttpServlet {
 		if (! auth.verifyAdmin(response)) return;
 		Person user = (Person) Auth.getSessionVariable(request, "user");
 	    Map<String, Object> properties = 
-	    		Library.propertySetBuilder("name",request.getParameter("name")
+	    		Library.propertySetBuilder("firstname",request.getParameter("firstname")
+	    								  ,"lastname",request.getParameter("lastname")
 	    				                  ,"phone",request.getParameter("phone")
-	    				                  ,"address",request.getParameter("address"));
+	    				                  ,"streetaddress",request.getParameter("streetaddress")
+	    				                  ,"city",request.getParameter("city")
+	    				                  ,"state",request.getParameter("state")
+	    				                  ,"zip",request.getParameter("zip")
+	    				                  );
 		
 	    List<String> errors = user.editPerson(request.getParameter("email"), properties);
 	    		
@@ -52,7 +50,7 @@ public class EditProfile extends HttpServlet {
 			
 		}else{
 			Auth.setSessionVariable(request, "user", user);
-			response.sendRedirect(request.getContextPath() + "/profile");			
+			response.sendRedirect("/profile");			
 		}
 	}
 }

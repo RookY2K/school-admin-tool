@@ -54,14 +54,13 @@ public class Auth {
 		session.removeAttribute(key);
 	}
 	
-	public Entity verifyLogin(String userName, String password){
+	public Person verifyLogin(String userName, String password){
 		if(userName == null || password == null)return null;
+				
+		Person client = UserFactory.getUser();
+		Person user = client.findPerson(userName);
 		
-		DataStore store = DataStore.getDataStore();
-		Filter filter = new Query.FilterPredicate("toupperusername", Query.FilterOperator.EQUAL, userName.toUpperCase());
-		List<Entity> users = store.findEntities(Client.getClientTable(), filter, Person.USERKEY);
-		if(users.isEmpty()) return null;
-		Entity user = users.get(0);
+		if(user == null) return null;
 		
 		/* TODO: user password should never be null. and yet it was, so temporary fix */
 		if (user.getProperty("password") == null) return null;

@@ -31,12 +31,12 @@ public class Login extends HttpServlet {
 		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		Entity userEntity = Auth.getAuth(null).verifyLogin(username,password);
-		boolean isLogin = (userEntity != null);
+		Person user = Auth.getAuth(null).verifyLogin(username,password);
+		boolean isLogin = (user != null);
 		request.setAttribute("isLogin", isLogin);
 		
 		if (isLogin){
-			Person user = UserFactory.getUser().findPerson(username);
+//			Person user = UserFactory.getUser().findPerson(username);
 			
 			Auth.setSessionVariable(request, "user", user);					
 		}

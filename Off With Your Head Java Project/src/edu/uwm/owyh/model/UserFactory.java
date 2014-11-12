@@ -18,7 +18,7 @@ public class UserFactory {
 //	}
 	
 	public static Person getUser(){
-		return Client.getClient();
+		return ClientWrapper.getClientWrapper();
 		
 //		return ContactCard.getContactCard();
 	}

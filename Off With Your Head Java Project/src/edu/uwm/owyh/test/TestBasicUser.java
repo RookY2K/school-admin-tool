@@ -17,11 +17,12 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
-import edu.uwm.owyh.model.Client;
+import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.model.ClientWrapper;
 import edu.uwm.owyh.model.DataStore;
 import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.UserFactory;
 import edu.uwm.owyh.model.Person.AccessLevel;
+import edu.uwm.owyh.model.UserFactory;
 
 public class TestBasicUser {
 
@@ -33,83 +34,92 @@ public class TestBasicUser {
 	@Test
 	public <T> void testAddPerson() {
 		Person user = UserFactory.getUser();
-		Map<String, Object> properties = new HashMap<String, Object>();
-		properties.put("password", "owyh");
-		properties.put("accesslevel", AccessLevel.ADMIN);
+		Map<String, Object> properties = Library.propertySetBuilder("password","owyh"
+				                                                   ,"accesslevel", AccessLevel.ADMIN);
 		user.addPerson("admin@uwm.edu", properties);	
-		List<Entity> search = datastore.findEntities(Client.getClientTable(), null, Person.USERKEY);
-		assertFalse("User Was Not Saved!", (search.size() == 0));
-	
+		List<?> search = datastore.findEntities(ClientWrapper.getClientTable(), null);
+		assertFalse("User Was Not Saved!", (search.size() == 0));	
 		
-		properties.clear();
-		properties.put("password", "owyh");
-		properties.put("accesslevel", AccessLevel.ADMIN);
 		Person user2 = UserFactory.getUser();
+		properties = Library.propertySetBuilder("password","owyh"
+				                               ,"accesslevel",AccessLevel.ADMIN);
+				
 		user2.addPerson("admin@uwm.edu", properties);
-		search = datastore.findEntities(Client.getClientTable(), null, Person.USERKEY);
+		search = datastore.findEntities(ClientWrapper.getClientTable(), null);
 		assertFalse("Two User of the same name was SAVED!", (search.size() == 2));
 		
-		properties.clear();
-		properties.put("password", "owyh");
-		properties.put("accesslevel", AccessLevel.ADMIN);
 		Person user3 = UserFactory.getUser();
+		properties = Library.propertySetBuilder("password", "owyh"
+				                               ,"accesslevel", AccessLevel.ADMIN);
+				
 		user3.addPerson("admin2@uwm.edu",properties);
-		search = datastore.findEntities(Client.getClientTable(), null, Person.USERKEY);
+		search = datastore.findEntities(ClientWrapper.getClientTable(), null);
 		assertTrue("Two User of different name was NOT SAVED!", (search.size() == 2));
 		
-		properties.clear();
-		properties.put("name", "Admin");
-		properties.put("phone", "(414)123-1234");
-		properties.put("address", "this is an address");
 		Person user4 = UserFactory.getUser();
+		properties = Library.propertySetBuilder("firstname", "Admin"
+				                               ,"phone", "(414)123-1234"
+				                               ,"streetaddress", "123 Elm St"
+				                               ,"city","Milwaukee"
+				                               ,"state","WI"
+				                               ,"zip","12345"
+				                               );
+
 		assertFalse("User already exists!",user4.addPerson("admin@uwm.edu", properties).isEmpty());
 		
-		properties.clear();
-		properties.put("name", "Admin3");
-		properties.put("phone", "123.543.8787");
-		properties.put("address", "this is still an address");
-		
 		Person user5 = UserFactory.getUser();
+		properties = Library.propertySetBuilder("firstname", "Admin3"
+				                               ,"phone", "123.543.8787"
+				                               ,"streetaddress","321 Maple Ln"
+				                               ,"city","Brookfield"
+				                               ,"state","WI"
+				                               ,"zip","54321"
+				                               );		
+		
 		assertFalse("User should not have been added without an accesslevel!"
 				,user5.addPerson("admin3@uwm.edu", properties).isEmpty());
 		properties.put("accesslevel", AccessLevel.ADMIN);
 		assertTrue("User should have been added!"
 				,user5.addPerson("admin3@uwm.edu", properties).isEmpty());
-		search = datastore.findEntities(Client.getClientTable(), null, Person.USERKEY);
+		search = datastore.findEntities(ClientWrapper.getClientTable(), null);
 		assertEquals("Three clients should have been added!", 3, search.size());
 	}
 	
 	@Test
 	public void testRemoveUser() {
-		Map<String, Object> properties = new HashMap<String, Object>();
-		properties.put("password", "owyh");
-		properties.put("accesslevel", AccessLevel.ADMIN);
 		Person user = UserFactory.getUser();
+		Map<String, Object> properties = Library.propertySetBuilder("password","owyh"
+																   ,"accesslevel", AccessLevel.ADMIN
+				                                                   );
 		user.addPerson("admin@uwm.edu",properties);	
-		List<Entity> search = datastore.findEntities(Client.getClientTable(), null, Person.USERKEY);
+		List<?> search = datastore.findEntities(ClientWrapper.getClientTable(), null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));
+		
 		user.removePerson("admin@uwm.edu");
-		search = datastore.findEntities(Client.getClientTable(), null, Person.USERKEY);
+		search = datastore.findEntities(ClientWrapper.getClientTable(), null);
 		assertTrue("User Was Not Removed", (search.size() == 0));	
 	}
 	
 	@Test
 	public void testFindUser() {
-		Map<String, Object> properties = new HashMap<String, Object>();
-		properties.put("password", "owyh");
-		properties.put("accesslevel", AccessLevel.ADMIN);
 		Person user = UserFactory.getUser();
+		Map<String, Object> properties = Library.propertySetBuilder("password", "owyh"
+				                                                   ,"accesslevel",AccessLevel.ADMIN
+				                                                   );
+		
 		user.addPerson("admin@uwm.edu", properties);	
 		Person foundUser = user.findPerson("admin@uwm.edu");
-		assertTrue("User Was Not Found", (user.getUserName().equalsIgnoreCase(foundUser.getUserName())));	
+		assertTrue("User Was Not Found", (((String)user.getProperty("username"))
+				                          .equalsIgnoreCase(
+				                        		  (String)foundUser.getProperty("username"))));	
 	}
 	
 	public void testGetAllUser() {
 		// Incomplete Test, Update Later On
-		Map<String, Object> properties = new HashMap<String, Object>();
-		properties.put("password", "owyh");
-		properties.put("accesslevel", AccessLevel.ADMIN);
 		Person user1 = UserFactory.getUser();
+		Map<String, Object> properties = Library.propertySetBuilder("password","owyh"
+				                                                   ,"accesslevel", AccessLevel.ADMIN
+				                                                   );
 		user1.addPerson("admin1@uwm.edu", properties);
 		Person user2 = UserFactory.getUser();
 		user2.addPerson("admin2@uwm.edu", properties);
@@ -135,31 +145,39 @@ public class TestBasicUser {
 	
 	@Test
 	public void testEditUser(){
-		Map<String, Object> properties = new HashMap<String, Object>();
-		properties.put("password", "owyh");
-		properties.put("accesslevel", AccessLevel.ADMIN);
 		Person user = UserFactory.getUser();
+		Map<String, Object> properties = Library.propertySetBuilder("password","owyh"
+				                                                   ,"accesslevel",AccessLevel.ADMIN
+				                                                   );
 		user.addPerson("admin@uwm.edu",properties);	
-		List<Entity> search = datastore.findEntities(Client.getClientTable(), null, Person.USERKEY );
+		List<?> search = datastore.findEntities(ClientWrapper.getClientTable(), null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));
 			
-		//user.setUserName("newAdminName"); //Unsure if we actually want.
-		properties.put("password", "newPassword");
-		properties.put("accesslevel", AccessLevel.INSTRUCTOR);
-		properties.put("name", "First M. Last");
-		properties.put("phone", "(414)-555-4321");
-		properties.put("address", "This is my address");
+		properties = Library.propertySetBuilder("password","newPassword"
+				                               ,"accesslevel", AccessLevel.INSTRUCTOR
+				                               ,"firstname","First"
+				                               ,"lastname","Last"
+				                               ,"phone","(414)-555-4321"
+				                               ,"streetaddress","123 Elm St"
+				                               ,"city","Milwaukee"
+				                               ,"state","WI"
+				                               ,"zip","12345"
+				                               );
+		
 		assertTrue("User info was not editted!", user.editPerson("admin@uwm.edu", properties).isEmpty());
 		
-		//assertEquals(user.getUserName(), "newAdminName"); //Do we actually want to allow username to change?
 		assertEquals("newPassword",user.getProperty("password"));
 		assertEquals(Person.AccessLevel.INSTRUCTOR, user.getProperty("accesslevel"));
-		assertEquals("First M. Last",user.getProperty("name"));
+		assertEquals("First",user.getProperty("firstname"));
+		assertEquals("Last",user.getProperty("lastname"));
 		assertEquals("(414)-555-4321", user.getProperty("phone"));
 		assertEquals(user.getProperty("username"), user.getProperty("email"));
-		assertEquals("This is my address",user.getProperty("address"));
+		assertEquals("123 Elm St",user.getProperty("streetaddress"));
+		assertEquals("Milwaukee", user.getProperty("city"));
+		assertEquals("WI",user.getProperty("state"));
+		assertEquals("12345",user.getProperty("zip"));
 		
-		search = datastore.findEntities(Client.getClientTable(), null, Person.USERKEY);
+		search = datastore.findEntities(ClientWrapper.getClientTable(), null);
 		assertTrue("User Was Saved Improperly", (search.size() == 1));
 	}
 	
@@ -171,11 +189,11 @@ public class TestBasicUser {
 		String userName4 = "vince@uwm.edu@";
 		String userName5 = "vinc3@uwm.edu";
 		
-		assertTrue(Client.checkEmail(userName1));
-		assertFalse(Client.checkEmail(userName2));
-		assertFalse(Client.checkEmail(userName3));
-		assertFalse(Client.checkEmail(userName4));
-		assertTrue(Client.checkEmail(userName5));		
+		assertTrue(ClientWrapper.checkEmail(userName1));
+		assertFalse(ClientWrapper.checkEmail(userName2));
+		assertFalse(ClientWrapper.checkEmail(userName3));
+		assertFalse(ClientWrapper.checkEmail(userName4));
+		assertTrue(ClientWrapper.checkEmail(userName5));		
 	}
 	
 	@Test
@@ -187,12 +205,12 @@ public class TestBasicUser {
 		String phone5 = "[414]123-4545";
 		String phone6 = "abc-1C3-45b5";
 		
-		assertTrue(Client.checkPhone(phone1));
-		assertTrue(Client.checkPhone(phone2));
-		assertTrue(Client.checkPhone(phone3));
-		assertFalse(Client.checkPhone(phone4));
-		assertFalse(Client.checkPhone(phone5));
-		assertFalse(Client.checkPhone(phone6));				
+		assertTrue(ClientWrapper.checkPhone(phone1));
+		assertTrue(ClientWrapper.checkPhone(phone2));
+		assertTrue(ClientWrapper.checkPhone(phone3));
+		assertFalse(ClientWrapper.checkPhone(phone4));
+		assertFalse(ClientWrapper.checkPhone(phone5));
+		assertFalse(ClientWrapper.checkPhone(phone6));				
 	}
 	
 	@Before

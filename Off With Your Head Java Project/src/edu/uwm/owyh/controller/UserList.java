@@ -26,18 +26,21 @@ public class UserList extends HttpServlet {
 			
 		List<Person> clients = user.getAllPersons();
 
-		String[] name = new String[clients.size()];
+		String[] firstname = new String[clients.size()];
+		String[] lastname = new String[clients.size()];
 		String[] username = new String[clients.size()];
 		int[] accesslevel = new int[clients.size()];
 		
 		for (int i = 0; i < clients.size(); i++) {
-			name[i] = (String) clients.get(i).getProperty("name");
-			username[i] = clients.get(i).getUserName();
+			firstname[i] = (String) clients.get(i).getProperty("firstname");
+			lastname[i] = (String) clients.get(i).getProperty("lastname");
+			username[i] = (String) clients.get(i).getProperty("username");
 			accesslevel[i] = ((AccessLevel) clients.get(i).getProperty("accesslevel")).getVal();
 		}
 		
 		request.setAttribute("user", user);
-		request.setAttribute("name", name);
+		request.setAttribute("firstname", firstname);
+		request.setAttribute("lastname", lastname);
 		request.setAttribute("username", username);
 		request.setAttribute("accesslevel", accesslevel);
 		

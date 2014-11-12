@@ -20,7 +20,7 @@ public class Profile extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyUser(response)) return;
 		
-		/* Find the logged in user. They're the only ones who can view thier profile. */
+		/* Find the logged in user. They're the only ones who can view their profile. */
 		Person user = (Person)Auth.getSessionVariable(request, "user");
 		if (user != null)
 		{

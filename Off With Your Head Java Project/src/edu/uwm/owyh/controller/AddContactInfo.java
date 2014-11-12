@@ -43,10 +43,15 @@ public class AddContactInfo extends HttpServlet {
 		}	
 		
 		Map<String, Object> properties = 
-				Library.propertySetBuilder("name",request.getParameter("name")
+				Library.propertySetBuilder("firstname",request.getParameter("firstname")
+										  ,"lastname",request.getParameter("lastname")
 						                  ,"phone",request.getParameter("phone")
-						                  ,"address",request.getParameter("address")
-						                  ,"accesslevel",accessLevel);
+						                  ,"streetaddress",request.getParameter("streetaddress")
+						                  ,"city",request.getParameter("city")
+						                  ,"state",request.getParameter("state")
+						                  ,"zip",request.getParameter("zip")
+						                  ,"accesslevel",accessLevel
+						                  );
 		
 		Person newUser = UserFactory.getUser();
 		List<String> errors = newUser.addPerson(request.getParameter("email"), properties);

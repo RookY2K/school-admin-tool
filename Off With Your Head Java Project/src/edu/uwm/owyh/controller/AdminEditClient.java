@@ -40,7 +40,7 @@ public class AdminEditClient extends HttpServlet {
 	    
 		if (errors.isEmpty())
 		{
-			response.sendRedirect(request.getContextPath() + "/userlist");
+			response.sendRedirect("/userlist");
 		}else{
 			request.setAttribute("errors", errors);
 			//TODO forward to correct jsp page

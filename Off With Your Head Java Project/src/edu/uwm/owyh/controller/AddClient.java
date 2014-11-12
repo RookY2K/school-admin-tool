@@ -22,7 +22,9 @@ public class AddClient extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		auth.verifyUser(response);
+		if(!auth.verifyAdmin(response)){
+			return;
+		}
 
 		response.sendRedirect(request.getContextPath() + "/admin/adduser.jsp");	
 	}
@@ -31,7 +33,9 @@ public class AddClient extends HttpServlet {
 			throws IOException, ServletException {
 
 		Auth auth = Auth.getAuth(request);
-		auth.verifyAdmin(response);
+		if(!auth.verifyAdmin(response)){
+			return;
+		}
 		
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");	
@@ -39,7 +43,8 @@ public class AddClient extends HttpServlet {
 		try {
 			int access = Integer.parseInt(request.getParameter("accesslevel"));
 			AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
-			Map<String, Object> properties = Library.propertySetBuilder("password",password,"accesslevel",accessLevel);
+			Map<String, Object> properties = Library.propertySetBuilder("password",password
+					                                                   ,"accesslevel",accessLevel);
 			Person newUser = UserFactory.getUser();
 			List<String> errors = newUser.addPerson(email, properties);
 			if (errors.isEmpty()) 
