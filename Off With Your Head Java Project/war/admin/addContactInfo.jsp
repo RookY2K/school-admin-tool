@@ -23,7 +23,6 @@
 			                                                  ,"state",""
 			                                                  ,"zip",""
 			                                                  );
-	String[] states = Library.getStates();
 	String taAccess = Integer.toString(Person.AccessLevel.TA.getVal());
 	String instructorAccess = Integer.toString(Person.AccessLevel.INSTRUCTOR.getVal());
 	String adminAccess = Integer.toString(Person.AccessLevel.ADMIN.getVal());
@@ -96,18 +95,9 @@
 					<td class="cell"><input type = "text" name="city" id="city" value="<%=properties.get("city")%>" /></td>
 					<td class="cell"><label class="field" for="state">&nbsp;&nbsp;&nbsp;State:</label></td>
 					<td class="cell">
-					<select name="state" id="state">
-						<option value=""></option>
-						<%
-							for(int i=0;i<states.length;++i){
-								String select = "";
-								if(states[i].equals(properties.get("state"))) select = "selected";
-						%>
-						<option value="<%=states[i] %>" <%=select %>><%=states[i] %></option>
-						<%								
-							}
-						%>
-					</select>
+					   <jsp:include page="/WEB-INF/templates/stateselect.jsp">
+					    	<jsp:param name="selected" value='<%=properties.get("state") %>' />
+						</jsp:include>
 					</td>	
 				</tr>
 				<tr>

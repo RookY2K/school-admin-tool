@@ -91,7 +91,12 @@
 					   </tr>
 					   <tr>
 						   <td class="cell"><label class="field" for="state">State: </label></td>
-						   <td class="cell"><input type = "text" name="state" id="state" value="<%=properties.get("state") %>"/>
+						   
+						   <td class="cell">
+						   <jsp:include page="/WEB-INF/templates/stateselect.jsp">
+						    	<jsp:param name="selected" value='<%=properties.get("state") %>' />
+							</jsp:include>	
+							</td>					   
 					   </tr>
 					   <tr>
 						   <td class="cell"><label class="field" for="zip">Zip Code: </label></td>

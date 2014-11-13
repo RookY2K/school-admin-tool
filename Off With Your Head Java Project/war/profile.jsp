@@ -54,10 +54,10 @@
 					<td class="user-label">Name:</td><td class="user-data"><%=properties.get("firstname") + " " + properties.get("lastname") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Phone Number:</td><td class="user-data"><%=properties.get("phone") %></td>
+					<td class="user-label">Email Address:</td><td class="user-data"><%=properties.get("email") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Email Address:</td><td class="user-data"><%=properties.get("email") %></td>
+					<td class="user-label">Phone Number:</td><td class="user-data"><%=properties.get("phone") %></td>
 				</tr>
 				<tr>
 					<td class="user-label">Address:</td><td class="user-data"><%=properties.get("streetaddress")%> <br/>
