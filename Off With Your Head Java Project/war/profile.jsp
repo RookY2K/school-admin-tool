@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.Person" %>
+<%@ page import="edu.uwm.owyh.model.WrapperObject" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@ page import="edu.uwm.owyh.library.Library"%>
 <%@ page import="java.util.Map" %>
@@ -13,19 +13,19 @@
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 
 <%
-	Person user = (Person)request.getAttribute("user");
+	WrapperObject user = (WrapperObject)request.getAttribute("user");
 	Map<String,Object> properties = null;
 	
 	if(user != null){
 		properties = Library.propertySetBuilder("firstname", user.getProperty("firstname")
-				                               ,"lastname",user.getProperty("lastname")
-				                               ,"phone",user.getProperty("phone")
-				                               ,"email",user.getProperty("email")
-				                               ,"streetaddress",user.getProperty("streetaddress")
-				                               ,"city",user.getProperty("city")
-				                               ,"state",user.getProperty("state")
-				                               ,"zip",user.getProperty("zip")
-				                               );
+		                               ,"lastname",user.getProperty("lastname")
+		                               ,"phone",user.getProperty("phone")
+		                               ,"email",user.getProperty("email")
+		                               ,"streetaddress",user.getProperty("streetaddress")
+		                               ,"city",user.getProperty("city")
+		                               ,"state",user.getProperty("state")
+		                               ,"zip",user.getProperty("zip")
+		                               );
 		
 		Set<String> keySet = properties.keySet();
 		String val = "";
@@ -48,7 +48,8 @@
 
 	<div id="body">
 	  <% 
-	       if(user != null && properties != null) { %>
+	       if(user != null && properties != null) { 
+	  %>
 			<table id="profile-table">
 				<tr>
 					<td class="user-label">Name:</td><td class="user-data"><%=properties.get("firstname") + " " + properties.get("lastname") %></td>
@@ -64,9 +65,10 @@
 					                                                          <%=properties.get("city") + ", " + properties.get("state") + " " + properties.get("zip")%></td>
 				</tr>
 				<tr>
-				<% Person me = (Person) Auth.getSessionVariable(request, "user");
-					if (me != null && me.getUserName().equals(user.getUserName())) {
-				%>
+	  <%
+	  	WrapperObject me = (WrapperObject) Auth.getSessionVariable(request, "user");
+		if (me != null && me.getUserName().equals(user.getUserName())) {
+	  %>
 					<td id="edit-link-cell">
 						<form action="/editprofile" method="get">
 							<input type="submit" value="Edit My Profile"/>

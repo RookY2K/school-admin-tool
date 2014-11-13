@@ -1,7 +1,6 @@
-<%@ page import="edu.uwm.owyh.model.Person" %>
-<%@ page import="java.util.List" %> 
-<%! @SuppressWarnings("unchecked") %>
-
+<%@ page import="edu.uwm.owyh.model.WrapperObject"%>
+<%@ page import="java.util.List"%>
+<%! @SuppressWarnings("unchecked")%>
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Add User" />
     <jsp:param name="stylesheet" value="layout.css" />
@@ -20,22 +19,22 @@
 	<div id="body">
 	
 		<% 
-		if (request.getAttribute("addNewUser") != null) {
-			boolean addNewUser = (Boolean) request.getAttribute("addNewUser");
-			if (addNewUser) { 
+			if (request.getAttribute("addNewUser") != null) {
+				boolean addNewUser = (Boolean) request.getAttribute("addNewUser");
+				if (addNewUser) {
 		%>
-		<span class="good-message">New User Was Added!</span>
-		<%	}else {
-				List<String> errors = (List<String>)request.getAttribute("errors");
-				for(String error:errors){
+			<span class="good-message">New User Was Added!</span>
+		<%	
+				}else {
+					List<String> errors = (List<String>)request.getAttribute("errors");
+					for(String error:errors){
 		%>
-		<span class="error-message"><%=error%></span>
+			<span class="error-message"><%=error%></span>
 		<% 
+					}
 				}
 			}
-		}
 		%>
-	
 		<form action="/admin/addUser" method="post">
 			<fieldset>
 				<legend> Add Users</legend>
@@ -52,9 +51,9 @@
 					<td class="cell"><label class="field" for="accesslevel">AccessLevel: </label></td>
 					<td class="cell"> 
 						<select name="accesslevel">
-						  <option value="<% out.print(Person.AccessLevel.TA.getVal()); %>">TA</option>
-						  <option value="<% out.print(Person.AccessLevel.INSTRUCTOR.getVal()); %>">INSTRUCTOR</option>
-						  <option value="<% out.print(Person.AccessLevel.ADMIN.getVal()); %>">ADMIN</option>
+						  <option value="<% out.print(WrapperObject.AccessLevel.TA.getVal()); %>">TA</option>					  
+						  <option value="<% out.print(WrapperObject.AccessLevel.INSTRUCTOR.getVal());%>">INSTRUCTOR</option>
+						  <option value="<% out.print(WrapperObject.AccessLevel.ADMIN.getVal());%>">ADMIN</option>
 						</select>
 					</td>
 				</tr>

@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.Person.AccessLevel;
-import edu.uwm.owyh.model.UserFactory;
+import edu.uwm.owyh.model.WrapperObject;
+import edu.uwm.owyh.model.WrapperObject.AccessLevel;
+import edu.uwm.owyh.model.WrapperObjectFactory;
 
 @SuppressWarnings("serial")
 public class UserList extends HttpServlet {
@@ -22,9 +22,9 @@ public class UserList extends HttpServlet {
 		
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyUser(response)) return;
-		Person user = (Person)Auth.getSessionVariable(request, "user");
+		WrapperObject user = (WrapperObject)Auth.getSessionVariable(request, "user");
 			
-		List<Person> clients = user.getAllPersons();
+		List<WrapperObject> clients = user.getAllObjects();
 
 		String[] firstname = new String[clients.size()];
 		String[] lastname = new String[clients.size()];
@@ -53,22 +53,22 @@ public class UserList extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyAdmin(response)) return;
 		
-		Person helper = UserFactory.getUser();
-		Person me = (Person) Auth.getSessionVariable(request, "user");
+		WrapperObject helper = WrapperObjectFactory.getPerson();
+		WrapperObject me = (WrapperObject) Auth.getSessionVariable(request, "user");
 		
 		@SuppressWarnings("unchecked")
 		Map<String, Object> item = request.getParameterMap();
 		
 		if (item.keySet().size() > 0) {
 			for (String key : item.keySet()) {
-				Person user = helper.findPerson(key);
+				WrapperObject user = helper.findObject(key);
 				if (user != null) {
 					if (user.getUserName().equals(me.getUserName())) {
 						response.sendRedirect(request.getContextPath() + "/userlist?error");	
 						return;
 					}
 					else {
-						user.removePerson(key);
+						user.removeObject(key);
 						response.sendRedirect(request.getContextPath() + "/userlist?deleted");	
 						return;	
 					}

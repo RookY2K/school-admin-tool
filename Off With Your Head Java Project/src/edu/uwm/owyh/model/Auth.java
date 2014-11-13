@@ -12,14 +12,14 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 
-import edu.uwm.owyh.model.Person.AccessLevel;
+import edu.uwm.owyh.model.WrapperObject.AccessLevel;
 
 public class Auth {
 	private AccessLevel _goodAccess;
 	private String _goodUserName;
 	
 	private Auth(HttpServletRequest request){
-		Person user = (Person)getSessionVariable(request, "user");
+		WrapperObject user = (WrapperObject)getSessionVariable(request, "user");
 		if (user == null) return;
 		_goodUserName = user.getUserName();
 		_goodAccess = (AccessLevel) user.getProperty("accesslevel");
@@ -54,11 +54,11 @@ public class Auth {
 		session.removeAttribute(key);
 	}
 	
-	public Person verifyLogin(String userName, String password){
+	public WrapperObject verifyLogin(String userName, String password){
 		if(userName == null || password == null)return null;
 				
-		Person client = UserFactory.getUser();
-		Person user = client.findPerson(userName);
+		WrapperObject client = WrapperObjectFactory.getPerson();
+		WrapperObject user = client.findObject(userName);
 		
 		if(user == null) return null;
 		

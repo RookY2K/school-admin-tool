@@ -9,21 +9,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.DataStore;
-import edu.uwm.owyh.model.ClientWrapper;
-import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.UserFactory;
+import edu.uwm.owyh.model.PersonWrapper;
+import edu.uwm.owyh.model.WrapperObject;
+import edu.uwm.owyh.model.WrapperObjectFactory;
 @SuppressWarnings("serial")
 public class Index extends HttpServlet {
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		Person client = UserFactory.getUser();
+		WrapperObject client = WrapperObjectFactory.getPerson();
 		
-		int userCount = client.getAllPersons().size();
+		int userCount = client.getAllObjects().size();
 		
 //		DataStore store = DataStore.getDataStore();
-//		int userCount = store.findEntities(Client.getClientTable(), null).size();	
+//		int userCount = store.findEntities(WrapperObject.getClientTable(), null).size();	
 		if(userCount == 0){
 			request.setAttribute("noUsers", true);
 			request.getRequestDispatcher("/initiallogin").forward(request, response);

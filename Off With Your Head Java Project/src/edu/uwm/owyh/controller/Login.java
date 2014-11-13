@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Entity;
 
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.UserFactory;
+import edu.uwm.owyh.model.WrapperObject;
+import edu.uwm.owyh.model.WrapperObjectFactory;
 
 @SuppressWarnings("serial")
 public class Login extends HttpServlet {
@@ -31,12 +31,12 @@ public class Login extends HttpServlet {
 		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		Person user = Auth.getAuth(null).verifyLogin(username,password);
+		WrapperObject user = Auth.getAuth(null).verifyLogin(username,password);
 		boolean isLogin = (user != null);
 		request.setAttribute("isLogin", isLogin);
 		
 		if (isLogin){
-//			Person user = UserFactory.getUser().findPerson(username);
+//			WrapperObject user = WrapperObjectFactory.getUser().findPerson(username);
 			
 			Auth.setSessionVariable(request, "user", user);					
 		}

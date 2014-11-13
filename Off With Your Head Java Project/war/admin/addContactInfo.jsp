@@ -1,10 +1,9 @@
-<%@ page import="edu.uwm.owyh.model.Person" %>
-<%@ page import="edu.uwm.owyh.library.Library" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.Set" %>
-<%! @SuppressWarnings("unchecked") %>
-
+<%@ page import="edu.uwm.owyh.model.WrapperObject"%>
+<%@ page import="edu.uwm.owyh.library.Library"%>
+<%@ page import="java.util.List"%>
+<%@ page import="java.util.Map"%>
+<%@ page import="java.util.Set"%>
+<%! @SuppressWarnings("unchecked")%>)
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Add Contact" />
     <jsp:param name="stylesheet" value="layout.css" />
@@ -14,21 +13,21 @@
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 <%
 	Map<String,Object> properties = Library.propertySetBuilder("firstname",""
-			                                                  ,"lastname",""
-			                                                  ,"email",""
-			                                                  ,"phone",""
-			                                                  ,"accesslevel",""
-			                                                  ,"streetaddress",""
-			                                                  ,"city",""
-			                                                  ,"state",""
-			                                                  ,"zip",""
-			                                                  );
+	                                                  ,"lastname",""
+	                                                  ,"email",""
+	                                                  ,"phone",""
+	                                                  ,"accesslevel",""
+	                                                  ,"streetaddress",""
+	                                                  ,"city",""
+	                                                  ,"state",""
+	                                                  ,"zip",""
+	                                                  );
 	String[] states = Library.getStates();
-	String taAccess = Integer.toString(Person.AccessLevel.TA.getVal());
-	String instructorAccess = Integer.toString(Person.AccessLevel.INSTRUCTOR.getVal());
-	String adminAccess = Integer.toString(Person.AccessLevel.ADMIN.getVal());
+	String taAccess = Integer.toString(WrapperObject.AccessLevel.TA.getVal());
+	String instructorAccess = Integer.toString(WrapperObject.AccessLevel.INSTRUCTOR.getVal());
+	String adminAccess = Integer.toString(WrapperObject.AccessLevel.ADMIN.getVal());
 %>
-<div id="content">
+ <div id="content">
  	<div id="local-nav-bar">
 		<ul id="local-list">
 	      <!-- <li><a class="nav-link" href="/admin/addClient">Add User</a></li> -->
@@ -42,24 +41,25 @@
 			Boolean addNewUser = (Boolean)request.getAttribute("addNewUser");
 			if (addNewUser != null && addNewUser) {
 		%>
-		<span class="good-message">User Contact Was Added!</span>
+			<span class="good-message">User Contact Was Added!</span>
 		<%	
 			}else{
 				List<String> errors = (List<String>)request.getAttribute("errors");
 				if(errors != null){
 					for(String error:errors){
 		%>
-		<span class="error-message"><%=error%><br /></span>
+			<span class="error-message"><%=error%></span>
 		<% 
 					}
 				}
 			}
-		%>			
+		%>
+		
 		<%	
-			Person user = (Person)request.getAttribute("badUserInfo");
+			WrapperObject user = (WrapperObject)request.getAttribute("badUserInfo");
 			if(user != null) {
-				Integer access = ((Person.AccessLevel)user.getProperty("accesslevel")).getVal();
-				 
+				Integer access = ((WrapperObject.AccessLevel)user.getProperty("accesslevel")).getVal();
+							 
 				properties = Library.propertySetBuilder("firstname",user.getProperty("firstname")
 						                               ,"lastname",user.getProperty("lastname")
 						                               ,"email",user.getProperty("email")
@@ -70,10 +70,9 @@
 						                               ,"state",user.getProperty("state")
 						                               ,"zip",user.getProperty("zip")
 						                               );				
-			}		
+			}
 		%>
-	
-		<form action="/admin/addContactInfo" method="post">
+			<form action="/admin/addContactInfo" method="post">
 			<fieldset>
 				<legend> Add User Contact</legend>
 				<table>

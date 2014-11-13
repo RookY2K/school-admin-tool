@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.Person" %>
+<%@ page import="edu.uwm.owyh.model.WrapperObject" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@ page import="java.util.List" %>
 <%@ page import="edu.uwm.owyh.library.Library"%>
@@ -14,18 +14,18 @@
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 
 <%
-	Person user = (Person)Auth.getSessionVariable(request,"user");
+	WrapperObject user = (WrapperObject)Auth.getSessionVariable(request,"user");
 	Map<String, Object> properties = null;
 	if(user != null){
 		properties = Library.propertySetBuilder("firstname",user.getProperty("firstname")
-				                                                   ,"lastname",user.getProperty("lastname")
-				                                                   ,"email",user.getProperty("email")
-				                                                   ,"phone",user.getProperty("phone")
-				                                                   ,"streetaddress",user.getProperty("streetaddress")
-				                                                   ,"city",user.getProperty("city")
-				                                                   ,"state",user.getProperty("state")
-				                                                   ,"zip",user.getProperty("zip")
-				                                                   );
+		                                                   ,"lastname",user.getProperty("lastname")
+		                                                   ,"email",user.getProperty("email")
+		                                                   ,"phone",user.getProperty("phone")
+		                                                   ,"streetaddress",user.getProperty("streetaddress")
+		                                                   ,"city",user.getProperty("city")
+		                                                   ,"state",user.getProperty("state")
+		                                                   ,"zip",user.getProperty("zip")
+		                                                   );
 	
 		Set<String> keySet = properties.keySet();	
 		

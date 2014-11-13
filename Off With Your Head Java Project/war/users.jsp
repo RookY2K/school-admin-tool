@@ -1,5 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.Person" %>
-
+<%@ page import="edu.uwm.owyh.model.WrapperObject" %>
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="User List" />
     <jsp:param name="stylesheet" value="layout.css" />
@@ -9,7 +8,7 @@
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 <%
 	String userName = "";
-	Person user = (Person)request.getAttribute("user");
+	WrapperObject user = (WrapperObject)request.getAttribute("user");
 	if(user != null){
 		userName = user.getUserName();
 	}
@@ -24,9 +23,13 @@
 	
 		<!-- User List  -->
 		
-		<% if (request.getParameter("deleted") != null) { %>
-			<br /><span class="good-message">A user was successfully deleted!</span>
-		<% } %>
+		<% 
+			if (request.getParameter("deleted") != null) { 
+		%>
+		<br /><span class="good-message">A user was successfully deleted!</span>
+		<% 
+			} 
+		%>
 		<form>
 			<fieldset>
 				<legend>User List</legend>
@@ -50,11 +53,11 @@
 				<td class="cell"><%=firstname[i] %></td>
 				<td class="cell"><%=username[i] %></td>
 				<td class="cell">
-				<% if (accesslevel[i] == Person.AccessLevel.TA.getVal()) { %>
+				<% if (accesslevel[i] == WrapperObject.AccessLevel.TA.getVal()) { %>
 					TA
-				<% } if (accesslevel[i] == Person.AccessLevel.INSTRUCTOR.getVal()) { %>
+				<% } if (accesslevel[i] == WrapperObject.AccessLevel.INSTRUCTOR.getVal()) { %>
 					INSTRUCTOR
-				<% } if (accesslevel[i] == Person.AccessLevel.ADMIN.getVal()) {  %>
+				<% } if (accesslevel[i] == WrapperObject.AccessLevel.ADMIN.getVal()) {  %>
 					ADMIN
 				<% } %>
 				</td>

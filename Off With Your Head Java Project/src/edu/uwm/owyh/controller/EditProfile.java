@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.Person;
+import edu.uwm.owyh.model.WrapperObject;
 
 @SuppressWarnings("serial")
 public class EditProfile extends HttpServlet {
@@ -30,7 +30,7 @@ public class EditProfile extends HttpServlet {
 		
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyAdmin(response)) return;
-		Person user = (Person) Auth.getSessionVariable(request, "user");
+		WrapperObject user = (WrapperObject) Auth.getSessionVariable(request, "user");
 	    Map<String, Object> properties = 
 	    		Library.propertySetBuilder("firstname",request.getParameter("firstname")
 	    								  ,"lastname",request.getParameter("lastname")
@@ -41,7 +41,7 @@ public class EditProfile extends HttpServlet {
 	    				                  ,"zip",request.getParameter("zip")
 	    				                  );
 		
-	    List<String> errors = user.editPerson(request.getParameter("email"), properties);
+	    List<String> errors = user.editObject(request.getParameter("email"), properties);
 	    		
 	    if (!errors.isEmpty())
 		{

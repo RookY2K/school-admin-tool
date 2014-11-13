@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.UserFactory;
+import edu.uwm.owyh.model.WrapperObject;
+import edu.uwm.owyh.model.WrapperObjectFactory;
 
 @SuppressWarnings("serial")
 public class Profile extends HttpServlet {
@@ -21,7 +21,7 @@ public class Profile extends HttpServlet {
 		if (! auth.verifyUser(response)) return;
 		
 		/* Find the logged in user. They're the only ones who can view their profile. */
-		Person user = (Person)Auth.getSessionVariable(request, "user");
+		WrapperObject user = (WrapperObject)Auth.getSessionVariable(request, "user");
 		if (user != null)
 		{
 			request.setAttribute("user", user);
@@ -43,15 +43,15 @@ public class Profile extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyUser(response)) return;
 		
-		Person helper = UserFactory.getUser();
-		Person user = null;
+		WrapperObject helper = WrapperObjectFactory.getPerson();
+		WrapperObject user = null;
 		
 		@SuppressWarnings("unchecked")
 		Map<String, Object> item = request.getParameterMap();
 		
 		if (item.keySet().size() > 0) {
 			for (String key : item.keySet()) {
-				user = helper.findPerson(key);
+				user = helper.findObject(key);
 				break;
 			}
 		}
