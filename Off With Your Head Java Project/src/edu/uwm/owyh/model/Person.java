@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-
 public interface Person extends Serializable{
 //	public static final Key USERKEY = KeyFactory.createKey("rootKey", "root");
 	public static final String EMAILPATTERN = "^\\w+@uwm.edu$";

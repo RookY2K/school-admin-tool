@@ -8,13 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.DataStore;
-import edu.uwm.owyh.model.ClientWrapper;
 import edu.uwm.owyh.model.Person;
 import edu.uwm.owyh.model.UserFactory;
 @SuppressWarnings("serial")
 public class Index extends HttpServlet {
 	
+	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
@@ -50,6 +49,7 @@ public class Index extends HttpServlet {
 		}		
 	}
 	
+	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		doGet(request,response);

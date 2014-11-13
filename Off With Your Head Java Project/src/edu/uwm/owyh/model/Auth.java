@@ -2,15 +2,9 @@ package edu.uwm.owyh.model;
 
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.Filter;
 
 import edu.uwm.owyh.model.Person.AccessLevel;
 

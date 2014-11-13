@@ -7,12 +7,8 @@ import java.util.Map;
 
 import javax.jdo.annotations.*;
 
-import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 
 public class ClientWrapper implements Person,Serializable{
@@ -78,6 +74,7 @@ public class ClientWrapper implements Person,Serializable{
 		return new ClientWrapper(client);
 	}
 
+	@Override
 	public Person findPerson(String username) {
 		DataStore store = DataStore.getDataStore();
 		List<Person> clients = null;
@@ -91,6 +88,7 @@ public class ClientWrapper implements Person,Serializable{
 		return clients.get(0);
 	}
 
+	@Override
 	public List<Person> getAllPersons() {
 		DataStore store = DataStore.getDataStore();
 		List<Person> clients = null;
