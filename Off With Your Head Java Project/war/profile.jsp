@@ -55,10 +55,10 @@
 					<td class="user-label">Name:</td><td class="user-data"><%=properties.get("firstname") + " " + properties.get("lastname") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Phone Number:</td><td class="user-data"><%=properties.get("phone") %></td>
+					<td class="user-label">Email Address:</td><td class="user-data"><%=properties.get("email") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Email Address:</td><td class="user-data"><%=properties.get("email") %></td>
+					<td class="user-label">Phone Number:</td><td class="user-data"><%=properties.get("phone") %></td>
 				</tr>
 				<tr>
 					<td class="user-label">Address:</td><td class="user-data"><%=properties.get("streetaddress")%> <br/>
@@ -77,8 +77,9 @@
 				<% } else { %>
 					
 					<td id="edit-link-cell">
-						<form action="/userlisteditbutton" method="post">
-							<input type="submit" value="Edit User Profile" name="<% out.print(user.getUserName()); %>" />
+						<form action="/editprofile" method="get">
+							<input type="hidden" name="username" value="<% out.print(user.getUserName()); %>" />
+							<input type="submit" value="Edit User Profile" />
 						</form>
 					</td>
 					

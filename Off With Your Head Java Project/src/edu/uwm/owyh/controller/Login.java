@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.datastore.Entity;
-
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.WrapperObject;
 import edu.uwm.owyh.model.WrapperObjectFactory;

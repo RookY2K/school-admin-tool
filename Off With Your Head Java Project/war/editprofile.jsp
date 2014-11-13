@@ -14,7 +14,7 @@
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 
 <%
-	WrapperObject user = (WrapperObject)Auth.getSessionVariable(request,"user");
+	WrapperObject user = (WrapperObject) request.getAttribute("user");
 	Map<String, Object> properties = null;
 	if(user != null){
 		properties = Library.propertySetBuilder("firstname",user.getProperty("firstname")
@@ -62,7 +62,7 @@
 	       if(user != null && properties != null) { %>
 		       <form action="/editprofile" method="post">
 				   <fieldset>
-					   <legend> <%= properties.get("lastname") %> </legend>
+					   <legend><%= properties.get("lastname") %>, <%= properties.get("firstname") %> </legend>
 					   <table>
 					   <tr>
 						   <td class="cell"><label class="field" for="firstname">First Name: </label></td>
@@ -91,7 +91,12 @@
 					   </tr>
 					   <tr>
 						   <td class="cell"><label class="field" for="state">State: </label></td>
-						   <td class="cell"><input type = "text" name="state" id="state" value="<%=properties.get("state") %>"/>
+						   
+						   <td class="cell">
+						   <jsp:include page="/WEB-INF/templates/stateselect.jsp">
+						    	<jsp:param name="selected" value='<%=properties.get("state") %>' />
+							</jsp:include>	
+							</td>					   
 					   </tr>
 					   <tr>
 						   <td class="cell"><label class="field" for="zip">Zip Code: </label></td>

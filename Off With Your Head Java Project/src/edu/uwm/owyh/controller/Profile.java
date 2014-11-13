@@ -1,7 +1,6 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -43,18 +42,14 @@ public class Profile extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyUser(response)) return;
 		
-		WrapperObject helper = WrapperObjectFactory.getPerson();
-		WrapperObject user = null;
-		
-		@SuppressWarnings("unchecked")
-		Map<String, Object> item = request.getParameterMap();
-		
-		if (item.keySet().size() > 0) {
-			for (String key : item.keySet()) {
-				user = helper.findObject(key);
-				break;
-			}
+		/* View a User's Profile from the UserList */
+		String username = request.getParameter("username");
+		if (username == null) {
+			response.sendRedirect("/userlist");
+			return;
 		}
+		
+		WrapperObject user = WrapperObjectFactory.getPerson().findObject(username);
 		
 		if (user != null) 
 			request.setAttribute("user", user);
