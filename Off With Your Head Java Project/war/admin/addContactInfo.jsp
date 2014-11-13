@@ -23,9 +23,9 @@
 			                                                  ,"state",""
 			                                                  ,"zip",""
 			                                                  );
-	String taAccess = Integer.toString(Person.AccessLevel.TA.getVal());
-	String instructorAccess = Integer.toString(Person.AccessLevel.INSTRUCTOR.getVal());
-	String adminAccess = Integer.toString(Person.AccessLevel.ADMIN.getVal());
+	String taAccess = Integer.toString(WrapperObject.AccessLevel.TA.getVal());
+	String instructorAccess = Integer.toString(WrapperObject.AccessLevel.INSTRUCTOR.getVal());
+	String adminAccess = Integer.toString(WrapperObject.AccessLevel.ADMIN.getVal());
 %>
 <div id="content">
  	<div id="local-nav-bar">

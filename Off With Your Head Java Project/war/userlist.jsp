@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.Person" %>
+<%@ page import="edu.uwm.owyh.model.WrapperObject" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@page import="java.util.List"%>
 <%! @SuppressWarnings("unchecked") %>
@@ -12,14 +12,14 @@
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 <%
 	String userName = "";
-	Person self = (Person)Auth.getSessionVariable(request, "user");
+	WrapperObject self = (WrapperObject)Auth.getSessionVariable(request, "user");
 	if(self != null ){
 		userName = self.getUserName();
 	}
 	
-	List<Person> users = (List<Person>) request.getAttribute("users");
+	List<WrapperObject> users = (List<WrapperObject>) request.getAttribute("users");
 	
-	Person.AccessLevel userAccess = (Person.AccessLevel) self.getProperty("accesslevel");
+	WrapperObject.AccessLevel userAccess = (WrapperObject.AccessLevel) self.getProperty("accesslevel");
 %>
 <div id="content">
 	<div id="local-nav-bar">
@@ -43,16 +43,16 @@
 				<td class="cell-header">First Name</td>
 				<td class="cell-header">Email</td>
 				<td class="cell-header">Role</td>
-				<% if (userAccess == Person.AccessLevel.ADMIN) { %>
+				<% if (userAccess == WrapperObject.AccessLevel.ADMIN) { %>
 				<td class="cell-header" colspan="3">Modify</td>
 				<% } %>
 			</tr>		
- 		<% for (Person user : users) {
+ 		<% for (WrapperObject user : users) {
 			
 			String firstname = (String) user.getProperty("firstname");
 		 	String lastname = (String) user.getProperty("lastname");
 		 	String username = (String) user.getProperty("username");
-		 	Person.AccessLevel accesslevel = (Person.AccessLevel) user.getProperty("accesslevel");
+		 	WrapperObject.AccessLevel accesslevel = (WrapperObject.AccessLevel) user.getProperty("accesslevel");
 			
 			%>
 			<tr>
@@ -60,16 +60,16 @@
 				<td class="cell"><%=firstname %></td>
 				<td class="cell"><%=username%></td>
 				<td class="cell">
-				<% if (accesslevel == Person.AccessLevel.TA) { %>
+				<% if (accesslevel == WrapperObject.AccessLevel.TA) { %>
 					TA
-				<% } if (accesslevel == Person.AccessLevel.INSTRUCTOR) { %>
+				<% } if (accesslevel == WrapperObject.AccessLevel.INSTRUCTOR) { %>
 					INSTRUCTOR
-				<% } if (accesslevel == Person.AccessLevel.ADMIN) {  %>
+				<% } if (accesslevel == WrapperObject.AccessLevel.ADMIN) {  %>
 					ADMIN
 				<% } %>
 				</td>
 				
-				<% if (userAccess == Person.AccessLevel.ADMIN) { %>
+				<% if (userAccess == WrapperObject.AccessLevel.ADMIN) { %>
 				
 				<td class="cell">
 					<form action="/profile" method="post">

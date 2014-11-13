@@ -31,7 +31,7 @@ public class EditProfile extends HttpServlet {
 		
 		/* User Edit there Own Profile */
 		if (user == null)
-			user = (Person)Auth.getSessionVariable(request,"user");
+			user = (WrapperObject)Auth.getSessionVariable(request,"user");
 		
 		request.setAttribute("user", user);
 		request.getRequestDispatcher("/editprofile.jsp").forward(request, response);	

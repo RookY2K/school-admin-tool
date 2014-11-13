@@ -41,7 +41,6 @@ public class UserList extends HttpServlet {
 			WrapperObject user = WrapperObjectFactory.getPerson().findObject(username);
 			if (user != null) {
 				if (WrapperObjectFactory.getPerson().removeObject(user.getUserName())) {
-						user.removeObject(key);
 					response.sendRedirect(request.getContextPath() + "/userlist?deleted");	
 					return;
 				}

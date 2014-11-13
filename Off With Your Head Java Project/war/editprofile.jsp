@@ -15,6 +15,7 @@
 
 <%
 	WrapperObject user = (WrapperObject) request.getAttribute("user");
+	if(user == null) user = (WrapperObject) Auth.getSessionVariable(request, "user");
 	Map<String, Object> properties = null;
 	if(user != null){
 		properties = Library.propertySetBuilder("firstname",user.getProperty("firstname")
