@@ -21,12 +21,11 @@ public class UserList extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyUser(response)) return;
 		
-		Person user = (Person)Auth.getSessionVariable(request, "user");
-			
+		/* Any Login User View User List */
+		Person user = (Person)Auth.getSessionVariable(request, "user");	
 		List<Person> clients = user.getAllPersons();
-
-		request.setAttribute("users", clients);
 		
+		request.setAttribute("users", clients);
 		request.getRequestDispatcher(request.getContextPath() + "userlist.jsp").forward(request, response);	
 	}
 	
@@ -36,8 +35,8 @@ public class UserList extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyAdmin(response)) return;
 		
+		/* Admin delete a User */
 		String username = (String) request.getParameter("username");
-		
 		if (username != null) {
 			Person user = UserFactory.getUser().findPerson(username);
 			if (user != null) {

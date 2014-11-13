@@ -42,7 +42,13 @@ public class Profile extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyUser(response)) return;
 		
+		/* View a User's Profile from the UserList */
 		String username = request.getParameter("username");
+		if (username == null) {
+			response.sendRedirect("/userlist");
+			return;
+		}
+		
 		Person user = UserFactory.getUser().findPerson(username);
 		
 		if (user != null) 

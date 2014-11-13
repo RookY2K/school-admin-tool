@@ -22,12 +22,14 @@ public class EditProfile extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if(! auth.verifyUser(response)) return;
 		
+		/* Admin edit another User's Profile */
 		String username = request.getParameter("username");
 		Person user = null;
 		if (username != null && auth.verifyAdmin()) {
 			user = UserFactory.getUser().findPerson(username);
 		}
 		
+		/* User Edit there Own Profile */
 		if (user == null)
 			user = (Person)Auth.getSessionVariable(request,"user");
 		
@@ -42,6 +44,7 @@ public class EditProfile extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyUser(response)) return;
 		
+		/* Admin attempt to start editing profile from UserList */
 		String username = request.getParameter("username");
 		if (username != null) {
 			doGet(request, response);
@@ -52,7 +55,7 @@ public class EditProfile extends HttpServlet {
 		Person user = UserFactory.getUser().findPerson(email);
 		Person self = (Person)Auth.getSessionVariable(request, "user");
 		
-		// Prevent non-Admin from editing other people
+		/* Prevent non-Admin from editing other people, Redirect to User own profile */
 		if (user == null || (!self.getUserName().equals(user.getUserName()) && !auth.verifyAdmin())) {
 			response.sendRedirect("/profile");		
 			return;
@@ -77,10 +80,12 @@ public class EditProfile extends HttpServlet {
 			
 		}
 	    else if (self.getUserName().equals(user.getUserName())) {
+	    	/* User edit there own profile, go back to view there profile */
 			response.sendRedirect("/profile");	
 			Auth.setSessionVariable(request, "user", user);
 		}
 	    else {
+	    	/* Admin edit another User Profile, go to userList */
 	    	response.sendRedirect("/userlist");	
 	    }
 	}
