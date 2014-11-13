@@ -13,6 +13,8 @@
 						
 	                    <li class="global-link-item"><a class="global-link" href="/profile">Profile</a>
 							<ul class="global-dropdown-list">
+								<li class="global-link-item"><a class="global-link" href="/editprofile">Edit My Profile</a></li>
+								<li class="global-link-item"><a class="global-link" href="/editprofile#changepassword">Change Password</a></li>
 							</ul>
 						</li>
 	

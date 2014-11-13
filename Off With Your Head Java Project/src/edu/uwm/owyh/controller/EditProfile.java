@@ -1,6 +1,7 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,16 +43,16 @@ public class EditProfile extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		if (! auth.verifyUser(response)) return;
+		if (! auth.verifyUser(response)) return;		
 		
 		/* Admin attempt to start editing profile from UserList */
 		String username = request.getParameter("username");
-		if (username != null) {
+		String email = request.getParameter("email");
+		if (username != null || email == null) {
 			doGet(request, response);
 			return;
 		}
 		
-		String email = request.getParameter("email");
 		WrapperObject user = WrapperObjectFactory.getPerson().findObject(email);
 		WrapperObject self = (WrapperObject)Auth.getSessionVariable(request, "user");
 		
@@ -60,9 +61,37 @@ public class EditProfile extends HttpServlet {
 			response.sendRedirect("/profile");		
 			return;
 		}
-			
-	    Map<String, Object> properties = 
-	    		Library.propertySetBuilder("firstname",request.getParameter("firstname")
+		
+		/* User change password */
+		Map<String, Object> properties;
+		String changepassword = request.getParameter("changepassword");
+
+		if (changepassword != null) {
+			String userPassword = (String) user.getProperty("password");
+			String originalPassword = request.getParameter("orginalpassword");
+			String newPassword = request.getParameter("newpassword");
+			String verifyNewPassword = request.getParameter("verifynewpassword");
+			List<String> errors = new ArrayList<String>();
+			if (originalPassword == null && !auth.verifyAdmin())
+				errors.add("Non-Admin Password Change Error!");
+			if (!newPassword.equals(verifyNewPassword ))
+				errors.add("New Password Does Not Match!");
+			if (userPassword != null && !userPassword.equals(originalPassword) && self.getUserName().equals(user.getUserName()))
+				errors.add("Password Does Not Match Original!");
+
+			if (errors.isEmpty())
+				properties = Library.propertySetBuilder("password", newPassword);
+			else {
+				request.setAttribute("errors", errors);
+				request.setAttribute("user", user);
+				request.getRequestDispatcher(request.getContextPath()+"/editprofile.jsp").forward(request,response);
+				return;
+			}
+		}
+		/* User change Profile */
+		else {
+			properties = 
+				Library.propertySetBuilder("firstname",request.getParameter("firstname")
 	    								  ,"lastname",request.getParameter("lastname")
 	    				                  ,"phone",request.getParameter("phone")
 	    				                  ,"streetaddress",request.getParameter("streetaddress")
@@ -70,14 +99,13 @@ public class EditProfile extends HttpServlet {
 	    				                  ,"state",request.getParameter("state")
 	    				                  ,"zip",request.getParameter("zip")
 	    				                  );
+		}
 		
 	    List<String> errors = user.editObject(request.getParameter("email"), properties);
-	    	
-	    
-	    if (!errors.isEmpty()) {
+
+		if (!errors.isEmpty()) {
 			request.setAttribute("errors", errors);
-			request.getRequestDispatcher(request.getContextPath()+"/editprofile.jsp").forward(request,response);
-			
+			request.getRequestDispatcher(request.getContextPath()+"/editprofile.jsp").forward(request,response);	
 		}
 	    else if (self.getUserName().equals(user.getUserName())) {
 	    	/* User edit there own profile, go back to view there profile */

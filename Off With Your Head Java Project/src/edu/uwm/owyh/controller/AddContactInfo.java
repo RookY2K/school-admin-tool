@@ -24,7 +24,7 @@ public class AddContactInfo extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyAdmin(response)) return;
 
-		response.sendRedirect(request.getContextPath() + "/admin/addContactInfo.jsp");	
+		request.getRequestDispatcher(request.getContextPath() + "/admin/addContactInfo.jsp").forward(request, response);
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
