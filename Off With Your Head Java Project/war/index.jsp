@@ -16,7 +16,7 @@
 				<% } %>
 				<tr>
 					<td id="user_name">User Name</td>
-					<td class="text_block"><input type="text" name="username"  required /></td>
+					<td class="text_block"><input type="text" name="username" placeholder="somename@uwm.edu" required /></td>
 				</tr>
 				<tr>
 					<td id="password">Password</td>

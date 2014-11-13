@@ -7,11 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.datastore.Entity;
-
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
 public class Login extends HttpServlet {

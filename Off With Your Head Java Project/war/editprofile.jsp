@@ -14,7 +14,7 @@
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 
 <%
-	Person user = (Person)Auth.getSessionVariable(request,"user");
+	Person user = (Person) request.getAttribute("user");
 	Map<String, Object> properties = null;
 	if(user != null){
 		properties = Library.propertySetBuilder("firstname",user.getProperty("firstname")
@@ -62,7 +62,7 @@
 	       if(user != null && properties != null) { %>
 		       <form action="/editprofile" method="post">
 				   <fieldset>
-					   <legend> <%= properties.get("lastname") %> </legend>
+					   <legend><%= properties.get("lastname") %>, <%= properties.get("firstname") %> </legend>
 					   <table>
 					   <tr>
 						   <td class="cell"><label class="field" for="firstname">First Name: </label></td>

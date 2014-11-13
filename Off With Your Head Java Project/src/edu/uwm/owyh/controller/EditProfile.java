@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Person;
+import edu.uwm.owyh.model.UserFactory;
 
 @SuppressWarnings("serial")
 public class EditProfile extends HttpServlet {
@@ -21,7 +22,17 @@ public class EditProfile extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if(! auth.verifyUser(response)) return;
 		
-		response.sendRedirect(request.getContextPath() + "/editprofile.jsp");		
+		String username = request.getParameter("username");
+		Person user = null;
+		if (username != null && auth.verifyAdmin()) {
+			user = UserFactory.getUser().findPerson(username);
+		}
+		
+		if (user == null)
+			user = (Person)Auth.getSessionVariable(request,"user");
+		
+		request.setAttribute("user", user);
+		request.getRequestDispatcher("/editprofile.jsp").forward(request, response);	
 			
 	}
 	
@@ -29,8 +40,24 @@ public class EditProfile extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		if (! auth.verifyAdmin(response)) return;
-		Person user = (Person) Auth.getSessionVariable(request, "user");
+		if (! auth.verifyUser(response)) return;
+		
+		String username = request.getParameter("username");
+		if (username != null) {
+			doGet(request, response);
+			return;
+		}
+		
+		String email = request.getParameter("email");
+		Person user = UserFactory.getUser().findPerson(email);
+		Person self = (Person)Auth.getSessionVariable(request, "user");
+		
+		// Prevent non-Admin from editing other people
+		if (user == null || (!self.getUserName().equals(user.getUserName()) && !auth.verifyAdmin())) {
+			response.sendRedirect("/profile");		
+			return;
+		}
+			
 	    Map<String, Object> properties = 
 	    		Library.propertySetBuilder("firstname",request.getParameter("firstname")
 	    								  ,"lastname",request.getParameter("lastname")
@@ -42,15 +69,19 @@ public class EditProfile extends HttpServlet {
 	    				                  );
 		
 	    List<String> errors = user.editPerson(request.getParameter("email"), properties);
-	    		
-	    if (!errors.isEmpty())
-		{
+	    	
+	    
+	    if (!errors.isEmpty()) {
 			request.setAttribute("errors", errors);
 			request.getRequestDispatcher(request.getContextPath()+"/editprofile.jsp").forward(request,response);
 			
-		}else{
-			Auth.setSessionVariable(request, "user", user);
-			response.sendRedirect("/profile");			
 		}
+	    else if (self.getUserName().equals(user.getUserName())) {
+			response.sendRedirect("/profile");	
+			Auth.setSessionVariable(request, "user", user);
+		}
+	    else {
+	    	response.sendRedirect("/userlist");	
+	    }
 	}
 }

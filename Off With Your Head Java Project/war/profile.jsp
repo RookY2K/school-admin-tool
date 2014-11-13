@@ -75,8 +75,9 @@
 				<% } else { %>
 					
 					<td id="edit-link-cell">
-						<form action="/userlisteditbutton" method="post">
-							<input type="submit" value="Edit User Profile" name="<% out.print(user.getUserName()); %>" />
+						<form action="/editprofile" method="get">
+							<input type="hidden" name="username" value="<% out.print(user.getUserName()); %>" />
+							<input type="submit" value="Edit User Profile" />
 						</form>
 					</td>
 					
