@@ -38,22 +38,17 @@ public class InitialLogin extends HttpServlet{
 				throws IOException, ServletException {
 			DataStore store = DataStore.getDataStore();
 			
-			/* DO NOT DELETE
-			Key software = KeyFactory.createKey("softwarekey", "appkey");
-			Entity softwareKey = new Entity(software);
-			softwareKey.setProperty("keyValue", "63D07BtB09");
-			store.insertEntity(softwareKey);*/
+			/* DO NOT DELETE */
 			
 //			SoftwareKey appkey = new SoftwareKey();
 //			appkey.setUnlock("63D07BtB09");
 //			store.insertEntity(appkey, appkey.getId());
+           
+			 
 
 			String userEnteredKey = request.getParameter("appkey");
 			String filter = "unlock== '" + userEnteredKey + "'";
-//			Filter filter = new Query.FilterPredicate("keyValue", Query.FilterOperator.EQUAL, userEnteredKey);
 			boolean isKey = !(store.findEntities(SoftwareKey.class, filter).isEmpty()); 
-					
-//					!(store.findEntities("softwarekey",filter).isEmpty());
 			
 			if(!isKey){
 				request.setAttribute("isKey", isKey);

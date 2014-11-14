@@ -15,9 +15,9 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.DataStore;
-import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.Person.AccessLevel;
-import edu.uwm.owyh.model.UserFactory;
+import edu.uwm.owyh.model.WrapperObject;
+import edu.uwm.owyh.model.WrapperObject.AccessLevel;
+import edu.uwm.owyh.model.WrapperObjectFactory;
 
 public class TestAuthorizations{
 	private final LocalServiceTestHelper helper =
@@ -37,11 +37,11 @@ public class TestAuthorizations{
 		_service = DataStore.getDataStore();
 		
 		
-		Person user = UserFactory.getUser();
+		WrapperObject user = WrapperObjectFactory.getPerson();
 		Map<String,Object> properties = Library.propertySetBuilder("password", _password
 				                                                  ,"accesslevel", _level
 				                                                  );
-		user.addPerson(_userName, properties);
+		user.addObject(_userName, properties);
 		
 		_a1 = Auth.getAuth(null);
 	}

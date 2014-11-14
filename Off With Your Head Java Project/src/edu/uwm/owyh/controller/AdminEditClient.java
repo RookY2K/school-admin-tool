@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.Person.AccessLevel;
-import edu.uwm.owyh.model.UserFactory;
+import edu.uwm.owyh.model.WrapperObject;
+import edu.uwm.owyh.model.WrapperObject.AccessLevel;
+import edu.uwm.owyh.model.WrapperObjectFactory;
 
 @SuppressWarnings("serial")
 public class AdminEditClient extends HttpServlet {
@@ -37,8 +37,8 @@ public class AdminEditClient extends HttpServlet {
 	    Map<String, Object> properties = 
 	    		Library.propertySetBuilder("password", request.getParameter("password")
 	    				                  ,"accesslevel", accessLevel);
-	    Person user = UserFactory.getUser();
-	    List<String> errors = user.editPerson(request.getParameter("username"), properties);
+	    WrapperObject user = WrapperObjectFactory.getPerson();
+	    List<String> errors = user.editObject(request.getParameter("username"), properties);
 	    
 		if (errors.isEmpty())
 		{

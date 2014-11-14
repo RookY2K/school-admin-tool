@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.Person" %>
+<%@ page import="edu.uwm.owyh.model.WrapperObject" %>
 <%@ page import="java.util.List" %>
 <%! @SuppressWarnings("unchecked") %>
 <jsp:include page="/WEB-INF/templates/header.jsp">
@@ -17,12 +17,14 @@
 	  	
 	<div id="body">
 		<% 
-		if (request.getAttribute("isEdited") != null) {
+		
+			if (request.getAttribute("isEdited") != null) {
 			boolean isEdited = (Boolean) request.getAttribute("isEdited");
 			if (isEdited) { 
 		%>
 		<span class="good-message">Edit Was Successfully!</span>
 		<% 
+	
 			}else { 
 				List<String> errors = (List<String>)request.getAttribute("errors");
 				for(String error:errors){
@@ -34,8 +36,10 @@
 		}
 		%>
 	
-	    <% Person user =(Person)(request.getAttribute("user"));
-	       if(user != null) { %>
+	    <%
+	       	WrapperObject user =(WrapperObject)(request.getAttribute("user"));
+		if(user != null) {
+	    %>
 		       <form action="/admin/adminEditUser" method="post">
 				   <fieldset>
 					   <legend> <%= user.getProperty("name") %> </legend>
@@ -46,8 +50,7 @@
 					   </tr>
 					   <tr>
 						   <td class="cell"><label class="field" for="address">Address: </label></td>
-						   <td class="cell"><input type = "text" name="address" id="address" value="<%=user.getProperty("address") %>" />
-					   </tr>
+						   <td class="cell"><input type = "text" name="address" id="address" value="<%=user.getProperty("address") %>" />					   </tr>
 					   <tr>
 						   <td class="cell"><label class="field" for="phone">Phone Number: </label></td>
 						   <td class="cell"><input type = "text" name="phone" id="phone" value="<%=user.getProperty("phone") %>" />
@@ -56,9 +59,9 @@
 						   <td class="cell"><label class="field" for="accesslevel">Role: </label></td>
 						   <td class="cell"> 
 							   <select name="accesslevel">
-							     <option value="<% out.print(Person.AccessLevel.TA.getVal()); %>" <% if(user.getProperty("accesslevel") == Person.AccessLevel.TA) {%> selected <% } %>>TA</option>
-							     <option value="<% out.print(Person.AccessLevel.INSTRUCTOR.getVal()); %>" <% if(user.getProperty("accesslevel") == Person.AccessLevel.INSTRUCTOR) {%> selected <% } %>>INSTRUCTOR</option>
-							     <option value="<% out.print(Person.AccessLevel.ADMIN.getVal()); %>" <% if(user.getProperty("accesslevel") == Person.AccessLevel.ADMIN) {%> selected <% } %>>ADMIN</option>
+							     <option value="<% out.print(WrapperObject.AccessLevel.TA.getVal()); %>" <% if(user.getProperty("accesslevel") == WrapperObject.AccessLevel.TA) {%> selected <% } %>>TA</option>
+							     <option value="<% out.print(WrapperObject.AccessLevel.INSTRUCTOR.getVal()); %>" <% if(user.getProperty("accesslevel") == WrapperObject.AccessLevel.INSTRUCTOR) {%> selected <% } %>>INSTRUCTOR</option>
+							     <option value="<% out.print(WrapperObject.AccessLevel.ADMIN.getVal()); %>" <% if(user.getProperty("accesslevel") == WrapperObject.AccessLevel.ADMIN) {%> selected <% } %>>ADMIN</option>
 							   </select>
 						   </td>
 					   </tr>

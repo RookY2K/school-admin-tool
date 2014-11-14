@@ -13,9 +13,9 @@ import javax.servlet.http.HttpSession;
 
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.Person.AccessLevel;
-import edu.uwm.owyh.model.UserFactory;
+import edu.uwm.owyh.model.WrapperObject;
+import edu.uwm.owyh.model.WrapperObject.AccessLevel;
+import edu.uwm.owyh.model.WrapperObjectFactory;
 
 @SuppressWarnings("serial")
 public class AddAdmin extends HttpServlet{
@@ -59,8 +59,8 @@ public class AddAdmin extends HttpServlet{
 											  ,"accesslevel",accessLevel
 											  );
 			
-			Person newUser = UserFactory.getUser();
-			List<String> errors = newUser.addPerson(email, properties);
+			WrapperObject newUser = WrapperObjectFactory.getPerson();
+			List<String> errors = newUser.addObject(email, properties);
 			
 			if (errors.isEmpty()){
 				Auth.setSessionVariable(request, "user", newUser);

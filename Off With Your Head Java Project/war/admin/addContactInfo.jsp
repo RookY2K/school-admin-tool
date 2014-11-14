@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.Person" %>
+<%@ page import="edu.uwm.owyh.model.WrapperObject" %>
 <%@ page import="edu.uwm.owyh.library.Library" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
@@ -23,10 +23,9 @@
 			                                                  ,"state",""
 			                                                  ,"zip",""
 			                                                  );
-	String[] states = Library.getStates();
-	String taAccess = Integer.toString(Person.AccessLevel.TA.getVal());
-	String instructorAccess = Integer.toString(Person.AccessLevel.INSTRUCTOR.getVal());
-	String adminAccess = Integer.toString(Person.AccessLevel.ADMIN.getVal());
+	String taAccess = Integer.toString(WrapperObject.AccessLevel.TA.getVal());
+	String instructorAccess = Integer.toString(WrapperObject.AccessLevel.INSTRUCTOR.getVal());
+	String adminAccess = Integer.toString(WrapperObject.AccessLevel.ADMIN.getVal());
 %>
 <div id="content">
  	<div id="local-nav-bar">
@@ -56,10 +55,10 @@
 			}
 		%>			
 		<%	
-			Person user = (Person)request.getAttribute("badUserInfo");
+			WrapperObject user = (WrapperObject)request.getAttribute("badUserInfo");
 			if(user != null) {
-				Integer access = ((Person.AccessLevel)user.getProperty("accesslevel")).getVal();
-				 
+				Integer access = ((WrapperObject.AccessLevel)user.getProperty("accesslevel")).getVal();
+							 
 				properties = Library.propertySetBuilder("firstname",user.getProperty("firstname")
 						                               ,"lastname",user.getProperty("lastname")
 						                               ,"email",user.getProperty("email")
@@ -70,71 +69,81 @@
 						                               ,"state",user.getProperty("state")
 						                               ,"zip",user.getProperty("zip")
 						                               );				
-			}		
+			}
 		%>
-	
-		<form action="/admin/addContactInfo" method="post">
+		
+		<form action="./" method="post">
 			<fieldset>
-				<legend> Add User Contact</legend>
+				<legend> Add User Account</legend>
 				<table>
-				<tr>
-					<td class="cell"><label class="field" for="firstname">First Name: </label></td>
-					<td class="cell"><input type = "text" name="firstname" id="firstname" value="<%=properties.get("firstname") %>" required/></td>
-					<td class="cell"><label class="field" for="lastname">&nbsp;&nbsp;&nbsp;Last Name: </label></td>
-					<td class="cell"><input type = "text" name="lastname" id="lastname" value="<%=properties.get("lastname") %>" required/></td>
-				</tr>
-				<tr>
-					<td class="cell"><label class="field" for="email">Email: </label></td>
-					<td class="cell"><input type = "email" name="email" id="email" placeholder="somename@uwm.edu" value="<%=properties.get("email") %>" pattern="^\w+@uwm.edu$" required /></td>
-				</tr>
-				<tr>
-					<td class="cell"><label class="field" for="streetaddress">Street Address: </label></td>
-					<td class="cell" colspan="3"><input type = "text" name="streetaddress" id="streetaddress" value="<%=properties.get("streetaddress")%>" /></td>
-				</tr>
-				<tr>
-					<td class="cell"><label class="field" for="city">City: </label></td>
-					<td class="cell"><input type = "text" name="city" id="city" value="<%=properties.get("city")%>" /></td>
-					<td class="cell"><label class="field" for="state">&nbsp;&nbsp;&nbsp;State:</label></td>
-					<td class="cell">
-					<select name="state" id="state">
-						<option value=""></option>
-						<%
-							for(int i=0;i<states.length;++i){
-								String select = "";
-								if(states[i].equals(properties.get("state"))) select = "selected";
-						%>
-						<option value="<%=states[i] %>" <%=select %>><%=states[i] %></option>
-						<%								
-							}
-						%>
-					</select>
-					</td>	
-				</tr>
-				<tr>
-					<td class="cell"><label class="field" for="zip">Zip Code: </label></td>
-					<td class="cell"><input type = "text" name="zip" id="zip" value="<%=properties.get("zip")%>" /></td>	
-				</tr>
-				<tr>
-					<td class="cell"><label class="field" for="phone">Phone Number: </label></td>
-					<td class="cell"><input type = "text" name="phone" id="phone" value="<%=properties.get("phone")%>"/></td>
-				</tr>
-				<tr>
-					<td class="cell"><label class="field" for="accesslevel">Role: </label></td>
-					<td class="cell"> 
-						<select name="accesslevel" required>
-						  <option value="">Please Select</option>
-						  <option value="<%=taAccess%>" <%if(taAccess.equals(properties.get("accesslevel").toString())){%>selected<%}%>>TA</option>
-						  <option value="<%=instructorAccess%>"<%if(instructorAccess.equals(properties.get("accesslevel").toString())){%>selected<%}%>>INSTRUCTOR</option>
-						  <option value="<%=adminAccess%>"<%if(adminAccess.equals(properties.get("accesslevel").toString())){%>selected<%}%>>ADMIN</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td class="cell" colspan="2"><input type="submit" value="Submit Contact Info" /></td>
-				</tr>
+					<tr>
+						<td class="cell"><label class="field" for="email">Email: </label></td>
+						<td class="cell"><input type = "email" name="email" id="email" placeholder="somename@uwm.edu" value="<%=properties.get("email") %>" pattern="^\w+@uwm.edu$" required /></td>
+					</tr>
+					<tr>
+						<td class="cell"><label class="field" for="email">Password: </label></td>
+						<td class="cell"><input type = "password" name="password" id="password" required /></td>
+					</tr>
+					<tr>
+					<td class="cell" colspan="2"><input type="submit" value="Add New User" /> <br /> NON FUNCTIONAL ATM</td>
+					</tr>
 				</table>
 			</fieldset>
 		</form>
+		<br />
+		<form action="/admin/addContactInfo" method="post">
+		<fieldset>
+			<legend> Add User Contact</legend>
+			<table>
+			<tr>
+				<td class="cell"><label class="field" for="firstname">First Name: </label></td>
+				<td class="cell"><input type = "text" name="firstname" id="firstname" value="<%=properties.get("firstname") %>" required/></td>
+				<td class="cell"><label class="field" for="lastname">&nbsp;&nbsp;&nbsp;Last Name: </label></td>
+				<td class="cell"><input type = "text" name="lastname" id="lastname" value="<%=properties.get("lastname") %>" required/></td>
+			</tr>
+			<tr>
+				<td class="cell"><label class="field" for="email">Email: </label></td>
+				<td class="cell"><input type = "email" name="email" id="email" placeholder="somename@uwm.edu" value="<%=properties.get("email") %>" pattern="^\w+@uwm.edu$" required /></td>
+			</tr>
+			<tr>
+				<td class="cell"><label class="field" for="streetaddress">Street Address: </label></td>
+				<td class="cell" colspan="3"><input type = "text" name="streetaddress" id="streetaddress" value="<%=properties.get("streetaddress")%>" /></td>
+			</tr>
+			<tr>
+				<td class="cell"><label class="field" for="city">City: </label></td>
+				<td class="cell"><input type = "text" name="city" id="city" value="<%=properties.get("city")%>" /></td>
+				<td class="cell"><label class="field" for="state">&nbsp;&nbsp;&nbsp;State:</label></td>
+				<td class="cell">
+				   <jsp:include page="/WEB-INF/templates/stateselect.jsp">
+				    	<jsp:param name="selected" value='<%=properties.get("state") %>' />
+					</jsp:include>
+				</td>	
+			</tr>
+			<tr>
+				<td class="cell"><label class="field" for="zip">Zip Code: </label></td>
+				<td class="cell"><input type = "text" name="zip" id="zip" value="<%=properties.get("zip")%>" /></td>	
+			</tr>
+			<tr>
+				<td class="cell"><label class="field" for="phone">Phone Number: </label></td>
+				<td class="cell"><input type = "text" name="phone" id="phone" value="<%=properties.get("phone")%>"/></td>
+			</tr>
+			<tr>
+				<td class="cell"><label class="field" for="accesslevel">Role: </label></td>
+				<td class="cell"> 
+					<select name="accesslevel" required>
+					  <option value="">Please Select</option>
+					  <option value="<%=taAccess%>" <%if(taAccess.equals(properties.get("accesslevel").toString())){%>selected<%}%>>TA</option>
+					  <option value="<%=instructorAccess%>"<%if(instructorAccess.equals(properties.get("accesslevel").toString())){%>selected<%}%>>INSTRUCTOR</option>
+					  <option value="<%=adminAccess%>"<%if(adminAccess.equals(properties.get("accesslevel").toString())){%>selected<%}%>>ADMIN</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="cell" colspan="2"><input type="submit" value="Add User Contact Info" /></td>
+			</tr>
+			</table>
+		</fieldset>
+	</form>
 	
 	</div>
 </div>

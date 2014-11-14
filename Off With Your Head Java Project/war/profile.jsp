@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.Person" %>
+<%@ page import="edu.uwm.owyh.model.WrapperObject" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@ page import="edu.uwm.owyh.library.Library"%>
 <%@ page import="java.util.Map" %>
@@ -13,19 +13,19 @@
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 
 <%
-	Person user = (Person)request.getAttribute("user");
+	WrapperObject user = (WrapperObject)request.getAttribute("user");
 	Map<String,Object> properties = null;
 	
 	if(user != null){
 		properties = Library.propertySetBuilder("firstname", user.getProperty("firstname")
-				                               ,"lastname",user.getProperty("lastname")
-				                               ,"phone",user.getProperty("phone")
-				                               ,"email",user.getProperty("email")
-				                               ,"streetaddress",user.getProperty("streetaddress")
-				                               ,"city",user.getProperty("city")
-				                               ,"state",user.getProperty("state")
-				                               ,"zip",user.getProperty("zip")
-				                               );
+		                               ,"lastname",user.getProperty("lastname")
+		                               ,"phone",user.getProperty("phone")
+		                               ,"email",user.getProperty("email")
+		                               ,"streetaddress",user.getProperty("streetaddress")
+		                               ,"city",user.getProperty("city")
+		                               ,"state",user.getProperty("state")
+		                               ,"zip",user.getProperty("zip")
+		                               );
 		
 		Set<String> keySet = properties.keySet();
 		String val = "";
@@ -38,7 +38,9 @@
 <div id="content">
 	<div id="local-nav-bar">
 		<ul id="local-list">
-			<li><a class="nav-link" href="/profile">User Profile</a></li>
+			<li><a class="nav-link" href="/profile">View My Profile</a></li>
+			<li><a class="nav-link" href="/editprofile">Edit My Profile</a></li>
+			<li><a class="nav-link" href="/editprofile#changepassword">Change Password</a></li>
 			<!--
 			<li><a class="nav-link" href="officehour.html">Office Hours</a></li>
 			<li><a class="nav-link" href="taclasses.html">Class Schedule</a></li>
@@ -48,25 +50,27 @@
 
 	<div id="body">
 	  <% 
-	       if(user != null && properties != null) { %>
+	       if(user != null && properties != null) { 
+	  %>
 			<table id="profile-table">
 				<tr>
 					<td class="user-label">Name:</td><td class="user-data"><%=properties.get("firstname") + " " + properties.get("lastname") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Phone Number:</td><td class="user-data"><%=properties.get("phone") %></td>
+					<td class="user-label">Email Address:</td><td class="user-data"><%=properties.get("email") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Email Address:</td><td class="user-data"><%=properties.get("email") %></td>
+					<td class="user-label">Phone Number:</td><td class="user-data"><%=properties.get("phone") %></td>
 				</tr>
 				<tr>
 					<td class="user-label">Address:</td><td class="user-data"><%=properties.get("streetaddress")%> <br/>
 					                                                          <%=properties.get("city") + ", " + properties.get("state") + " " + properties.get("zip")%></td>
 				</tr>
 				<tr>
-				<% Person me = (Person) Auth.getSessionVariable(request, "user");
-					if (me != null && me.getUserName().equals(user.getUserName())) {
-				%>
+	  <%
+	  	WrapperObject me = (WrapperObject) Auth.getSessionVariable(request, "user");
+		if (me != null && me.getUserName().equals(user.getUserName())) {
+	  %>
 					<td id="edit-link-cell">
 						<form action="/editprofile" method="get">
 							<input type="submit" value="Edit My Profile"/>
@@ -75,8 +79,9 @@
 				<% } else { %>
 					
 					<td id="edit-link-cell">
-						<form action="/userlisteditbutton" method="post">
-							<input type="submit" value="Edit User Profile" name="<% out.print(user.getUserName()); %>" />
+						<form action="/editprofile" method="get">
+							<input type="hidden" name="username" value="<% out.print(user.getUserName()); %>" />
+							<input type="submit" value="Edit User Profile" />
 						</form>
 					</td>
 					

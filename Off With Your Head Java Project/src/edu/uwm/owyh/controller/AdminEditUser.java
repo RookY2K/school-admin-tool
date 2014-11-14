@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.Person;
-import edu.uwm.owyh.model.Person.AccessLevel;
-import edu.uwm.owyh.model.UserFactory;
+import edu.uwm.owyh.model.WrapperObject;
+import edu.uwm.owyh.model.WrapperObject.AccessLevel;
+import edu.uwm.owyh.model.WrapperObjectFactory;
 
 @SuppressWarnings("serial")
 public class AdminEditUser extends HttpServlet {
@@ -33,7 +33,7 @@ public class AdminEditUser extends HttpServlet {
 		
 		int access = Integer.parseInt(request.getParameter("accesslevel"));
 		AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
-	    Person user = UserFactory.getUser();
+	    WrapperObject user = WrapperObjectFactory.getPerson();
 		Map<String, Object> properties = 
 				Library.propertySetBuilder("accesslevel",accessLevel
 						                  ,"firstname", request.getParameter("firstname")
@@ -45,12 +45,12 @@ public class AdminEditUser extends HttpServlet {
 						                  ,"zip",request.getParameter("zip")
 						                  );
 		
-		List<String> errors = user.editPerson(request.getParameter("username"), properties);
+		List<String> errors = user.editObject(request.getParameter("username"), properties);
 		if (errors.isEmpty())
 		{
 			request.setAttribute("user", user);
 			request.setAttribute("isEdited", true);
-			Person client = (Person)Auth.getSessionVariable(request, "user");
+			WrapperObject client = (WrapperObject)Auth.getSessionVariable(request, "user");
 			String userName = (String)user.getProperty("userName");
 			String clientName = (String)client.getProperty("userName");
 			if(userName.equalsIgnoreCase(clientName)){
