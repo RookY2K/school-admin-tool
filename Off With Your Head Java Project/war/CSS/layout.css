@@ -137,14 +137,24 @@ body {
 }
 
 #global-nav-bar ul ul {
-	display:none;
+	visibility: hidden;
+	opacity: 0.0;
+	transition: opacity .25s ease-in-out;
+   -moz-transition: opacity .25s ease-in-out;
+   -webkit-transition: opacity .25s ease-in-out;
 }
 
 #global-nav-bar ul li:hover > ul {
-	display: block;
+	visibility: visible;
 	margin: 0px;
 	padding: 0px;
+	opacity: 1.0;
+	 transition: opacity .75s ease-in-out;
+   -moz-transition: opacity .75s ease-in-out;
+   -webkit-transition: opacity .75s ease-in-out;
 }
+
+
 
 #global-nav-bar ul li:hover > ul li {
 	float:none;

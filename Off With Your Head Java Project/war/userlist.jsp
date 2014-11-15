@@ -45,6 +45,8 @@
 				<td class="cell-header">Role</td>
 				<% if (userAccess == WrapperObject.AccessLevel.ADMIN) { %>
 				<td class="cell-header" colspan="3">Modify</td>
+				<% } else {%>
+				<td class="cell-header" colspan="1">Profile</td>
 				<% } %>
 			</tr>		
  		<% for (WrapperObject user : users) {
@@ -69,7 +71,7 @@
 				<% } %>
 				</td>
 				
-				<% if (userAccess == WrapperObject.AccessLevel.ADMIN) { %>
+				
 				
 				<td class="cell">
 					<form action="/profile" method="post">
@@ -77,6 +79,7 @@
 						<input type="submit" value="View Profile" />
 					</form>
 				</td>
+				<% if (userAccess == WrapperObject.AccessLevel.ADMIN) { %>
 				
 				<%if(!userName.equalsIgnoreCase(username)){%>
 				<td class="cell">

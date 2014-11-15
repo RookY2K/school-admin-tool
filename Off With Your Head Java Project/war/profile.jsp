@@ -4,6 +4,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Set" %>
 
+
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Profile" />
     <jsp:param name="stylesheet" value="layout.css" />
@@ -14,6 +15,8 @@
 
 <%
 	WrapperObject user = (WrapperObject)request.getAttribute("user");
+	WrapperObject self = (WrapperObject) Auth.getSessionVariable(request, "user");
+	if(user == null) user = self;
 	Map<String,Object> properties = null;
 	
 	if(user != null){
@@ -33,6 +36,9 @@
 			if(properties.get(key) == null) properties.put(key, val);
 		}
 	}
+	
+	if (user == null || properties == null || self == null) return;
+	WrapperObject.AccessLevel accesslevel = (WrapperObject.AccessLevel) self.getProperty("accesslevel");
 %>
 
 <div id="content">
@@ -49,9 +55,6 @@
 	</div>
 
 	<div id="body">
-	  <% 
-	       if(user != null && properties != null) { 
-	  %>
 			<table id="profile-table">
 				<tr>
 					<td class="user-label">Name:</td><td class="user-data"><%=properties.get("firstname") + " " + properties.get("lastname") %></td>
@@ -59,6 +62,7 @@
 				<tr>
 					<td class="user-label">Email Address:</td><td class="user-data"><%=properties.get("email") %></td>
 				</tr>
+				<%  if (self.getUserName().equals(user.getUserName()) || accesslevel == WrapperObject.AccessLevel.ADMIN) {  %>
 				<tr>
 					<td class="user-label">Phone Number:</td><td class="user-data"><%=properties.get("phone") %></td>
 				</tr>
@@ -66,17 +70,15 @@
 					<td class="user-label">Address:</td><td class="user-data"><%=properties.get("streetaddress")%> <br/>
 					                                                          <%=properties.get("city") + ", " + properties.get("state") + " " + properties.get("zip")%></td>
 				</tr>
+				<% } %>
 				<tr>
-	  <%
-	  	WrapperObject me = (WrapperObject) Auth.getSessionVariable(request, "user");
-		if (me != null && me.getUserName().equals(user.getUserName())) {
-	  %>
+			  <%  if (self.getUserName().equals(user.getUserName())) {  %>
 					<td id="edit-link-cell">
 						<form action="/editprofile" method="get">
 							<input type="submit" value="Edit My Profile"/>
 						</form>
 					</td>
-				<% } else { %>
+				<% } else if (accesslevel == WrapperObject.AccessLevel.ADMIN) { %>
 					
 					<td id="edit-link-cell">
 						<form action="/editprofile" method="get">
@@ -88,7 +90,6 @@
 				<% } %>
 				</tr>
 			</table>
-		  <% } %>
 	</div>                    
 </div>
 <jsp:include page="/WEB-INF/templates/footer.jsp" />

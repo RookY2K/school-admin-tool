@@ -5,6 +5,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Set" %>
 <%! @SuppressWarnings("unchecked") %>
+
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Edit User" />
     <jsp:param name="stylesheet" value="layout.css" />
@@ -39,6 +40,7 @@
 	}
 	
 	if (user == null || properties == null || self == null) return;
+	WrapperObject.AccessLevel accesslevel = (WrapperObject.AccessLevel) self.getProperty("accesslevel");
 %>
 
 <div id="content">
@@ -125,7 +127,7 @@
 			   <% 
 			   String myUsername = (String) self.getProperty("username");
 			   String targetUsername = (String) user.getProperty("username");
-			   if ((WrapperObject.AccessLevel) self.getProperty("accesslevel") != WrapperObject.AccessLevel.ADMIN || myUsername.equals(targetUsername)) { 
+			   if (accesslevel != WrapperObject.AccessLevel.ADMIN || myUsername.equals(targetUsername)) { 
 			   %>
 			   		
 			   <tr>
@@ -146,7 +148,7 @@
 			   <tr>
 				   <td class="cell" colspan="2"><input type="submit" name="changeuserpassword" value="Change Password"/></td>
 			   </tr>
-			   <%  if ((WrapperObject.AccessLevel) self.getProperty("accesslevel") == WrapperObject.AccessLevel.ADMIN && !myUsername.equals(targetUsername)) { %>
+			   <%  if (accesslevel == WrapperObject.AccessLevel.ADMIN && !myUsername.equals(targetUsername)) { %>
 		  		<tr>
 				   <td class="cell" colspan="2"><input type="submit" name="changeuserpasswordandemail" value="Change & Email User Password"/></td>
 			   </tr>
