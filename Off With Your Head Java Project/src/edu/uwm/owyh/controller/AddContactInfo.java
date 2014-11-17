@@ -18,6 +18,7 @@ import edu.uwm.owyh.model.WrapperObjectFactory;
 @SuppressWarnings("serial")
 public class AddContactInfo extends HttpServlet {
 	
+	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
@@ -27,6 +28,7 @@ public class AddContactInfo extends HttpServlet {
 		request.getRequestDispatcher(request.getContextPath() + "/admin/addContactInfo.jsp").forward(request, response);
 	}
 	
+	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
