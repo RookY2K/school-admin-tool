@@ -35,9 +35,11 @@ public class Login extends HttpServlet {
 		
 		if (isLogin){
 //			WrapperObject user = WrapperObjectFactory.getUser().findPerson(username);
-			
-			Auth.setSessionVariable(request, "user", user);					
+			Auth.setSessionVariable(request, "user", user);		
+			response.sendRedirect(request.getContextPath() + "/");
+			return;
 		}
-		response.sendRedirect(request.getContextPath() + "/");
+		
+		response.sendRedirect(request.getContextPath() + "/index.jsp?login=fail");
 	}
 }
