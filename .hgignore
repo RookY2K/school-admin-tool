@@ -59,6 +59,8 @@ Off With Your Head Java Project/war/WEB-INF/lib/geronimo-jpa_2.0_spec-1.0.jar
 Off With Your Head Java Project/war/WEB-INF/lib/jdo-api-3.0.1.jar
 Off With Your Head Java Project/war/WEB-INF/lib/jta-1.1.jar
 Off With Your Head Java Project/war/editprofile.jsp.orig
+Off With Your Head Java Project/Page.txt
+Off With Your Head Java Project/user_dictionary.txt.txt
 syntax: regexp
 ^(.*[\\/])?gen[\\/].*
 ^(.*[\\/])?bin[\\/].*

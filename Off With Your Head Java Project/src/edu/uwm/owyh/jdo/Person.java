@@ -1,8 +1,13 @@
 package edu.uwm.owyh.jdo;
 
 import java.io.Serializable;
+import java.util.List;
 
-import javax.jdo.annotations.*;
+import javax.jdo.annotations.Extension;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -25,29 +30,46 @@ public class Person implements Serializable,Cloneable{
 	private String parentKey;
 	
 	@Persistent
+	private List<Section> sections;
+	
+	@Persistent
+	private ContactInfo contactInfo;
+	
+	@Persistent
 	private String userName;
+	
 	@Persistent
 	private String toUpperUserName;
+	
 	@Persistent
 	private String password;
-	@Persistent
-	private String firstName;
-	@Persistent
-	private String lastName;
-	@Persistent
-	private String email;
-	@Persistent
-	private String phone;
+	
+//	@Persistent
+//	private String firstName;
+//	
+//	@Persistent
+//	private String lastName;
+//	
+//	@Persistent
+//	private String email;
+//	
+//	@Persistent
+//	private String phone;
+//	
 	@Persistent
 	private Integer accessLevel;
-	@Persistent
-	private String streetAddress;
-	@Persistent
-	private String city;
-	@Persistent
-	private String state;
-	@Persistent
-	private String zip;
+	
+//	@Persistent
+//	private String streetAddress;
+//	
+//	@Persistent
+//	private String city;
+//	
+//	@Persistent
+//	private String state;
+//	
+//	@Persistent
+//	private String zip;
 
 	//Private constructors
 	/*
@@ -63,6 +85,8 @@ public class Person implements Serializable,Cloneable{
 		
 		setUserName(userName);
 		setToUpperUserName(userName);
+		
+		contactInfo = ContactInfo.getContactInfo();
 	}
 	
 	private Person(){
@@ -116,48 +140,52 @@ public class Person implements Serializable,Cloneable{
 	public String getParentKey() {
 		return parentKey;
 	}
+	
+	public ContactInfo getContactInfo(){
+		return contactInfo;
+	}
 
 	/**
 	 * @return the zip
 	 */
-	public String getZipCode() {
-		return zip;
-	}
+//	public String getZip() {
+//		return zip;
+//	}
 	
 	/**
 	 * @return the state
 	 */
-	public String getState() {
-		return state;
-	}
+//	public String getState() {
+//		return state;
+//	}
 
 	/**
 	 * @return the city
 	 */
-	public String getCity() {
-		return city;
-	}
+//	public String getCity() {
+//		return city;
+//	}
 
 	/**
 	 * @return the street address
 	 */
-	public String getStreetAddress() {
-		return streetAddress;
-	}
+//	public String getStreetAddress() {
+//		return streetAddress;
+//	}
 
 	/**
 	 * @return the last name
 	 */
-	public String getLastName() {
-		return lastName;
-	}
+//	public String getLastName() {
+//		return lastName;
+//	}
 
 	/**
 	 * @return the first name
 	 */
-	public String getFirstName() {
-		return firstName;
-	}
+//	public String getFirstName() {
+//		return firstName;
+//	}
 
 	/**
 	 * @return the userName
@@ -183,16 +211,16 @@ public class Person implements Serializable,Cloneable{
 	/**
 	 * @return the email
 	 */
-	public String getEmail() {
-		return email;
-	}
+//	public String getEmail() {
+//		return email;
+//	}
 	
 	/**
 	 * @return the phone
 	 */
-	public String getPhone() {
-		return phone;
-	}
+//	public String getPhone() {
+//		return phone;
+//	}
 	
 	/**
 	 * @return the accessLevel
@@ -203,53 +231,57 @@ public class Person implements Serializable,Cloneable{
 	
 	//Mutators
 	
+	public void setContactInfo(ContactInfo info){
+		contactInfo = info;
+	}
+	
 	/**
 	 * Sets the city field
 	 * @param city
 	 */
-	public void setCity(String city) {
-		this.city = city;			
-	}
+//	public void setCity(String city) {
+//		this.city = city;			
+//	}
 
 	/**
 	 * Sets the zip field
 	 * @param zip
 	 */
-	public void setZip(String zip) {
-		this.zip = zip;			
-	}
+//	public void setZip(String zip) {
+//		this.zip = zip;			
+//	}
 
 	/**
 	 * Sets the State field
 	 * @param state
 	 */
-	public void setState(String state) {
-		this.state = state;			
-	}
+//	public void setState(String state) {
+//		this.state = state;			
+//	}
 
 	/**
 	 * Sets the street address field
 	 * @param street
 	 */
-	public void setStreetAddress(String street) {
-		streetAddress = street;			
-	}
+//	public void setStreetAddress(String street) {
+//		streetAddress = street;			
+//	}
 
 	/**
 	 * Sets the last name field
 	 * @param lastName
 	 */
-	public void setLastName(String lastName) {
-		this.lastName = lastName;			
-	}
+//	public void setLastName(String lastName) {
+//		this.lastName = lastName;			
+//	}
 	
 	/**
 	 * Sets the first name field
 	 * @param firstName
 	 */
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;			
-	}	
+//	public void setFirstName(String firstName) {
+//		this.firstName = firstName;			
+//	}	
 
 	/**
 	 * Sets the password field
@@ -263,17 +295,17 @@ public class Person implements Serializable,Cloneable{
 	 * Sets the email field
 	 * @param email the email to set
 	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
+//	public void setEmail(String email) {
+//		this.email = email;
+//	}
 	
 	/**
 	 * Sets the phone number field
 	 * @param phone the phone to set
 	 */
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+//	public void setPhone(String phone) {
+//		this.phone = phone;
+//	}
 	
 	/**
 	 * Sets the access level field
@@ -313,6 +345,8 @@ public class Person implements Serializable,Cloneable{
 			other.id = keyBuilder.addChild(KIND, other.userName).getKey();
 			
 			other.parentKey = null;
+			
+			other.setContactInfo(getContactInfo().clone());
 			
 			return other;			
 		}
