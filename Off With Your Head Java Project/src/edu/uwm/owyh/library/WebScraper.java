@@ -1,7 +1,7 @@
 package edu.uwm.owyh.library;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -17,7 +17,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSpan;
 import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptJobManager;
 
+import edu.uwm.owyh.mockjdo.Course;
+import edu.uwm.owyh.mockjdo.Section;
+
 public class WebScraper {
+	private List<Course> _courses;
 
 	public static Document getPage(String targetUrl) {
 		// TODO Auto-generated method stub
@@ -122,8 +126,25 @@ public class WebScraper {
 			courseTables.add(tableAnchorRow.parent().parent());
 		}
 		
-		for(int i=0; i<courses.size(); ++i){
+		for(int i=0; i<courseTables.size(); ++i){
+			Course course = new Course();
+			Section section = new Section();
+			course.setSection(section);
+			String courseInfo = courses.get(i).text();
+			//TODO Do we need both COMPSCI and number? Or is number enough?
+			course.setCourseNum(courseInfo.substring(0, 7) + "-" + courseInfo.substring(8, 11));
 			
+			int startIndex = courseInfo.indexOf(":") + 1;
+			int endIndex = courseInfo.indexOf("(", startIndex);
+			
+			course.setCourseName(courseInfo.substring(startIndex,endIndex).trim());
+			//TODO there is more than one section per course
+			Element sectionInfo = courseTables.get(i).getElementsByAttributeValue("class", "body copy").get(0);
+			Iterator<Element> it = sectionInfo.children().iterator();
+			
+			while(it.hasNext()){
+				System.out.println(it.next().text());
+			}
 		}
 		
 //		System.out.println("Course count = " + courseTables.size());

@@ -61,6 +61,8 @@ Off With Your Head Java Project/war/WEB-INF/lib/jta-1.1.jar
 Off With Your Head Java Project/war/editprofile.jsp.orig
 Off With Your Head Java Project/Page.txt
 Off With Your Head Java Project/user_dictionary.txt.txt
+Off With Your Head Java Project/src/edu/uwm/owyh/mockjdo/Course.java
+Off With Your Head Java Project/src/edu/uwm/owyh/mockjdo/Section.java
 syntax: regexp
 ^(.*[\\/])?gen[\\/].*
 ^(.*[\\/])?bin[\\/].*

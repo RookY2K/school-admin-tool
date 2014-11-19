@@ -86,11 +86,9 @@ public class PersonWrapper implements WrapperObject,Serializable{
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject> persons = null;
 		String filter = "parentKey == '" + PARENT + "'";
-		try{
-			persons = getPersonsFromList(store.findEntities(getPersonTable(), filter));
-		}finally{
-			store.closeDataStore();
-		}
+
+		persons = getPersonsFromList(store.findEntities(getPersonTable(), filter));
+
 		return persons;
 	}
 
