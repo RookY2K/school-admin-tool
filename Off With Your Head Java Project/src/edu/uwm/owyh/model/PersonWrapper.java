@@ -86,11 +86,9 @@ public class PersonWrapper implements WrapperObject,Serializable{
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject> persons = null;
 		String filter = "parentKey == '" + PARENT + "'";
-		try{
-			persons = getPersonsFromList(store.findEntities(getPersonTable(), filter));
-		}finally{
-			store.closeDataStore();
-		}
+
+		persons = getPersonsFromList(store.findEntities(getPersonTable(), filter));
+
 		return persons;
 	}
 
@@ -134,24 +132,24 @@ public class PersonWrapper implements WrapperObject,Serializable{
 		case "password":
 			return _person.getPassword();
 		case "firstname":
-			return _person.getFirstName();
+			return _person.getContactInfo().getFirstName();
 		case "lastname":
-			return _person.getLastName();
+			return _person.getContactInfo().getLastName();
 		case "email":
-			return _person.getEmail();
+			return _person.getContactInfo().getEmail();
 		case "phone":
-			return _person.getPhone();
+			return _person.getContactInfo().getPhone();
 		case "accesslevel":
 			Integer accessLevel = _person.getAccessLevel();
 			return AccessLevel.getAccessLevel(accessLevel);
 		case "streetaddress":
-			return _person.getStreetAddress();
+			return _person.getContactInfo().getStreetAddress();
 		case "city":
-			return _person.getCity();
+			return _person.getContactInfo().getCity();
 		case "state":
-			return _person.getState();
+			return _person.getContactInfo().getState();
 		case "zip":
-			return _person.getZipCode();
+			return _person.getContactInfo().getZip();
 		default:
 			return null;
 		}
@@ -172,36 +170,33 @@ public class PersonWrapper implements WrapperObject,Serializable{
 			_person.setAccessLevel(accessLevel);
 			break;
 		case "firstname":
-			_person.setFirstName((String) obj);
+			_person.getContactInfo().setFirstName((String) obj);
 			break;
 		case "lastname":
-			_person.setLastName((String) obj);
+			_person.getContactInfo().setLastName((String) obj);
 			break;
 		case "email":
-			_person.setEmail((String) obj);
+			_person.getContactInfo().setEmail((String) obj);
 			break;
 		case "phone":
-			_person.setPhone((String) obj);
+			_person.getContactInfo().setPhone((String) obj);
 			break;
 		case "streetaddress":
-			_person.setStreetAddress((String)obj);
+			_person.getContactInfo().setStreetAddress((String)obj);
 			break;
 		case "city":
-			_person.setCity((String) obj);
+			_person.getContactInfo().setCity((String) obj);
 			break;
 		case "state":
-			_person.setState((String) obj);
+			_person.getContactInfo().setState((String) obj);
 			break;
 		case "zip":
-			_person.setZip((String) obj);
+			_person.getContactInfo().setZip((String) obj);
 			break;			
 		default:
 			throw new IllegalArgumentException(propertyKey + " is not a valid property of " + getClass().getSimpleName());
 		}
-		if(propertyKey == "accesslevel"){
-			obj = ((AccessLevel)object).getVal();
-		}
-
+		
 		return error;
 	}
 
