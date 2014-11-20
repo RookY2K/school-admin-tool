@@ -115,6 +115,10 @@ public class PersonWrapper implements WrapperObject,Serializable{
 	public static boolean checkEmail(String userName){
 		return userName.matches(EMAILPATTERN);
 	}
+	
+	public static boolean checkOfficeHours(String formatString){
+		return formatString.matches(OFFICEHOURPATTERN);
+	}
 
 	public static boolean checkPhone(String phone){
 		return (phone.trim() == ""|| phone.trim().matches(PHONEPATTERN));
@@ -150,6 +154,8 @@ public class PersonWrapper implements WrapperObject,Serializable{
 			return _person.getContactInfo().getState();
 		case "zip":
 			return _person.getContactInfo().getZip();
+		case "officehours":
+			return _person.getOfficeHours();
 		default:
 			return null;
 		}
@@ -193,6 +199,9 @@ public class PersonWrapper implements WrapperObject,Serializable{
 		case "zip":
 			_person.getContactInfo().setZip((String) obj);
 			break;			
+		case "officehours":
+			_person.addOfficeHours((String) obj);
+			break;
 		default:
 			throw new IllegalArgumentException(propertyKey + " is not a valid property of " + getClass().getSimpleName());
 		}
@@ -243,6 +252,12 @@ public class PersonWrapper implements WrapperObject,Serializable{
 				throw new IllegalArgumentException("Property must be of type AccessLevel");
 			}
 			break;
+			
+		case "officehours":
+			checkObjectIsString(object);
+			if(!checkOfficeHours((String)object)){
+				error = "Error: Incorrectly Formatted Office Hours String!";
+			}
 		default:
 			checkObjectIsString(object);
 			break;

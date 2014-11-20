@@ -160,6 +160,7 @@ public class TestBasicUser {
 				                               ,"city","Milwaukee"
 				                               ,"state","WI"
 				                               ,"zip","12345"
+				                               ,"officehours", "TR 10:25AM-12:45PM"
 				                               );
 		
 		assertTrue("User info was not editted!", user.editObject("admin@uwm.edu", properties).isEmpty());
@@ -174,6 +175,10 @@ public class TestBasicUser {
 		assertEquals("Milwaukee", user.getProperty("city"));
 		assertEquals("WI",user.getProperty("state"));
 		assertEquals("12345",user.getProperty("zip"));
+		
+        List<String> hours = (List<String>)user.getProperty("officehours");
+		
+		assertEquals("TR 10:00AM-12:00PM",hours.get(0));
 		
 		search = datastore.findEntities(PersonWrapper.getPersonTable(), null);
 		assertTrue("User Was Saved Improperly", (search.size() == 1));
