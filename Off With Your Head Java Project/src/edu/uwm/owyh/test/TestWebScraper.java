@@ -1,6 +1,9 @@
 package edu.uwm.owyh.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -10,40 +13,56 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
 import edu.uwm.owyh.library.WebScraper;
 
 public class TestWebScraper {
-	private String baseUri;
-	private String targetUrl;
-	private String html;
+	private String _baseUri;
+	private String _notASite;
+	
+	/*
+	 * connectToPage(String)
+	 * closeConnection()
+	 * findFirstByXPath(HtmlPage, String)
+	 * findByXPath(HtmlPage, String)
+	 * findAndClickAnchor(HtmlPage, String)
+	 * ClickSpanAndGetResultingPage(HtmlPage, String)
+	 */
 	
 	@Before
 	public void setUp(){
-		
+		_baseUri = "http://1-dot-owyh14.appspot.com";
+		_notASite = "http://www.probablynotasite.com";
 	}
 	
 	@After
 	public void tearDown(){
-		
+		WebScraper.closeConnection();
 	}
 	
 	@Test
-	public void testGetPage(){
-		Document htmlPage = null;
+	public void testConnect(){
+		HtmlPage page = null;
 		try{
-			htmlPage = WebScraper.getPage(targetUrl);
+			page = WebScraper.connectToPage(_notASite);
 		}catch(Exception e){
 			fail("Exception should have been caught in method and null returned!");
 		}
+		assertTrue(page == null);
 		
-		assertFalse(htmlPage == null);
-		assertTrue(htmlPage.hasText());
+		page = WebScraper.connectToPage(_baseUri);
+		assertFalse(page == null);
+		assertEquals("Login",page.getTitleText());
 	}
 	
 	public void testFindLink(){
-		String target = ""; //TODO fill in target, searchStr, and html string values
-		String searchStr = "";
-		Document doc = Jsoup.parse(html);
+		String xPath = "//a[contains(@href,'vamaiuri@uwm.edu')]";
+		
+		HtmlPage page = WebScraper.connectToPage(_baseUri);
+		
+		page = WebScraper.findAndClickAnchor(page, xPath);
 		boolean isFound = false;
 		
 		List<String> links = WebScraper.findLinks(doc,searchStr);
@@ -63,7 +82,7 @@ public class TestWebScraper {
 		String target = ""; //TODO fill in target, searchStr
 		String searchStr = "";
 		
-		Document doc = Jsoup.parse(html);
+		Document doc = Jsoup.parse(_html);
 		
 		List<String> links = WebScraper.findLinks(doc, searchStr);
 		

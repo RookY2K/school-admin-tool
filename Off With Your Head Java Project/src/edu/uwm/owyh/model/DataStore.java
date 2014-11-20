@@ -43,7 +43,6 @@ public final class DataStore{
 		query.setFilter(filter);
 			
 		results = (List<E>) query.execute();
-		results.size(); //workaround for lazy loading "bug"
 			
 		return results;
 	}
