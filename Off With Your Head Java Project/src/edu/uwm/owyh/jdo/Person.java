@@ -44,32 +44,10 @@ public class Person implements Serializable,Cloneable{
 	@Persistent
 	private String password;
 	
-//	@Persistent
-//	private String firstName;
-//	
-//	@Persistent
-//	private String lastName;
-//	
-//	@Persistent
-//	private String email;
-//	
-//	@Persistent
-//	private String phone;
-//	
 	@Persistent
 	private Integer accessLevel;
 	
-//	@Persistent
-//	private String streetAddress;
-//	
-//	@Persistent
-//	private String city;
-//	
-//	@Persistent
-//	private String state;
-//	
-//	@Persistent
-//	private String zip;
+
 
 	//Private constructors
 	/*
