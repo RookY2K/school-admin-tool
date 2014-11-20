@@ -15,6 +15,7 @@ import edu.uwm.owyh.model.WrapperObjectFactory;
 @SuppressWarnings("serial")
 public class UserList extends HttpServlet {
 	
+	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
@@ -29,6 +30,7 @@ public class UserList extends HttpServlet {
 		request.getRequestDispatcher(request.getContextPath() + "userlist.jsp").forward(request, response);	
 	}
 	
+	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		

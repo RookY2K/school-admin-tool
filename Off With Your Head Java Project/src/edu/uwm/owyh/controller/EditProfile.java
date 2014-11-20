@@ -17,6 +17,7 @@ import edu.uwm.owyh.model.WrapperObjectFactory;
 
 @SuppressWarnings("serial")
 public class EditProfile extends HttpServlet {
+	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
@@ -39,6 +40,7 @@ public class EditProfile extends HttpServlet {
 			
 	}
 	
+	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		

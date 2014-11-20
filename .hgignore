@@ -59,10 +59,18 @@ Off With Your Head Java Project/war/WEB-INF/lib/geronimo-jpa_2.0_spec-1.0.jar
 Off With Your Head Java Project/war/WEB-INF/lib/jdo-api-3.0.1.jar
 Off With Your Head Java Project/war/WEB-INF/lib/jta-1.1.jar
 Off With Your Head Java Project/war/editprofile.jsp.orig
+Off With Your Head Java Project/src/edu/uwm/owyh/controller/AddClient.java.orig
+Off With Your Head Java Project/src/edu/uwm/owyh/test/TestBasicUser.java.orig
+Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/controller/AddClient.java.orig
+Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/test/TestBasicUser.java.orig
+Off With Your Head Java Project/war/WEB-INF/lib/appengine-api-1.0-sdk-1.9.14.jar
+Off With Your Head Java Project/war/WEB-INF/lib/appengine-jsr107cache-1.9.14.jar
 Off With Your Head Java Project/Page.txt
 Off With Your Head Java Project/user_dictionary.txt.txt
 Off With Your Head Java Project/src/edu/uwm/owyh/mockjdo/Course.java
 Off With Your Head Java Project/src/edu/uwm/owyh/mockjdo/Section.java
+Off With Your Head Java Project/war/WEB-INF/lib/appengine-api-1.0-sdk-1.9.14.jar
+Off With Your Head Java Project/war/WEB-INF/lib/appengine-jsr107cache-1.9.14.jar
 syntax: regexp
 ^(.*[\\/])?gen[\\/].*
 ^(.*[\\/])?bin[\\/].*

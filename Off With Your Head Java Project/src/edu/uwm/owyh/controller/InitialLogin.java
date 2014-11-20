@@ -17,6 +17,7 @@ import edu.uwm.owyh.model.DataStore;
 @SuppressWarnings("serial")
 public class InitialLogin extends HttpServlet{
 			
+		@Override
 		public void doGet(HttpServletRequest request, HttpServletResponse response)
 				throws IOException, ServletException {
 			Boolean noUsers = (Boolean)request.getAttribute("noUsers");
@@ -32,6 +33,7 @@ public class InitialLogin extends HttpServlet{
 			}
 		}
 		
+		@Override
 		public void doPost(HttpServletRequest request, HttpServletResponse response)
 				throws IOException, ServletException {
 			DataStore store = DataStore.getDataStore();

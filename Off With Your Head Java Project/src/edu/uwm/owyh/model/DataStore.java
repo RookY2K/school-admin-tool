@@ -1,13 +1,10 @@
 package edu.uwm.owyh.model;
 
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
-import javax.jdo.Transaction;
-
 import edu.uwm.owyh.library.PMF;
 
 public final class DataStore{
@@ -43,6 +40,7 @@ public final class DataStore{
 		query.setFilter(filter);
 			
 		results = (List<E>) query.execute();
+		results.size(); //workaround for lazy loading "bug"
 			
 		return results;
 	}

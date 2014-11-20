@@ -1,6 +1,7 @@
 package edu.uwm.owyh.jdo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.annotations.Extension;
@@ -36,6 +37,9 @@ public class Person implements Serializable,Cloneable{
 	private ContactInfo contactInfo;
 	
 	@Persistent
+	private List<OfficeHours> officeHours;
+	
+	@Persistent
 	private String userName;
 	
 	@Persistent
@@ -63,6 +67,9 @@ public class Person implements Serializable,Cloneable{
 		
 		setUserName(userName);
 		setToUpperUserName(userName);
+		
+		/* Create an empty array list */
+		officeHours = new ArrayList<OfficeHours>();
 		
 		contactInfo = ContactInfo.getContactInfo();
 	}
@@ -207,6 +214,22 @@ public class Person implements Serializable,Cloneable{
 		return accessLevel;
 	}
 	
+	/**
+	 * Returns a list of all office hours currently stored on this person as strings.
+	 * @return ArrayList<String>
+	 */
+	public List<String> getOfficeHours()
+	{
+		List<String> list = new ArrayList<String>();
+		
+		for(int x=0; x < officeHours.size(); x++)
+		{
+			list.add(officeHours.get(x).toString());
+		}
+		
+		return(list);
+	}
+	
 	//Mutators
 	
 	public void setContactInfo(ContactInfo info){
@@ -301,6 +324,21 @@ public class Person implements Serializable,Cloneable{
 		toUpperUserName = userName.toUpperCase();
 	}
 	
+	/**
+	 * Adds the specified office hours to the list of office hours.
+	 * @param formatString
+	 */
+	public void addOfficeHours(String formatString)
+	{
+		//officeHours.add(new OfficeHours(formatString, this));
+		
+		//OfficeHours oh = new OfficeHours(formatString, this);
+		
+		//String test = oh.toString();
+		
+		//String test = officeHours.get(0).toString();
+	}
+
 	//Utility Methods
 	
 		/**

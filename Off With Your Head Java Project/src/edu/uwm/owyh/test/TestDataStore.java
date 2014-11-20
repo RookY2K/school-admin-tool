@@ -129,7 +129,7 @@ public class TestDataStore {
 			String parent = KeyFactory.keyToString(TestObject.PARENTKEY);
 			filter = key + "== '" + value + "' && parentKey == '" + parent + "'";
 
-			List<TestObject> entities = (List<TestObject>)store.findEntities(TABLE, filter);
+			List<TestObject> entities = store.findEntities(TABLE, filter);
 
 			assertEquals(1,entities.size());
 			assertEquals(entities.get(0), e2);
