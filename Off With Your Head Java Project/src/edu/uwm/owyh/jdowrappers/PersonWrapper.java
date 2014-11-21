@@ -1,24 +1,29 @@
-package edu.uwm.owyh.model;
+package edu.uwm.owyh.jdowrappers;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 import edu.uwm.owyh.jdo.Person;
+import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
+import edu.uwm.owyh.model.DataStore;
 
 public class PersonWrapper implements WrapperObject,Serializable{
 
-	
+
 	private static final long serialVersionUID = -4561417175133189867L;
-	private String _userName;
+//	private String _userName;
 	private Person _person;
 	private static final String PARENT = KeyFactory.keyToString(Person.getParentkey());
+	
 
+	//Private constructors
 	private PersonWrapper(Person person) {
-		_userName = person.getUserName();
+//		_userName = person.getUserName();
 		_person = person;	
 	}
 
@@ -26,47 +31,100 @@ public class PersonWrapper implements WrapperObject,Serializable{
 		//Default constructor that returns a WrapperObject object with default (null) 
 		//instance variables
 	}
+	
+	
+	//private mutators
+	private void setPerson(String userName){
+//		_userName = userName;
 
-	private void setPerson(String userName, boolean isClone){
-		_userName = userName;
-		Person other = getPerson(userName);
-		if(isClone)other = getPersonClone(other);
-		
-		_person = other;		
+		_person = getPerson(userName);		
 	}
 	
-	private Person getPersonClone(Person other) {
-		return other.clone();
+	private void setProperty(String propertyKey, Object object) {
+//		String error = "";
+		Object obj = object;
+
+//		error = checkProperty(propertyKey, obj);
+
+		switch(propertyKey){
+		case "password":
+			_person.setPassword((String) obj);
+			break;
+		case "accesslevel":
+			Integer accessLevel = ((AccessLevel)obj).getVal();
+			_person.setAccessLevel(accessLevel);
+			break;
+		case "firstname":
+			_person.getContactInfo().setFirstName((String) obj);
+			break;
+		case "lastname":
+			_person.getContactInfo().setLastName((String) obj);
+			break;
+		case "email":
+			_person.getContactInfo().setEmail((String) obj);
+			break;
+		case "phone":
+			_person.getContactInfo().setPhone((String) obj);
+			break;
+		case "streetaddress":
+			_person.getContactInfo().setStreetAddress((String)obj);
+			break;
+		case "city":
+			_person.getContactInfo().setCity((String) obj);
+			break;
+		case "state":
+			_person.getContactInfo().setState((String) obj);
+			break;
+		case "zip":
+			_person.getContactInfo().setZip((String) obj);
+			break;			
+		case "officehours":
+			_person.addOfficeHours((String) obj);
+			break;
+		default:
+			throw new IllegalArgumentException(propertyKey + " is not a valid property of " + getClass().getSimpleName());
+		}
+
+//		return error;
 	}
 
+
+	//private Accessors
 	private Person getPerson(String userName) {
 		DataStore store = DataStore.getDataStore();
 
-		String filter = "toUpperUserName == '" + userName.toUpperCase() + 
-				"' && parentKey == '" + PARENT + "'";
+		Key id = Person.generateIdFromUserName(userName);
 
-		List<Person> users = store.findEntities(getPersonTable(), filter);
-		if(users.isEmpty()) {
-			Person person = Person.getPerson(userName);
-			return person;
+		Person user = (Person) store.findEntityById(getPersonTable(), id);
+
+		if(user == null) {
+			user = Person.getPerson(userName);
 		}
-		return users.get(0);
+		return user;
 	}
+	
+	private static WrapperObject getPersonWrapper(Person client) {
+		return new PersonWrapper(client);
+	}
+	
+	private List<WrapperObject> getPersonsFromList(List<Person> entities) {
+		List<WrapperObject> persons = new ArrayList<WrapperObject>();
+		for (Person item : entities)
+			persons.add(PersonWrapper.getPersonWrapper(item));
+		return persons;
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see edu.uwm.owyh.model.WrapperObject#getUserName()
 	 */
 	@Override
-	public String getUserName(){
-		return _userName;
+	public Key getId(){
+		return _person.getId();
 	}
 
-	protected static WrapperObject getPersonWrapper(){
+	public static WrapperObject getPersonWrapper(){
 		return  new PersonWrapper();
-	}
-
-	private static WrapperObject getPersonWrapper(Person client) {
-		return new PersonWrapper(client);
 	}
 
 	public WrapperObject findObject(String username) {
@@ -92,13 +150,6 @@ public class PersonWrapper implements WrapperObject,Serializable{
 		return persons;
 	}
 
-	private List<WrapperObject> getPersonsFromList(List<Person> entities) {
-		List<WrapperObject> persons = new ArrayList<WrapperObject>();
-		for (Person item : entities)
-			persons.add(PersonWrapper.getPersonWrapper(item));
-		return persons;
-	}
-
 	/**
 	 * 
 	 * @return
@@ -115,9 +166,9 @@ public class PersonWrapper implements WrapperObject,Serializable{
 	public static boolean checkEmail(String userName){
 		return userName.matches(EMAILPATTERN);
 	}
-	
+
 	public static boolean checkOfficeHours(String formatString){
-		return formatString.matches(OFFICEHOURPATTERN);
+		return formatString.matches(OfficeHoursWrapper.OFFICEHOURPATTERN);
 	}
 
 	public static boolean checkPhone(String phone){
@@ -161,53 +212,7 @@ public class PersonWrapper implements WrapperObject,Serializable{
 		}
 	}
 
-	private String setProperty(String propertyKey, Object object) {
-		String error = "";
-		Object obj = object;
-
-		error = checkProperty(propertyKey, obj);
-
-		switch(propertyKey){
-		case "password":
-			_person.setPassword((String) obj);
-			break;
-		case "accesslevel":
-			Integer accessLevel = ((AccessLevel)obj).getVal();
-			_person.setAccessLevel(accessLevel);
-			break;
-		case "firstname":
-			_person.getContactInfo().setFirstName((String) obj);
-			break;
-		case "lastname":
-			_person.getContactInfo().setLastName((String) obj);
-			break;
-		case "email":
-			_person.getContactInfo().setEmail((String) obj);
-			break;
-		case "phone":
-			_person.getContactInfo().setPhone((String) obj);
-			break;
-		case "streetaddress":
-			_person.getContactInfo().setStreetAddress((String)obj);
-			break;
-		case "city":
-			_person.getContactInfo().setCity((String) obj);
-			break;
-		case "state":
-			_person.getContactInfo().setState((String) obj);
-			break;
-		case "zip":
-			_person.getContactInfo().setZip((String) obj);
-			break;			
-		case "officehours":
-			_person.addOfficeHours((String) obj);
-			break;
-		default:
-			throw new IllegalArgumentException(propertyKey + " is not a valid property of " + getClass().getSimpleName());
-		}
-		
-		return error;
-	}
+	
 
 	/**
 	 * 
@@ -252,7 +257,7 @@ public class PersonWrapper implements WrapperObject,Serializable{
 				throw new IllegalArgumentException("Property must be of type AccessLevel");
 			}
 			break;
-			
+
 		case "officehours":
 			checkObjectIsString(object);
 			if(!checkOfficeHours((String)object)){
@@ -270,16 +275,13 @@ public class PersonWrapper implements WrapperObject,Serializable{
 		DataStore store = DataStore.getDataStore();
 		String error;
 		boolean hasAccessLevel = false;
-		boolean isClone = false;
+		//		boolean isClone = false;
 		List<String> errors = new ArrayList<String>();
 
 		if(findObject(userName) != null){
 			errors.add("Error: User already exists!");
-			//return errors;
-			isClone = true;
+			//			isClone = true;
 		}
-			
-		setPerson(userName, isClone);		
 
 		error = checkProperty("username", userName);
 
@@ -287,21 +289,28 @@ public class PersonWrapper implements WrapperObject,Serializable{
 			errors.add(error);
 		}
 
-		setProperty("email", userName);
-
 		for(String propertyKey : properties.keySet()){
 			if(propertyKey.equals("accesslevel")) hasAccessLevel = true;
-			error = setProperty(propertyKey, properties.get(propertyKey));
+			error = checkProperty(propertyKey, properties.get(propertyKey));
 			if(!error.equals("")){
 				errors.add(error);
 			}
 		}
 
 		if(!hasAccessLevel) errors.add("Error: Role is a required field!");
-		if(errors.isEmpty()){ 
-			if(!store.insertEntity(_person, _person.getId())){
-				errors.add("Error: Datastore insert failed for unexpected reason!");
-			}
+
+		if(!errors.isEmpty()) return errors;
+
+		setPerson(userName);		
+
+		setProperty("email", userName);
+
+		for(String propertyKey : properties.keySet()){
+			setProperty(propertyKey, properties.get(propertyKey));
+		}
+
+		if(!store.insertEntity(_person, _person.getId())){
+			errors.add("Error: Datastore insert failed for unexpected reason!");
 		}
 
 		return errors;
@@ -312,26 +321,29 @@ public class PersonWrapper implements WrapperObject,Serializable{
 		DataStore store = DataStore.getDataStore();
 		String error;
 		List<String> errors = new ArrayList<String>();
-		Boolean isClone = true;
+		//		Boolean isClone = true;
 
 		if(findObject(userName) == null){
-			errors.add("Error: That requested user to edit does not exist!");
-			return errors;
+			throw new IllegalArgumentException("That user does not exist!");
 		}
 
-		setPerson(userName, isClone);
-
 		for(String propertyKey : properties.keySet()){
-			error = setProperty(propertyKey, properties.get(propertyKey));
+			error = checkProperty(propertyKey, properties.get(propertyKey));
 			if(!error.equals("")){
 				errors.add(error);
 			}
 		}
 
-		if(errors.isEmpty()){
-			if(!store.updateEntity(_person, _person.getId())){
-				errors.add("Error: Datastore update failed for unexpected reason!");
-			}
+		if(!errors.isEmpty()) return errors;
+
+		setPerson(userName);
+
+		for(String propertyKey : properties.keySet()){
+			setProperty(propertyKey, properties.get(propertyKey));
+		}
+
+		if(!store.updateEntity(_person, _person.getId())){
+			errors.add("Error: Datastore update failed for unexpected reason!");
 		}
 
 		return errors;
@@ -340,7 +352,8 @@ public class PersonWrapper implements WrapperObject,Serializable{
 	@Override
 	public boolean removeObject(String userName) {
 		DataStore store = DataStore.getDataStore();
-		setPerson(userName, false);
+		
+		setPerson(userName);
 
 		return store.deleteEntity(_person, _person.getId());		
 	}

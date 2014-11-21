@@ -70,7 +70,7 @@ public class WebScraper {
 		return page.getFirstByXPath(xPathExpr);
 	}
 	
-	public static List<?> findByXPath(HtmlPage page, String xPathExpr){
+	public static List<?> findByXPath(DomNode page, String xPathExpr){
 		return page.getByXPath(xPathExpr);
 	}
 	
@@ -194,11 +194,11 @@ public class WebScraper {
 			HtmlTable courseTable = courseTables.get(i);
 			Course course = _courses.get(i);
 			
-			List<HtmlTableRow> sectionRows = (List<HtmlTableRow>)findByXPath(page, findSectionRows);
+			List<HtmlTableRow> sectionRows = (List<HtmlTableRow>)findByXPath(courseTable, findSectionRows);
 			
 			course.setSection(setAllSectionInfoForCourse(sectionRows));
 		}
-		/*
+		
 		for(Course course : _courses){
 			System.out.println(course.getCourseNum() + ": " + course.getCourseName());
 			System.out.println("------------------------------------------");
@@ -213,7 +213,7 @@ public class WebScraper {
 				System.out.println("Instructor: " + section.getInstructorName());
 				System.out.println("Room: " + section.getRoom() + "\n");				
 			}
-		}*/
+		}
 		final long endTime = System.currentTimeMillis();
 		
 		System.out.println("This took this long: " + (endTime - startTime));		

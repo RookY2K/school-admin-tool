@@ -5,22 +5,22 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.List;
+import java.io.IOException;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlForm;
+import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import edu.uwm.owyh.library.WebScraper;
 
 public class TestWebScraper {
-	private String _baseUri;
-	private String _notASite;
+	private static final String BASE_URI = "http://1-dot-owyh14.appspot.com";
+	private HtmlPage _testPage;
 	
 	/*
 	 * connectToPage(String)
@@ -32,92 +32,77 @@ public class TestWebScraper {
 	 */
 	
 	@Before
-	public void setUp(){
-		_baseUri = "http://1-dot-owyh14.appspot.com";
-		_notASite = "http://www.probablynotasite.com";
+	public void setUp() throws IOException{
+		String adminName = "vamaiuri@uwm.edu";
+		String pw = "123";
+		HtmlInput login = null;
+		HtmlForm form = null;
+		HtmlInput userName = null;
+		HtmlInput password = null;
+		_testPage = WebScraper.connectToPage(BASE_URI);
+		if(_testPage.getTitleText().equalsIgnoreCase("initial login")){
+			fail("No Admin set up for testPage!");
+		}else if(!_testPage.getTitleText().equalsIgnoreCase("login")){
+			fail("Unexpected Index page for testPage!");
+		}else{
+			form = _testPage.getFirstByXPath("//form[@id = 'login']");
+			login = form.getFirstByXPath(".//input[@id = 'login_button']");
+			userName = form.getInputByName("username");
+			password = form.getInputByName("password");
+			
+			userName.setValueAttribute(adminName);
+			password.setValueAttribute(pw);
+			
+			_testPage = login.click();
+		}
+		
+		
 	}
 	
 	@After
-	public void tearDown(){
+	public void tearDown() throws IOException{
+		String logoutPath = "//a[@href = '/login?login=logout']";
+		
+		WebScraper.findAndClickAnchor(_testPage, logoutPath);
 		WebScraper.closeConnection();
 	}
 	
 	@Test
 	public void testConnect(){
 		HtmlPage page = null;
+		String notASite = "http://www.probablynotasite.com";
 		try{
-			page = WebScraper.connectToPage(_notASite);
+			page = WebScraper.connectToPage(notASite);
 		}catch(Exception e){
 			fail("Exception should have been caught in method and null returned!");
 		}
 		assertTrue(page == null);
 		
-		page = WebScraper.connectToPage(_baseUri);
+		page = WebScraper.connectToPage("http://www.google.com");
 		assertFalse(page == null);
-		assertEquals("Login",page.getTitleText());
+		assertEquals("Google",page.getTitleText());
 	}
 	
-	public void testFindLink(){
-		String xPath = "//a[contains(@href,'vamaiuri@uwm.edu')]";
+	@Test
+	public void TestNavigateToNewPageFromOldPage() throws IOException{
+		String xPath = "//a[@href = '/userlist']";
 		
-		HtmlPage page = WebScraper.connectToPage(_baseUri);
+		assertEquals("Admin", _testPage.getTitleText());
 		
-		page = WebScraper.findAndClickAnchor(page, xPath);
-		boolean isFound = false;
+		_testPage = WebScraper.findAndClickAnchor(_testPage, xPath);
+				
+		assertFalse("Return should never be null",_testPage == null);
 		
-		List<String> links = WebScraper.findLinks(doc,searchStr);
-		
-		assertFalse("Return should never be null",links == null);
-		
-		for(String link : links){
-			if(link.equalsIgnoreCase(target)){
-				isFound = true;
-				break;
-			}			
-		}
-		assertTrue("Link, " + target + ", was not found!", isFound);
+		assertEquals("User List",_testPage.getTitleText());
 	}
 	
-	public void TestNavigateToNewPageFromOldPage(){
-		String target = ""; //TODO fill in target, searchStr
-		String searchStr = "";
-		
-		Document doc = Jsoup.parse(_html);
-		
-		List<String> links = WebScraper.findLinks(doc, searchStr);
-		
-		assertFalse("findLinks returned null!", links == null);
-		
-		String url = null;
-		for(String link : links){
-			if(link.equalsIgnoreCase(target)){
-				url = link;
-				break;
-			}
-		}
-		
-		assertFalse("Link wasn't found",url==null);
-		
-		try{
-			doc = WebScraper.getPage(url);
-		}catch(Exception e){
-			fail("Exception should have been caught and null returned");
-		}
-		
-		assertFalse("No Document object returned!",doc == null);
-		
-		assertTrue(doc.title().equalsIgnoreCase("google"));
-	}
-	
+	@Test
 	public void TestFindElementOnPage(){
+		String xPath = "//a[@href = '/userlist']";
 		
-	}
-	
-	public void TestGetAttributeFromElement(){
+		HtmlAnchor link = (HtmlAnchor) WebScraper.findFirstByXPath(_testPage, xPath);
 		
-	}
-	
-	public void TestGetInfoFromAttribute(){
-		
+		assertFalse("No link was returned!",link == null);
+		assertEquals("Users", link.asText());
 	}
 }

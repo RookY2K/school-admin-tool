@@ -36,7 +36,7 @@ public class Person implements Serializable,Cloneable{
 	@Persistent
 	private ContactInfo contactInfo;
 	
-	@Persistent
+	@Persistent(mappedBy = "parentPerson")
 	private List<OfficeHours> officeHours;
 	
 	@Persistent
@@ -61,9 +61,7 @@ public class Person implements Serializable,Cloneable{
 	 * keeping strong consistency in queries.
 	 */
 	private Person(String userName){
-		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(PARENTKEY);
-		
-		id = keyBuilder.addChild(KIND, userName).getKey();
+		id = generateIdFromUserName(userName);
 		
 		setUserName(userName);
 		setToUpperUserName(userName);
@@ -131,48 +129,6 @@ public class Person implements Serializable,Cloneable{
 	}
 
 	/**
-	 * @return the zip
-	 */
-//	public String getZip() {
-//		return zip;
-//	}
-	
-	/**
-	 * @return the state
-	 */
-//	public String getState() {
-//		return state;
-//	}
-
-	/**
-	 * @return the city
-	 */
-//	public String getCity() {
-//		return city;
-//	}
-
-	/**
-	 * @return the street address
-	 */
-//	public String getStreetAddress() {
-//		return streetAddress;
-//	}
-
-	/**
-	 * @return the last name
-	 */
-//	public String getLastName() {
-//		return lastName;
-//	}
-
-	/**
-	 * @return the first name
-	 */
-//	public String getFirstName() {
-//		return firstName;
-//	}
-
-	/**
 	 * @return the userName
 	 */
 	public String getUserName() {
@@ -192,20 +148,6 @@ public class Person implements Serializable,Cloneable{
 	public String getPassword() {
 		return password;
 	}
-	
-	/**
-	 * @return the email
-	 */
-//	public String getEmail() {
-//		return email;
-//	}
-	
-	/**
-	 * @return the phone
-	 */
-//	public String getPhone() {
-//		return phone;
-//	}
 	
 	/**
 	 * @return the accessLevel
@@ -234,55 +176,7 @@ public class Person implements Serializable,Cloneable{
 	
 	public void setContactInfo(ContactInfo info){
 		contactInfo = info;
-	}
-	
-	/**
-	 * Sets the city field
-	 * @param city
-	 */
-//	public void setCity(String city) {
-//		this.city = city;			
-//	}
-
-	/**
-	 * Sets the zip field
-	 * @param zip
-	 */
-//	public void setZip(String zip) {
-//		this.zip = zip;			
-//	}
-
-	/**
-	 * Sets the State field
-	 * @param state
-	 */
-//	public void setState(String state) {
-//		this.state = state;			
-//	}
-
-	/**
-	 * Sets the street address field
-	 * @param street
-	 */
-//	public void setStreetAddress(String street) {
-//		streetAddress = street;			
-//	}
-
-	/**
-	 * Sets the last name field
-	 * @param lastName
-	 */
-//	public void setLastName(String lastName) {
-//		this.lastName = lastName;			
-//	}
-	
-	/**
-	 * Sets the first name field
-	 * @param firstName
-	 */
-//	public void setFirstName(String firstName) {
-//		this.firstName = firstName;			
-//	}	
+	}	
 
 	/**
 	 * Sets the password field
@@ -290,23 +184,7 @@ public class Person implements Serializable,Cloneable{
 	 */
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	
-	/**
-	 * Sets the email field
-	 * @param email the email to set
-	 */
-//	public void setEmail(String email) {
-//		this.email = email;
-//	}
-	
-	/**
-	 * Sets the phone number field
-	 * @param phone the phone to set
-	 */
-//	public void setPhone(String phone) {
-//		this.phone = phone;
-//	}
+	}	
 	
 	/**
 	 * Sets the access level field
@@ -341,30 +219,36 @@ public class Person implements Serializable,Cloneable{
 
 	//Utility Methods
 	
-		/**
-		 * Provides a deep clone of a Person JDO. The returned JDO will
-		 * not be persisted in the Datastore if changes are made to it's
-		 * fields. 
-		 * @return cloned Person JDO
-		 */
-		@Override
-		public Person clone(){
-			Person other = null;
-			try {
-				 other = (Person) super.clone();
-			} catch (CloneNotSupportedException e) {
-				//Will not happen as Person implements Cloneable
-				e.printStackTrace();
-			}
-			
+//		/**
+//		 * Provides a deep clone of a Person JDO. The returned JDO will
+//		 * not be persisted in the Datastore if changes are made to it's
+//		 * fields. 
+//		 * @return cloned Person JDO
+//		 */
+//		@Override
+//		public Person clone(){
+//			Person other = null;
+//			try {
+//				 other = (Person) super.clone();
+//			} catch (CloneNotSupportedException e) {
+//				//Will not happen as Person implements Cloneable
+//				e.printStackTrace();
+//			}
+//			
+//			KeyFactory.Builder keyBuilder = new KeyFactory.Builder(PARENTKEY);
+//			other.id = keyBuilder.addChild(KIND, other.userName).getKey();
+//			
+//			other.parentKey = null;
+//			
+//			other.setContactInfo(getContactInfo().clone());
+//			
+//			return other;			
+//		}
+		
+		public static Key generateIdFromUserName(String userName){
 			KeyFactory.Builder keyBuilder = new KeyFactory.Builder(PARENTKEY);
-			other.id = keyBuilder.addChild(KIND, other.userName).getKey();
 			
-			other.parentKey = null;
-			
-			other.setContactInfo(getContactInfo().clone());
-			
-			return other;			
+			return keyBuilder.addChild(KIND, userName).getKey();
 		}
 }
 

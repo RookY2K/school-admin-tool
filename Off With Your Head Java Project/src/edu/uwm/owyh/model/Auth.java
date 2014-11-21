@@ -2,11 +2,14 @@ package edu.uwm.owyh.model;
 
 import java.io.IOException;
 import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import edu.uwm.owyh.model.WrapperObject.AccessLevel;
+import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdowrappers.WrapperObject;
+import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
 
 public class Auth {
 	private AccessLevel _goodAccess;
@@ -15,7 +18,7 @@ public class Auth {
 	private Auth(HttpServletRequest request){
 		WrapperObject user = (WrapperObject)getSessionVariable(request, "user");
 		if (user == null) return;
-		_goodUserName = user.getUserName();
+		_goodUserName = (String) user.getProperty("username");
 		_goodAccess = (AccessLevel) user.getProperty("accesslevel");
 	}
 	

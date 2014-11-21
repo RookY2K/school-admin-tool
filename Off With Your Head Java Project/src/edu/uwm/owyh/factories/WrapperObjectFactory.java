@@ -1,4 +1,7 @@
-package edu.uwm.owyh.model;
+package edu.uwm.owyh.factories;
+
+import edu.uwm.owyh.jdowrappers.PersonWrapper;
+import edu.uwm.owyh.jdowrappers.WrapperObject;
 
 public class WrapperObjectFactory {
 	

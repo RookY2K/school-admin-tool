@@ -12,12 +12,12 @@ import org.junit.Test;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
+import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdowrappers.WrapperObject;
+import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.DataStore;
-import edu.uwm.owyh.model.WrapperObject;
-import edu.uwm.owyh.model.WrapperObject.AccessLevel;
-import edu.uwm.owyh.model.WrapperObjectFactory;
 
 public class TestAuthorizations{
 	private final LocalServiceTestHelper helper =

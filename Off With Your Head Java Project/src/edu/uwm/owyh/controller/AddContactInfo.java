@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdowrappers.WrapperObject;
+import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.WrapperObject;
-import edu.uwm.owyh.model.WrapperObject.AccessLevel;
-import edu.uwm.owyh.model.WrapperObjectFactory;
 
 @SuppressWarnings("serial")
 public class AddContactInfo extends HttpServlet {
@@ -63,7 +63,7 @@ public class AddContactInfo extends HttpServlet {
 		else {
 			request.setAttribute("errors",errors);
 			request.setAttribute("addNewUser", false);
-			request.setAttribute("badUserInfo", newUser);
+			request.setAttribute("properties", properties);
 		}		
 		
 		request.getRequestDispatcher(request.getContextPath() + "/admin/addContactInfo.jsp").forward(request, response);	

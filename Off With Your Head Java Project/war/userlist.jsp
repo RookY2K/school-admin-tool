@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@page import="java.util.List"%>
 <%! @SuppressWarnings("unchecked") %>
@@ -14,7 +14,7 @@
 	String userName = "";
 	WrapperObject self = (WrapperObject)Auth.getSessionVariable(request, "user");
 	if(self != null ){
-		userName = self.getUserName();
+		userName = (String)self.getProperty("username");
 	}
 	
 	List<WrapperObject> users = (List<WrapperObject>) request.getAttribute("users");

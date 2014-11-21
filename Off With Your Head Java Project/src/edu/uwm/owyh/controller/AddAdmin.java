@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdowrappers.WrapperObject;
+import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.WrapperObject;
-import edu.uwm.owyh.model.WrapperObject.AccessLevel;
-import edu.uwm.owyh.model.WrapperObjectFactory;
 
 @SuppressWarnings("serial")
 public class AddAdmin extends HttpServlet{

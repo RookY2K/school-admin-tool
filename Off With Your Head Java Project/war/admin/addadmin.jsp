@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.WrapperObject"%>
+<%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject"%>
 <%@ page import="java.util.List"%>
 <%! @SuppressWarnings("unchecked")%>
 <jsp:include page="/WEB-INF/templates/header.jsp">

@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.WrapperObject;
-import edu.uwm.owyh.model.WrapperObjectFactory;
 
 @SuppressWarnings("serial")
 public class EditProfile extends HttpServlet {
@@ -59,7 +59,7 @@ public class EditProfile extends HttpServlet {
 		WrapperObject self = (WrapperObject)Auth.getSessionVariable(request, "user");
 		
 		/* Prevent non-Admin from editing other people, Redirect to User own profile */
-		if (user == null || (!self.getUserName().equals(user.getUserName()) && !auth.verifyAdmin())) {
+		if (user == null || (!self.getId().equals(user.getId()) && !auth.verifyAdmin())) {
 			response.sendRedirect("/profile");		
 			return;
 		}
@@ -78,7 +78,7 @@ public class EditProfile extends HttpServlet {
 				errors.add("Non-Admin Password Change Error!");
 			if (!newPassword.equals(verifyNewPassword ))
 				errors.add("New Password Does Not Match!");
-			if (userPassword != null && !userPassword.equals(originalPassword) && self.getUserName().equals(user.getUserName()))
+			if (userPassword != null && !userPassword.equals(originalPassword) && self.getId().equals(user.getId()))
 				errors.add("Password Does Not Match Original!");
 
 			if (errors.isEmpty())
@@ -106,10 +106,11 @@ public class EditProfile extends HttpServlet {
 	    List<String> errors = user.editObject(request.getParameter("email"), properties);
 
 		if (!errors.isEmpty()) {
+			request.setAttribute("properties", properties);
 			request.setAttribute("errors", errors);
 			request.getRequestDispatcher(request.getContextPath()+"/editprofile.jsp").forward(request,response);	
 		}
-	    else if (self.getUserName().equals(user.getUserName())) {
+	    else if (self.getId().equals(user.getId())) {
 	    	/* User edit there own profile, go back to view there profile */
 			response.sendRedirect("/profile");	
 			Auth.setSessionVariable(request, "user", user);

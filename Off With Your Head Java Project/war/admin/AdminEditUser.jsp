@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
 <%@ page import="java.util.List" %>
 <%! @SuppressWarnings("unchecked") %>
 <jsp:include page="/WEB-INF/templates/header.jsp">
@@ -77,7 +77,7 @@
 					   </table>
 					   
 					   <!-- This is hidden, but required to get the proper user once we post. -->
-					   <input type="hidden" name="username" value="<%= user.getUserName() %>" />
+					   <input type="hidden" name="username" value="<%= user.getProperty("username") %>" />
 				   </fieldset>
 			   </form>
 		<% } %>

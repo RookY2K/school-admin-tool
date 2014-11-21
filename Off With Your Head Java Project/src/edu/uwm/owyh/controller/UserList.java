@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.WrapperObject;
-import edu.uwm.owyh.model.WrapperObjectFactory;
 
 @SuppressWarnings("serial")
 public class UserList extends HttpServlet {
@@ -42,7 +42,7 @@ public class UserList extends HttpServlet {
 		if (username != null) {
 			WrapperObject user = WrapperObjectFactory.getPerson().findObject(username);
 			if (user != null) {
-				if (WrapperObjectFactory.getPerson().removeObject(user.getUserName())) {
+				if (WrapperObjectFactory.getPerson().removeObject((String)user.getProperty("username"))) {
 					response.sendRedirect(request.getContextPath() + "/userlist?deleted");	
 					return;
 				}

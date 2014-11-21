@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@ page import="java.util.List" %>
 <%@ page import="edu.uwm.owyh.library.Library"%>
@@ -18,8 +18,8 @@
 	WrapperObject user = (WrapperObject) request.getAttribute("user");
 	WrapperObject self = (WrapperObject) Auth.getSessionVariable(request, "user");
 	if(user == null) user = self;
-	Map<String, Object> properties = null;
-	if(user != null){
+	Map<String, Object> properties = (Map<String, Object>)request.getAttribute("properties");
+	if(user != null && properties == null){
 		properties = Library.propertySetBuilder("firstname",user.getProperty("firstname")
 		                                                   ,"lastname",user.getProperty("lastname")
 		                                                   ,"email",user.getProperty("email")

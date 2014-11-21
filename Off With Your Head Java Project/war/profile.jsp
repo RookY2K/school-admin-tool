@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@ page import="edu.uwm.owyh.library.Library"%>
 <%@ page import="java.util.Map" %>
@@ -62,7 +62,7 @@
 				<tr>
 					<td class="user-label">Email Address:</td><td class="user-data"><%=properties.get("email") %></td>
 				</tr>
-				<%  if (self.getUserName().equals(user.getUserName()) || accesslevel == WrapperObject.AccessLevel.ADMIN) {  %>
+				<%  if (self.getId().equals(user.getId()) || accesslevel == WrapperObject.AccessLevel.ADMIN) {  %>
 				<tr>
 					<td class="user-label">Phone Number:</td><td class="user-data"><%=properties.get("phone") %></td>
 				</tr>
@@ -72,7 +72,7 @@
 				</tr>
 				<% } %>
 				<tr>
-			  <%  if (self.getUserName().equals(user.getUserName())) {  %>
+			  <%  if (self.getId().equals(user.getId())) {  %>
 					<td id="edit-link-cell">
 						<form action="/editprofile" method="get">
 							<input type="submit" value="Edit My Profile"/>
@@ -82,7 +82,7 @@
 					
 					<td id="edit-link-cell">
 						<form action="/editprofile" method="get">
-							<input type="hidden" name="username" value="<% out.print(user.getUserName()); %>" />
+							<input type="hidden" name="username" value="<% out.print(user.getProperty("username")); %>" />
 							<input type="submit" value="Edit User Profile" />
 						</form>
 					</td>

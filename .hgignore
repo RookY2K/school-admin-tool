@@ -71,6 +71,10 @@ Off With Your Head Java Project/src/edu/uwm/owyh/mockjdo/Course.java
 Off With Your Head Java Project/src/edu/uwm/owyh/mockjdo/Section.java
 Off With Your Head Java Project/war/WEB-INF/lib/appengine-api-1.0-sdk-1.9.14.jar
 Off With Your Head Java Project/war/WEB-INF/lib/appengine-jsr107cache-1.9.14.jar
+Off With Your Head Java Project/src/edu/uwm/owyh/jdo/Person.java.orig
+Off With Your Head Java Project/src/edu/uwm/owyh/model/DataStore.java.orig
+Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/jdo/Person.java.orig
+Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/model/DataStore.java.orig
 syntax: regexp
 ^(.*[\\/])?gen[\\/].*
 ^(.*[\\/])?bin[\\/].*

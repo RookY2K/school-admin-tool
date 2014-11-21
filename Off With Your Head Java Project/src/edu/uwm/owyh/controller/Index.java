@@ -7,11 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.DataStore;
-import edu.uwm.owyh.model.ClientWrapper;
-import edu.uwm.owyh.model.WrapperObject;
-import edu.uwm.owyh.model.WrapperObjectFactory;
 @SuppressWarnings("serial")
 public class Index extends HttpServlet {
 	
@@ -22,9 +20,7 @@ public class Index extends HttpServlet {
 		WrapperObject client = WrapperObjectFactory.getPerson();
 		
 		int userCount = client.getAllObjects().size();
-		
-//		DataStore store = DataStore.getDataStore();
-//		int userCount = store.findEntities(WrapperObject.getClientTable(), null).size();	
+
 		if(userCount == 0){
 			request.setAttribute("noUsers", true);
 			request.getRequestDispatcher("/initiallogin").forward(request, response);

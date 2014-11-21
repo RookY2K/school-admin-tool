@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.model.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
 <%@ page import="edu.uwm.owyh.library.Library" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
@@ -13,16 +13,18 @@
 
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 <%
+	
 	Map<String,Object> properties = Library.propertySetBuilder("firstname",""
-			                                                  ,"lastname",""
-			                                                  ,"email",""
-			                                                  ,"phone",""
-			                                                  ,"accesslevel",""
-			                                                  ,"streetaddress",""
-			                                                  ,"city",""
-			                                                  ,"state",""
-			                                                  ,"zip",""
-			                                                  );
+												              ,"lastname",""
+												              ,"email",""
+												              ,"phone",""
+												              ,"accesslevel",""
+												              ,"streetaddress",""
+												              ,"city",""
+												              ,"state",""
+												              ,"zip",""
+												              );
+	
 	String taAccess = Integer.toString(WrapperObject.AccessLevel.TA.getVal());
 	String instructorAccess = Integer.toString(WrapperObject.AccessLevel.INSTRUCTOR.getVal());
 	String adminAccess = Integer.toString(WrapperObject.AccessLevel.ADMIN.getVal());
@@ -55,20 +57,8 @@
 			}
 		%>			
 		<%	
-			WrapperObject user = (WrapperObject)request.getAttribute("badUserInfo");
-			if(user != null) {
-				Integer access = ((WrapperObject.AccessLevel)user.getProperty("accesslevel")).getVal();
-							 
-				properties = Library.propertySetBuilder("firstname",user.getProperty("firstname")
-						                               ,"lastname",user.getProperty("lastname")
-						                               ,"email",user.getProperty("email")
-						                               ,"phone",user.getProperty("phone")
-						                               ,"accesslevel",access
-						                               ,"streetaddress",user.getProperty("streetaddress")
-						                               ,"city",user.getProperty("city")
-						                               ,"state",user.getProperty("state")
-						                               ,"zip",user.getProperty("zip")
-						                               );				
+			if(addNewUser != null && !addNewUser) {				
+				properties = (Map<String,Object>)request.getAttribute("properties");
 			}
 		%>
 		

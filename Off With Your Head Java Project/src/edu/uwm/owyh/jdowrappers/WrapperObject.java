@@ -1,4 +1,4 @@
-package edu.uwm.owyh.model;
+package edu.uwm.owyh.jdowrappers;
 
 import java.io.Serializable;
 import java.util.List;
@@ -38,17 +38,17 @@ public interface WrapperObject extends Serializable{
 	 * Accessor for user name
 	 * @return _userName
 	 */
-	abstract String getUserName();
+	abstract Key getId();
 	
 	abstract Object getProperty(String propertyKey);
 	
-	abstract List<String> addObject(String userName, Map<String,Object> properties);
+	abstract List<String> addObject(String id, Map<String,Object> properties);
 	
-	abstract List<String> editObject(String userName, Map<String,Object> properties);
+	abstract List<String> editObject(String id, Map<String,Object> properties);
 
-	abstract boolean removeObject(String userName);
+	abstract boolean removeObject(String id);
 	
-	abstract WrapperObject findObject(String userName);
+	abstract WrapperObject findObject(String filter);
 	
 	abstract List<WrapperObject> getAllObjects();
 }

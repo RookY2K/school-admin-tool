@@ -15,12 +15,12 @@ import org.junit.Test;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
+import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdowrappers.PersonWrapper;
+import edu.uwm.owyh.jdowrappers.WrapperObject;
+import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
 import edu.uwm.owyh.library.Library;
-import edu.uwm.owyh.model.PersonWrapper;
 import edu.uwm.owyh.model.DataStore;
-import edu.uwm.owyh.model.WrapperObject;
-import edu.uwm.owyh.model.WrapperObject.AccessLevel;
-import edu.uwm.owyh.model.WrapperObjectFactory;
 
 public class TestBasicUser {
 
@@ -112,6 +112,7 @@ public class TestBasicUser {
 				                        		  (String)foundUser.getProperty("username"))));	
 	}
 	
+	@Test
 	public void testGetAllUser() {
 		// Incomplete Test, Update Later On
 		WrapperObject user1 = WrapperObjectFactory.getPerson();
@@ -131,10 +132,10 @@ public class TestBasicUser {
 		boolean findUser1 = false, findUser2 = false, findUser3 = false, findUser4 = false;
 		
 		for (WrapperObject item : clients) {
-			if (item.getUserName() == user1.getUserName()) findUser1 = true;
-			else if (item.getUserName() != user2.getUserName()) findUser2 = true;
-			else if (item.getUserName() != user3.getUserName()) findUser3 = true;
-			else if (item.getUserName() != user4.getUserName()) findUser4 = true;	
+			if (item.getId().equals(user1.getId())) findUser1 = true;
+			else if (item.getId().equals(user2.getId())) findUser2 = true;
+			else if (item.getId().equals(user3.getId())) findUser3 = true;
+			else if (item.getId().equals(user4.getId())) findUser4 = true;	
 		}
 		
 		if (!findUser1 || !findUser2 || !findUser3 || !findUser4)
