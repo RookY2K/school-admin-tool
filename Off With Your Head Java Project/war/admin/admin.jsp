@@ -12,11 +12,14 @@
 <div id="content">
  	<div id="local-nav-bar">
 		<ul id="local-list">
-	      <li><a class="nav-link" href="/admin/addContactInfo">Add User Contact</a></li>
+	      <li><a class="nav-link" href="/admin/addContactInfo">Add New User</a></li>
+	      <li><a class="nav-link" href="/admin/addContactInfo#addcontactinfo">Add Contact Info</a></li>
 		</ul>
 	</div>
 	  	
 	<div id="body">
+	
+	Welcome Admin!
 	
 	</div>
 </div>

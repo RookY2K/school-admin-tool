@@ -57,15 +57,16 @@ public class AddContactInfo extends HttpServlet {
 		
 		WrapperObject newUser = WrapperObjectFactory.getPerson();
 		List<String> errors = newUser.addObject(request.getParameter("email"), properties);
-		if (errors.isEmpty()) {
-			request.setAttribute("addNewUser", true);
-		}
-		else {
-			request.setAttribute("errors",errors);
-			request.setAttribute("addNewUser", false);
-			request.setAttribute("properties", properties);
-		}		
 		
-		request.getRequestDispatcher(request.getContextPath() + "/admin/addContactInfo.jsp").forward(request, response);	
+		properties.put("email", request.getParameter("email"));
+		request.setAttribute("properties", properties);
+		
+		if (! errors.isEmpty()) {
+			request.setAttribute("errors",errors);
+			request.getRequestDispatcher(request.getContextPath() + "/admin/addContactInfo.jsp").forward(request, response);	
+			return;
+		}
+
+		request.getRequestDispatcher(request.getContextPath() + "/admin/addConfirm.jsp").forward(request, response);	
 	}
 }
