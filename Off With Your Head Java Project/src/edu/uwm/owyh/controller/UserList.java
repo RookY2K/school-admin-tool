@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
@@ -26,13 +27,14 @@ public class UserList extends HttpServlet {
 		if (! auth.verifyUser(response)) return;
 		
 		/* Any Login User View User List */
-		WrapperObject user = (WrapperObject)Auth.getSessionVariable(request, "user");
-		List<WrapperObject> clients = user.getAllObjects();
+		WrapperObject<Person> user = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
+		List<WrapperObject<Person>> clients = user.getAllObjects();
 		
 		request.setAttribute("users", clients);
 		request.getRequestDispatcher(request.getContextPath() + "userlist.jsp").forward(request, response);	
 	}
 	
+
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
@@ -44,7 +46,7 @@ public class UserList extends HttpServlet {
 		String username = (String) request.getParameter("username");
 		if (username != null) {
 			Key id = Library.generateIdFromUserName(username);
-			WrapperObject user = WrapperObjectFactory.getPerson().findObjectById(id);
+			WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
 			if (user != null) {
 				if (WrapperObjectFactory.getPerson().removeObject((String)user.getProperty("username"))) {
 					response.sendRedirect(request.getContextPath() + "/userlist?deleted");	

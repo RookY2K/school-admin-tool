@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdo.Person" %>
 <%@ page import="java.util.List" %>
 <%! @SuppressWarnings("unchecked") %>
 <jsp:include page="/WEB-INF/templates/header.jsp">
@@ -37,7 +38,7 @@
 		%>
 	
 	    <%
-	       	WrapperObject user =(WrapperObject)(request.getAttribute("user"));
+	       	WrapperObject<Person> user =(WrapperObject<Person>)(request.getAttribute("user"));
 		if(user != null) {
 	    %>
 		       <form action="/admin/adminEditUser" method="post">

@@ -20,6 +20,7 @@ import edu.uwm.owyh.model.Auth;
 
 @SuppressWarnings("serial")
 public class EditProfile extends HttpServlet {
+	@SuppressWarnings("unchecked")
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
@@ -29,7 +30,7 @@ public class EditProfile extends HttpServlet {
 		
 		/* Admin edit another User's Profile */
 		String username = request.getParameter("username");
-		WrapperObject user = null;
+		WrapperObject<Person> user = null;
 		if (username != null && auth.verifyAdmin()) {
 			Key id = Library.generateIdFromUserName(username);
 			user = WrapperObjectFactory.getPerson().findObjectById(id);
@@ -37,13 +38,14 @@ public class EditProfile extends HttpServlet {
 		
 		/* User Edit there Own Profile */
 		if (user == null)
-			user = (WrapperObject)Auth.getSessionVariable(request,"user");
+			user = (WrapperObject<Person>)Auth.getSessionVariable(request,"user");
 		
 		request.setAttribute("user", user);
 		request.getRequestDispatcher("/editprofile.jsp").forward(request, response);	
 			
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
@@ -60,8 +62,8 @@ public class EditProfile extends HttpServlet {
 		}
 		
 		Key id = Library.generateIdFromUserName(email);
-		WrapperObject user = WrapperObjectFactory.getPerson().findObjectById(id);
-		WrapperObject self = (WrapperObject)Auth.getSessionVariable(request, "user");
+		WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
+		WrapperObject<Person> self = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
 		
 		/* Prevent non-Admin from editing other people, Redirect to User own profile */
 		if (user == null || (!self.getId().equals(user.getId()) && !auth.verifyAdmin())) {

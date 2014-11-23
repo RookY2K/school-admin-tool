@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
 import edu.uwm.owyh.library.Library;
@@ -24,6 +25,7 @@ public class AdminEditUser extends HttpServlet {
 		response.sendRedirect("/userlist");
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
@@ -33,7 +35,7 @@ public class AdminEditUser extends HttpServlet {
 		
 		int access = Integer.parseInt(request.getParameter("accesslevel"));
 		AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
-	    WrapperObject user = WrapperObjectFactory.getPerson();
+	    WrapperObject<Person> user = WrapperObjectFactory.getPerson();
 		Map<String, Object> properties = 
 				Library.propertySetBuilder("accesslevel",accessLevel
 						                  ,"firstname", request.getParameter("firstname")
@@ -50,7 +52,7 @@ public class AdminEditUser extends HttpServlet {
 		{
 			request.setAttribute("user", user);
 			request.setAttribute("isEdited", true);
-			WrapperObject client = (WrapperObject)Auth.getSessionVariable(request, "user");
+			WrapperObject<Person> client = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
 			String userName = (String)user.getProperty("userName");
 			String clientName = (String)client.getProperty("userName");
 			if(userName.equalsIgnoreCase(clientName)){

@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdo.Person" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@ page import="java.util.List" %>
 <%@ page import="edu.uwm.owyh.library.Library"%>
@@ -15,8 +16,8 @@
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 
 <%
-	WrapperObject user = (WrapperObject) request.getAttribute("user");
-	WrapperObject self = (WrapperObject) Auth.getSessionVariable(request, "user");
+	WrapperObject<Person> user = (WrapperObject<Person>) request.getAttribute("user");
+	WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
 	if(user == null) user = self;
 	Map<String, Object> properties = (Map<String, Object>)request.getAttribute("properties");
 	if(user != null && properties == null){

@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.model.Auth;
 
@@ -25,13 +25,14 @@ public class Login extends HttpServlet {
 		response.sendRedirect("/");
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		WrapperObject user = Auth.getAuth(null).verifyLogin(username,password);
+		WrapperObject<Person> user = Auth.getAuth(null).verifyLogin(username,password);
 		boolean isLogin = (user != null);
 		request.setAttribute("isLogin", isLogin);
 		

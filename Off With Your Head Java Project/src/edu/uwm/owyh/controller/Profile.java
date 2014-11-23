@@ -10,12 +10,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 
 @SuppressWarnings("serial")
 public class Profile extends HttpServlet {
+	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
@@ -24,7 +26,7 @@ public class Profile extends HttpServlet {
 		if (! auth.verifyUser(response)) return;
 		
 		/* Find the logged in user. They're the only ones who can view their profile. */
-		WrapperObject user = (WrapperObject)Auth.getSessionVariable(request, "user");
+		WrapperObject<Person> user = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
 		if (user != null)
 		{
 			request.setAttribute("user", user);
@@ -54,7 +56,7 @@ public class Profile extends HttpServlet {
 			return;
 		}
 		Key id = Library.generateIdFromUserName(username);
-		WrapperObject user = WrapperObjectFactory.getPerson().findObjectById(id);
+		WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
 		
 		if (user != null) 
 			request.setAttribute("user", user);

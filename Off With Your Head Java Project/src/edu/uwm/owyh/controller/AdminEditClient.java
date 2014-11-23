@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
 import edu.uwm.owyh.library.Library;
@@ -37,7 +38,7 @@ public class AdminEditClient extends HttpServlet {
 	    Map<String, Object> properties = 
 	    		Library.propertySetBuilder("password", request.getParameter("password")
 	    				                  ,"accesslevel", accessLevel);
-	    WrapperObject user = WrapperObjectFactory.getPerson();
+	    WrapperObject<Person> user = WrapperObjectFactory.getPerson();
 	    List<String> errors = user.editObject(request.getParameter("username"), properties);
 	    
 		if (errors.isEmpty())

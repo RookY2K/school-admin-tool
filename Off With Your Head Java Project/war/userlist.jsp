@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdo.Person" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@page import="java.util.List"%>
 <%! @SuppressWarnings("unchecked") %>
@@ -12,12 +13,12 @@
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 <%
 	String userName = "";
-	WrapperObject self = (WrapperObject)Auth.getSessionVariable(request, "user");
+	WrapperObject<Person> self = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
 	if(self != null ){
 		userName = (String)self.getProperty("username");
 	}
 	
-	List<WrapperObject> users = (List<WrapperObject>) request.getAttribute("users");
+	List<WrapperObject<Person>> users = (List<WrapperObject<Person>>) request.getAttribute("users");
 	
 	WrapperObject.AccessLevel userAccess = (WrapperObject.AccessLevel) self.getProperty("accesslevel");
 %>
@@ -49,7 +50,7 @@
 				<td class="cell-header" colspan="1">Profile</td>
 				<% } %>
 			</tr>		
- 		<% for (WrapperObject user : users) {
+ 		<% for (WrapperObject<Person> user : users) {
 			
 			String firstname = (String) user.getProperty("firstname");
 		 	String lastname = (String) user.getProperty("lastname");

@@ -63,7 +63,6 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> addObject(String id, Map<String, Object> properties) {
 		Key parentId = Library.generateIdFromUserName(id);
@@ -163,7 +162,6 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		return errors;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean removeObject(String id) {
 		OfficeHours childJDO = getOfficeHours();		

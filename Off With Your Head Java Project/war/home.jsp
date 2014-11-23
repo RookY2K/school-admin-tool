@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdo.Person" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Hello World" />
@@ -8,7 +9,7 @@
 
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 
-	<% WrapperObject user = (WrapperObject) Auth.getSessionVariable(request, "user");
+	<% WrapperObject<Person> user = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
 		if(user == null) return; 
 	%>	
 

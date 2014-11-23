@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 
 public interface WrapperObject<E> extends Serializable{
 //	public static final Key USERKEY = KeyFactory.createKey("rootKey", "root");

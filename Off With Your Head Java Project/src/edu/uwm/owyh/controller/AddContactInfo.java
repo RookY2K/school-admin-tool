@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
 import edu.uwm.owyh.library.Library;
@@ -55,7 +56,7 @@ public class AddContactInfo extends HttpServlet {
 						                  ,"accesslevel",accessLevel
 						                  );
 		
-		WrapperObject newUser = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> newUser = WrapperObjectFactory.getPerson();
 		List<String> errors = newUser.addObject(request.getParameter("email"), properties);
 		
 		properties.put("email", request.getParameter("email"));

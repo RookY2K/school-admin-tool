@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.model.Auth;
 @SuppressWarnings("serial")
@@ -17,7 +18,7 @@ public class Index extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		WrapperObject client = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> client = WrapperObjectFactory.getPerson();
 		
 		int userCount = client.getAllObjects().size();
 

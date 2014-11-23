@@ -32,7 +32,6 @@ public class TestBasicUser {
 	private final LocalServiceTestHelper helper =
 	        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public <T> void testAddPerson() {
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
@@ -87,7 +86,6 @@ public class TestBasicUser {
 		assertEquals("Three clients should have been added!", 3, search.size());
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testRemoveUser() {
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
@@ -103,7 +101,6 @@ public class TestBasicUser {
 		assertTrue("User Was Not Removed", (search.size() == 0));	
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testFindUser() {
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
@@ -119,7 +116,6 @@ public class TestBasicUser {
 				                        		  (String)foundUser.getProperty("username"))));	
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testGetAllUser() {
 		// Incomplete Test, Update Later On
@@ -150,7 +146,6 @@ public class TestBasicUser {
 			fail("did not find all USERS!");
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testEditUser(){
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
@@ -221,7 +216,6 @@ public class TestBasicUser {
 		assertFalse(PersonWrapper.checkPhone(phone6));				
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testAddOfficeHoursNoConflict(){
 		WrapperObject<Person> user = getPerson("admin@uwm.edu");
@@ -244,7 +238,6 @@ public class TestBasicUser {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
 	private WrapperObject<Person> getPerson(String userName){
 		WrapperObject<Person> person = WrapperObjectFactory.getPerson();
 		

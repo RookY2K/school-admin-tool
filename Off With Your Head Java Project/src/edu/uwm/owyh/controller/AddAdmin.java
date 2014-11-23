@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
 import edu.uwm.owyh.library.Library;
@@ -59,7 +60,7 @@ public class AddAdmin extends HttpServlet{
 											  ,"accesslevel",accessLevel
 											  );
 			
-			WrapperObject newUser = WrapperObjectFactory.getPerson();
+			WrapperObject<Person> newUser = WrapperObjectFactory.getPerson();
 			List<String> errors = newUser.addObject(email, properties);
 			
 			if (errors.isEmpty()){

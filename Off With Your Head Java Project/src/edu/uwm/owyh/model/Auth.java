@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
 import edu.uwm.owyh.library.Library;
@@ -19,7 +20,7 @@ public class Auth {
 	private String _goodUserName;
 	
 	private Auth(HttpServletRequest request){
-		WrapperObject user = (WrapperObject)getSessionVariable(request, "user");
+		WrapperObject<Person> user = (WrapperObject<Person>)getSessionVariable(request, "user");
 		if (user == null) return;
 		_goodUserName = (String) user.getProperty("username");
 		_goodAccess = (AccessLevel) user.getProperty("accesslevel");
@@ -54,12 +55,12 @@ public class Auth {
 		session.removeAttribute(key);
 	}
 	
-	public WrapperObject verifyLogin(String userName, String password){
+	public WrapperObject<Person> verifyLogin(String userName, String password){
 		if(userName == null || password == null)return null;
 				
-		WrapperObject client = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> client = WrapperObjectFactory.getPerson();
 		Key id = Library.generateIdFromUserName(userName);
-		WrapperObject user = client.findObjectById(id);
+		WrapperObject<Person> user = client.findObjectById(id);
 		
 		if(user == null) return null;
 		

@@ -222,7 +222,7 @@ public class Person implements Serializable,Cloneable{
 	public static Key generateIdFromUserName(String userName){
 		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(PARENTKEY);
 
-		return keyBuilder.addChild(KIND, userName).getKey();
+		return keyBuilder.addChild(KIND, userName.toLowerCase()).getKey();
 	}
 }
 

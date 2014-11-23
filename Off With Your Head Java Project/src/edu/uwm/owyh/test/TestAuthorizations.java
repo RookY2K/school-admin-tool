@@ -13,6 +13,7 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
 import edu.uwm.owyh.library.Library;
@@ -37,7 +38,7 @@ public class TestAuthorizations{
 		_service = DataStore.getDataStore();
 		
 		
-		WrapperObject user = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
 		Map<String,Object> properties = Library.propertySetBuilder("password", _password
 				                                                  ,"accesslevel", _level
 				                                                  );
