@@ -44,7 +44,7 @@
 				<td class="cell-header">Email</td>
 				<td class="cell-header">Role</td>
 				<% if (userAccess == WrapperObject.AccessLevel.ADMIN) { %>
-				<td class="cell-header" colspan="3">Modify</td>
+				<td class="cell-header" colspan="3">Profile</td>
 				<% } else {%>
 				<td class="cell-header" colspan="1">Profile</td>
 				<% } %>
@@ -76,7 +76,7 @@
 				<td class="cell">
 					<form action="/profile" method="post">
 						<input type="hidden" name="username" value="<%=username %>" />
-						<input type="submit" value="View Profile" />
+						<input type="submit" value="View" />
 					</form>
 				</td>
 				<% if (userAccess == WrapperObject.AccessLevel.ADMIN) { %>
@@ -85,7 +85,7 @@
 				<td class="cell">
 					<form action="/userlist" method="post">
 						<input type="hidden" name="username" value="<%=username %>" />
-						<input type="submit" value="Delete User"/>
+						<input type="submit" value="Delete"/>
 					</form>
 				</td>
 				<%}else{%>
@@ -95,7 +95,7 @@
 				<td class="cell">
 					<form action="/editprofile" method="post">
 						<input type="hidden" name="username" value="<%=username %>" />
-						<input type="submit" value="Edit User" />
+						<input type="submit" value="Edit" />
 					</form>
 				</td>
 						

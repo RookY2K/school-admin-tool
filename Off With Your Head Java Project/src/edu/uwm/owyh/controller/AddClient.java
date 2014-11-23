@@ -1,6 +1,7 @@
 package edu.uwm.owyh.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ public class AddClient extends HttpServlet {
 			return;
 		}
 
-		response.sendRedirect(request.getContextPath() + "/admin/adduser.jsp");	
+		response.sendRedirect(request.getContextPath() + "/admin/addContactInfo");	
 	}
 	
 	@Override
@@ -41,26 +42,55 @@ public class AddClient extends HttpServlet {
 		
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");	
+		String verifyPassword = request.getParameter("verifypassword");	
+		
+		List<String> errors = new ArrayList<String>();
+		Map<String, Object> properties = null;
+		
+		if (password == null || password.equals("") || verifyPassword == null)
+			errors.add("Invalid Password!");
+		if (! password.equals(verifyPassword))
+			errors.add("Passwords does not Match!");
 
+		if (! errors.isEmpty()) {
+			request.setAttribute("errors", errors);
+			request.getRequestDispatcher(request.getContextPath() + "/admin/addContactInfo.jsp").forward(request, response);
+			return;
+		}
+		
 		try {
 			int access = Integer.parseInt(request.getParameter("accesslevel"));
 			AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
-			Map<String, Object> properties = Library.propertySetBuilder("password",password
-					                                                   ,"accesslevel",accessLevel);
+			properties = Library.propertySetBuilder("password",password
+					                                 ,"accesslevel",accessLevel);
 			WrapperObject newUser = WrapperObjectFactory.getPerson();
-			List<String> errors = newUser.addObject(email, properties);
-			if (errors.isEmpty()) 
-				request.setAttribute("addNewUser", true);
-			else{
-				request.setAttribute("addNewUser", false);
-				request.setAttribute("errors", errors);
-			}
+			errors = newUser.addObject(email, properties);
+			
+			properties = Library.propertySetBuilder("firstname",""
+		              ,"lastname",""
+		              ,"email", request.getParameter("email")
+		              ,"phone",""
+		              ,"accesslevel",""
+		              ,"streetaddress",""
+		              ,"city",""
+		              ,"state",""
+		              ,"zip",""
+		              ,"password", password
+		              ,"accesslevel", accessLevel
+		              );
 		}
 		catch (NumberFormatException e) {
-			//Shouldn't happen
-			request.setAttribute("addNewUser", false);
+			errors.add("Invalid AccessLevel!");
 		}
 		
-		request.getRequestDispatcher("adduser.jsp").forward(request, response);	
+		request.setAttribute("properties", properties);
+		
+		if (! errors.isEmpty()) {
+			request.setAttribute("errors", errors);
+			request.getRequestDispatcher("addContactInfo.jsp").forward(request, response);
+			return;
+		}
+		
+		request.getRequestDispatcher(request.getContextPath() + "/admin/addConfirm.jsp").forward(request, response);	
 	}
 }

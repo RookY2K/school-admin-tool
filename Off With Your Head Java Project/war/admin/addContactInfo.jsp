@@ -28,25 +28,20 @@
 	String taAccess = Integer.toString(WrapperObject.AccessLevel.TA.getVal());
 	String instructorAccess = Integer.toString(WrapperObject.AccessLevel.INSTRUCTOR.getVal());
 	String adminAccess = Integer.toString(WrapperObject.AccessLevel.ADMIN.getVal());
+
 %>
 <div id="content">
  	<div id="local-nav-bar">
 		<ul id="local-list">
-	      <!-- <li><a class="nav-link" href="/admin/addClient">Add User</a></li> -->
-	      <li><a class="nav-link" href="/admin/addContactInfo">Add User Contact</a></li>
+	      <li><a class="nav-link" href="/admin/addContactInfo">Add New User</a></li>
+	      <li><a class="nav-link" href="/admin/addContactInfo#addcontactinfo">Add Contact Info</a></li>
 		</ul>
 	</div>
 	  	
 	<div id="body">
 	
 		<% 
-			Boolean addNewUser = (Boolean)request.getAttribute("addNewUser");
-			if (addNewUser != null && addNewUser) {
-		%>
-		<span class="good-message">User Contact Was Added!</span>
-		<%	
-			}else{
-				List<String> errors = (List<String>)request.getAttribute("errors");
+			List<String> errors = (List<String>)request.getAttribute("errors");
 				if(errors != null){
 					for(String error:errors){
 		%>
@@ -54,17 +49,21 @@
 		<% 
 					}
 				}
-			}
 		%>			
 		<%	
-			if(addNewUser != null && !addNewUser) {				
+			if(request.getAttribute("properties") != null) {				
 				properties = (Map<String,Object>)request.getAttribute("properties");
 			}
+		
+			String accessLevel = "";
+			  if (properties.get("accesslevel") != null && !(properties.get("accesslevel") instanceof String))
+				  	accessLevel = Integer.toString(((WrapperObject.AccessLevel) properties.get("accesslevel")).getVal());
 		%>
 		
-		<form action="./" method="post">
+		<form action="/admin/addClient" method="post">
+			<input type="hidden" name="addnewuser" value="addnewuser" />
 			<fieldset>
-				<legend> Add User Account</legend>
+				<legend> Add New User Account</legend>
 				<table>
 					<tr>
 						<td class="cell"><label class="field" for="email">Email: </label></td>
@@ -75,15 +74,32 @@
 						<td class="cell"><input type = "password" name="password" id="password" required /></td>
 					</tr>
 					<tr>
-					<td class="cell" colspan="2"><input type="submit" value="Add New User" /> <br /> NON FUNCTIONAL ATM</td>
+						<td class="cell"><label class="field" for="email">Verify Password: </label></td>
+						<td class="cell"><input type = "password" name="verifypassword" id="password" required /></td>
+					</tr>
+								<tr>
+				<td class="cell"><label class="field" for="accesslevel">Role: </label></td>
+				<td class="cell"> 
+					<select name="accesslevel" required>
+					  <option value="">Please Select</option>
+					  <option value="<%=taAccess%>" <%if(taAccess.equals(accessLevel)){%>selected<%}%>>TA</option>
+					  <option value="<%=instructorAccess%>"<%if(instructorAccess.equals(accessLevel)){%>selected<%}%>>INSTRUCTOR</option>
+					  <option value="<%=adminAccess%>"<%if(adminAccess.equals(accessLevel)){%>selected<%}%>>ADMIN</option>
+					</select>
+				</td>
+				</tr>
+					<tr>
+					<td class="cell" colspan="2"><input type="submit" value="Add New User" /></td>
 					</tr>
 				</table>
 			</fieldset>
 		</form>
 		<br />
+		
 		<form action="/admin/addContactInfo" method="post">
+		<a id="addcontactinfo"></a>
 		<fieldset>
-			<legend> Add User Contact</legend>
+			<legend> Add Contact Information</legend>
 			<table>
 			<tr>
 				<td class="cell"><label class="field" for="firstname">First Name: </label></td>
@@ -122,9 +138,9 @@
 				<td class="cell"> 
 					<select name="accesslevel" required>
 					  <option value="">Please Select</option>
-					  <option value="<%=taAccess%>" <%if(taAccess.equals(properties.get("accesslevel").toString())){%>selected<%}%>>TA</option>
-					  <option value="<%=instructorAccess%>"<%if(instructorAccess.equals(properties.get("accesslevel").toString())){%>selected<%}%>>INSTRUCTOR</option>
-					  <option value="<%=adminAccess%>"<%if(adminAccess.equals(properties.get("accesslevel").toString())){%>selected<%}%>>ADMIN</option>
+					  <option value="<%=taAccess%>" <%if(taAccess.equals(accessLevel)){%>selected<%}%>>TA</option>
+					  <option value="<%=instructorAccess%>"<%if(instructorAccess.equals(accessLevel)){%>selected<%}%>>INSTRUCTOR</option>
+					  <option value="<%=adminAccess%>"<%if(adminAccess.equals(accessLevel)){%>selected<%}%>>ADMIN</option>
 					</select>
 				</td>
 			</tr>

@@ -33,7 +33,8 @@ WrapperObject user = (WrapperObject)Auth.getSessionVariable(request, "user");
                      
                      <li class="global-link-item"><a class="global-link" href="/">Admin</a>
 						<ul class="global-dropdown-list">
-							<li class="global-link-item"><a class="global-link" href="/admin/addContactInfo">Add User Contact</a></li>
+	   						<li class="global-link-item"><a class="global-link" href="/admin/addContactInfo">Add New User</a></li>
+							<li class="global-link-item"><a class="global-link" href="/admin/addContactInfo#addcontactinfo">Add Contact Info</a></li>
 							<!--<li class="global-link-item"><a class="global-link" href="/admin/addClient">Edit User Login</a></li>  -->	
 					    </ul>
 					</li>
