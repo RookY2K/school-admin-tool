@@ -10,7 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.datastore.Key;
+
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
@@ -28,7 +31,8 @@ public class EditProfile extends HttpServlet {
 		String username = request.getParameter("username");
 		WrapperObject user = null;
 		if (username != null && auth.verifyAdmin()) {
-			user = WrapperObjectFactory.getPerson().findObject(username);
+			Key id = Library.generateIdFromUserName(username);
+			user = WrapperObjectFactory.getPerson().findObjectById(id);
 		}
 		
 		/* User Edit there Own Profile */
@@ -55,7 +59,8 @@ public class EditProfile extends HttpServlet {
 			return;
 		}
 		
-		WrapperObject user = WrapperObjectFactory.getPerson().findObject(email);
+		Key id = Library.generateIdFromUserName(email);
+		WrapperObject user = WrapperObjectFactory.getPerson().findObjectById(id);
 		WrapperObject self = (WrapperObject)Auth.getSessionVariable(request, "user");
 		
 		/* Prevent non-Admin from editing other people, Redirect to User own profile */

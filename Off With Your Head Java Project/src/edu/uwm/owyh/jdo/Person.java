@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -33,10 +34,11 @@ public class Person implements Serializable,Cloneable{
 	@Persistent
 	private List<Section> sections;
 	
-	@Persistent
+	@Persistent(dependent="true")
 	private ContactInfo contactInfo;
 	
 	@Persistent(mappedBy = "parentPerson")
+	@Element(dependent = "true")
 	private List<OfficeHours> officeHours;
 	
 	@Persistent
@@ -157,19 +159,12 @@ public class Person implements Serializable,Cloneable{
 	}
 	
 	/**
-	 * Returns a list of all office hours currently stored on this person as strings.
-	 * @return ArrayList<String>
+	 * Returns a list of all office hours
+	 * @return List<OfficeHours> officeHours
 	 */
-	public List<String> getOfficeHours()
+	public List<OfficeHours> getOfficeHours()
 	{
-		List<String> list = new ArrayList<String>();
-		
-		for(int x=0; x < officeHours.size(); x++)
-		{
-			list.add(officeHours.get(x).toString());
-		}
-		
-		return(list);
+		return officeHours;
 	}
 	
 	//Mutators
@@ -206,49 +201,28 @@ public class Person implements Serializable,Cloneable{
 	 * Adds the specified office hours to the list of office hours.
 	 * @param formatString
 	 */
-	public void addOfficeHours(String formatString)
+	public void addOfficeHours(OfficeHours officeHours)
 	{
-		//officeHours.add(new OfficeHours(formatString, this));
+		if(officeHours == null) 
+			throw new NullPointerException("officeHours cannot be null!");
+		if(getOfficeHours().contains(officeHours))
+			throw new IllegalArgumentException("Duplicate officeHours entry!");
+		this.officeHours.add(officeHours);
+	}
+
+	public boolean removeOfficeHours(OfficeHours officeHours){
+		if(officeHours == null) 
+			throw new NullPointerException("officeHours cannot be null!");
 		
-		//OfficeHours oh = new OfficeHours(formatString, this);
-		
-		//String test = oh.toString();
-		
-		//String test = officeHours.get(0).toString();
+		return this.officeHours.remove(officeHours);
 	}
 
 	//Utility Methods
 	
-//		/**
-//		 * Provides a deep clone of a Person JDO. The returned JDO will
-//		 * not be persisted in the Datastore if changes are made to it's
-//		 * fields. 
-//		 * @return cloned Person JDO
-//		 */
-//		@Override
-//		public Person clone(){
-//			Person other = null;
-//			try {
-//				 other = (Person) super.clone();
-//			} catch (CloneNotSupportedException e) {
-//				//Will not happen as Person implements Cloneable
-//				e.printStackTrace();
-//			}
-//			
-//			KeyFactory.Builder keyBuilder = new KeyFactory.Builder(PARENTKEY);
-//			other.id = keyBuilder.addChild(KIND, other.userName).getKey();
-//			
-//			other.parentKey = null;
-//			
-//			other.setContactInfo(getContactInfo().clone());
-//			
-//			return other;			
-//		}
-		
-		public static Key generateIdFromUserName(String userName){
-			KeyFactory.Builder keyBuilder = new KeyFactory.Builder(PARENTKEY);
-			
-			return keyBuilder.addChild(KIND, userName).getKey();
-		}
+	public static Key generateIdFromUserName(String userName){
+		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(PARENTKEY);
+
+		return keyBuilder.addChild(KIND, userName).getKey();
+	}
 }
 

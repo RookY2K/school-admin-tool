@@ -16,6 +16,7 @@ public class OfficeHours implements Serializable, Cloneable{
 	private static final long serialVersionUID = -5764789184332986969L;
 	private static final String KIND = OfficeHours.class.getSimpleName();
 	private static final Class<OfficeHours> CLASSNAME = OfficeHours.class;
+	private static final int NUM_PROPERTIES = 3; 
 
 	
 	@PrimaryKey
@@ -34,15 +35,15 @@ public class OfficeHours implements Serializable, Cloneable{
 	@Persistent
 	private double endTime;
 	
-	public OfficeHours(String formatString, Person parentPerson){		
-		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(parentPerson.getId());
-		
-		setId(keyBuilder.addChild(KIND, formatString).getKey());
-		
-		/* Parses the string and loads the values into this object. */
-		parseFormatString(formatString);
-		setParentPerson(parentPerson);
-	}
+//	private OfficeHours(){		
+//		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(parentPerson.getId());
+//		
+//		setId(keyBuilder.addChild(KIND, formatString).getKey());
+//		
+//		/* Parses the string and loads the values into this object. */
+//		parseFormatString(formatString);
+//		setParentPerson(parentPerson);
+//	}
 
 	
 	private OfficeHours(){
@@ -55,7 +56,7 @@ public class OfficeHours implements Serializable, Cloneable{
 	 * Public accessor method for OfficeHours jdo
 	 * @return OfficeHours jdo
 	 */
-	public OfficeHours getOfficeHours(){
+	public static OfficeHours getOfficeHours(){
 		return new OfficeHours();
 	}
 	
@@ -88,6 +89,10 @@ public class OfficeHours implements Serializable, Cloneable{
 	 */
 	public Person getParentPerson() {
 		return parentPerson;
+	}
+	
+	public static int numProperties(){
+		return NUM_PROPERTIES;
 	}
 
 	/**
@@ -132,37 +137,25 @@ public class OfficeHours implements Serializable, Cloneable{
 		this.endTime = endTime;
 	}
 	
-	/**
-	 * @param the parent person
-	 */
-	public void setParentPerson(Person parentPerson) {
-		this.parentPerson = parentPerson;
-	}
-	
-	/**
-	 * @param the id Key
-	 */
-	public void setId(Key id) {
-		this.id = id;
-	}
-	
 	//Utility Methods
 	
-	@Override
-	public OfficeHours clone(){
-		OfficeHours other = null;
-		
-		try{
-			other = (OfficeHours)super.clone();
-		}catch(CloneNotSupportedException e){
-			//Won't happen
-			e.printStackTrace();
-		}
-		
-		return other;
+	@Override 
+	public boolean equals(Object other){
+		if(!(other instanceof OfficeHours)) return false;
+		OfficeHours officeHours = (OfficeHours)other;
+		return this.getDays().equalsIgnoreCase(officeHours.getDays()) &&
+			   this.getStartTime() == officeHours.getStartTime() &&
+			   this.getEndTime() == officeHours.getStartTime();
 	}
 	
-	private void parseFormatString(String formatString)
+	@Override
+	public int hashCode(){
+		return (int)Double.doubleToLongBits(getDays().hashCode() *
+			   Math.round(getStartTime()) * 
+			   Math.round(getEndTime()));
+	}
+	
+	public void parseFormatString(String formatString)
 	{
 		String newStartHour, newStartMinute, newEndHour, newEndMinute, AmPm;
 
@@ -237,6 +230,7 @@ public class OfficeHours implements Serializable, Cloneable{
 		this.endTime = newEndTime;
 	}
 	
+	@Override
 	public String toString()
     {
 		double displayStartTime;

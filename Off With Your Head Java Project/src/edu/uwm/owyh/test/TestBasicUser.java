@@ -12,10 +12,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.OfficeHours;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.PersonWrapper;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
@@ -29,32 +32,33 @@ public class TestBasicUser {
 	private final LocalServiceTestHelper helper =
 	        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public <T> void testAddPerson() {
-		WrapperObject user = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
 		Map<String, Object> properties = Library.propertySetBuilder("password","owyh"
 				                                                   ,"accesslevel", AccessLevel.ADMIN);
 		user.addObject("admin@uwm.edu", properties);	
-		List<?> search = datastore.findEntities(PersonWrapper.getPersonTable(), null);
+		List<?> search = datastore.findEntities(user.getTable(), null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));	
 		
-		WrapperObject user2 = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> user2 = WrapperObjectFactory.getPerson();
 		properties = Library.propertySetBuilder("password","owyh"
 				                               ,"accesslevel",AccessLevel.ADMIN);
 				
 		user2.addObject("admin@uwm.edu", properties);
-		search = datastore.findEntities(PersonWrapper.getPersonTable(), null);
+		search = datastore.findEntities(user2.getTable(), null);
 		assertFalse("Two User of the same name was SAVED!", (search.size() == 2));
 		
-		WrapperObject user3 = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> user3 = WrapperObjectFactory.getPerson();
 		properties = Library.propertySetBuilder("password", "owyh"
 				                               ,"accesslevel", AccessLevel.ADMIN);
 				
 		user3.addObject("admin2@uwm.edu",properties);
-		search = datastore.findEntities(PersonWrapper.getPersonTable(), null);
+		search = datastore.findEntities(user3.getTable(), null);
 		assertTrue("Two User of different name was NOT SAVED!", (search.size() == 2));
 		
-		WrapperObject user4 = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> user4 = WrapperObjectFactory.getPerson();
 		properties = Library.propertySetBuilder("firstname", "Admin"
 				                               ,"phone", "(414)123-1234"
 				                               ,"streetaddress", "123 Elm St"
@@ -65,7 +69,7 @@ public class TestBasicUser {
 
 		assertFalse("User already exists!",user4.addObject("admin@uwm.edu", properties).isEmpty());
 		
-		WrapperObject user5 = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> user5 = WrapperObjectFactory.getPerson();
 		properties = Library.propertySetBuilder("firstname", "Admin3"
 				                               ,"phone", "123.543.8787"
 				                               ,"streetaddress","321 Maple Ln"
@@ -79,59 +83,63 @@ public class TestBasicUser {
 		properties.put("accesslevel", AccessLevel.ADMIN);
 		assertTrue("User should have been added!"
 				,user5.addObject("admin3@uwm.edu", properties).isEmpty());
-		search = datastore.findEntities(PersonWrapper.getPersonTable(), null);
+		search = datastore.findEntities(user5.getTable(), null);
 		assertEquals("Three clients should have been added!", 3, search.size());
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testRemoveUser() {
-		WrapperObject user = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
 		Map<String, Object> properties = Library.propertySetBuilder("password","owyh"
 																   ,"accesslevel", AccessLevel.ADMIN
 				                                                   );
 		user.addObject("admin@uwm.edu",properties);	
-		List<?> search = datastore.findEntities(PersonWrapper.getPersonTable(), null);
+		List<?> search = datastore.findEntities(user.getTable(), null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));
 		
 		user.removeObject("admin@uwm.edu");
-		search = datastore.findEntities(PersonWrapper.getPersonTable(), null);
+		search = datastore.findEntities(user.getTable(), null);
 		assertTrue("User Was Not Removed", (search.size() == 0));	
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testFindUser() {
-		WrapperObject user = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
 		Map<String, Object> properties = Library.propertySetBuilder("password", "owyh"
 				                                                   ,"accesslevel",AccessLevel.ADMIN
 				                                                   );
 		
 		user.addObject("admin@uwm.edu", properties);	
-		WrapperObject foundUser = user.findObject("admin@uwm.edu");
+		Key id = Library.generateIdFromUserName("admin@uwm.edu");
+		WrapperObject<Person> foundUser = user.findObjectById(id);
 		assertTrue("User Was Not Found", (((String)user.getProperty("username"))
 				                          .equalsIgnoreCase(
 				                        		  (String)foundUser.getProperty("username"))));	
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testGetAllUser() {
 		// Incomplete Test, Update Later On
-		WrapperObject user1 = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> user1 = WrapperObjectFactory.getPerson();
 		Map<String, Object> properties = Library.propertySetBuilder("password","owyh"
 				                                                   ,"accesslevel", AccessLevel.ADMIN
 				                                                   );
 		user1.addObject("admin1@uwm.edu", properties);
-		WrapperObject user2 = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> user2 = WrapperObjectFactory.getPerson();
 		user2.addObject("admin2@uwm.edu", properties);
-		WrapperObject user3 = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> user3 = WrapperObjectFactory.getPerson();
 		user3.addObject("admin3@uwm.edu", properties);
-		WrapperObject user4 = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> user4 = WrapperObjectFactory.getPerson();
 		user4.addObject("admin4@uwm.edu", properties);
 		
-		List<WrapperObject> clients = user1.getAllObjects();
+		List<WrapperObject<Person>> clients = user1.getAllObjects();
 		
 		boolean findUser1 = false, findUser2 = false, findUser3 = false, findUser4 = false;
 		
-		for (WrapperObject item : clients) {
+		for (WrapperObject<Person> item : clients) {
 			if (item.getId().equals(user1.getId())) findUser1 = true;
 			else if (item.getId().equals(user2.getId())) findUser2 = true;
 			else if (item.getId().equals(user3.getId())) findUser3 = true;
@@ -142,14 +150,15 @@ public class TestBasicUser {
 			fail("did not find all USERS!");
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testEditUser(){
-		WrapperObject user = WrapperObjectFactory.getPerson();
+		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
 		Map<String, Object> properties = Library.propertySetBuilder("password","owyh"
 				                                                   ,"accesslevel",AccessLevel.ADMIN
 				                                                   );
 		user.addObject("admin@uwm.edu",properties);	
-		List<?> search = datastore.findEntities(PersonWrapper.getPersonTable(), null);
+		List<?> search = datastore.findEntities(user.getTable(), null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));
 			
 		properties = Library.propertySetBuilder("password","newPassword"
@@ -160,8 +169,7 @@ public class TestBasicUser {
 				                               ,"streetaddress","123 Elm St"
 				                               ,"city","Milwaukee"
 				                               ,"state","WI"
-				                               ,"zip","12345"
-				                               ,"officehours", "TR 10:25AM-12:45PM"
+				                               ,"zip","12345"				                               
 				                               );
 		
 		assertTrue("User info was not editted!", user.editObject("admin@uwm.edu", properties).isEmpty());
@@ -176,12 +184,8 @@ public class TestBasicUser {
 		assertEquals("Milwaukee", user.getProperty("city"));
 		assertEquals("WI",user.getProperty("state"));
 		assertEquals("12345",user.getProperty("zip"));
-		
-        List<String> hours = (List<String>)user.getProperty("officehours");
-		
-		assertEquals("TR 10:00AM-12:00PM",hours.get(0));
-		
-		search = datastore.findEntities(PersonWrapper.getPersonTable(), null);
+				
+		search = datastore.findEntities(user.getTable(), null);
 		assertTrue("User Was Saved Improperly", (search.size() == 1));
 	}
 	
@@ -215,6 +219,41 @@ public class TestBasicUser {
 		assertFalse(PersonWrapper.checkPhone(phone4));
 		assertFalse(PersonWrapper.checkPhone(phone5));
 		assertFalse(PersonWrapper.checkPhone(phone6));				
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testAddOfficeHoursNoConflict(){
+		WrapperObject<Person> user = getPerson("admin@uwm.edu");
+		WrapperObject<OfficeHours> officeHours = WrapperObjectFactory.getOfficeHours();
+		List<String> errors;
+		
+		Map<String, Object> properties = Library.propertySetBuilder("days", "MTR"
+				                                                   ,"starttime", "11:15AM"
+				                                                   ,"endtime", "2:35PM");
+		
+		errors = officeHours.addObject("admin@uwm.edu", properties);
+		assertTrue(errors.isEmpty());
+		
+		assertEquals("11:15AM", officeHours.getProperty("starttime"));
+		assertEquals("2:35PM", officeHours.getProperty("endtime"));
+		assertEquals("MTR", officeHours.getProperty("days"));
+		
+		properties = Library.propertySetBuilder("days", "MWF"
+				                               );
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	private WrapperObject<Person> getPerson(String userName){
+		WrapperObject<Person> person = WrapperObjectFactory.getPerson();
+		
+		Map<String, Object> properties = Library.propertySetBuilder("password", "owyh"
+				                                                   ,"accesslevel", AccessLevel.ADMIN);
+		
+		person.addObject(userName, properties);
+		
+		return person;
 	}
 	
 	@Before

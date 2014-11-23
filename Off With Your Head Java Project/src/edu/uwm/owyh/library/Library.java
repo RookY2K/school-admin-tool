@@ -3,6 +3,10 @@ package edu.uwm.owyh.library;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.appengine.api.datastore.Key;
+
+import edu.uwm.owyh.jdo.Person;
+
 public class Library {
 	public static Map<String, Object> propertySetBuilder(Object...properties){
 		if(properties.length % 2 != 0){
@@ -39,5 +43,9 @@ public class Library {
 		String[] states = stateString.split(delim);
 		
 		return states;
+	}
+	
+	public static Key generateIdFromUserName(String userName){
+		return Person.generateIdFromUserName(userName);
 	}
 }

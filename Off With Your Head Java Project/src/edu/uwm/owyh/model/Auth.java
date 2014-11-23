@@ -7,9 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.appengine.api.datastore.Key;
+
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
+import edu.uwm.owyh.library.Library;
 
 public class Auth {
 	private AccessLevel _goodAccess;
@@ -55,7 +58,8 @@ public class Auth {
 		if(userName == null || password == null)return null;
 				
 		WrapperObject client = WrapperObjectFactory.getPerson();
-		WrapperObject user = client.findObject(userName);
+		Key id = Library.generateIdFromUserName(userName);
+		WrapperObject user = client.findObjectById(id);
 		
 		if(user == null) return null;
 		

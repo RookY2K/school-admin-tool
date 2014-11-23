@@ -7,8 +7,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.datastore.Key;
+
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
+import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 
 @SuppressWarnings("serial")
@@ -50,8 +53,8 @@ public class Profile extends HttpServlet {
 			response.sendRedirect("/userlist");
 			return;
 		}
-		
-		WrapperObject user = WrapperObjectFactory.getPerson().findObject(username);
+		Key id = Library.generateIdFromUserName(username);
+		WrapperObject user = WrapperObjectFactory.getPerson().findObjectById(id);
 		
 		if (user != null) 
 			request.setAttribute("user", user);

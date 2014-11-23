@@ -8,8 +8,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.datastore.Key;
+
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
+import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 
 @SuppressWarnings("serial")
@@ -40,7 +43,8 @@ public class UserList extends HttpServlet {
 		/* Admin delete a User */
 		String username = (String) request.getParameter("username");
 		if (username != null) {
-			WrapperObject user = WrapperObjectFactory.getPerson().findObject(username);
+			Key id = Library.generateIdFromUserName(username);
+			WrapperObject user = WrapperObjectFactory.getPerson().findObjectById(id);
 			if (user != null) {
 				if (WrapperObjectFactory.getPerson().removeObject((String)user.getProperty("username"))) {
 					response.sendRedirect(request.getContextPath() + "/userlist?deleted");	
