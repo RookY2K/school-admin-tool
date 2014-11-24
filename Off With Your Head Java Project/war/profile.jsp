@@ -59,7 +59,7 @@
 				<% } %>
 				
 				<tr>
-					<td class="user-label"> Office Hours: </td><td class="user-data"><%=user.get("phone") %>
+					<td class="user-label"> Office Hours: </td><td class="user-data">
 					
 				 <% List<OfficeHours> officeHours = (List<OfficeHours>) user.get("officehours");
 				 	List<WrapperObject<OfficeHours>> officeHoursWrapped = new ArrayList<WrapperObject<OfficeHours>>();
