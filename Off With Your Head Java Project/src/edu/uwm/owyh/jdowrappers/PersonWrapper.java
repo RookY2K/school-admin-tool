@@ -241,6 +241,10 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 			throw new IllegalArgumentException("Person jdo does not have " + kind + " as a child jdo!");
 		}
 		
+		if(!DataStore.getDataStore().updateEntity(getPerson(), getPerson().getId())){
+			errors.add("DataStore update failed for unknown reason! Please try again.");
+		}
+		
 		return errors;
 	}
 
@@ -315,9 +319,6 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		case "zip":
 			_person.getContactInfo().setZip((String) obj);
 			break;			
-//		case "officehours":
-//			_person.addOfficeHours((String) obj);
-//			break;
 		default:
 			throw new IllegalArgumentException(propertyKey + " is not a valid property of " + getClass().getSimpleName());
 		}

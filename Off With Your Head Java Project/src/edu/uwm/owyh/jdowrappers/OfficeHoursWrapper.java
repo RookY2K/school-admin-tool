@@ -77,7 +77,7 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 
 		if(!errors.isEmpty()) return errors;
 
-		Boolean isConflict = checkConflict(parent, properties);
+		boolean isConflict = checkConflict(parent, properties);
 
 		if(isConflict){
 			errors.add("New office hours conflict with other established office hours!");
@@ -93,18 +93,22 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 	private boolean checkConflict(WrapperObject<Person> parent, Map<String, Object> properties) {
 		List<OfficeHours> officeHours = (List<OfficeHours>) parent.getProperty("officehours");
 		String days = (String) properties.get("days");
-		double startTime = parseTimeToDouble((String)properties.get("starttime"));
-		double endTime  = parseTimeToDouble((String) properties.get("endtime"));
-
+		double startTime = Library.parseTimeToDouble((String)properties.get("starttime"));
+		double endTime  = Library.parseTimeToDouble((String) properties.get("endtime"));
+		
 		for(OfficeHours conflict : officeHours){
+			boolean skip = conflict.equals(getOfficeHours());
+//			if(conflict.equals(_officeHours)) skip = true;
+			if(skip) continue;
 			String compDays = conflict.getDays();
 			double compStart = conflict.getStartTime();
 			double compEnd = conflict.getEndTime();
 			for(int i=0;i<days.length();++i){
 				String day = Character.toString(days.charAt(i));
 				if(compDays.contains(day)){
-					if(startTime >= compStart && startTime <= compEnd 
-							|| endTime >= compStart && endTime <= endTime){
+					boolean isStartConflict = startTime >= compStart && startTime <= compEnd;
+					boolean isEndConflict = endTime >= compStart && endTime <=compEnd;
+					if(isStartConflict || isEndConflict){
 						return true;
 					}
 				}
@@ -143,8 +147,8 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 
 		OfficeHours editedHours = OfficeHours.getOfficeHours();		
 		editedHours.setDays((String) properties.get("days"));
-		editedHours.setStartTime(parseTimeToDouble((String)properties.get("starttime")));
-		editedHours.setEndTime(parseTimeToDouble((String)properties.get("endtime")));
+		editedHours.setStartTime(Library.parseTimeToDouble((String)properties.get("starttime")));
+		editedHours.setEndTime(Library.parseTimeToDouble((String)properties.get("endtime")));
 
 		Boolean isDuplicate = childHours.contains(editedHours);
 
@@ -214,7 +218,6 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 	public List<WrapperObject<OfficeHours>> getAllObjects() {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<OfficeHours>> officeHours = null;
-			
 		officeHours = getOfficeHoursFromList(store.findEntities(getTable(), null));
 	
 		return officeHours;
@@ -278,13 +281,14 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		switch(propertyKey.toLowerCase()){
 		case "days":
 			officeHours.setDays(propertyValue);
+			setDayBooleans(propertyValue);
 			break;
 		case "starttime":
-			time = parseTimeToDouble(propertyValue);
+			time = Library.parseTimeToDouble(propertyValue);
 			officeHours.setStartTime(time);
 			break;
 		case "endtime":
-			time = parseTimeToDouble(propertyValue);
+			time = Library.parseTimeToDouble(propertyValue);
 			officeHours.setEndTime(time);
 			break;
 		}
@@ -292,76 +296,28 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 
 	}
 
-	private double parseTimeToDouble(String time) {
-		double hours = parseHours(time);
-		double minutes = parseMinutes(time)/60;
-		String AmPm = parseAmPm(time);
-
-		if(AmPm.equalsIgnoreCase("pm")){
-			if(hours != 12) hours += 12;
-		}else{
-			if(hours == 12) hours += 12;
+	private void setDayBooleans(String propertyValue) {
+		OfficeHours officeHours = getOfficeHours();
+		for(int i=0; i<propertyValue.length(); ++i){
+			switch(propertyValue.charAt(i)){
+			case 'M':
+				officeHours.setOnMonday(true);
+				break;
+			case 'T':
+				officeHours.setOnTuesday(true);
+				break;
+			case 'W':
+				officeHours.setOnWednesday(true);
+				break;
+			case 'R':
+				officeHours.setOnThursday(true);
+				break;
+			case 'F':
+				officeHours.setOnFriday(true);
+				break;
+			}
 		}
-
-		return hours + minutes;
-	}
-
-	private String parseAmPm(String time) {
-		int startIndex = time.length() - 2;
-		String AmPm = time.substring(startIndex);
-
-		if(!(AmPm.equalsIgnoreCase("am") || AmPm.equalsIgnoreCase("pm"))){
-			throw new IllegalArgumentException("Am or Pm was not appended to the time!");
-		}
-
-		return AmPm;
-	}
-
-	private double parseMinutes(String time) { 
-		int startIndex = time.indexOf(':') + 1;
-		int endIndex = startIndex + 2;
-
-		if(startIndex == -1)
-			throw new IllegalArgumentException("Missing ':' separator between hours and minutes!");
-
-		String minutes = time.substring(startIndex, endIndex);
-
-		double numMinutes = -1;
-
-		try{
-			numMinutes = Double.parseDouble(minutes);
-		}catch(NumberFormatException nfe){
-			throw new IllegalArgumentException("Minutes portion of the time was not a number");
-		}
-
-		if(numMinutes >= 60 || numMinutes < 0){
-			throw new IllegalArgumentException("Minutes should be between 0 and 59!");
-		}
-
-		return numMinutes;
-	}
-
-	private double parseHours(String time) {
-		int startIndex = 0;
-		int endIndex = time.indexOf(':');
-
-		if(endIndex == -1)
-			throw new IllegalArgumentException("Missing ':' separator between hours and minutes!");
-
-		String hours = time.substring(startIndex, endIndex);
-
-		double numHours = -1;
-
-		try{
-			numHours = Double.parseDouble(hours);
-		}catch(NumberFormatException nfe){
-			throw new IllegalArgumentException("Hours portion of the time was not a number!");
-		}
-
-		if(numHours > 12 || numHours <= 0)
-			throw new IllegalArgumentException("Hours should be between 1 and 12!");
-
-		return numHours;		
+		
 	}
 
 	private List<String> checkAllProperties(Map<String, Object> properties) {

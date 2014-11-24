@@ -1,10 +1,13 @@
 package edu.uwm.owyh.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.jdo.Extent;
 import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+
 import edu.uwm.owyh.library.PMF;
 
 public final class DataStore{
@@ -34,9 +37,19 @@ public final class DataStore{
 	@SuppressWarnings("unchecked")
 	public <E> List<E> findEntities(Class<E> table,String filter) throws IllegalArgumentException{
 		if(_service.isClosed()) getDataStore();
+		List<E> results = null;
+//		if(filter == null){
+//			Extent<E> extent = _service.getExtent(table, false);
+//			results = new ArrayList<E>();
+//			
+//			for(E entity : extent){
+//				results.add(entity);
+//			}
+//			return results;			
+//		}
 		Query query = _service.newQuery(table);
 
-		List<E> results = null;
+		
 		query.setFilter(filter);
 
 		results = (List<E>) query.execute();

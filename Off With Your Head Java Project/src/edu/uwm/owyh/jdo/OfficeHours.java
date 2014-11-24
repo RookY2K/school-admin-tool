@@ -29,6 +29,98 @@ public class OfficeHours implements Serializable, Cloneable{
 	private String days;
 	
 	@Persistent
+	private boolean onMonday;
+	
+	@Persistent
+	private boolean onTuesday;
+	
+	@Persistent
+	private boolean onWednesday;
+	
+	@Persistent
+	private boolean onThursday;
+	
+	@Persistent
+	private boolean onFriday;
+	
+	/**
+	 * @return the onMonday
+	 */
+	public boolean isOnMonday() {
+		return onMonday;
+	}
+
+	/**
+	 * @return the onTuesday
+	 */
+	public boolean isOnTuesday() {
+		return onTuesday;
+	}
+
+	/**
+	 * @return the onWednesday
+	 */
+	public boolean isOnWednesday() {
+		return onWednesday;
+	}
+
+	/**
+	 * @return the onThursday
+	 */
+	public boolean isOnThursday() {
+		return onThursday;
+	}
+
+	/**
+	 * @return the onFriday
+	 */
+	public boolean isOnFriday() {
+		return onFriday;
+	}
+
+	/**
+	 * @param parentPerson the parentPerson to set
+	 */
+	public void setParentPerson(Person parentPerson) {
+		this.parentPerson = parentPerson;
+	}
+
+	/**
+	 * @param onMonday the onMonday to set
+	 */
+	public void setOnMonday(boolean onMonday) {
+		this.onMonday = onMonday;
+	}
+
+	/**
+	 * @param onTuesday the onTuesday to set
+	 */
+	public void setOnTuesday(boolean onTuesday) {
+		this.onTuesday = onTuesday;
+	}
+
+	/**
+	 * @param onWednesday the onWednesday to set
+	 */
+	public void setOnWednesday(boolean onWednesday) {
+		this.onWednesday = onWednesday;
+	}
+
+	/**
+	 * @param onThursday the onThursday to set
+	 */
+	public void setOnThursday(boolean onThursday) {
+		this.onThursday = onThursday;
+	}
+
+	/**
+	 * @param onFriday the onFriday to set
+	 */
+	public void setOnFriday(boolean onFriday) {
+		this.onFriday = onFriday;
+	}
+
+	@Persistent
 	private double startTime;
 	
 	@Persistent
@@ -49,6 +141,11 @@ public class OfficeHours implements Serializable, Cloneable{
 		//Default constructor
 		startTime = -1;
 		endTime = -1;
+		onMonday = false;
+		onTuesday = false;
+		onWednesday = false;
+		onThursday = false;
+		onFriday = false;
 	}
 	
 	/**
@@ -142,9 +239,10 @@ public class OfficeHours implements Serializable, Cloneable{
 	public boolean equals(Object other){
 		if(!(other instanceof OfficeHours)) return false;
 		OfficeHours officeHours = (OfficeHours)other;
-		return this.getDays().equalsIgnoreCase(officeHours.getDays()) &&
-			   this.getStartTime() == officeHours.getStartTime() &&
-			   this.getEndTime() == officeHours.getStartTime();
+		boolean equalDays = this.getDays().equals(officeHours.getDays());
+		boolean equalStart = this.getStartTime() == officeHours.getStartTime();
+		boolean equalEnd = this.getEndTime() == officeHours.getEndTime();
+		return equalDays && equalStart && equalEnd;
 	}
 	
 	@Override
@@ -154,80 +252,80 @@ public class OfficeHours implements Serializable, Cloneable{
 			   Math.round(getEndTime()));
 	}
 	
-	public void parseFormatString(String formatString)
-	{
-		String newStartHour, newStartMinute, newEndHour, newEndMinute, AmPm;
-
-		double newStartTime, newEndTime;
-
-		// Set up for first parse, Days. 
-		int startIndex = 0;
-		int endIndex = formatString.indexOf(" ");				   
-		days = formatString.substring(startIndex, endIndex);
-
-		// Set up for next parse, Start Hour
-		startIndex = endIndex+1;
-		endIndex = formatString.indexOf(":", startIndex);
-		newStartHour = formatString.substring(startIndex, endIndex);
-		newStartTime = Double.parseDouble(newStartHour);
-
-		// Next Parse, start Minute. 
-		startIndex = endIndex+1;
-		endIndex = formatString.indexOf("M", startIndex);  //Of AM/PM 
-		newStartMinute = formatString.substring(startIndex, endIndex-1);
-
-		/* Add the conversion of our minutes section. */
-		newStartTime += ((double)Double.parseDouble(newStartMinute)/((double)60));
-
-		/* Next Parse, AM/PM for start hours. Special case. We
-		 * already know where the string we want is. Just pull it. */
-		startIndex = endIndex-1;
-		AmPm = formatString.substring(startIndex, endIndex);
-
-		// Check for AM or PM and modify startHours accordingly. 
-		if(AmPm.charAt(0) == 'P')
-		{
-			/* Account for the 1 wierd case, 12PM. */
-			if(newStartTime < 12 || newStartTime >= 13)
-			{
-			    // PM start time. Add 12 to start Hours. 
-			    newStartTime+=12;
-			}
-		}
-
-		// End Hours. 
-		startIndex = endIndex+2; //+2 to account for '-' character. 
-		endIndex = formatString.indexOf(":", startIndex);
-		newEndHour = formatString.substring(startIndex, endIndex);
-		newEndTime = Double.parseDouble(newEndHour);
-
-		// Next Parse, end Minute. 
-		startIndex = endIndex+1;
-		endIndex = formatString.indexOf("M", startIndex);  //Of AM/PM 
-		newEndMinute = formatString.substring(startIndex, endIndex-1);
-
-		/* Add the conversion of our minutes section. */
-		newEndTime += ((double)Double.parseDouble(newEndMinute)/((double)60));
-
-		/* Next Parse, AM/PM for start hours. Special case. We
-		 * already know where the string we want is. Just pull it. */
-		startIndex = endIndex-1;
-		AmPm = formatString.substring(startIndex, endIndex);
-
-		// Check for AM or PM and modify startHours accordingly. 
-		if(AmPm.charAt(0) == 'P')
-		{
-			/* Account for the 1 weird time case, 12PM. */
-			if(newEndTime < 12 || newEndTime >= 13)
-			{
-			    // PM start time. Add 12 to start Hours. 
-				newEndTime+=12;
-			}			   
-		}
-		
-		this.startTime = newStartTime;
-		this.endTime = newEndTime;
-	}
+//	public void parseFormatString(String formatString)
+//	{
+//		String newStartHour, newStartMinute, newEndHour, newEndMinute, AmPm;
+//
+//		double newStartTime, newEndTime;
+//
+//		// Set up for first parse, Days. 
+//		int startIndex = 0;
+//		int endIndex = formatString.indexOf(" ");				   
+//		days = formatString.substring(startIndex, endIndex);
+//
+//		// Set up for next parse, Start Hour
+//		startIndex = endIndex+1;
+//		endIndex = formatString.indexOf(":", startIndex);
+//		newStartHour = formatString.substring(startIndex, endIndex);
+//		newStartTime = Double.parseDouble(newStartHour);
+//
+//		// Next Parse, start Minute. 
+//		startIndex = endIndex+1;
+//		endIndex = formatString.indexOf("M", startIndex);  //Of AM/PM 
+//		newStartMinute = formatString.substring(startIndex, endIndex-1);
+//
+//		/* Add the conversion of our minutes section. */
+//		newStartTime += ((double)Double.parseDouble(newStartMinute)/((double)60));
+//
+//		/* Next Parse, AM/PM for start hours. Special case. We
+//		 * already know where the string we want is. Just pull it. */
+//		startIndex = endIndex-1;
+//		AmPm = formatString.substring(startIndex, endIndex);
+//
+//		// Check for AM or PM and modify startHours accordingly. 
+//		if(AmPm.charAt(0) == 'P')
+//		{
+//			/* Account for the 1 wierd case, 12PM. */
+//			if(newStartTime < 12 || newStartTime >= 13)
+//			{
+//			    // PM start time. Add 12 to start Hours. 
+//			    newStartTime+=12;
+//			}
+//		}
+//
+//		// End Hours. 
+//		startIndex = endIndex+2; //+2 to account for '-' character. 
+//		endIndex = formatString.indexOf(":", startIndex);
+//		newEndHour = formatString.substring(startIndex, endIndex);
+//		newEndTime = Double.parseDouble(newEndHour);
+//
+//		// Next Parse, end Minute. 
+//		startIndex = endIndex+1;
+//		endIndex = formatString.indexOf("M", startIndex);  //Of AM/PM 
+//		newEndMinute = formatString.substring(startIndex, endIndex-1);
+//
+//		/* Add the conversion of our minutes section. */
+//		newEndTime += ((double)Double.parseDouble(newEndMinute)/((double)60));
+//
+//		/* Next Parse, AM/PM for start hours. Special case. We
+//		 * already know where the string we want is. Just pull it. */
+//		startIndex = endIndex-1;
+//		AmPm = formatString.substring(startIndex, endIndex);
+//
+//		// Check for AM or PM and modify startHours accordingly. 
+//		if(AmPm.charAt(0) == 'P')
+//		{
+//			/* Account for the 1 weird time case, 12PM. */
+//			if(newEndTime < 12 || newEndTime >= 13)
+//			{
+//			    // PM start time. Add 12 to start Hours. 
+//				newEndTime+=12;
+//			}			   
+//		}
+//		
+//		this.startTime = newStartTime;
+//		this.endTime = newEndTime;
+//	}
 	
 	@Override
 	public String toString()

@@ -1,6 +1,7 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
 <%@ page import="edu.uwm.owyh.jdo.Person" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
+<%! @SuppressWarnings("unchecked") %>
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Hello World" />
     <jsp:param name="stylesheet" value="layout.css" />
@@ -23,7 +24,9 @@
 			<li><a class="nav-link" href="taclasses.html">Class Schedule</a></li>
 			<% } %>
 			
-			<li><a class="nav-link" href="queryPage.html">Queries</a></li>
+			<!--
+			 <li><a class="nav-link" href="queryPage.html">Queries</a></li> 
+			-->
 		</ul>
 	</div>
 	  	

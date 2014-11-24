@@ -4,7 +4,7 @@
 <%@ page import="edu.uwm.owyh.library.Library"%>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Set" %>
-
+<%! @SuppressWarnings("unchecked") %>
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Profile" />

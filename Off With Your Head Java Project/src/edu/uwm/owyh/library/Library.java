@@ -48,4 +48,77 @@ public class Library {
 	public static Key generateIdFromUserName(String userName){
 		return Person.generateIdFromUserName(userName);
 	}
+	
+	public static double parseTimeToDouble(String time){
+		double hours = parseHours(time);
+		double minutes = parseMinutes(time)/60;
+		String AmPm = parseAmPm(time);
+
+		if(AmPm.equalsIgnoreCase("pm")){
+			if(hours != 12) hours += 12;
+		}else{
+			if(hours == 12) hours += 12;
+		}
+
+		return hours + minutes;
+	}
+	
+	private static String parseAmPm(String time) {
+		int startIndex = time.length() - 2;
+		String AmPm = time.substring(startIndex);
+
+		if(!(AmPm.equalsIgnoreCase("am") || AmPm.equalsIgnoreCase("pm"))){
+			throw new IllegalArgumentException("Am or Pm was not appended to the time!");
+		}
+
+		return AmPm;
+	}
+
+	private static double parseMinutes(String time) { 
+		int startIndex = time.indexOf(':') + 1;
+		int endIndex = startIndex + 2;
+
+		if(startIndex == -1)
+			throw new IllegalArgumentException("Missing ':' separator between hours and minutes!");
+
+		String minutes = time.substring(startIndex, endIndex);
+
+		double numMinutes = -1;
+
+		try{
+			numMinutes = Double.parseDouble(minutes);
+		}catch(NumberFormatException nfe){
+			throw new IllegalArgumentException("Minutes portion of the time was not a number");
+		}
+
+		if(numMinutes >= 60 || numMinutes < 0){
+			throw new IllegalArgumentException("Minutes should be between 0 and 59!");
+		}
+
+		return numMinutes;
+	}
+
+	private static double parseHours(String time) {
+		int startIndex = 0;
+		int endIndex = time.indexOf(':');
+
+		if(endIndex == -1)
+			throw new IllegalArgumentException("Missing ':' separator between hours and minutes!");
+
+		String hours = time.substring(startIndex, endIndex);
+
+		double numHours = -1;
+
+		try{
+			numHours = Double.parseDouble(hours);
+		}catch(NumberFormatException nfe){
+			throw new IllegalArgumentException("Hours portion of the time was not a number!");
+		}
+
+		if(numHours > 12 || numHours <= 0)
+			throw new IllegalArgumentException("Hours should be between 1 and 12!");
+
+		return numHours;		
+	}
+
 }

@@ -28,55 +28,55 @@ import edu.uwm.owyh.model.DataStore;
 public class TestBasicUser {
 
 	DataStore datastore;
-	
+
 	private final LocalServiceTestHelper helper =
-	        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
-	
+			new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
+
 	@Test
 	public <T> void testAddPerson() {
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
 		Map<String, Object> properties = Library.propertySetBuilder("password","owyh"
-				                                                   ,"accesslevel", AccessLevel.ADMIN);
+				,"accesslevel", AccessLevel.ADMIN);
 		user.addObject("admin@uwm.edu", properties);	
 		List<?> search = datastore.findEntities(user.getTable(), null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));	
-		
+
 		WrapperObject<Person> user2 = WrapperObjectFactory.getPerson();
 		properties = Library.propertySetBuilder("password","owyh"
-				                               ,"accesslevel",AccessLevel.ADMIN);
-				
+				,"accesslevel",AccessLevel.ADMIN);
+
 		user2.addObject("admin@uwm.edu", properties);
 		search = datastore.findEntities(user2.getTable(), null);
 		assertFalse("Two User of the same name was SAVED!", (search.size() == 2));
-		
+
 		WrapperObject<Person> user3 = WrapperObjectFactory.getPerson();
 		properties = Library.propertySetBuilder("password", "owyh"
-				                               ,"accesslevel", AccessLevel.ADMIN);
-				
+				,"accesslevel", AccessLevel.ADMIN);
+
 		user3.addObject("admin2@uwm.edu",properties);
 		search = datastore.findEntities(user3.getTable(), null);
 		assertTrue("Two User of different name was NOT SAVED!", (search.size() == 2));
-		
+
 		WrapperObject<Person> user4 = WrapperObjectFactory.getPerson();
 		properties = Library.propertySetBuilder("firstname", "Admin"
-				                               ,"phone", "(414)123-1234"
-				                               ,"streetaddress", "123 Elm St"
-				                               ,"city","Milwaukee"
-				                               ,"state","WI"
-				                               ,"zip","12345"
-				                               );
+				,"phone", "(414)123-1234"
+				,"streetaddress", "123 Elm St"
+				,"city","Milwaukee"
+				,"state","WI"
+				,"zip","12345"
+				);
 
 		assertFalse("User already exists!",user4.addObject("admin@uwm.edu", properties).isEmpty());
-		
+
 		WrapperObject<Person> user5 = WrapperObjectFactory.getPerson();
 		properties = Library.propertySetBuilder("firstname", "Admin3"
-				                               ,"phone", "123.543.8787"
-				                               ,"streetaddress","321 Maple Ln"
-				                               ,"city","Brookfield"
-				                               ,"state","WI"
-				                               ,"zip","54321"
-				                               );		
-		
+				,"phone", "123.543.8787"
+				,"streetaddress","321 Maple Ln"
+				,"city","Brookfield"
+				,"state","WI"
+				,"zip","54321"
+				);		
+
 		assertFalse("User should not have been added without an accesslevel!"
 				,user5.addObject("admin3@uwm.edu", properties).isEmpty());
 		properties.put("accesslevel", AccessLevel.ADMIN);
@@ -85,44 +85,44 @@ public class TestBasicUser {
 		search = datastore.findEntities(user5.getTable(), null);
 		assertEquals("Three clients should have been added!", 3, search.size());
 	}
-	
+
 	@Test
 	public void testRemoveUser() {
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
 		Map<String, Object> properties = Library.propertySetBuilder("password","owyh"
-																   ,"accesslevel", AccessLevel.ADMIN
-				                                                   );
+				,"accesslevel", AccessLevel.ADMIN
+				);
 		user.addObject("admin@uwm.edu",properties);	
 		List<?> search = datastore.findEntities(user.getTable(), null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));
-		
+
 		user.removeObject("admin@uwm.edu");
 		search = datastore.findEntities(user.getTable(), null);
 		assertTrue("User Was Not Removed", (search.size() == 0));	
 	}
-	
+
 	@Test
 	public void testFindUser() {
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
 		Map<String, Object> properties = Library.propertySetBuilder("password", "owyh"
-				                                                   ,"accesslevel",AccessLevel.ADMIN
-				                                                   );
-		
+				,"accesslevel",AccessLevel.ADMIN
+				);
+
 		user.addObject("admin@uwm.edu", properties);	
 		Key id = Library.generateIdFromUserName("admin@uwm.edu");
 		WrapperObject<Person> foundUser = user.findObjectById(id);
 		assertTrue("User Was Not Found", (((String)user.getProperty("username"))
-				                          .equalsIgnoreCase(
-				                        		  (String)foundUser.getProperty("username"))));	
+				.equalsIgnoreCase(
+						(String)foundUser.getProperty("username"))));	
 	}
-	
+
 	@Test
 	public void testGetAllUser() {
 		// Incomplete Test, Update Later On
 		WrapperObject<Person> user1 = WrapperObjectFactory.getPerson();
 		Map<String, Object> properties = Library.propertySetBuilder("password","owyh"
-				                                                   ,"accesslevel", AccessLevel.ADMIN
-				                                                   );
+				,"accesslevel", AccessLevel.ADMIN
+				);
 		user1.addObject("admin1@uwm.edu", properties);
 		WrapperObject<Person> user2 = WrapperObjectFactory.getPerson();
 		user2.addObject("admin2@uwm.edu", properties);
@@ -130,45 +130,45 @@ public class TestBasicUser {
 		user3.addObject("admin3@uwm.edu", properties);
 		WrapperObject<Person> user4 = WrapperObjectFactory.getPerson();
 		user4.addObject("admin4@uwm.edu", properties);
-		
+
 		List<WrapperObject<Person>> clients = user1.getAllObjects();
-		
+
 		boolean findUser1 = false, findUser2 = false, findUser3 = false, findUser4 = false;
-		
+
 		for (WrapperObject<Person> item : clients) {
 			if (item.getId().equals(user1.getId())) findUser1 = true;
 			else if (item.getId().equals(user2.getId())) findUser2 = true;
 			else if (item.getId().equals(user3.getId())) findUser3 = true;
 			else if (item.getId().equals(user4.getId())) findUser4 = true;	
 		}
-		
+
 		if (!findUser1 || !findUser2 || !findUser3 || !findUser4)
 			fail("did not find all USERS!");
 	}
-	
+
 	@Test
 	public void testEditUser(){
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
 		Map<String, Object> properties = Library.propertySetBuilder("password","owyh"
-				                                                   ,"accesslevel",AccessLevel.ADMIN
-				                                                   );
+				,"accesslevel",AccessLevel.ADMIN
+				);
 		user.addObject("admin@uwm.edu",properties);	
 		List<?> search = datastore.findEntities(user.getTable(), null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));
-			
+
 		properties = Library.propertySetBuilder("password","newPassword"
-				                               ,"accesslevel", AccessLevel.INSTRUCTOR
-				                               ,"firstname","First"
-				                               ,"lastname","Last"
-				                               ,"phone","(414)-555-4321"
-				                               ,"streetaddress","123 Elm St"
-				                               ,"city","Milwaukee"
-				                               ,"state","WI"
-				                               ,"zip","12345"				                               
-				                               );
-		
+				,"accesslevel", AccessLevel.INSTRUCTOR
+				,"firstname","First"
+				,"lastname","Last"
+				,"phone","(414)-555-4321"
+				,"streetaddress","123 Elm St"
+				,"city","Milwaukee"
+				,"state","WI"
+				,"zip","12345"				                               
+				);
+
 		assertTrue("User info was not editted!", user.editObject("admin@uwm.edu", properties).isEmpty());
-		
+
 		assertEquals("newPassword",user.getProperty("password"));
 		assertEquals(WrapperObject.AccessLevel.INSTRUCTOR, user.getProperty("accesslevel"));
 		assertEquals("First",user.getProperty("firstname"));
@@ -179,11 +179,11 @@ public class TestBasicUser {
 		assertEquals("Milwaukee", user.getProperty("city"));
 		assertEquals("WI",user.getProperty("state"));
 		assertEquals("12345",user.getProperty("zip"));
-				
+
 		search = datastore.findEntities(user.getTable(), null);
 		assertTrue("User Was Saved Improperly", (search.size() == 1));
 	}
-	
+
 	@Test
 	public void testEmailCheck(){
 		String userName1 = "vince@uwm.edu";
@@ -191,14 +191,14 @@ public class TestBasicUser {
 		String userName3 = "vin@ce@uwm.edu";
 		String userName4 = "vince@uwm.edu@";
 		String userName5 = "vinc3@uwm.edu";
-		
+
 		assertTrue(PersonWrapper.checkEmail(userName1));
 		assertFalse(PersonWrapper.checkEmail(userName2));
 		assertFalse(PersonWrapper.checkEmail(userName3));
 		assertFalse(PersonWrapper.checkEmail(userName4));
 		assertTrue(PersonWrapper.checkEmail(userName5));		
 	}
-	
+
 	@Test
 	public void testPhoneNumberCheck(){
 		String phone1 = "(414)123-4545";
@@ -207,7 +207,7 @@ public class TestBasicUser {
 		String phone4 = "(414)-123 -4545";
 		String phone5 = "[414]123-4545";
 		String phone6 = "abc-1C3-45b5";
-		
+
 		assertTrue(PersonWrapper.checkPhone(phone1));
 		assertTrue(PersonWrapper.checkPhone(phone2));
 		assertTrue(PersonWrapper.checkPhone(phone3));
@@ -215,46 +215,261 @@ public class TestBasicUser {
 		assertFalse(PersonWrapper.checkPhone(phone5));
 		assertFalse(PersonWrapper.checkPhone(phone6));				
 	}
-	
+
 	@Test
 	public void testAddOfficeHoursNoConflict(){
 		WrapperObject<Person> user = getPerson("admin@uwm.edu");
 		WrapperObject<OfficeHours> officeHours = WrapperObjectFactory.getOfficeHours();
 		List<String> errors;
-		
+
 		Map<String, Object> properties = Library.propertySetBuilder("days", "MTR"
-				                                                   ,"starttime", "11:15AM"
-				                                                   ,"endtime", "2:35PM");
-		
-		errors = officeHours.addObject("admin@uwm.edu", properties);
+				,"starttime", "11:15AM"
+				,"endtime", "2:35PM");
+
+		errors = officeHours.addObject((String)user.getProperty("username"), properties);
 		assertTrue(errors.isEmpty());
-		
+
 		assertEquals("11:15AM", officeHours.getProperty("starttime"));
 		assertEquals("2:35PM", officeHours.getProperty("endtime"));
 		assertEquals("MTR", officeHours.getProperty("days"));
-		
+
 		properties = Library.propertySetBuilder("days", "MWF"
-				                               );
+				,"starttime", "9:05AM"
+				,"endtime", "11:14AM");
+
+		WrapperObject<OfficeHours> officeHours2 = WrapperObjectFactory.getOfficeHours();
+		errors = officeHours2.addObject((String)user.getProperty("username"), properties);
+		assertTrue(errors.isEmpty());
+
+		assertEquals("9:05AM", officeHours2.getProperty("starttime"));
+		assertEquals("11:14AM", officeHours2.getProperty("endtime"));
+		assertEquals("MWF", officeHours2.getProperty("days"));
+
+		assertEquals(2, ((List<?>)user.getProperty("officehours")).size());	
+		assertTrue(!officeHours.equals(officeHours2));
+
+		properties = Library.propertySetBuilder("days", "TRF"
+				,"starttime", "2:36PM"
+				,"endtime", "4:14PM");
+
+		WrapperObject<OfficeHours> officeHours3 = WrapperObjectFactory.getOfficeHours();
+		errors = officeHours3.addObject((String)user.getProperty("username"), properties);
+		assertTrue(errors.isEmpty());
+
+		assertEquals("2:36PM", officeHours3.getProperty("starttime"));
+		assertEquals("4:14PM", officeHours3.getProperty("endtime"));
+		assertEquals("TRF", officeHours3.getProperty("days"));
+
+		assertEquals(3, ((List<?>)user.getProperty("officehours")).size());	
+		assertTrue(!officeHours3.equals(officeHours) && !officeHours3.equals(officeHours2));
+	}
+
+	@Test
+	public void TestAddOfficeHoursWithBadStringFormat(){
+		WrapperObject<Person> user = getPerson("admin@uwm.edu");
+
+		WrapperObject<OfficeHours> officeHours = WrapperObjectFactory.getOfficeHours();
+
+		Map<String,Object> properties = Library.propertySetBuilder("days", "MTSF"
+				,"starttime", "3:45PM"
+				,"endtime", "5:45PM");
+
+		try{
+			officeHours.addObject((String)user.getProperty("username"), properties);
+			fail("IllegalArgumentException expected!");
+		}catch(IllegalArgumentException iae){
+			//pass test
+		}
+
+		properties = Library.propertySetBuilder("days", "MTF"
+				,"starttime", "01:65AM"
+				,"endtime", "12:30PM");
+
+		try{
+			officeHours.addObject((String)user.getProperty("username"), properties);
+			fail("IllegalArgumentException expected!");
+		}catch(IllegalArgumentException iae){
+			//pass test
+		}
+
+		properties = Library.propertySetBuilder("days", "MTF"
+				,"starttime", "01:45AM"
+				,"endtime", "12:30PW");
+
+		try{
+			officeHours.addObject((String)user.getProperty("username"), properties);
+			fail("IllegalArgumentException expected!");
+		}catch(IllegalArgumentException iae){
+			//pass test
+		}
+	}
+	
+	@Test
+	public void TestAddOfficeHoursWithConflicts(){
+		WrapperObject<Person> user = getPerson("admin@uwm.edu");
+		WrapperObject<OfficeHours> officeHours = WrapperObjectFactory.getOfficeHours();
+		List<String> errors;
+
+		Map<String, Object> properties = Library.propertySetBuilder("days", "MTR"
+				,"starttime", "11:15AM"
+				,"endtime", "2:35PM");
+
+		errors = officeHours.addObject((String)user.getProperty("username"), properties);
+		assertTrue(errors.isEmpty());
+
+		assertEquals("11:15AM", officeHours.getProperty("starttime"));
+		assertEquals("2:35PM", officeHours.getProperty("endtime"));
+		assertEquals("MTR", officeHours.getProperty("days"));
+
+		properties = Library.propertySetBuilder("days", "MWF"
+				,"starttime", "9:05AM"
+				,"endtime", "11:15AM");
+
+		WrapperObject<OfficeHours> officeHours2 = WrapperObjectFactory.getOfficeHours();
+		errors = officeHours2.addObject((String)user.getProperty("username"), properties);
+		assertTrue(!errors.isEmpty());
+
+		assertEquals(1, ((List<?>)user.getProperty("officehours")).size());	
+
+		properties = Library.propertySetBuilder("days", "TRF"
+				,"starttime", "2:35PM"
+				,"endtime", "4:14PM");
+
+		WrapperObject<OfficeHours> officeHours3 = WrapperObjectFactory.getOfficeHours();
+		errors = officeHours3.addObject((String)user.getProperty("username"), properties);
+		assertTrue(!errors.isEmpty());
+
+		assertEquals(1, ((List<?>)user.getProperty("officehours")).size());	
+	}
+	
+	@Test
+	public void TestFindSpecificOfficeHours(){
+		addThreeOfficeHours();
 		
+		String days = "MTR";
+		String startTime = "11:15AM";
+		String endTime = "2:35PM";
+		
+		String filter = "days == " + days
+				      + " && startTime == " + Library.parseTimeToDouble(startTime)
+				      + " && endTime == " + Library.parseTimeToDouble(endTime);
+		
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter);
+		assertFalse(officeHours.isEmpty());
+		assertEquals(1, officeHours.size());
+		
+		assertEquals("MTR", officeHours.get(0).getProperty("days"));
+		assertEquals("11:15AM", officeHours.get(0).getProperty("starttime"));
+		assertEquals("2:35PM", officeHours.get(0).getProperty("endTime"));
+	}
+	
+	@Test
+	public void TestFindOfficeHoursInRange(){
+		addThreeOfficeHours();		
+		boolean onM = true;
+		String startTime = "2:36PM";
+		String endTime = "11:14AM";
+		
+		String filter = "onMonday == " + onM;
+				      
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter);
+		assertFalse(officeHours.isEmpty());
+		assertEquals(2, officeHours.size());
+		
+		filter = "startTime < " + Library.parseTimeToDouble(startTime);
+		officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter);
+		assertFalse(officeHours.isEmpty());
+		assertEquals(2, officeHours.size());
+		
+		filter = "startTime > " + Library.parseTimeToDouble(endTime)
+				+" && startTime < " + Library.parseTimeToDouble(startTime);
+		
+		officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter);
+		assertFalse(officeHours.isEmpty());
+		assertEquals(1, officeHours.size());		
+		
+		filter = "endTime > " + Library.parseTimeToDouble(endTime)
+				+" && onThursday == " + true
+				+" && onTuesday == " + true 
+				+" && onFriday == " + false;
+		officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter);
+		assertFalse(officeHours.isEmpty());
+		assertEquals(1, officeHours.size());
+	}
+	
+	@Test
+	public void TestFindAllOfficeHours(){
+		addThreeOfficeHours();
+		
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().getAllObjects();
+		
+		assertEquals(3, officeHours.size());
+	}
+	
+	@Test
+	public void TestEditOfficeHoursWithNoConflict(){
+		addThreeOfficeHours();
+		
+		String filter = "days == 'MTR'";
+		
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter);
+		assertEquals(1, officeHours.size());
+		
+		WrapperObject<OfficeHours> hours = officeHours.get(0);
+		Map<String, Object> properties = Library.propertySetBuilder("days", "MF"
+																   ,"starttime","12:30PM"
+																   ,"endtime","2:00PM");		
+		
+		hours.editObject("admin@uwm.edu", properties);
+		
+		assertEquals("MF", hours.getProperty("days"));
+		assertEquals("12:30PM", hours.getProperty("starttime"));
+		assertEquals("2:00PM", hours.getProperty("endtime"));
+	}
+	
+	
+	private void addThreeOfficeHours(){
+		WrapperObject<Person> user = getPerson("admin@uwm.edu");
+		WrapperObject<OfficeHours> officeHours = WrapperObjectFactory.getOfficeHours();
+
+		Map<String, Object> properties = Library.propertySetBuilder("days", "MTR"
+				,"starttime", "11:15AM"
+				,"endtime", "2:35PM");
+
+		officeHours.addObject((String)user.getProperty("username"), properties);
+
+		properties = Library.propertySetBuilder("days", "MWF"
+				,"starttime", "9:05AM"
+				,"endtime", "11:14AM");
+
+		WrapperObject<OfficeHours> officeHours2 = WrapperObjectFactory.getOfficeHours();
+		officeHours2.addObject((String)user.getProperty("username"), properties);
+
+		properties = Library.propertySetBuilder("days", "TRF"
+				,"starttime", "2:36PM"
+				,"endtime", "4:14PM");
+
+		WrapperObject<OfficeHours> officeHours3 = WrapperObjectFactory.getOfficeHours();
+		officeHours3.addObject((String)user.getProperty("username"), properties);
 	}
 	
 	private WrapperObject<Person> getPerson(String userName){
 		WrapperObject<Person> person = WrapperObjectFactory.getPerson();
-		
+
 		Map<String, Object> properties = Library.propertySetBuilder("password", "owyh"
-				                                                   ,"accesslevel", AccessLevel.ADMIN);
-		
+				,"accesslevel", AccessLevel.ADMIN);
+
 		person.addObject(userName, properties);
-		
+
 		return person;
 	}
-	
+
 	@Before
 	public void setUp() {
 		helper.setUp();
 		datastore = DataStore.getDataStore();
 	}
-	
+
 	@After
 	public void tearDown() {
 		helper.tearDown();

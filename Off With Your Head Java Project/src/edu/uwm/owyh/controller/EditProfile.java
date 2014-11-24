@@ -102,6 +102,7 @@ public class EditProfile extends HttpServlet {
 			properties = 
 				Library.propertySetBuilder("firstname",request.getParameter("firstname")
 	    								  ,"lastname",request.getParameter("lastname")
+	    								  ,"email",request.getParameter("email")
 	    				                  ,"phone",request.getParameter("phone")
 	    				                  ,"streetaddress",request.getParameter("streetaddress")
 	    				                  ,"city",request.getParameter("city")
