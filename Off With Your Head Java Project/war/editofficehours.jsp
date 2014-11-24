@@ -3,7 +3,6 @@
 <%@ page import="edu.uwm.owyh.factories.WrapperObjectFactory" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Map" %>
 <%! @SuppressWarnings("unchecked") %>
 

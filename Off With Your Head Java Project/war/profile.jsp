@@ -1,7 +1,9 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
-<%@ page import="edu.uwm.owyh.jdo.Person" %>
-<%@ page import="edu.uwm.owyh.model.Auth" %>
+<%@ page import="edu.uwm.owyh.jdo.OfficeHours" %>
+<%@ page import="edu.uwm.owyh.factories.WrapperObjectFactory" %>
 <%@ page import="edu.uwm.owyh.library.Library"%>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Set" %>
 <%! @SuppressWarnings("unchecked") %>
@@ -55,6 +57,25 @@
 					                                                          <%=user.get("city") + ", " + user.get("state") + " " + user.get("zip")%></td>
 				</tr>
 				<% } %>
+				
+				<tr>
+					<td class="user-label"> Office Hours: </td><td class="user-data"><%=user.get("phone") %>
+					
+				 <% List<OfficeHours> officeHours = (List<OfficeHours>) user.get("officehours");
+				 	List<WrapperObject<OfficeHours>> officeHoursWrapped = new ArrayList<WrapperObject<OfficeHours>>();
+				 	for (OfficeHours hours : officeHours)
+			 			officeHoursWrapped.add(WrapperObjectFactory.getOfficeHours().findObjectById(hours.getId()));
+
+				 	for(WrapperObject<OfficeHours> hours : officeHoursWrapped) {
+		 			  	String startTime = (String) hours.getProperty("starttime");
+		 			  	String endTime = (String) hours.getProperty("endtime");
+		 			  	String days = (String) hours.getProperty("days");
+				 		
+				 		out.print("" + days +" " + startTime + " - " + endTime + "<br />");
+				 	}
+				 %>
+				</td>
+				</tr>
 				<tr>
 			  <%  if (self.get("email").equals(user.get("email"))) {  %>
 					<td id="edit-link-cell">
