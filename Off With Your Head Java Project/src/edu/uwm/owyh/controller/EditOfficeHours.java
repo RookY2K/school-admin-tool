@@ -29,6 +29,8 @@ public class EditOfficeHours extends HttpServlet {
 		if(! auth.verifyUser(response)) return;
 		
 		WrapperObject<Person> self = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
+		Key myId = Library.generateIdFromUserName((String) self.getProperty("username"));
+		self = WrapperObjectFactory.getPerson().findObjectById(myId);
 		//request.setAttribute("self", Library.makeUserProperties(self));
 		
 		/* Admin edit another User's Profile 
@@ -75,6 +77,8 @@ public class EditOfficeHours extends HttpServlet {
 		//Key id = Library.generateIdFromUserName(email);
 		//WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
 		WrapperObject<Person> self = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
+		Key myId = Library.generateIdFromUserName((String) self.getProperty("username"));
+		self = WrapperObjectFactory.getPerson().findObjectById(myId);
 		request.setAttribute("self", Library.makeUserProperties(self));
 		
 		/* Prevent non-Admin from editing other people, Redirect to User own profile 

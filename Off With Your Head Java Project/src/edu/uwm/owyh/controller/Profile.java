@@ -27,8 +27,11 @@ public class Profile extends HttpServlet {
 		if (! auth.verifyUser(response)) return;
 		
 		/* Find the logged in user. They're the only ones who can view their profile. */
-		WrapperObject<Person> user = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
 		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
+		Key myId = Library.generateIdFromUserName((String) self.getProperty("username"));
+		self = WrapperObjectFactory.getPerson().findObjectById(myId);
+		WrapperObject<Person> user = self;
+		
 		if (user != null)
 		{
 			request.setAttribute("user", Library.makeUserProperties(user));
@@ -54,6 +57,8 @@ public class Profile extends HttpServlet {
 		if (! auth.verifyUser(response)) return;
 		
 		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
+		Key myId = Library.generateIdFromUserName((String) self.getProperty("username"));
+		self = WrapperObjectFactory.getPerson().findObjectById(myId);
 		request.setAttribute("self", Library.makeUserProperties(self));
 		
 		/* View a User's Profile from the UserList */
