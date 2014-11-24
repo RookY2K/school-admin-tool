@@ -28,6 +28,9 @@ public class EditProfile extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if(! auth.verifyUser(response)) return;
 		
+		WrapperObject<Person> self = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
+		request.setAttribute("self", Library.makeUserProperties(self));
+		
 		/* Admin edit another User's Profile */
 		String username = request.getParameter("username");
 		WrapperObject<Person> user = null;
@@ -38,10 +41,10 @@ public class EditProfile extends HttpServlet {
 		
 		/* User Edit there Own Profile */
 		if (user == null)
-			user = (WrapperObject<Person>)Auth.getSessionVariable(request,"user");
+			user = self;
 		
-		request.setAttribute("user", user);
-		request.getRequestDispatcher("/editprofile.jsp").forward(request, response);	
+		request.setAttribute("user", Library.makeUserProperties(user));
+		request.getRequestDispatcher(request.getContextPath() + "editprofile.jsp").forward(request, response);	
 			
 	}
 	
@@ -64,6 +67,7 @@ public class EditProfile extends HttpServlet {
 		Key id = Library.generateIdFromUserName(email);
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
 		WrapperObject<Person> self = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
+		request.setAttribute("self", Library.makeUserProperties(self));
 		
 		/* Prevent non-Admin from editing other people, Redirect to User own profile */
 		if (user == null || (!self.getId().equals(user.getId()) && !auth.verifyAdmin())) {
@@ -71,8 +75,9 @@ public class EditProfile extends HttpServlet {
 			return;
 		}
 		
-		/* User change password */
+		/* Admin and User change password */
 		Map<String, Object> properties;
+		List<String> errors = new ArrayList<String>();
 		String changepassword = request.getParameter("changepassword");
 
 		if (changepassword != null) {
@@ -80,25 +85,19 @@ public class EditProfile extends HttpServlet {
 			String originalPassword = request.getParameter("orginalpassword");
 			String newPassword = request.getParameter("newpassword");
 			String verifyNewPassword = request.getParameter("verifynewpassword");
-			List<String> errors = new ArrayList<String>();
+			errors = new ArrayList<String>();
 			if (originalPassword == null && !auth.verifyAdmin())
 				errors.add("Non-Admin Password Change Error!");
 			if (!newPassword.equals(verifyNewPassword ))
 				errors.add("New Password Does Not Match!");
 			if (userPassword != null && !userPassword.equals(originalPassword) && self.getId().equals(user.getId()))
 				errors.add("Password Does Not Match Original!");
-
-			if (errors.isEmpty())
-				properties = Library.propertySetBuilder("password", newPassword);
-			else {
-				request.setAttribute("errors", errors);
-				request.setAttribute("user", user);
-				request.getRequestDispatcher(request.getContextPath()+"/editprofile.jsp").forward(request,response);
-				return;
-			}
 		}
+
 		/* User change Profile */
-		else {
+		String editprofile = request.getParameter("editprofile");
+		
+		if (editprofile != null) {
 			properties = 
 				Library.propertySetBuilder("firstname",request.getParameter("firstname")
 	    								  ,"lastname",request.getParameter("lastname")
@@ -109,19 +108,20 @@ public class EditProfile extends HttpServlet {
 	    				                  ,"state",request.getParameter("state")
 	    				                  ,"zip",request.getParameter("zip")
 	    				                  );
+			errors = user.editObject(request.getParameter("email"), properties);
 		}
 		
-	    List<String> errors = user.editObject(request.getParameter("email"), properties);
+	    
 
 		if (!errors.isEmpty()) {
-			request.setAttribute("properties", properties);
+			request.setAttribute("user", Library.makeUserProperties(user));
 			request.setAttribute("errors", errors);
-			request.getRequestDispatcher(request.getContextPath()+"/editprofile.jsp").forward(request,response);	
+			request.getRequestDispatcher(request.getContextPath() + "editprofile.jsp").forward(request,response);	
 		}
 	    else if (self.getId().equals(user.getId())) {
 	    	/* User edit there own profile, go back to view there profile */
 			response.sendRedirect("/profile");	
-			Auth.setSessionVariable(request, "user", user);
+			//Auth.setSessionVariable(request, "user", user);
 		}
 	    else {
 	    	/* Admin edit another User Profile, go to userList */

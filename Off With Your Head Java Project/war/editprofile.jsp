@@ -1,10 +1,10 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
-<%@ page import="edu.uwm.owyh.jdo.Person" %>
+<%@ page import="edu.uwm.owyh.jdo.OfficeHours" %>
+<%@ page import="edu.uwm.owyh.factories.WrapperObjectFactory" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@ page import="java.util.List" %>
-<%@ page import="edu.uwm.owyh.library.Library"%>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="java.util.Set" %>
 <%! @SuppressWarnings("unchecked") %>
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
@@ -16,32 +16,12 @@
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 
 <%
-	WrapperObject<Person> user = (WrapperObject<Person>) request.getAttribute("user");
-	WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
-	if(user == null) user = self;
-	Map<String, Object> properties = (Map<String, Object>)request.getAttribute("properties");
-	if(user != null && properties == null){
-		properties = Library.propertySetBuilder("firstname",user.getProperty("firstname")
-		                                                   ,"lastname",user.getProperty("lastname")
-		                                                   ,"email",user.getProperty("email")
-		                                                   ,"phone",user.getProperty("phone")
-		                                                   ,"streetaddress",user.getProperty("streetaddress")
-		                                                   ,"city",user.getProperty("city")
-		                                                   ,"state",user.getProperty("state")
-		                                                   ,"zip",user.getProperty("zip")
-		                                                   ,"password",user.getProperty("password")
-		                                                   );
+	Map<String, Object> user = (Map<String, Object>) request.getAttribute("user");
+	Map<String, Object> self = (Map<String, Object>) request.getAttribute("self");
+
+	if (user == null || self == null) return;
 	
-		Set<String> keySet = properties.keySet();	
-		
-		for(String key : keySet){
-			String val = "";
-			if(properties.get(key) == null) properties.put(key, val);
-		}
-	}
-	
-	if (user == null || properties == null || self == null) return;
-	WrapperObject.AccessLevel accesslevel = (WrapperObject.AccessLevel) self.getProperty("accesslevel");
+	WrapperObject.AccessLevel accesslevel = (WrapperObject.AccessLevel) self.get("accesslevel");
 %>
 
 <div id="content">
@@ -50,6 +30,8 @@
 		    <li><a class="nav-link" href="/profile">View My Profile</a></li>
 		    <li><a class="nav-link" href="/editprofile">Edit My Profile</a></li>
 			<li><a class="nav-link" href="/editprofile#changepassword">Change Password</a></li>
+			<li><a class="nav-link" href="/editofficehours">Add Office Hour</a></li>
+			<li><a class="nav-link" href="/editofficehours#changeofficehour">Edit Office Hours</a></li>
 			<!--
 			<li><a class="nav-link" href="officehour.html">Office Hours</a></li>
 			<li><a class="nav-link" href="taclasses.html">Class Schedule</a></li>
@@ -69,49 +51,51 @@
 			}
 		%>
        <form action="/editprofile" method="post">
+    	   <input type="hidden" name="editprofile" value="editprofile" />
+    	    <input hidden="true" type = "text" name="email" id="email" value="<%=user.get("email") %>" />
 		   <fieldset>
-			   <legend><%= properties.get("lastname") %>, <%= properties.get("firstname") %> </legend>
+			   <legend><%= user.get("lastname") %>, <%= user.get("firstname") %> </legend>
 			   <table>
 			   <tr>
 				   <td class="cell"><label class="field" for="firstname">First Name: </label></td>
-				   <td class="cell"><input type = "text" name="firstname" id="firstname" value="<%=properties.get("firstname") %>" required />
+				   <td class="cell"><input type = "text" name="firstname" id="firstname" value="<%=user.get("firstname") %>" required /></td>
 			   </tr>
 			   <tr>
 				   <td class="cell"><label class="field" for="lastname">Last Name: </label></td>
-				   <td class="cell"><input type = "text" name="lastname" id="lastname" value="<%=properties.get("lastname") %>" required />
+				   <td class="cell"><input type = "text" name="lastname" id="lastname" value="<%=user.get("lastname") %>" required /></td>
 			   </tr>
 			   <tr>
 				   <td class="cell"><label class="field" for="emaildisplay">Email: </label></td>
-				   <td class="cell"><input type = "text" name="emaildisplay" id="emaildisplay" value="<%=properties.get("email") %>" disabled />
-				   <td class="cell"><input hidden="true" type = "text" name="email" id="email" value="<%=properties.get("email") %>" />
+				   <td class="cell"><input type = "text" name="emaildisplay" id="emaildisplay" value="<%=user.get("email") %>" disabled /></td>
+				  
 			   </tr>
 			   <tr>
 				   <td class="cell"><label class="field" for="phone">Phone: </label></td>
-				   <td class="cell"><input type = "text" name="phone" id="phone" value="<%=properties.get("phone") %>"/>
+				   <td class="cell"><input type = "text" name="phone" id="phone" value="<%=user.get("phone") %>"/></td>
 			   </tr>
 			   <tr>
 				   <td class="cell"><label class="field" for="streetaddress">Address: </label></td>
-				   <td class="cell"><input type = "text" name="streetaddress" id="streetaddress" value="<%=properties.get("streetaddress") %>"/>
+				   <td class="cell"><input type = "text" name="streetaddress" id="streetaddress" value="<%=user.get("streetaddress") %>"/></td>
 			   </tr>
 			   <tr>
 				   <td class="cell"><label class="field" for="city">City: </label></td>
-				   <td class="cell"><input type = "text" name="city" id="city" value="<%=properties.get("city") %>"/>
+				   <td class="cell"><input type = "text" name="city" id="city" value="<%=user.get("city") %>"/></td>
 			   </tr>
 			   <tr>
 				   <td class="cell"><label class="field" for="state">State: </label></td>
 				   
 				   <td class="cell">
 				   <jsp:include page="/WEB-INF/templates/stateselect.jsp">
-				    	<jsp:param name="selected" value='<%=properties.get("state") %>' />
+				    	<jsp:param name="selected" value='<%=user.get("state") %>' />
 					</jsp:include>	
 					</td>					   
 			   </tr>
 			   <tr>
 				   <td class="cell"><label class="field" for="zip">Zip Code: </label></td>
-				   <td class="cell"><input type = "text" name="zip" id="zip" value="<%=properties.get("zip") %>"/>
+				   <td class="cell"><input type = "text" name="zip" id="zip" value="<%=user.get("zip") %>"/></td>
 			   </tr>
 			   <tr>
-				   <td class="cell" colspan="2"><input type="submit" value="Submit"/></td>
+				   <td class="cell" colspan="2"><input type="submit" name="editprofilesubmit" value="Edit Profile"/></td>
 			   </tr>
 			   </table>
 		   </fieldset>
@@ -120,14 +104,14 @@
 	   <br /><a id="changepassword" ></a>
 	    <form action="/editprofile" method="post">
 			<input type="hidden" name="changepassword" value="changepassword" />
-			<input type="hidden" name="email" value="<%=properties.get("email") %>" />
+			<input type="hidden" name="email" value="<%=user.get("email") %>" />
 		   <fieldset>
 			   <legend>Change Password</legend>
 			   <table>
 			   
 			   <% 
-			   String myUsername = (String) self.getProperty("username");
-			   String targetUsername = (String) user.getProperty("username");
+			   String myUsername = (String) self.get("email");
+			   String targetUsername = (String) user.get("email");
 			   if (accesslevel != WrapperObject.AccessLevel.ADMIN || myUsername.equals(targetUsername)) { 
 			   %>
 			   		
@@ -147,16 +131,12 @@
 				   <td class="cell"><input type = "password" name="verifynewpassword" id="verifynewpassword" value="" required />
 			   </tr>
 			   <tr>
-				   <td class="cell" colspan="2"><input type="submit" name="changeuserpassword" value="Change Password"/></td>
+				   <td class="cell" colspan="2"><input type="submit" name="changeuserpasswordsubmit" value="Change Password"/></td>
 			   </tr>
-			   <%  if (accesslevel == WrapperObject.AccessLevel.ADMIN && !myUsername.equals(targetUsername)) { %>
-		  		<tr>
-				   <td class="cell" colspan="2"><input type="submit" name="changeuserpasswordandemail" value="Change & Email User Password"/></td>
-			   </tr>
-			   <% } %>
 			   </table>
 		   </fieldset>
 	   </form>
+
 	</div>
 </div>
 

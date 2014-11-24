@@ -66,7 +66,7 @@ public class AddAdmin extends HttpServlet{
 			if (errors.isEmpty()){
 				Auth.setSessionVariable(request, "user", newUser);
 				Auth.removeSessionVariable(request, "isAddAdmin");
-				response.sendRedirect(request.getContextPath() + "/editprofile.jsp");	
+				response.sendRedirect(request.getContextPath() + "/editprofile");	
 			}else{ 
 				forwardForError(request, response, errors);
 			}

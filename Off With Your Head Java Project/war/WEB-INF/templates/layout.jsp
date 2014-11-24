@@ -22,6 +22,7 @@ WrapperObject user = (WrapperObject)Auth.getSessionVariable(request, "user");
 						<ul class="global-dropdown-list">
 							<li class="global-link-item"><a class="global-link" href="/editprofile">Edit My Profile</a></li>
 							<li class="global-link-item"><a class="global-link" href="/editprofile#changepassword">Change Password</a></li>
+							<li class="global-link-item"><a class="global-link" href="/editofficehours">Add Office Hours</a></li>
 						</ul>
 					</li>
 					<li class="global-link-item"><a class="global-link" href="/userlist">Users</a></li>

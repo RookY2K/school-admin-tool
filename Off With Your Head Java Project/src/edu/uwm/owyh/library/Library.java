@@ -6,6 +6,7 @@ import java.util.Map;
 import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.jdo.Person;
+import edu.uwm.owyh.jdowrappers.WrapperObject;
 
 public class Library {
 	public static Map<String, Object> propertySetBuilder(Object...properties){
@@ -47,6 +48,26 @@ public class Library {
 	
 	public static Key generateIdFromUserName(String userName){
 		return Person.generateIdFromUserName(userName);
+	}
+
+	public static Map<String, Object> makeUserProperties(WrapperObject<Person> user) {
+		if (user == null) return null;
+		Map<String, Object> properties =
+				Library.propertySetBuilder("firstname",user.getProperty("firstname")
+                                           ,"lastname",user.getProperty("lastname")
+                                           ,"email",user.getProperty("email")
+                                           ,"phone",user.getProperty("phone")
+                                           ,"streetaddress",user.getProperty("streetaddress")
+                                           ,"city",user.getProperty("city")
+                                           ,"state",user.getProperty("state")
+                                           ,"zip",user.getProperty("zip")
+                                           ,"password",user.getProperty("password")
+                                           ,"accesslevel",user.getProperty("accesslevel")
+                                           , "officehours",user.getProperty("officehours")
+                                           );
+		for(String key : properties.keySet())
+			if(properties.get(key) == null) properties.put(key, "");
+		return properties;
 	}
 	
 	public static double parseTimeToDouble(String time){

@@ -19,6 +19,7 @@ import edu.uwm.owyh.model.Auth;
 @SuppressWarnings("serial")
 public class UserList extends HttpServlet {
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {

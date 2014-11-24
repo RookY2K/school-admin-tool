@@ -18,6 +18,7 @@ import edu.uwm.owyh.model.Auth;
 @SuppressWarnings("serial")
 public class Profile extends HttpServlet {
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
@@ -27,9 +28,11 @@ public class Profile extends HttpServlet {
 		
 		/* Find the logged in user. They're the only ones who can view their profile. */
 		WrapperObject<Person> user = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
+		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
 		if (user != null)
 		{
-			request.setAttribute("user", user);
+			request.setAttribute("user", Library.makeUserProperties(user));
+			request.setAttribute("self", Library.makeUserProperties(self));
 			request.getRequestDispatcher(request.getContextPath() + "/profile.jsp").forward(request, response);	
 	
 		}
@@ -42,12 +45,16 @@ public class Profile extends HttpServlet {
 			
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyUser(response)) return;
+		
+		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
+		request.setAttribute("self", Library.makeUserProperties(self));
 		
 		/* View a User's Profile from the UserList */
 		String username = request.getParameter("username");
@@ -58,8 +65,10 @@ public class Profile extends HttpServlet {
 		Key id = Library.generateIdFromUserName(username);
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
 		
-		if (user != null) 
-			request.setAttribute("user", user);
+		if (user == null) 
+			user = self;
+
+		request.setAttribute("user", Library.makeUserProperties(user));
 		
 		request.getRequestDispatcher(request.getContextPath() + "profile.jsp").forward(request, response);			
 	}

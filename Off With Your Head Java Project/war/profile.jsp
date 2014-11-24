@@ -15,31 +15,12 @@
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 
 <%
-	WrapperObject<Person> user = (WrapperObject<Person>)request.getAttribute("user");
-	WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
-	if(user == null) user = self;
-	Map<String,Object> properties = null;
+	Map<String,Object> user = (Map<String,Object>) request.getAttribute("user");
+	Map<String,Object> self = (Map<String,Object>) request.getAttribute("self");
 	
-	if(user != null){
-		properties = Library.propertySetBuilder("firstname", user.getProperty("firstname")
-		                               ,"lastname",user.getProperty("lastname")
-		                               ,"phone",user.getProperty("phone")
-		                               ,"email",user.getProperty("email")
-		                               ,"streetaddress",user.getProperty("streetaddress")
-		                               ,"city",user.getProperty("city")
-		                               ,"state",user.getProperty("state")
-		                               ,"zip",user.getProperty("zip")
-		                               );
-		
-		Set<String> keySet = properties.keySet();
-		String val = "";
-		for(String key : keySet){
-			if(properties.get(key) == null) properties.put(key, val);
-		}
-	}
+	if (user == null || self == null) return;
 	
-	if (user == null || properties == null || self == null) return;
-	WrapperObject.AccessLevel accesslevel = (WrapperObject.AccessLevel) self.getProperty("accesslevel");
+	WrapperObject.AccessLevel accesslevel = (WrapperObject.AccessLevel) self.get("accesslevel");
 %>
 
 <div id="content">
@@ -48,6 +29,8 @@
 			<li><a class="nav-link" href="/profile">View My Profile</a></li>
 			<li><a class="nav-link" href="/editprofile">Edit My Profile</a></li>
 			<li><a class="nav-link" href="/editprofile#changepassword">Change Password</a></li>
+			<li><a class="nav-link" href="/editofficehours">Add Office Hour</a></li>
+			<li><a class="nav-link" href="/editofficehours#changeofficehour">Edit Office Hours</a></li>
 			<!--
 			<li><a class="nav-link" href="officehour.html">Office Hours</a></li>
 			<li><a class="nav-link" href="taclasses.html">Class Schedule</a></li>
@@ -58,32 +41,40 @@
 	<div id="body">
 			<table id="profile-table">
 				<tr>
-					<td class="user-label">Name:</td><td class="user-data"><%=properties.get("firstname") + " " + properties.get("lastname") %></td>
+					<td class="user-label">Name:</td><td class="user-data"><%=user.get("firstname") + " " + user.get("lastname") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Email Address:</td><td class="user-data"><%=properties.get("email") %></td>
+					<td class="user-label">Email Address:</td><td class="user-data"><%=user.get("email") %></td>
 				</tr>
-				<%  if (self.getId().equals(user.getId()) || accesslevel == WrapperObject.AccessLevel.ADMIN) {  %>
+				<%  if (self.get("email").equals(user.get("email")) || accesslevel == WrapperObject.AccessLevel.ADMIN) {  %>
 				<tr>
-					<td class="user-label">Phone Number:</td><td class="user-data"><%=properties.get("phone") %></td>
+					<td class="user-label">Phone Number:</td><td class="user-data"><%=user.get("phone") %></td>
 				</tr>
 				<tr>
-					<td class="user-label">Address:</td><td class="user-data"><%=properties.get("streetaddress")%> <br/>
-					                                                          <%=properties.get("city") + ", " + properties.get("state") + " " + properties.get("zip")%></td>
+					<td class="user-label">Address:</td><td class="user-data"><%=user.get("streetaddress")%> <br/>
+					                                                          <%=user.get("city") + ", " + user.get("state") + " " + user.get("zip")%></td>
 				</tr>
 				<% } %>
 				<tr>
-			  <%  if (self.getId().equals(user.getId())) {  %>
+			  <%  if (self.get("email").equals(user.get("email"))) {  %>
 					<td id="edit-link-cell">
 						<form action="/editprofile" method="get">
 							<input type="submit" value="Edit My Profile"/>
 						</form>
 					</td>
+				</tr>
+				<tr>
+					<td id="edit-link-cell">
+						<form action="/editofficehours" method="get">
+							<input type="submit" value="Edit Office Hours"/>
+						</form>
+					</td>
+				</tr>	
 				<% } else if (accesslevel == WrapperObject.AccessLevel.ADMIN) { %>
 					
 					<td id="edit-link-cell">
 						<form action="/editprofile" method="get">
-							<input type="hidden" name="username" value="<% out.print(user.getProperty("username")); %>" />
+							<input type="hidden" name="username" value="<% out.print(user.get("email")); %>" />
 							<input type="submit" value="Edit User Profile" />
 						</form>
 					</td>

@@ -20,6 +20,7 @@ public class Auth {
 	private String _goodUserName;
 	
 	private Auth(HttpServletRequest request){
+		@SuppressWarnings("unchecked")
 		WrapperObject<Person> user = (WrapperObject<Person>)getSessionVariable(request, "user");
 		if (user == null) return;
 		_goodUserName = (String) user.getProperty("username");
