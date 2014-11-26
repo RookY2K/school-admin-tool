@@ -76,6 +76,9 @@ Off With Your Head Java Project/src/edu/uwm/owyh/model/DataStore.java.orig
 Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/jdo/Person.java.orig
 Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/model/DataStore.java.orig
 Off With Your Head Java Project/war/WEB-INF/classes/META-INF/jdoconfig.xml
+Off With Your Head Java Project/war/WEB-INF/classes/log4j.properties
+Off With Your Head Java Project/war/WEB-INF/appengine-generated/datastore-indexes-auto.xml
+Off With Your Head Java Project/war/WEB-INF/appengine-generated/local_db.bin
 syntax: regexp
 ^(.*[\\/])?gen[\\/].*
 ^(.*[\\/])?bin[\\/].*
