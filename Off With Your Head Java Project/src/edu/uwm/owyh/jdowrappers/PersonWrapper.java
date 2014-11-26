@@ -14,13 +14,64 @@ import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.DataStore;
 
+/**
+ * Wrapper Class for the Person JDO
+ * @author Vince Maiuri
+ *
+ */
 public class PersonWrapper implements WrapperObject<Person>,Serializable{
 
 
 	private static final long serialVersionUID = -4561417175133189867L;
 	private Person _person;
 	private static final String PARENT = KeyFactory.keyToString(Person.getParentkey());
+	public static final String EMAILPATTERN = "^\\w+@uwm.edu$";
+	public static final String PHONEPATTERN = "^((\\(\\d{3}\\))|(\\d{3}))[-\\.\\s]{0,1}\\d{3}[-\\.\\s]{0,1}\\d{4}$";
 	
+	public enum AccessLevel {
+		TA(3), INSTRUCTOR(2), ADMIN(1);
+		private int value;
+		private AccessLevel(int val){
+			value = val;
+		}
+		public int getVal(){
+			return value;
+		}
+		public static AccessLevel getAccessLevel(int val){
+			switch(val){
+			case 1:
+				return AccessLevel.ADMIN;
+			case 2:
+				return AccessLevel.INSTRUCTOR;
+			case 3:
+				return AccessLevel.TA;
+			default:
+				return null;
+			}
+		}
+	}
+
+	//Private constructors
+		private PersonWrapper(Person person) {
+			_person = person;	
+		}
+
+	private PersonWrapper(){
+		//Default constructor that returns a WrapperObject object with default (null) 
+		//instance variables
+	}
+
+	/**
+	 * Public accessor method for the PersonWrapper object
+	 * @return an instantiated PersonWrapper Object
+	 */
+	public static WrapperObject<Person> getPersonWrapper(){
+		return  new PersonWrapper();
+	}
+
+	private static WrapperObject<Person> getPersonWrapper(Person client) {
+		return new PersonWrapper(client);
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.uwm.owyh.model.WrapperObject#getUserName()
@@ -30,59 +81,46 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		return _person.getId();
 	}
 
-	public static WrapperObject<Person> getPersonWrapper(){
-		return  new PersonWrapper();
-	}
-
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#findObject(java.lang.String, edu.uwm.owyh.jdowrappers.WrapperObject)
+	 */
 	@Override
-	public List<WrapperObject<Person>> findObject(String filter) {
+	public <T> List<WrapperObject<Person>> findObject(String filter, WrapperObject<T> parent) {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<Person>> persons = null;
 	
 		String filterWithParent = "parentKey == '" + PARENT + "'" +
 						"&& " + filter;
-		List<Person> entities = store.findEntities(getTable(), filterWithParent);
+		List<Person> entities = store.findEntities(getTable(), filterWithParent, null);
 		persons = getPersonsFromList(entities);
 		
 		return persons;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#getAllObjects()
+	 */
 	public List<WrapperObject<Person>> getAllObjects() {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<Person>> persons = null;
 		String filter = "parentKey == '" + PARENT + "'";
 	
-		persons = getPersonsFromList(store.findEntities(getTable(), filter));
+		persons = getPersonsFromList(store.findEntities(getTable(), filter, null));
 	
 		return persons;
 	}
 
-	/**
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#getTable()
 	 */
 	@Override
 	public Class<Person> getTable(){
 		return Person.getClassname();
 	}
 
-	/**
-	 * 
-	 * @param userName
-	 * @return
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#getProperty(java.lang.String)
 	 */
-	public static boolean checkEmail(String userName){
-		return userName.matches(EMAILPATTERN);
-	}
-
-	public static boolean checkOfficeHours(String formatString){
-		return formatString.matches(OfficeHoursWrapper.OFFICEHOURPATTERN);
-	}
-
-	public static boolean checkPhone(String phone){
-		return (phone.trim() == ""|| phone.trim().matches(PHONEPATTERN));
-	}
-
 	@Override
 	public Object getProperty(String propertyKey) {
 		if(propertyKey == null) return null;
@@ -120,6 +158,9 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#addObject(java.lang.String, java.util.Map)
+	 */
 	@Override
 	public List<String> addObject(String userName, Map<String, Object> properties) {
 		DataStore store = DataStore.getDataStore();
@@ -166,6 +207,9 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		return errors;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#editObject(java.lang.String, java.util.Map)
+	 */
 	@Override
 	public List<String> editObject(String userName, Map<String, Object> properties) {
 		DataStore store = DataStore.getDataStore();
@@ -199,6 +243,9 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		return errors;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#removeObject(java.lang.String)
+	 */
 	@Override
 	public boolean removeObject(String userName) {
 		DataStore store = DataStore.getDataStore();
@@ -208,6 +255,9 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		return store.deleteEntity(_person, _person.getId());		
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#findObjectById(com.google.appengine.api.datastore.Key)
+	 */
 	@Override
 	public WrapperObject<Person> findObjectById(Key id) {
 		DataStore store = DataStore.getDataStore();
@@ -218,8 +268,11 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		return getPersonWrapper(person);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#addChildObject(java.lang.Object)
+	 */
 	@Override
-	public List<String> addChildObject(Object ChildJDO) {
+	public List<String> addChildObject(Object ChildJDO) throws UnsupportedOperationException {
 		String kind = ChildJDO.getClass().getSimpleName();
 		List<String> errors = new ArrayList<String>();
 		switch(kind.toLowerCase()){
@@ -248,8 +301,11 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		return errors;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#removeChildObject(java.lang.Object)
+	 */
 	@Override
-	public boolean removeChildObject(Object childJDO) {
+	public boolean removeChildObject(Object childJDO) throws UnsupportedOperationException {
 		String kind = childJDO.getClass().getSimpleName();
 		
 		switch(kind.toLowerCase()){
@@ -263,21 +319,35 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		}
 	}
 
-	//Private constructors
-	private PersonWrapper(Person person) {
-//		_userName = person.getUserName();
-		_person = person;	
+	/**
+	 * 
+	 * @param email
+	 * @return true if email is in proper format
+	 */
+	public static boolean checkEmail(String email){
+		return email.matches(EMAILPATTERN);
 	}
 
-	private PersonWrapper(){
-		//Default constructor that returns a WrapperObject object with default (null) 
-		//instance variables
+	/**
+	 * Checks officehours for the proper format
+	 * @param formatString
+	 * @return true if the officehours are in the proper format string
+	 */
+	public static boolean checkOfficeHours(String formatString){
+		return formatString.matches(OfficeHoursWrapper.OFFICEHOURPATTERN);
 	}
-	
-	
+
+	/**
+	 * Checks the phone number for proper format
+	 * @param phone
+	 * @return true if the phone number is in the proper format
+	 */
+	public static boolean checkPhone(String phone){
+		return (phone.trim() == ""|| phone.trim().matches(PHONEPATTERN));
+	}
+
 	//private mutators
 	private void setPerson(String userName){
-//		_userName = userName;
 		_person = getPerson(userName);		
 	}
 	
@@ -343,10 +413,6 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 	
 	private Person getPerson(){
 		return _person;
-	}
-	
-	private static WrapperObject<Person> getPersonWrapper(Person client) {
-		return new PersonWrapper(client);
 	}
 	
 	private List<WrapperObject<Person>> getPersonsFromList(List<Person> entities) {

@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject"%>
+<%@ page import="edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel" %>
 <%@ page import="java.util.List"%>
 <%! @SuppressWarnings("unchecked")%>
 <jsp:include page="/WEB-INF/templates/header.jsp">
@@ -51,9 +52,9 @@
 					<td class="cell"><label class="field" for="accesslevel">AccessLevel: </label></td>
 					<td class="cell"> 
 						<select name="accesslevel">
-						  <option value="<% out.print(WrapperObject.AccessLevel.TA.getVal()); %>">TA</option>					  
-						  <option value="<% out.print(WrapperObject.AccessLevel.INSTRUCTOR.getVal());%>">INSTRUCTOR</option>
-						  <option value="<% out.print(WrapperObject.AccessLevel.ADMIN.getVal());%>">ADMIN</option>
+						  <option value="<% out.print(AccessLevel.TA.getVal()); %>">TA</option>					  
+						  <option value="<% out.print(AccessLevel.INSTRUCTOR.getVal());%>">INSTRUCTOR</option>
+						  <option value="<% out.print(AccessLevel.ADMIN.getVal());%>">ADMIN</option>
 						</select>
 					</td>
 				</tr>

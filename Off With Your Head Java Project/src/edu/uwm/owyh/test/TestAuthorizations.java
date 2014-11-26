@@ -15,10 +15,9 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
-import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
+import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.DataStore;
 
 public class TestAuthorizations{
 	private final LocalServiceTestHelper helper =
@@ -26,7 +25,6 @@ public class TestAuthorizations{
 	private AccessLevel _level;
 	private String _userName;
 	private String _password;
-	private DataStore _service;
 	private Auth _a1;
 
 	@Before
@@ -35,11 +33,10 @@ public class TestAuthorizations{
 		_level = AccessLevel.ADMIN;
 		_userName = "vamaiuri@uwm.edu";
 		_password = "paSsw0rd$";
-		_service = DataStore.getDataStore();
 		
 		
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
-		Map<String,Object> properties = Library.propertySetBuilder("password", _password
+		Map<String,Object> properties = Library.propertyMapBuilder("password", _password
 				                                                  ,"accesslevel", _level
 				                                                  );
 		user.addObject(_userName, properties);

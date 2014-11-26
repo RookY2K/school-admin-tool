@@ -25,7 +25,6 @@ public class Login extends HttpServlet {
 		response.sendRedirect("/");
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {

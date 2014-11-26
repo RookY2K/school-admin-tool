@@ -2,3 +2,35 @@
 	margin: auto;
 	display: table;
 }
+
+#course_info_table, .section_header_cell, .section_cell{
+	border: 1px solid black;
+}
+
+#course_info_table{
+	border-collapse:collapse;
+}
+
+#course_info_table_header{
+	background: #FFBD00 url("../images/wave.jpg") no-repeat scroll center top;
+}
+
+#section_headers{
+	background-color: #D3D3D3;
+}
+
+.evenrow{
+	background-color: #FFBD00;	
+}
+
+.oddrow{
+	background-color: #D3D3D3;
+}
+
+.section_cell{
+	text-align:center;
+}
+
+
+
+

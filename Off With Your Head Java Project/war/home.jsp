@@ -17,13 +17,19 @@
 <div id="content">
 	<div id="local-nav-bar">
 		<ul id="local-list">
+			<li><a class="nav-link" href="/profile">View My Profile</a></li>
+		    <li><a class="nav-link" href="/editprofile">Edit My Profile</a></li>
+			<li><a class="nav-link" href="/editprofile#changepassword">Change Password</a></li>
+			<li><a class="nav-link" href="/editofficehours">Add/Edit Office Hours</a></li>
+			<!--
 			<li><a class="nav-link" href="officehour.html">Office Hours</a></li>
-			
-			<% if(user.getProperty("accesslevel").equals(WrapperObject.AccessLevel.TA))
-			{%>
+			-->
+			<!-- 
+			<% //if(user.getProperty("accesslevel").equals(WrapperObject.AccessLevel.TA))
+			//{%>
 			<li><a class="nav-link" href="taclasses.html">Class Schedule</a></li>
-			<% } %>
-			
+			<% //} %>
+			 -->
 			<!--
 			 <li><a class="nav-link" href="queryPage.html">Queries</a></li> 
 			-->

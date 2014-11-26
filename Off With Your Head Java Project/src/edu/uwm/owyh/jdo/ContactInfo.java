@@ -9,6 +9,10 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
 
+/**
+ * JDO class for ContactInfo
+ * @author Vince Maiuri
+ */
 @PersistenceCapable
 public class ContactInfo implements Serializable, Cloneable{
 
@@ -69,18 +73,25 @@ public class ContactInfo implements Serializable, Cloneable{
 	}
 	
 	/**
-	 * Returns the parent Person who the contact info belongs
-	 * to
+	 * Returns the parent Person to whom the contact info belongs
 	 * @return Person contactee
 	 */
 	public Person getContactee(){
 		return contactee;
 	}
 	
+	/**
+	 * Returns the email
+	 * @return the email
+	 */
 	public String getEmail(){
 		return email;
 	}
 	
+	/**
+	 * Returns the phone number
+	 * @return the phone number
+	 */
 	public String getPhone(){
 		return phone;
 	}
@@ -135,53 +146,70 @@ public class ContactInfo implements Serializable, Cloneable{
 	
 	//Mutator
 	
+	/**
+	 * Sets the email field
+	 * @param email
+	 */
 	public void setEmail(String email){
 		this.email = email;
 	}
 	
+	/**
+	 * Sets the phone number field
+	 * @param phone
+	 */
 	public void setPhone(String phone){
 		this.phone = phone;
 	}
 	
+	/**
+	 * Sets the first name field
+	 * @param firstName
+	 */
 	public void setFirstName(String firstName){
 		this.firstName = firstName;
 	}
 	
+	/**
+	 * Sets the last name field
+	 * @param lastName
+	 */
 	public void setLastName(String lastName){
 		this.lastName = lastName;
 	}
 	
+	/**
+	 * Sets the street address field
+	 * @param streetAddress
+	 */
 	public void setStreetAddress(String streetAddress){
 		this.streetAddress = streetAddress;
 	}
 	
+	/**
+	 * Sets the city field
+	 * @param city
+	 */
 	public void setCity(String city){
 		this.city = city;
 	}
 	
+	/**
+	 * Sets the state field
+	 * @param state
+	 */
 	public void setState(String state){
 		this.state = state;
 	}
 	
+	/**
+	 * Sets the zip code field
+	 * @param zip
+	 */
 	public void setZip(String zip){
 		this.zip = zip;
 	}
 	
 	//Utility Methods
 	
-	@Override
-	public ContactInfo clone(){
-		ContactInfo other = null;
-		
-		try{
-			other = (ContactInfo) super.clone();
-		}catch(CloneNotSupportedException e){
-			//Won't happen
-			e.printStackTrace();
-		}		
-		
-		other.contactee = null;
-				
-		return other;
-	}
 }

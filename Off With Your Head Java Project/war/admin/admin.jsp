@@ -14,6 +14,7 @@
 		<ul id="local-list">
 	      <li><a class="nav-link" href="/admin/addContactInfo">Add New User</a></li>
 	      <li><a class="nav-link" href="/admin/addContactInfo#addcontactinfo">Add Contact Info</a></li>
+	      <li><a class="nav-link" href="/admin/scraper" target="_blank">Get Course List</a></li>
 		</ul>
 	</div>
 	  	

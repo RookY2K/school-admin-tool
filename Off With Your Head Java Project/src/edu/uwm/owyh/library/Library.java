@@ -4,12 +4,44 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 
+/**
+ * Library class with miscellaneous, general, utility methods that are called by several classes.
+ * All methods in this class will be Static methods. There is no such thing as a Library object.
+ * @author Vince Maiuri
+ *
+ */
 public class Library {
-	public static Map<String, Object> propertySetBuilder(Object...properties){
+	
+	private Library(){
+		//Prevents instantiation of the Library class
+	}
+	
+	/**
+	 * <pre>Utility method to build a Property Map for editing/adding JDO .Expects key-value pairs. 
+	 * Will throw Exception if there is an odd number of arguments,the supposed key is null, or
+	 * key is not a string.
+	 * Otherwise, there is no check to ensure keys actually exist for any JDO or that the value
+	 * is of the correct type for the property. Expectation is that the JDO wrapper classes will
+	 * perform these specific checks.</pre>
+	 * 
+	 *   <p><pre>      E.G. key: name   value: Vince
+	 *           key: age    value: 33
+	 *           key: gender value: male
+	 *        
+	 *           Library.propertyMapBuilder("name", "Vince"
+	 *                                     ,"age", 33
+	 *                                     ,"gender","male");</pre></p>
+	 *                                  
+	 * @param properties <pre>Iterable array of JDO property Key-value pairs (String, Object). Expectation
+	 * is that the Key and value are next to each other and that the key will precede the value.</pre>
+	 * @return a map with the inputted properties.
+	 */
+	public static Map<String, Object> propertyMapBuilder(Object...properties){
 		if(properties.length % 2 != 0){
 			throw new IllegalArgumentException("Odd number of arguments!");
 		}
@@ -35,6 +67,10 @@ public class Library {
 		return result;
 	}
 	
+	/**
+	 * Buids an array of the 50 state abbreviations. Useful for building state select lists.
+	 * @return an array of the 50 state abbreviations
+	 */
 	public static String[] getStates(){
 		String stateString = "AL,AK,AZ,AR,CA,CO,CT,DE,FL,GA,HI,ID,IL,IN,IA,KS,KY,LA,ME,MD,MA,MI,MN,"
 				+ "MO,MS,MT,NE,NV,NH,NJ,NM,NY,NC,ND,OH,OK,OR,PA,RI,SC,SD,TN,TX,UT,VT,VA,WA,WV,WI,WY";
@@ -46,14 +82,27 @@ public class Library {
 		return states;
 	}
 	
+	/**
+	 * <pre>Utility method to build a Person JDO primary key from the inputted userName. Will
+	 * always return a Key, even if the Person does not exist in the Datastore. </pre>
+	 * @param userName - uwm email address
+	 * @return Key - Person JDO primary key
+	 */
 	public static Key generateIdFromUserName(String userName){
-		return Person.generateIdFromUserName(userName);
+		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(Person.getParentkey());
+
+		return keyBuilder.addChild(Person.getKind(), userName.toLowerCase()).getKey();		
 	}
 
+	/**
+	 * Utility Method to build a person's Property map. 
+	 * @param user - WrapperObject<Person> object
+	 * @return A map of properties.
+	 */
 	public static Map<String, Object> makeUserProperties(WrapperObject<Person> user) {
 		if (user == null) return null;
 		Map<String, Object> properties =
-				Library.propertySetBuilder("firstname",user.getProperty("firstname")
+				Library.propertyMapBuilder("firstname",user.getProperty("firstname")
                                            ,"lastname",user.getProperty("lastname")
                                            ,"email",user.getProperty("email")
                                            ,"phone",user.getProperty("phone")
@@ -70,6 +119,41 @@ public class Library {
 		return properties;
 	}
 	
+	/**
+	 * Utility method to convert a Time from a double value to a String. 
+	 * @param time - time to convert to String
+	 * @return a String time of format: dD:DDXM where d is for times >= 10 and X is A or P
+	 */
+	public static String timeToString(double time) {
+		int hoursIn24Cycle = (int)time;
+		double fractionalMinutes = time - hoursIn24Cycle;
+
+		long minutes = Math.round(fractionalMinutes * 60);
+		int hoursIn12Cycle;
+		boolean isPm = false;
+		if(hoursIn24Cycle > 12){
+			hoursIn12Cycle = hoursIn24Cycle - 12;
+			isPm = true;
+		}else{
+			hoursIn12Cycle = hoursIn24Cycle;
+			if(hoursIn12Cycle == 12) isPm = true;
+		}
+		String AmPm = isPm ? "PM" : "AM";
+		String minutesString = Long.toString(minutes);
+
+		minutesString = minutesString.length() == 1 ? "0" + minutesString : minutesString;
+
+
+
+		return "" + hoursIn12Cycle + ":" + minutesString + AmPm;
+	}
+	
+	/**
+	 * Utility method that parses a String time to a double
+	 * @param time - Expected format is dD:DDXM where d is for times >= 10:DD and X is an A or P
+	 * @return <pre>the parsed time as a double. Mantissa value is the hours converted to a 24 hour clock
+	 *         1-24 where 24 is 12AM. Exponent value is the minutes divided by 60 (e.g. 15/60 = .25). </pre>
+	 */
 	public static double parseTimeToDouble(String time){
 		double hours = parseHours(time);
 		double minutes = parseMinutes(time)/60;
@@ -141,5 +225,7 @@ public class Library {
 
 		return numHours;		
 	}
+	
+	
 
 }

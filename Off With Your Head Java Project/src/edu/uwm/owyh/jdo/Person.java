@@ -14,6 +14,12 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import edu.uwm.owyh.library.Library;
+
+/**
+ * Person jdo class
+ * @author Vince Maiuri
+ */
 @PersistenceCapable
 public class Person implements Serializable,Cloneable{
 
@@ -63,7 +69,7 @@ public class Person implements Serializable,Cloneable{
 	 * keeping strong consistency in queries.
 	 */
 	private Person(String userName){
-		id = generateIdFromUserName(userName);
+		id = Library.generateIdFromUserName(userName);
 		
 		setUserName(userName);
 		setToUpperUserName(userName);
@@ -126,6 +132,9 @@ public class Person implements Serializable,Cloneable{
 		return parentKey;
 	}
 	
+	/**
+	 * @return the contactInfo child JDO
+	 */
 	public ContactInfo getContactInfo(){
 		return contactInfo;
 	}
@@ -168,7 +177,10 @@ public class Person implements Serializable,Cloneable{
 	}
 	
 	//Mutators
-	
+	/**
+	 * Sets the contactinfo for the Person
+	 * @param info
+	 */
 	public void setContactInfo(ContactInfo info){
 		contactInfo = info;
 	}	
@@ -199,7 +211,7 @@ public class Person implements Serializable,Cloneable{
 	
 	/**
 	 * Adds the specified office hours to the list of office hours.
-	 * @param formatString
+	 * @param officeHours - Child OfficeHours jdo to add to the Person JDO list field.
 	 */
 	public void addOfficeHours(OfficeHours officeHours)
 	{
@@ -210,6 +222,11 @@ public class Person implements Serializable,Cloneable{
 		this.officeHours.add(officeHours);
 	}
 
+	/**
+	 * Removes one officehour jdo from the OfficeHours list field
+	 * @param officeHours
+	 * @return true if the officehours was successfully removed
+	 */
 	public boolean removeOfficeHours(OfficeHours officeHours){
 		if(officeHours == null) 
 			throw new NullPointerException("officeHours cannot be null!");
@@ -218,11 +235,5 @@ public class Person implements Serializable,Cloneable{
 	}
 
 	//Utility Methods
-	
-	public static Key generateIdFromUserName(String userName){
-		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(PARENTKEY);
-
-		return keyBuilder.addChild(KIND, userName.toLowerCase()).getKey();
-	}
 }
 

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
-import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
+import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 
@@ -62,12 +62,12 @@ public class AddClient extends HttpServlet {
 		try {
 			int access = Integer.parseInt(request.getParameter("accesslevel"));
 			AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
-			properties = Library.propertySetBuilder("password",password
+			properties = Library.propertyMapBuilder("password",password
 					                                 ,"accesslevel",accessLevel);
 			WrapperObject<Person> newUser = WrapperObjectFactory.getPerson();
 			errors = newUser.addObject(email, properties);
 			
-			properties = Library.propertySetBuilder("firstname",""
+			properties = Library.propertyMapBuilder("firstname",""
 		              ,"lastname",""
 		              ,"email", request.getParameter("email")
 		              ,"phone",""

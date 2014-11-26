@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel" %>
 <%@ page import="edu.uwm.owyh.jdo.OfficeHours" %>
 <%@ page import="edu.uwm.owyh.factories.WrapperObjectFactory" %>
 <%@ page import="edu.uwm.owyh.library.Library"%>
@@ -22,7 +23,7 @@
 	
 	if (user == null || self == null) return;
 	
-	WrapperObject.AccessLevel accesslevel = (WrapperObject.AccessLevel) self.get("accesslevel");
+	AccessLevel accesslevel = (AccessLevel) self.get("accesslevel");
 %>
 
 <div id="content">
@@ -31,8 +32,7 @@
 			<li><a class="nav-link" href="/profile">View My Profile</a></li>
 			<li><a class="nav-link" href="/editprofile">Edit My Profile</a></li>
 			<li><a class="nav-link" href="/editprofile#changepassword">Change Password</a></li>
-			<li><a class="nav-link" href="/editofficehours">Add Office Hour</a></li>
-			<li><a class="nav-link" href="/editofficehours#changeofficehour">Edit Office Hours</a></li>
+			<li><a class="nav-link" href="/editofficehours">Add/Edit Office Hour</a></li>
 			<!--
 			<li><a class="nav-link" href="officehour.html">Office Hours</a></li>
 			<li><a class="nav-link" href="taclasses.html">Class Schedule</a></li>
@@ -48,7 +48,7 @@
 				<tr>
 					<td class="user-label">Email Address:</td><td class="user-data"><%=user.get("email") %></td>
 				</tr>
-				<%  if (self.get("email").equals(user.get("email")) || accesslevel == WrapperObject.AccessLevel.ADMIN) {  %>
+				<%  if (self.get("email").equals(user.get("email")) || accesslevel == AccessLevel.ADMIN) {  %>
 				<tr>
 					<td class="user-label">Phone Number:</td><td class="user-data"><%=user.get("phone") %></td>
 				</tr>
@@ -91,8 +91,8 @@
 						</form>
 					</td>
 				</tr>	
-				<% } else if (accesslevel == WrapperObject.AccessLevel.ADMIN) { %>
-					
+				<% } else if (accesslevel == AccessLevel.ADMIN) { %>
+				<tr>	
 					<td id="edit-link-cell">
 						<form action="/editprofile" method="get">
 							<input type="hidden" name="username" value="<% out.print(user.get("email")); %>" />

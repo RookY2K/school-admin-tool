@@ -1,6 +1,12 @@
-<%@ page import="edu.uwm.owyh.mockjdo.Course" %>
-<%@ page import="edu.uwm.owyh.mockjdo.Section" %>
+<%@ page import="edu.uwm.owyh.jdo.Course" %>
+<%@ page import="edu.uwm.owyh.jdo.Section" %>
+<%@ page import="edu.uwm.owyh.model.Auth" %>
+<%@ page import="edu.uwm.owyh.model.DataStore" %>
+<%@ page import="java.util.Collections" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <%! @SuppressWarnings("unchecked") %>
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Class List" />
@@ -10,11 +16,9 @@
 
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 <%
-	List<Course> courses = (List<Course>)request.getAttribute("courses");
-	List<String> errors = (List<String>)request.getAttribute("errors");
-	if(courses == null){
-		errors = (List<String>)request.getAttribute("errors");
-	}
+	List<String> errors = (List<String>)Auth.getSessionVariable(request, "errors");
+	Map<Integer, Course> courses = (Map<Integer, Course>)Auth.getSessionVariable(request, "courses");
+	List<Integer> courseKeyList = (List<Integer>) Auth.getSessionVariable(request, "coursekeys");
 %>
 
 
@@ -38,58 +42,97 @@
 	<%
 			}
 		}
-		if(courses != null){
-			for(int i=0; i<courses.size(); ++i){
-				Course course = courses.get(i);
-				String courseNum = course.getCourseNum();
-				String courseName = course.getCourseName();
-				List<Section> sections = course.getSections();
+		Auth.removeSessionVariable(request, "errors");
+		
+	%>	
+		<form method="post" action="/classlist">
+			<fieldset>
+				<legend>Course List</legend>
+				<table id="courselist_table">
+				<tr>
+					<td class="cell">Courses: </td>
+					<td class="cell"> 
+						<select name="courselist" required>
+						  <option value="">Select a course...</option>
+	<%
+							if(courseKeyList != null){
+								for(int key : courseKeyList){
 	%>
-		<span class="course_info"><%=courseNum%>&nbsp;<%=courseName %></span>
-		<%
-				for(int j=0; i<sections.size(); ++j){
-					Section section = sections.get(i);
-					String sectionNum = section.getSectionNum();
-					String creditLoad = section.getCreditLoad();
-					String days = section.getDays();
-					String hours = section.getHours();
-					String dates = section.getDates();
-					String room = section.getRoom();
-					String instructorName = section.getInstructorName();		
-		%>
-		<table class="section_table">
+						  <option value="<%=key%>">COMPSCI-<%=key%>: <%=courses.get(key).getCourseName() %></option>
+	<%
+								}
+							}
+	%>
+						</select> 
+					</td>
+				</tr>
+				</table>
+			</fieldset>
+			&nbsp;<input type="submit" id="select_course" value="Select Course" />				
+		</form>
+	<%
+		Course selectedCourse = (Course)request.getAttribute("selectedcourse");
+		boolean isAdmin = Auth.getAuth(request).verifyAdmin();
+		if(selectedCourse != null){
+			int courseNum = selectedCourse.getCourseNum();
+			String courseName = selectedCourse.getCourseName();
+			List<Section>sections = selectedCourse.getSections();
+	
+	%>	
+		<form method="post" action="/admin/editcourses">
+			<fieldset>
+			<legend>Course Information</legend>
+			<table id="course_info_table">
 			<thead>
 				<tr>
-					<th class="section_header">Section Number</th>
-					<th class="section_header">Units</th>
-					<th class="section_header">Hours</th>
-					<th class="section_header">Days</th>
-					<th class="section_header">Dates</th>
-					<th class="section_header">Instructor</th>
-					<th class="section_header">Room</th>
+					<th id="course_info_table_header" colspan="7">COMPSCI-<%=courseNum %>: <%=courseName %></th>
+				</tr>
+				<tr id="section_headers">
+					<th class="section_header_cell">Section</th>
+					<th class="section_header_cell">Credits</th>
+					<th class="section_header_cell">Dates</th>
+					<th class="section_header_cell">Days</th>
+					<th class="section_header_cell">Hours</th>
+					<th class="section_header_cell">Room</th>
+					<th class="section_header_cell">Instructor</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td class="section_info"><%=sectionNum %></td>
-					<td class="section_info"><%=creditLoad %></td>
-					<td class="section_info"><%=hours %></td>
-					<td class="section_info"><%=days %></td>
-					<td class="section_info"><%=dates %></td>
-					<td class="section_info"><%=instructorName %></td>
-					<td class="section_info"><%=room %></td>
-				</tr>
-			</tbody>
-		
-		</table><br />
-	<%
-				}	
-			}
+   	<%
+   			int row = -1;
+   			for(Section section : sections){
+   				row++;
+   				String className = row % 2 == 0 ? "evenrow" : "oddrow";
+   				
+				String sectionNum = section.getSectionNum();
+				String credits = section.getCredits();
+				String dates = section.getDates();
+				String days = section.getDays();
+				String hours = section.getHours();
+				String room = section.getRoom();
+				String instructor = section.getInstructor();
 	%>
-		<br />
+				<tr class="<%=className %>">
+					<td class="section_cell"><%=sectionNum %></td>
+					<td class="section_cell"><%=credits %></td>
+					<td class="section_cell"><%=dates %></td>
+					<td class="section_cell"><%=days %></td>
+					<td class="section_cell"><%=hours %></td>
+					<td class="section_cell"><%=room %></td>
+					<td class="section_cell"><%=instructor %></td>
+				</tr>
+	<%
+   			}
+	%>			
+			</tbody>
+			</table>
+			</fieldset>
+		
+		</form>
 	<%
 		}
-	%>
+	%>	
+		
 	</div>
 </div>
 

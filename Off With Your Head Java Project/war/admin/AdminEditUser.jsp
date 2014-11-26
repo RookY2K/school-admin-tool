@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel" %>
 <%@ page import="edu.uwm.owyh.jdo.Person" %>
 <%@ page import="java.util.List" %>
 <%! @SuppressWarnings("unchecked") %>
@@ -60,9 +61,9 @@
 						   <td class="cell"><label class="field" for="accesslevel">Role: </label></td>
 						   <td class="cell"> 
 							   <select name="accesslevel">
-							     <option value="<% out.print(WrapperObject.AccessLevel.TA.getVal()); %>" <% if(user.getProperty("accesslevel") == WrapperObject.AccessLevel.TA) {%> selected <% } %>>TA</option>
-							     <option value="<% out.print(WrapperObject.AccessLevel.INSTRUCTOR.getVal()); %>" <% if(user.getProperty("accesslevel") == WrapperObject.AccessLevel.INSTRUCTOR) {%> selected <% } %>>INSTRUCTOR</option>
-							     <option value="<% out.print(WrapperObject.AccessLevel.ADMIN.getVal()); %>" <% if(user.getProperty("accesslevel") == WrapperObject.AccessLevel.ADMIN) {%> selected <% } %>>ADMIN</option>
+							     <option value="<% out.print(AccessLevel.TA.getVal()); %>" <% if(user.getProperty("accesslevel") == AccessLevel.TA) {%> selected <% } %>>TA</option>
+							     <option value="<% out.print(AccessLevel.INSTRUCTOR.getVal()); %>" <% if(user.getProperty("accesslevel") == AccessLevel.INSTRUCTOR) {%> selected <% } %>>INSTRUCTOR</option>
+							     <option value="<% out.print(AccessLevel.ADMIN.getVal()); %>" <% if(user.getProperty("accesslevel") == AccessLevel.ADMIN) {%> selected <% } %>>ADMIN</option>
 							   </select>
 						   </td>
 					   </tr>

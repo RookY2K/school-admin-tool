@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.ScriptException;
@@ -15,14 +14,12 @@ import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSpan;
-import com.gargoylesoftware.htmlunit.html.HtmlTable;
-import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptJobManager;
-
-import edu.uwm.owyh.controller.ClassList;
-import edu.uwm.owyh.mockjdo.Course;
-import edu.uwm.owyh.mockjdo.Section;
-
+/**
+ * Utility class for Scraping HTML websites using HTMLUnit.
+ * @author Vince Maiuri
+ *
+ */
 public class WebScraper {
 	private final static WebClient WEBCLIENT;
 	
@@ -64,18 +61,41 @@ public class WebScraper {
 		return page;
 	}
 	
+	/**
+	 * Closes the connection
+	 */
 	public static void closeConnection(){
 		WEBCLIENT.closeAllWindows();
 	}
 	
+	/**
+	 * Returns a the first DOM node found given the xPath expression
+	 * @param page - page from which DOM node is being searched for
+	 * @param xPathExpr - xPath expression
+	 * @return DomNode being searched for (null if not found).
+	 */
 	public static DomNode findFirstByXPath(HtmlPage page, String xPathExpr){
 		return page.getFirstByXPath(xPathExpr);
 	}
 	
+	/**
+	 * Returns a list of DOM nodes found from a given xPath expression
+	 * @param page - root DOM node being searched from
+	 * @param xPathExpr - xPath expression 
+	 * @return List of objects found from xPathExpr
+	 */
+	@SuppressWarnings("unchecked")
 	public static List<?> findByXPath(DomNode page, String xPathExpr){
-		return page.getByXPath(xPathExpr);
+		return (List<DomNode>) page.getByXPath(xPathExpr);
 	}
 	
+	/**
+	 * Find a specific anchor, then click that anchor. Return the resultant page
+	 * @param page
+	 * @param xPathExpr
+	 * @return the Page navigated to
+	 * @throws IOException
+	 */
 	public static HtmlPage findAndClickAnchor(HtmlPage page, String xPathExpr) throws IOException{
 		HtmlPage newPage = null;
 		
@@ -86,6 +106,14 @@ public class WebScraper {
 		return newPage;
 	}
 	
+	/**
+	 * Find and click specific span. 
+	 * @param page
+	 * @param xPathExpr
+	 * @return Resultant page from clicking on span
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public static HtmlPage ClickSpanAndGetResultingPage(HtmlPage page, String xPathExpr) throws IOException, InterruptedException{
 		HtmlPage newPage = null;
 		
@@ -100,69 +128,5 @@ public class WebScraper {
 		}
 		
 		return newPage;
-	}
-	
-	/* 
-	 * 1) Connect to a website
-	 * 2) Be able to find pertinent links
-	 * 3) Navigate through links to desired page
-	 * 4) Find elements of interest
-	 * 5) Get attributes from elements
-	 * 6) Get information from attributes
-	 */
-	@SuppressWarnings("unchecked")
-	public static void main(String[] args)throws IOException, InterruptedException{
-		final long startTime = System.currentTimeMillis();
-		List<Course> _courses = null;
-		String term = "Fall";
-		String baseUri = "http://www4.uwm.edu/schedule";
-		String findSpecificTermLink = "//a[@class = 'term_link' and contains(@href,'" + term + "')]";
-		String findCompSciLink = "//a[contains(@href, 'COMPSCI')]";
-		String findToggleAllSpan = "//span[@id = 'toggle_all_compsci']";
-		String findCourseHeader = "//span[@class = 'subhead']";
-		String findCourseTables = "//table[@cellpadding = '2']";
-		String findSectionRows = ".//tr[@class='body copy']";
-		
-//		WEBCLIENT.closeAllWindows();
-		
-		HtmlPage page = connectToPage(baseUri);		
-		
-		page = findAndClickAnchor(page, findSpecificTermLink);
-		page = findAndClickAnchor(page, findCompSciLink);
-		page = ClickSpanAndGetResultingPage(page, findToggleAllSpan);
-		
-		List<HtmlSpan> courseSpans = (List<HtmlSpan>) findByXPath(page, findCourseHeader);
-		_courses = 	ClassList.setCourseInfo(courseSpans);
-		
-		List<HtmlTable> courseTables = (List<HtmlTable>) findByXPath(page, findCourseTables);
-		
-		for(int i=0; i<courseTables.size(); ++i){
-			HtmlTable courseTable = courseTables.get(i);
-			Course course = _courses.get(i);
-			
-			List<HtmlTableRow> sectionRows = (List<HtmlTableRow>)findByXPath(courseTable, findSectionRows);
-			
-			course.setSection(ClassList.setAllSectionInfoForCourse(sectionRows));
-		}
-		
-		for(Course course : _courses){
-			System.out.println(course.getCourseNum() + ": " + course.getCourseName());
-			System.out.println("------------------------------------------");
-			List<Section> sections = course.getSections();
-			
-			for(Section section : sections){
-				System.out.println("Section Number: " + section.getSectionNum());
-				System.out.println("Credit Load: " + section.getCreditLoad());
-				System.out.println("Days: " + section.getDays());
-				System.out.println("Hours: " + section.getHours());
-				System.out.println("Dates: " + section.getDates());
-				System.out.println("Instructor: " + section.getInstructorName());
-				System.out.println("Room: " + section.getRoom() + "\n");				
-			}
-		}
-		final long endTime = System.currentTimeMillis();
-		
-		System.out.println("This took this long: " + (endTime - startTime));		
-		
-	}
+	}	
 }

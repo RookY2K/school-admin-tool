@@ -6,6 +6,15 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
 	<servlet>
+		<servlet-name>Scraper</servlet-name>
+		<servlet-class>edu.uwm.owyh.controller.Scraper</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Scraper</servlet-name>
+		<url-pattern>/admin/scraper</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>Index</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.Index</servlet-class>
 	</servlet>

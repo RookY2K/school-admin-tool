@@ -1,24 +1,38 @@
 package edu.uwm.owyh.model;
 
-import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
-import javax.jdo.Extent;
 import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.jdo.Transaction;
 
+import com.google.appengine.api.datastore.Key;
+
+import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.PMF;
 
+/**
+ * Datastore interaction Layer. All datastore calls should come through this
+ * layer.
+ * @author Vince Maiuri
+ *
+ */
 public final class DataStore{
-
+	
 	private static PersistenceManager _service;
 	private static DataStore _store = null;
 
+	//Private constructor
 	private DataStore(){
 		_service =  PMF.get();
 	}
 
+	/**
+	 * Public accessor for an instantiated DataStore object. 
+	 * @return an instantiated DataStore object
+	 */
 	public static DataStore getDataStore(){
 		if(_store == null || _service.isClosed()){
 			_store = new DataStore();
@@ -27,81 +41,69 @@ public final class DataStore{
 	}
 
 	/**
-	 * Returns a collection of entities based on filter from specified table
-	 * @param table
-	 * @param filter
-	 * @param ancestor
-	 * @return Collection<Entity> matching filter
-	 * @throws IllegalArgumentException if the filter is illegally constructed.
+	 * Returns a list of entities based on filter from specified table
+	 * @param table - The JDO class that is being searched for
+	 * @param filter - The JDOQL filter
+	 * @param parent - Optional parameter that will do search by parent if not null
+	 * @return List<E> matching filter
 	 */
 	@SuppressWarnings("unchecked")
-	public <E> List<E> findEntities(Class<E> table,String filter) throws IllegalArgumentException{
+	public <E, T> List<E> findEntities(Class<E> table,String filter, WrapperObject<T> parent){
 		if(_service.isClosed()) getDataStore();
 		List<E> results = null;
-//		if(filter == null){
-//			Extent<E> extent = _service.getExtent(table, false);
-//			results = new ArrayList<E>();
-//			
-//			for(E entity : extent){
-//				results.add(entity);
-//			}
-//			return results;			
-//		}
-		Query query = _service.newQuery(table);
-
+		Key parentKey = null;
 		
+		Query query = _service.newQuery(table);
+		
+		if(parent != null){
+			if(filter != null){
+				filter = "parentPerson == parent && " + filter;
+			}else{
+				filter = "parentPerson == parent";
+			}
+			parentKey = parent.getId();
+		}
 		query.setFilter(filter);
+		
+		if(parent != null) query.declareParameters("String parent");		
 
-		results = (List<E>) query.execute();
+		results = (List<E>) query.execute(parentKey);
 
 		return results;
 	}
 
 	/**
 	 * Inserts one entity into the datastore.
-	 * @param <T>
-	 * @param entity
+	 * @param <E> class of entity
+	 * @param entity to be inserted
+	 * @param id - primary key of entity to be inserted
 	 * @return true if successful
 	 */
-	public boolean insertEntity(Object entity, Object id){
+	@SuppressWarnings("unchecked")
+	public <E> boolean insertEntity(E entity, Key id){
 		if(entity == null) return false;
 		if(_service.isClosed()) getDataStore();
-		//		int retry = 3;
-		boolean success = false;
-		//		Transaction tnx = _service.currentTransaction();
-		//		tnx.begin();
-		//		while(true){
-		//			try{
-		Object ent = findEntityById(entity.getClass(),id);
+
+		E ent = (E) findEntityById(entity.getClass(),id);
 		if(ent != null) return false;
 		_service.makePersistent(entity);
-		//				tnx.commit();
-		success = true;
-		//				break;
-		//			}catch(ConcurrentModificationException cme){
-		//				if(retry == 0) throw cme;
 
-		//				--retry;
-		//			}finally{
-		//				if(tnx.isActive()){
-		//					tnx.rollback();
-		//				}
-		//			}			
-		//		}		
-		return success;
+		return true;
 	}
 
 	/**
 	 * updates an existing entity with new properties
-	 * @param <T>
+	 * @param <E> Class of entity being updated
+	 * @param id - primary key of entity being updated
 	 * @param ent - entity being updated
 	 * @return true if an entity is successfully updated
 	 */
-	public boolean updateEntity(Object ent, Object id){
+	@SuppressWarnings("unchecked")
+	public <E> boolean updateEntity(E ent, Key id){
 		if(ent == null) return false;
 		if(_service.isClosed()) getDataStore();
 
-		Object entity = findEntityById(ent.getClass(),id);
+		E entity = (E) findEntityById(ent.getClass(),id);
 		if(entity == null) return false;
 		_service.makePersistent(ent);
 
@@ -110,11 +112,12 @@ public final class DataStore{
 
 	/**
 	 * deletes an entity if the entity exists
-	 * @param <T>
+	 * @param <E> class of entity being deleted
 	 * @param ent - entity being deleted
+	 * @param id - primary key of entity being deleted
 	 * @return true if an entity is deleted
 	 */
-	public  boolean deleteEntity(Object ent, Object id){
+	public <E> boolean deleteEntity(E ent, Key id){
 		if(ent == null) return false;
 		if(_service.isClosed()) getDataStore();
 		Object entity = findEntityById(ent.getClass(),id);
@@ -123,19 +126,87 @@ public final class DataStore{
 		return true;
 	}
 
-	public Object findEntityById(Class<?> cls,
-			Object id) {
+	/**
+	 * Find an entity given it's id
+	 * @param cls - class of entity being searched for
+	 * @param id - Primary key of entity being searched for
+	 * @return the entity if found, else null
+	 */
+	public <E> E findEntityById(Class<E> cls,
+			Key id) {
 		if(cls == null || id == null) return null;
 		if(_service.isClosed()) getDataStore();
 		try{
-			Object result = _service.getObjectById(cls, id);
+			E result = _service.getObjectById(cls, id);
 			return result;
 		}catch(JDOObjectNotFoundException nfe){
 			return null;
 		}
 	}
 
+	/**
+	 * Closes the PersistenceManager
+	 */
 	public void closeDataStore(){
 		_service.close();
+	}
+
+	/**
+	 * <pre>Batch insertion of entities. Transaction based:
+	 * I.E. If any entity fails to be inserted, 
+	 * then all entities are not inserted.</pre>
+	 * @param entities - A list of entities to be inserted
+	 * @return true if all entities are inserted. Else false.
+	 */
+	public <E> boolean insertEntities(List<E> entities) {
+		int retries = 3;
+		Transaction tnx = _service.currentTransaction();
+		boolean success = false;
+		tnx.begin();
+		while(!success){
+			try{
+				_service.makePersistentAll(entities);
+				tnx.commit();
+				success = true;
+			}catch(ConcurrentModificationException cme){
+				if(retries == 0) throw cme;
+				
+				--retries;
+			}finally{
+				if(tnx.isActive()) tnx.rollback();
+			}
+		}		
+		
+		return success;
+	}
+
+	/**
+	 * <pre>Batch deletion of entities. Transaction based:
+	 * I.E. if any entity in list fails to be deleted, then
+	 * all entities in list are not deleted</pre>
+	 * @param entities - List of entities to be deleted
+	 * @return true if all entities are deleted, else false.
+	 */
+	public <E> boolean deleteAllEntities(List<E> entities) {
+		int retries = 3;
+		Transaction tnx = _service.currentTransaction();
+		boolean success = false;
+		tnx.begin();
+		
+		while(!success){
+			try{
+				_service.deletePersistentAll(entities);
+				tnx.commit();
+				success = true;
+			}catch(ConcurrentModificationException cme){
+				if(retries == 0) throw cme;
+				
+				--retries;
+			}finally{
+				if(tnx.isActive()) tnx.rollback();
+			}
+		}
+		
+		return success;		
 	}
 }

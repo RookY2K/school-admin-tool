@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel" %>
 <%@ page import="java.util.List"%>
 <%! @SuppressWarnings("unchecked")%>
 
@@ -21,9 +22,9 @@
 	<div id="body">
 			
 			<% 
-		String taAccess = Integer.toString(WrapperObject.AccessLevel.TA.getVal());
-		String instructorAccess = Integer.toString(WrapperObject.AccessLevel.INSTRUCTOR.getVal());
-		String adminAccess = Integer.toString(WrapperObject.AccessLevel.ADMIN.getVal());
+		String taAccess = Integer.toString(AccessLevel.TA.getVal());
+		String instructorAccess = Integer.toString(AccessLevel.INSTRUCTOR.getVal());
+		String adminAccess = Integer.toString(AccessLevel.ADMIN.getVal());
 		
 		String username = "";
 		if (request.getAttribute("badUserName") != null)

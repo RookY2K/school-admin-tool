@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel" %>
 <%@ page import="edu.uwm.owyh.library.Library" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
@@ -13,22 +14,20 @@
 
 <jsp:include page="/WEB-INF/templates/layout.jsp" />
 <%
+	Map<String,Object> properties = Library.propertyMapBuilder("firstname",""
+										              ,"lastname",""
+										              ,"email",""
+										              ,"phone",""
+										              ,"accesslevel",""
+										              ,"streetaddress",""
+										              ,"city",""
+										              ,"state",""
+										              ,"zip",""
+										              );
 	
-	Map<String,Object> properties = Library.propertySetBuilder("firstname",""
-												              ,"lastname",""
-												              ,"email",""
-												              ,"phone",""
-												              ,"accesslevel",""
-												              ,"streetaddress",""
-												              ,"city",""
-												              ,"state",""
-												              ,"zip",""
-												              );
-	
-	String taAccess = Integer.toString(WrapperObject.AccessLevel.TA.getVal());
-	String instructorAccess = Integer.toString(WrapperObject.AccessLevel.INSTRUCTOR.getVal());
-	String adminAccess = Integer.toString(WrapperObject.AccessLevel.ADMIN.getVal());
-
+	String taAccess = Integer.toString(AccessLevel.TA.getVal());
+	String instructorAccess = Integer.toString(AccessLevel.INSTRUCTOR.getVal());
+	String adminAccess = Integer.toString(AccessLevel.ADMIN.getVal());
 %>
 <div id="content">
  	<div id="local-nav-bar">
@@ -57,7 +56,7 @@
 		
 			String accessLevel = "";
 			  if (properties.get("accesslevel") != null && !(properties.get("accesslevel") instanceof String))
-				  	accessLevel = Integer.toString(((WrapperObject.AccessLevel) properties.get("accesslevel")).getVal());
+				  	accessLevel = Integer.toString(((AccessLevel) properties.get("accesslevel")).getVal());
 		%>
 		
 		<form action="/admin/addClient" method="post">

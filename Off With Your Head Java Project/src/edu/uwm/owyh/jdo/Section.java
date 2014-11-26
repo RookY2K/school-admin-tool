@@ -1,7 +1,6 @@
 package edu.uwm.owyh.jdo;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -11,6 +10,10 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+/**
+ * Section JDO class
+ * @author Vince Maiuri
+ */
 @PersistenceCapable
 public class Section implements Serializable, Cloneable{
 	private static final long serialVersionUID = -6125753884855098249L;
@@ -21,8 +24,9 @@ public class Section implements Serializable, Cloneable{
 	@Persistent
 	private Course parentCourse;
 	
+	//TODO implement this as a Person object (Maybe?)
 	@Persistent
-	private Person teacher;
+	private String instructor;
 
 	@PrimaryKey
 	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
@@ -34,20 +38,21 @@ public class Section implements Serializable, Cloneable{
 	@Persistent
 	private String days;
 	
+	//TODO split into start and end date
+	//TODO set type as java.util.Date
 	@Persistent
-	private double startTime;
+	private String dates;
 	
+	//TODO split into start and end time
+	//TODO set type as double
 	@Persistent
-	private double endTime;
-	
-	@Persistent
-	private Date startDay;
-	
-	@Persistent
-	private Date endDay;
+	private String hours;
 	
 	@Persistent
 	private String room;
+	
+	@Persistent
+	private String credits;
 	
 	private Section(String sectionNum, Course parentCourse){		
 		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(parentCourse.getId());
@@ -57,11 +62,16 @@ public class Section implements Serializable, Cloneable{
 		setParentCourse(parentCourse);
 	}
 
+	private Section(){
+		
+	}
+
 	/**
-	 * @return the kind
+	 * Public accessor for Section JDO
+	 * @return Section jdo
 	 */
-	public static String getKind() {
-		return KIND;
+	public static Section getSection(){
+		return new Section();
 	}
 
 	/**
@@ -72,17 +82,10 @@ public class Section implements Serializable, Cloneable{
 	}
 
 	/**
-	 * @return the parentCourse
+	 * @return the kind
 	 */
-	public Course getParentCourse() {
-		return parentCourse;
-	}
-
-	/**
-	 * @return the teacher
-	 */
-	public Person getTeacher() {
-		return teacher;
+	public static String getKind() {
+		return KIND;
 	}
 
 	/**
@@ -100,40 +103,47 @@ public class Section implements Serializable, Cloneable{
 	}
 
 	/**
-	 * @return the days
+	 * @return the parentCourse
 	 */
-	public String getDaysHeld() {
-		return days;
+	public Course getParentCourse() {
+		return parentCourse;
 	}
 
 	/**
-	 * @return the startTime
+	 * @return the dates
 	 */
-	public double getStartTime() {
-		return startTime;
+	public String getDates() {
+		return dates;
 	}
 
 	/**
-	 * @return the endTime
+	 * @return the hours
 	 */
-	public double getEndTime() {
-		return endTime;
+	public String getHours() {
+		return hours;
+	}
+
+	/**
+	 * @return the credits
+	 */
+	public String getCredits() {
+		return credits;
+	}
+
+	/**
+	 * @return the teacher
+	 */
+	public String getInstructor() {
+		return instructor;
 	}
 
 	/**
 	 * @return the startDay
 	 */
-	public Date getStartDay() {
-		return startDay;
+	public String getDays() {
+		return days;
 	}
 
-	/**
-	 * @return the endDay
-	 */
-	public Date getEndDay() {
-		return endDay;
-	}
-	
 	/**
 	 * @return the room
 	 */
@@ -142,45 +152,38 @@ public class Section implements Serializable, Cloneable{
 	}
 
 	/**
-	 * @param teacher the teacher to set
+	 * @param dates the dates to set
 	 */
-	public void setTeacher(Person teacher) {
-		this.teacher = teacher;
+	public void setDates(String dates) {
+		this.dates = dates;
+	}
+
+	/**
+	 * @param hours the hours to set
+	 */
+	public void setHours(String hours) {
+		this.hours = hours;
+	}
+
+	/**
+	 * @param credits the credits to set
+	 */
+	public void setCredits(String credits) {
+		this.credits = credits;
+	}
+	
+	/**
+	 * @param instructor the teacher to set
+	 */
+	public void setInstructor(String instructor) {
+		this.instructor = instructor;
 	}
 
 	/**
 	 * @param days the days to set
 	 */
-	public void setDaysHeld(String daysHeld) {
-		this.days = daysHeld;
-	}
-
-	/**
-	 * @param startTime the startTime to set
-	 */
-	public void setStartTime(double startTime) {
-		this.startTime = startTime;
-	}
-
-	/**
-	 * @param endTime the endTime to set
-	 */
-	public void setEndTime(double endTime) {
-		this.endTime = endTime;
-	}
-
-	/**
-	 * @param startDay the startDay to set
-	 */
-	public void setStartDay(Date startDay) {
-		this.startDay = startDay;
-	}
-
-	/**
-	 * @param endDay the endDay to set
-	 */
-	public void setEndDay(Date endDay) {
-		this.endDay = endDay;
+	public void setDays(String days) {
+		this.days = days;
 	}
 	
 	/**
@@ -190,6 +193,13 @@ public class Section implements Serializable, Cloneable{
 		this.room = room;
 	}
 	
+	/**
+	 * @param sectionNum Sets the section number
+	 */
+	public void setSectionNum(String sectionNum) {
+		this.sectionNum = sectionNum;
+	}
+
 	//Private mutator to assign the course this section belongs to
 	private void setParentCourse(Course parentCourse) {
 		if(parentCourse != null) 
@@ -201,26 +211,6 @@ public class Section implements Serializable, Cloneable{
 	private void setId(Key id) {
 		this.id = id;
 	}
-
 	
-	private void setSectionNum(String sectionNum) {
-		this.sectionNum = sectionNum;
-	}
-	
-	@Override
-	public Section clone(){
-		Section other = null;
-		try {
-			 other = (Section) super.clone();
-		} catch (CloneNotSupportedException e) {
-			//Will not happen as Section implements Cloneable
-			e.printStackTrace();
-		}
-		
-		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(other.getParentCourse().getId());
-		other.id = keyBuilder.addChild(KIND, other.sectionNum).getKey();		
-		
-		return other;
-	}
-	
+	//Utility Methods
 }

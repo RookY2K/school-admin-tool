@@ -1,8 +1,10 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel" %>
+<%@ page import="edu.uwm.owyh.jdo.Person" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 
 <%
-WrapperObject user = (WrapperObject)Auth.getSessionVariable(request, "user");
+WrapperObject<Person> user = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
 %>
 
 <div id="wrapper">
@@ -22,20 +24,22 @@ WrapperObject user = (WrapperObject)Auth.getSessionVariable(request, "user");
 						<ul class="global-dropdown-list">
 							<li class="global-link-item"><a class="global-link" href="/editprofile">Edit My Profile</a></li>
 							<li class="global-link-item"><a class="global-link" href="/editprofile#changepassword">Change Password</a></li>
-							<li class="global-link-item"><a class="global-link" href="/editofficehours">Add Office Hours</a></li>
+							<li class="global-link-item"><a class="global-link" href="/editofficehours">Add/Edit Office Hours</a></li>
 						</ul>
 					</li>
 					<li class="global-link-item"><a class="global-link" href="/userlist">Users</a></li>
 					
+					<li class="global-link-item"><a class="global-link" href="/classlist">Class List</a></li>
 					<% 
 					if (user != null) {
-						WrapperObject.AccessLevel accesslevel = (WrapperObject.AccessLevel) user.getProperty("accesslevel");
-					if (accesslevel == WrapperObject.AccessLevel.ADMIN) { %>
+						AccessLevel accesslevel = (AccessLevel) user.getProperty("accesslevel");
+					if (accesslevel == AccessLevel.ADMIN) { %>
                      
                      <li class="global-link-item"><a class="global-link" href="/">Admin</a>
 						<ul class="global-dropdown-list">
 	   						<li class="global-link-item"><a class="global-link" href="/admin/addContactInfo">Add New User</a></li>
 							<li class="global-link-item"><a class="global-link" href="/admin/addContactInfo#addcontactinfo">Add Contact Info</a></li>
+							<li class="global-link-item"><a class="global-link" href="/admin/scraper" target="_blank">Get Course List</a></li>
 							<!--<li class="global-link-item"><a class="global-link" href="/admin/addClient">Edit User Login</a></li>  -->	
 					    </ul>
 					</li>

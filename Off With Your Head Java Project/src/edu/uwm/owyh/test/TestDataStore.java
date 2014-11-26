@@ -67,7 +67,7 @@ public class TestDataStore {
 			assertEquals("Datastore table initially should be empty"
 					,0 , dataStoreClassQuery().size());
 
-			store.insertEntity(e1, e1.getName());  
+			store.insertEntity(e1, e1.getId());  
 
 			assertEquals("Datastore table after 1 insert:", 
 					1, dataStoreClassQuery().size());
@@ -129,7 +129,7 @@ public class TestDataStore {
 			String parent = KeyFactory.keyToString(TestObject.PARENTKEY);
 			filter = key + "== '" + value + "' && parentKey == '" + parent + "'";
 
-			List<TestObject> entities = store.findEntities(TABLE, filter);
+			List<TestObject> entities = store.findEntities(TABLE, filter,null);
 
 			assertEquals(1,entities.size());
 			assertEquals(entities.get(0), e2);
@@ -159,7 +159,7 @@ public class TestDataStore {
 			filter = "(" + key + " == '" + val1 + "' || " 
 					+ key + " == '" + val2 + "') && parentKey == '" + parent + "'";
 
-			List<TestObject> entities = store.findEntities(TABLE, filter);
+			List<TestObject> entities = store.findEntities(TABLE, filter, null);
 
 			assertEquals(2, entities.size());
 			assertFalse(entities.get(0).equals(entities.get(1)));
@@ -190,7 +190,7 @@ public class TestDataStore {
 			
 			String parent = KeyFactory.keyToString(TestObject.PARENTKEY);
 			String filter = "parentKey == '" + parent + "'";
-			List<TestObject> entities = store.findEntities(TABLE, filter);
+			List<TestObject> entities = store.findEntities(TABLE, filter, null);
 
 			assertEquals(4, entities.size());
 		}finally{
@@ -214,7 +214,7 @@ public class TestDataStore {
 			
 			service.makePersistent(e5);
 			
-			List<TestObject> entities = store.findEntities(TABLE, null);
+			List<TestObject> entities = store.findEntities(TABLE, null, null);
 
 			assertEquals(5, entities.size());
 		}finally{

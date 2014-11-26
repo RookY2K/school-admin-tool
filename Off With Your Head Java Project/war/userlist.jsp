@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
+<%@ page import="edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel" %>
 <%@ page import="edu.uwm.owyh.jdo.Person" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@page import="java.util.List"%>
@@ -20,7 +21,7 @@
 	
 	List<WrapperObject<Person>> users = (List<WrapperObject<Person>>) request.getAttribute("users");
 	
-	WrapperObject.AccessLevel userAccess = (WrapperObject.AccessLevel) self.getProperty("accesslevel");
+	AccessLevel userAccess = (AccessLevel) self.getProperty("accesslevel");
 %>
 <div id="content">
 	<div id="local-nav-bar">
@@ -44,7 +45,7 @@
 				<td class="cell-header">First Name</td>
 				<td class="cell-header">Email</td>
 				<td class="cell-header">Role</td>
-				<% if (userAccess == WrapperObject.AccessLevel.ADMIN) { %>
+				<% if (userAccess == AccessLevel.ADMIN) { %>
 				<td class="cell-header" colspan="3">Profile</td>
 				<% } else {%>
 				<td class="cell-header" colspan="1">Profile</td>
@@ -55,7 +56,7 @@
 			String firstname = (String) user.getProperty("firstname");
 		 	String lastname = (String) user.getProperty("lastname");
 		 	String username = (String) user.getProperty("username");
-		 	WrapperObject.AccessLevel accesslevel = (WrapperObject.AccessLevel) user.getProperty("accesslevel");
+		 	AccessLevel accesslevel = (AccessLevel) user.getProperty("accesslevel");
 			
 			%>
 			<tr>
@@ -63,11 +64,11 @@
 				<td class="cell"><%=firstname %></td>
 				<td class="cell"><%=username%></td>
 				<td class="cell">
-				<% if (accesslevel == WrapperObject.AccessLevel.TA) { %>
+				<% if (accesslevel == AccessLevel.TA) { %>
 					TA
-				<% } if (accesslevel == WrapperObject.AccessLevel.INSTRUCTOR) { %>
+				<% } if (accesslevel == AccessLevel.INSTRUCTOR) { %>
 					INSTRUCTOR
-				<% } if (accesslevel == WrapperObject.AccessLevel.ADMIN) {  %>
+				<% } if (accesslevel == AccessLevel.ADMIN) {  %>
 					ADMIN
 				<% } %>
 				</td>
@@ -80,7 +81,7 @@
 						<input type="submit" value="View" />
 					</form>
 				</td>
-				<% if (userAccess == WrapperObject.AccessLevel.ADMIN) { %>
+				<% if (userAccess == AccessLevel.ADMIN) { %>
 				
 				<%if(!userName.equalsIgnoreCase(username)){%>
 				<td class="cell">

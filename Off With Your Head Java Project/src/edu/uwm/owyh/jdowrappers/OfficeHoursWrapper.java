@@ -14,6 +14,12 @@ import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.DataStore;
 
 
+/**
+ * Wrapper class for the OfficeHours JDO class
+ * Attempts to limit direct interaction with the OfficeHours JDO class
+ * Implements WrapperObject<E> interface
+ * @author Vince Maiuri
+ */
 public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializable{
 
 	private static final long serialVersionUID = 6788916101743070177L;
@@ -28,21 +34,37 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		_officeHours = OfficeHours.getOfficeHours();
 	}
 
+	private static WrapperObject<OfficeHours> getOfficeHoursWrapper(
+			OfficeHours item) {
+		OfficeHoursWrapper other = getOfficeHoursWrapper();
+		other._officeHours = item;
+		
+		return other;
+	}
+
 	public static OfficeHoursWrapper getOfficeHoursWrapper(){
 		return new OfficeHoursWrapper();
 	}
 
-
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#getId()
+	 */
 	@Override
 	public Key getId() {
 		return _officeHours.getId();
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#getTable()
+	 */
 	@Override
 	public Class<OfficeHours> getTable() {
 		return OfficeHours.getClassname();
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#getProperty(java.lang.String)
+	 */
 	@Override
 	public Object getProperty(String propertyKey) {
 		if(propertyKey == null) return null;
@@ -52,17 +74,20 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 			return _officeHours.getDays();
 		case "starttime":
 			double startTime = _officeHours.getStartTime();
-			String startTimeString = parseTimeToString(startTime);
+			String startTimeString = Library.timeToString(startTime);
 			return startTimeString;
 		case "endtime":
 			double endTime = _officeHours.getEndTime();
-			String endTimeString = parseTimeToString(endTime);
+			String endTimeString = Library.timeToString(endTime);
 			return endTimeString;
 		default:
 			return null;
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#addObject(java.lang.String, java.util.Map)
+	 */
 	@Override
 	public List<String> addObject(String id, Map<String, Object> properties) {
 		Key parentId = Library.generateIdFromUserName(id);
@@ -89,52 +114,28 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		return parent.addChildObject(getOfficeHours());
 	}
 
-	@SuppressWarnings("unchecked")
-	private boolean checkConflict(WrapperObject<Person> parent, Map<String, Object> properties) {
-		List<OfficeHours> officeHours = (List<OfficeHours>) parent.getProperty("officehours");
-		String days = (String) properties.get("days");
-		double startTime = Library.parseTimeToDouble((String)properties.get("starttime"));
-		double endTime  = Library.parseTimeToDouble((String) properties.get("endtime"));
-		
-		for(OfficeHours conflict : officeHours){
-			boolean skip = conflict.equals(getOfficeHours());
-//			if(conflict.equals(_officeHours)) skip = true;
-			if(skip) continue;
-			String compDays = conflict.getDays();
-			double compStart = conflict.getStartTime();
-			double compEnd = conflict.getEndTime();
-			for(int i=0;i<days.length();++i){
-				String day = Character.toString(days.charAt(i));
-				if(compDays.contains(day)){
-					boolean isStartConflict = startTime >= compStart && startTime <= compEnd;
-					boolean isEndConflict = endTime >= compStart && endTime <=compEnd;
-					if(isStartConflict || isEndConflict){
-						return true;
-					}
-				}
-			}
-		}
-
-		return false;
-	}
-
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#editObject(java.lang.String, java.util.Map)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> editObject(String id, Map<String, Object> properties) {
-
+	
 		OfficeHours childJDO = getOfficeHours();
-
+	
 		if(childJDO.getId() == null) throw new IllegalStateException("Calling object is not a Persisted JDO!");
-
+	
 		Key parentId = Library.generateIdFromUserName(id);
 		List<String> errors = new ArrayList<String>();
-
+	
 		WrapperObject<Person> parent = WrapperObjectFactory.getPerson().findObjectById(parentId);
-
+	
 		if(parent == null) throw new IllegalArgumentException("No parent exists with ID: " 
 				+ id + " to edit office hours!");
-
+	
 		errors = checkAllProperties(properties);
+		
+		if(!errors.isEmpty()) return errors;
 		
 		boolean isConflict = checkConflict(parent, properties);
 		
@@ -144,21 +145,21 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		}
 		
 		List<OfficeHours> childHours = (List<OfficeHours>) parent.getProperty("officehours");
-
+	
 		OfficeHours editedHours = OfficeHours.getOfficeHours();		
 		editedHours.setDays((String) properties.get("days"));
 		editedHours.setStartTime(Library.parseTimeToDouble((String)properties.get("starttime")));
 		editedHours.setEndTime(Library.parseTimeToDouble((String)properties.get("endtime")));
-
+	
 		Boolean isDuplicate = childHours.contains(editedHours);
-
+	
 		if(isDuplicate){
 			errors.add("Duplicate Office hours!");
 			return errors;
 		}
-
+	
 		setAllProperties(properties);
-
+	
 		if(!DataStore.getDataStore().updateEntity(_officeHours, getId())){
 			errors.add("Unknown datastore error when updating!");
 		}
@@ -166,44 +167,37 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		return errors;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#removeObject(java.lang.String)
+	 */
 	@Override
 	public boolean removeObject(String id) {
 		OfficeHours childJDO = getOfficeHours();		
 		if(childJDO.getId() == null) throw new IllegalStateException("Calling object is not a Persisted JDO!");
-
+	
 		Key parentKey = Library.generateIdFromUserName(id);
-
+	
 		WrapperObject<Person> parent = WrapperObjectFactory.getPerson().findObjectById(parentKey);
-
+	
 		return parent.removeChildObject(childJDO);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#findObject(java.lang.String, edu.uwm.owyh.jdowrappers.WrapperObject)
+	 */
 	@Override
-	public List<WrapperObject<OfficeHours>> findObject(String filter) {
+	public <T> List<WrapperObject<OfficeHours>> findObject(String filter, WrapperObject<T> parent) {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<OfficeHours>> officeHours = null;
-		List<OfficeHours> entities = store.findEntities(getTable(), filter);
+		List<OfficeHours> entities = store.findEntities(getTable(), filter, parent);
 		officeHours = getOfficeHoursFromList(entities);
 		
 		return officeHours;
 	}
 
-	private List<WrapperObject<OfficeHours>> getOfficeHoursFromList(
-			List<OfficeHours> entities) {
-		List<WrapperObject<OfficeHours>> officeHours = new ArrayList<WrapperObject<OfficeHours>>();
-		for (OfficeHours item : entities)
-			officeHours.add(OfficeHoursWrapper.getOfficeHoursWrapper(item));
-		return officeHours;
-	}
-
-	private static WrapperObject<OfficeHours> getOfficeHoursWrapper(
-			OfficeHours item) {
-		OfficeHoursWrapper other = getOfficeHoursWrapper();
-		other._officeHours = item;
-		
-		return other;
-	}
-
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#findObjectById(com.google.appengine.api.datastore.Key)
+	 */
 	@Override
 	public WrapperObject<OfficeHours> findObjectById(Key id) {
 		DataStore store = DataStore.getDataStore();
@@ -214,63 +208,119 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		return getOfficeHoursWrapper(officeHours);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#getAllObjects()
+	 */
 	@Override
 	public List<WrapperObject<OfficeHours>> getAllObjects() {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<OfficeHours>> officeHours = null;
-		officeHours = getOfficeHoursFromList(store.findEntities(getTable(), null));
+		officeHours = getOfficeHoursFromList(store.findEntities(getTable(), null, null));
 	
 		return officeHours;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#addChildObject(java.lang.Object)
+	 */
 	@Override
-	public List<String> addChildObject(Object childJDO) {
+	public List<String> addChildObject(Object childJDO) throws UnsupportedOperationException {
 		throw new UnsupportedOperationException("OfficeHours do not have any children entities");
 	}
 
-
+	/* (non-Javadoc)
+	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#removeChildObject(java.lang.Object)
+	 */
 	@Override
-	public boolean removeChildObject(Object childJDO) {
+	public boolean removeChildObject(Object childJDO) throws UnsupportedOperationException{
 		throw new UnsupportedOperationException("OfficeHours do not have any children entities");
 	}
 
-	private static String parseTimeToString(double time) {
-		int hoursIn24Cycle = (int)time;
-		double fractionalMinutes = time - hoursIn24Cycle;
+	private List<String> checkAllProperties(Map<String, Object> properties) {
+		List<String> errors = new ArrayList<String>();
+		int argSize = properties.size();
+		int expectedSize = OfficeHours.numProperties();
+		String days = (String) properties.get("days");
+		String startTime = (String) properties.get("starttime");
+		String endTime = (String) properties.get("endtime");
+		double start = -1;
+		double end = -1;
+		
+		
+		if(argSize != expectedSize) 
+			throw new IllegalArgumentException("Expected " + expectedSize + " arguments. "
+					+ "Actual number was " + argSize);
+	
+		if(days == null || days.trim() == "") errors.add("Please check at least one day!");
+		else if(!days.trim().matches(DAYS_PATTERN)) throw new IllegalArgumentException("Bad pattern for days!");
+		
+		if(startTime == null || startTime.trim() == "") errors.add("Please enter a value for start time!");
+		else if(!startTime.trim().matches(HOURS_PATTERN)) throw new IllegalArgumentException("Bad pattern for startTime!");
+		start = Library.parseTimeToDouble(startTime);
+		
+		if(endTime == null || endTime.trim() == "") errors.add("Please enter a value for end time!");
+		else if(!endTime.trim().matches(HOURS_PATTERN)) throw new IllegalArgumentException("Bad pattern for endTime!");
+		end = Library.parseTimeToDouble(endTime);
+		
+		if(start >= end) errors.add("Office hours cannot start at or after end time");
+		
+		return errors;
+	}
 
-		long minutes = Math.round(fractionalMinutes * 60);
-		int hoursIn12Cycle;
-		boolean isPm = false;
-		if(hoursIn24Cycle > 12){
-			hoursIn12Cycle = hoursIn24Cycle - 12;
-			isPm = true;
-		}else{
-			hoursIn12Cycle = hoursIn24Cycle;
-			if(hoursIn12Cycle == 12) isPm = true;
+	private void setAllProperties(Map<String, Object> properties) {
+		if(properties == null) throw new NullPointerException("Properties argument is null!");
+	
+	
+		for(String propertyKey : properties.keySet()){
+			setProperty(propertyKey, properties.get(propertyKey));
 		}
-		String AmPm = isPm ? "PM" : "AM";
-		String minutesString = Long.toString(minutes);
+	}
 
-		minutesString = minutesString.length() == 1 ? "0" + minutesString : minutesString;
+	@SuppressWarnings("unchecked")
+	private boolean checkConflict(WrapperObject<Person> parent, Map<String, Object> properties) {
+		List<OfficeHours> officeHours = (List<OfficeHours>) parent.getProperty("officehours");
+		String days = (String) properties.get("days");
+		double startTime = Library.parseTimeToDouble((String)properties.get("starttime"));
+		double endTime  = Library.parseTimeToDouble((String) properties.get("endtime"));
+		
+		for(OfficeHours conflict : officeHours){
+			
+			boolean skip = conflict.equals(getOfficeHours());
+			if(skip) continue;
+			
+			String compDays = conflict.getDays();
+			double compStart = conflict.getStartTime();
+			double compEnd = conflict.getEndTime();
+			
+			for(int i=0;i<days.length();++i){
+				String day = Character.toString(days.charAt(i));
+				
+				if(compDays.contains(day)){
+					boolean isStartConflict = startTime >= compStart && startTime < compEnd;
+					boolean isEndConflict = endTime > compStart && endTime <=compEnd;
+					
+					if(isStartConflict || isEndConflict){
+						return true;
+					}
+				}
+			}
+		}
 
+		return false;
+	}
 
-
-		return "" + hoursIn12Cycle + ":" + minutesString + AmPm;
+	private List<WrapperObject<OfficeHours>> getOfficeHoursFromList(
+			List<OfficeHours> entities) {
+		List<WrapperObject<OfficeHours>> officeHours = new ArrayList<WrapperObject<OfficeHours>>();
+		for (OfficeHours item : entities)
+			officeHours.add(OfficeHoursWrapper.getOfficeHoursWrapper(item));
+		return officeHours;
 	}
 
 	private OfficeHours getOfficeHours() {
 		if(_officeHours == null) _officeHours = OfficeHours.getOfficeHours();
 
 		return _officeHours;
-	}
-
-	private void setAllProperties(Map<String, Object> properties) {
-		if(properties == null) throw new NullPointerException("Properties argument is null!");
-
-
-		for(String propertyKey : properties.keySet()){
-			setProperty(propertyKey, properties.get(propertyKey));
-		}
 	}
 
 	private void setProperty(String propertyKey, Object object) {
@@ -298,6 +348,7 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 
 	private void setDayBooleans(String propertyValue) {
 		OfficeHours officeHours = getOfficeHours();
+		resetOnDays(officeHours);
 		for(int i=0; i<propertyValue.length(); ++i){
 			switch(propertyValue.charAt(i)){
 			case 'M':
@@ -319,42 +370,13 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		}
 		
 	}
-
-	private List<String> checkAllProperties(Map<String, Object> properties) {
-		List<String> errors = new ArrayList<String>();
-		int argSize = properties.size();
-		int expectedSize = OfficeHours.numProperties();
-
-		if(argSize != expectedSize) 
-			throw new IllegalArgumentException("Expected " + expectedSize + " arguments. "
-					+ "Actual number was " + argSize);
-
-		String days = (String) properties.get("days");
-		if(days == null || days.trim() == null) errors.add("Please check at least one day!");
-		else if(!days.trim().matches(DAYS_PATTERN)) throw new IllegalArgumentException("Bad pattern for days!");
-		String startTime = (String) properties.get("starttime");
-		if(startTime == null || startTime.trim() == null) errors.add("Please enter a value for start time!");
-		else if(!startTime.trim().matches(HOURS_PATTERN)) throw new IllegalArgumentException("Bad pattern for startTime!");
-		String endTime = (String) properties.get("endtime");
-		if(endTime == null || endTime.trim() == null) errors.add("Please enter a value for end time!");
-		else if(!endTime.trim().matches(HOURS_PATTERN)) throw new IllegalArgumentException("Bad pattern for endTime!");
-
-		return errors;
+	
+	private static void resetOnDays(OfficeHours officeHours){
+		officeHours.setOnMonday(false);
+		officeHours.setOnTuesday(false);
+		officeHours.setOnWednesday(false);
+		officeHours.setOnThursday(false);
+		officeHours.setOnFriday(false);
 	}
-
-	/*
-	public static void main(String[] args){
-		for(double i = 0; i < 60; i += 1){
-			double minutes = i/60;
-			double hours = 14.0;
-
-			double time = hours + minutes;
-
-			String timeString = parseTimeToString(time);
-
-			System.out.println("The time is: " + timeString);
-		}
-	}
-	 */
 
 }

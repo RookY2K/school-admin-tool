@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
@@ -48,12 +49,14 @@ public class EditOfficeHours extends HttpServlet {
 		request.setAttribute("user", Library.makeUserProperties(self));
 		
 		/* Rewrap OfficeHour JDO back into its Wrapper */
-		List<edu.uwm.owyh.jdo.OfficeHours> officeHours = (List<edu.uwm.owyh.jdo.OfficeHours>) self.getProperty("officehours");
+/*		List<edu.uwm.owyh.jdo.OfficeHours> officeHours = (List<edu.uwm.owyh.jdo.OfficeHours>) self.getProperty("officehours");
 	 	List<WrapperObject<edu.uwm.owyh.jdo.OfficeHours>> officeHoursWrapped = new ArrayList<WrapperObject<edu.uwm.owyh.jdo.OfficeHours>>();
 	 		for (edu.uwm.owyh.jdo.OfficeHours hours : officeHours)
-	 			officeHoursWrapped.add(WrapperObjectFactory.getOfficeHours().findObjectById(hours.getId()));
+	 			officeHoursWrapped.add(WrapperObjectFactory.getOfficeHours().findObjectById(hours.getId()));*/
 		
-		request.setAttribute("officehourswrapped", officeHoursWrapped );
+		List<WrapperObject<OfficeHours>> officeHoursList = WrapperObjectFactory.getOfficeHours().findObject(null, self);
+		
+		request.setAttribute("officehourswrapped", officeHoursList );
 		request.getRequestDispatcher(request.getContextPath() + "editofficehours.jsp").forward(request, response);	
 			
 	}
@@ -106,7 +109,7 @@ public class EditOfficeHours extends HttpServlet {
 		if (request.getParameter("end_ampm") != null) endtime += request.getParameter("end_ampm");
 		
 		Map<String, Object> officehours = 
-				Library.propertySetBuilder("days",days
+				Library.propertyMapBuilder("days",days
 	    								  ,"starttime",starttime
 	    				                  ,"endtime",endtime
 											);
@@ -119,17 +122,19 @@ public class EditOfficeHours extends HttpServlet {
 				int officeHourID = Integer.valueOf(request.getParameter("officehourid"));
 				
 				/* Rewrap OfficeHour JDO back into its Wrapper */
-				List<edu.uwm.owyh.jdo.OfficeHours> officeHours = (List<edu.uwm.owyh.jdo.OfficeHours>) self.getProperty("officehours");
-			 	List<WrapperObject<edu.uwm.owyh.jdo.OfficeHours>> officeHoursWrapped = new ArrayList<WrapperObject<edu.uwm.owyh.jdo.OfficeHours>>();
-		 		for (edu.uwm.owyh.jdo.OfficeHours hours : officeHours)
-		 			officeHoursWrapped.add(WrapperObjectFactory.getOfficeHours().findObjectById(hours.getId()));
-		 		
+//				List<edu.uwm.owyh.jdo.OfficeHours> officeHours = (List<edu.uwm.owyh.jdo.OfficeHours>) self.getProperty("officehours");
+//			 	List<WrapperObject<edu.uwm.owyh.jdo.OfficeHours>> officeHoursWrapped = new ArrayList<WrapperObject<edu.uwm.owyh.jdo.OfficeHours>>();
+				
+//		 		for (edu.uwm.owyh.jdo.OfficeHours hours : officeHours)
+//		 			officeHoursWrapped.add(WrapperObjectFactory.getOfficeHours().findObjectById(hours.getId()));
+				List<WrapperObject<OfficeHours>> officeHoursWrapped = WrapperObjectFactory.getOfficeHours().findObject(null, self);
+				
 		 		if (officeHourID < 0 || officeHourID > officeHoursWrapped.size()) {
 		 			errors.add("Edit ID error!");
 		 		}
 		 		else {
 		 			if (request.getParameter("deleteofficehour") != null) {
-		 				if (! self.removeChildObject(officeHours.get(officeHourID)))
+		 				if (! officeHoursWrapped.get(officeHourID).removeObject((String)self.getProperty("username")))
 		 						errors.add("Could not Delete Hours");
 		 			}
 		 			else
@@ -152,7 +157,7 @@ public class EditOfficeHours extends HttpServlet {
 		}
 	    else {
 	    	/* Admin edit another Office Hour, go to userList */
-	    	response.sendRedirect("/profile");	
+	    	response.sendRedirect("/editofficehours");	
 	    }
 	}
 }

@@ -99,7 +99,7 @@ public class EditProfile extends HttpServlet {
 				errors.add("Password Does Not Match Original!");
 			
 			if (errors.isEmpty()) {
-				properties = Library.propertySetBuilder("password", newPassword);
+				properties = Library.propertyMapBuilder("password", newPassword);
 				errors = user.editObject(request.getParameter("email"), properties);
 			}
 		}
@@ -109,7 +109,7 @@ public class EditProfile extends HttpServlet {
 		
 		if (editprofile != null) {
 			properties = 
-				Library.propertySetBuilder("firstname",request.getParameter("firstname")
+				Library.propertyMapBuilder("firstname",request.getParameter("firstname")
 	    								  ,"lastname",request.getParameter("lastname")
 	    								  ,"email",request.getParameter("email")
 	    				                  ,"phone",request.getParameter("phone")

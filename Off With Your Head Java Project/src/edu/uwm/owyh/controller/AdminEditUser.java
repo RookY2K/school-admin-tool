@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
-import edu.uwm.owyh.jdowrappers.WrapperObject.AccessLevel;
+import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 
@@ -37,7 +37,7 @@ public class AdminEditUser extends HttpServlet {
 		AccessLevel accessLevel = AccessLevel.getAccessLevel(access);
 	    WrapperObject<Person> user = WrapperObjectFactory.getPerson();
 		Map<String, Object> properties = 
-				Library.propertySetBuilder("accesslevel",accessLevel
+				Library.propertyMapBuilder("accesslevel",accessLevel
 						                  ,"firstname", request.getParameter("firstname")
 						                  ,"lastname",request.getParameter("lastname")
 						                  ,"phone", request.getParameter("phone")

@@ -48,7 +48,7 @@ public class InitialLogin extends HttpServlet{
 
 			String userEnteredKey = request.getParameter("appkey");
 			String filter = "unlock== '" + userEnteredKey + "'";
-			boolean isKey = !(store.findEntities(SoftwareKey.class, filter).isEmpty()); 
+			boolean isKey = !(store.findEntities(SoftwareKey.class, filter, null).isEmpty()); 
 			
 			if(!isKey){
 				request.setAttribute("isKey", isKey);
@@ -70,16 +70,14 @@ public class InitialLogin extends HttpServlet{
 			@Persistent
 			private String unlock;
 			
-			private Long getId(){
-				return id;
-			}
-			
-			private String getUnlock(){
-				return unlock;
-			}
-			
+			@SuppressWarnings("unused")
 			private void setUnlock(String key){
 				unlock = key;
+			}
+			
+			@SuppressWarnings("unused")
+			private Long getId(){
+				return id;
 			}
 		}
 }
