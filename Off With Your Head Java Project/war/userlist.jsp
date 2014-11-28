@@ -80,7 +80,7 @@
 						<input type="submit" class="submit" value="View" />
 					</form>
 				</td>
-				<% if (userAccess == AccessLevel.ADMIN) { %>
+				<% if (isAdmin) { %>
 				
 				<% String myUsername = (String)self.get("email");
 					String username = (String)user.get("email");
@@ -119,7 +119,7 @@
     <div>
     	<% 	if (modifyUser != null) {	%>
   		<form action="/userlist#edituserprofile" method="post">
-  			<input type="hidden" id="modifyuser" name="modifyuse" value="<%=modifyUser.get("email") %>" />
+  			<input type="hidden" id="modifyuser" name="modifyuser" value="<%=modifyUser.get("email") %>" />
 			<table>
 				<tr>
 				   <td class="user-label">First Name:</td>
@@ -140,12 +140,16 @@
 			   <tr>
 				   <td class="user-label">Address:</td>
 				   <td class="user-label"><%=modifyUser.get("streetaddress") %> <br /> <%=modifyUser.get("city") %>
-				   <% if (modifyUser.get("city") != null && modifyUser.get("") != null) { out.print(" , "); } %>
-				   <%=modifyUser.get("zip") %>
+				   <% if (modifyUser.get("city") != null && modifyUser.get("state") != null && 
+				   		!modifyUser.get("state").equals("") && !modifyUser.get("city").equals("")) { out.print(", "); } %>
+				   <%=modifyUser.get("state") %>  <%=modifyUser.get("zip") %>
 				   </td>
 			   </tr>
 				<tr>
-				   <td class="submitinfo" colspan="2"><input type="submit" class="submit" name="editprofilesubmit" value="Edit Information"/></td>
+				   <td class="submitinfo" colspan="2">
+				   <% if (isAdmin) { %>
+				   <input type="submit" class="submit" name="editprofilesubmit" value="Edit Information"/></td>
+				   <% } %>
 				</tr>
 			</table>	
 		</form>
