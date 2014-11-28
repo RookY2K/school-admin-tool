@@ -49,8 +49,6 @@
 				<td class="cell-header">Last Name</td>
 				<td class="cell-header">First Name</td>
 				<td class="cell-header">Email</td>
-				<td class="hidden"></td><td class="hidden"></td><td class="hidden"></td>
-				<td class="hidden"></td><td class="hidden"></td>
 				<td class="cell-header">Role</td>
 				<% if (userAccess == AccessLevel.ADMIN) { %>
 				<td class="cell-header" colspan="3">Profile</td>
@@ -61,21 +59,11 @@
  		<% for (int i = 0; i < users.size(); i++) {
  				Map<String,Object> user = users.get(i);
 		 		AccessLevel accesslevel = (AccessLevel) user.get("accesslevel");
-		 		
-		 		String address = user.get("streetaddress") + "<br/>" + user.get("city");
-				if (user.get("city") != null && !user.get("city").equals("") && user.get("state") != null && !user.get("state").equals("")) address += ", ";
-				address += user.get("state") + " " + user.get("zip");
 		%>
 			<tr>
 				<td class="cell"><%=user.get("lastname") %></td>
 				<td class="cell"><%=user.get("firstname") %></td>
 				<td class="cell"><%=user.get("email") %></td>
-				<td class="hidden"><%=user.get("phone") %></td>
-				<td class="hidden"><%=address %></td>
-				<td class="hidden"><%=user.get("streetaddress") %></td>
-				<td class="hidden"><%=user.get("city") %></td>
-				<td class="hidden"><%=user.get("state") %></td>
-				<td class="hidden"><%=user.get("zip") %></td>
 				<td class="cell">
 				<% if (accesslevel == AccessLevel.TA) { %>
 					TA
@@ -89,7 +77,7 @@
 				<td class="cell">
 					<form action="/userlist#viewuserprofile" method="post">
 						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
-						<input type="submit" class="submit" value="View" onclick="viewProfile(<%=i + 1 %>);" />
+						<input type="submit" class="submit" value="View" />
 					</form>
 				</td>
 				<% if (userAccess == AccessLevel.ADMIN) { %>

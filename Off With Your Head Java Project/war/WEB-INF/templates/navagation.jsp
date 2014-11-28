@@ -8,8 +8,6 @@
 				<li class="nav"><a href="/" class="navbar1-link">Home</a>
 					<ul class="nav">
 						<li class="nav"><a href="/" class="navbar1-link">Weekly Calendar</a></li>
-					  	
-					  	<li class="nav"><a href="/officehours" class="navbar1-link">Office Hour Manager</a></li>
 					</ul>
 				</li>
 				<li class="nav"><a href="/profile" class="navbar1-link">Profile</a>

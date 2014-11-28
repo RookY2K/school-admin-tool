@@ -64,7 +64,7 @@ public class UserList extends HttpServlet {
 			throws IOException, ServletException {
 		
 		Auth auth = Auth.getAuth(request);
-		if (! auth.verifyAdmin(response)) return;
+		if (! auth.verifyUser(response)) return;
 		
 		/* This allow Admin to edit, delete user Redirected from another page */
 		if (request.getParameter("edituserprofilefromview") != null || 
