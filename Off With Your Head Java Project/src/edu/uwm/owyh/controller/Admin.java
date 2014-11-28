@@ -36,7 +36,7 @@ public class Admin extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if(!auth.verifyAdmin(response)) return;
 		
-		Map<String, Object> properties;
+		Map<String, Object> properties = null;
 		List<String> errors = new ArrayList<String>();
 		
 		AccessLevel accessLevel = null;
@@ -77,12 +77,9 @@ public class Admin extends HttpServlet {
 				errors = WrapperObjectFactory.getPerson().addObject(request.getParameter("email"), properties);
 			}
 			
-			if (!errors.isEmpty()) {
-				request.setAttribute("addnewusererrors", errors);
-				request.getRequestDispatcher(request.getContextPath() + "/admin/admin.jsp").forward(request, response);
-				return;
-			}
-			response.sendRedirect(request.getContextPath() + "/admin#addnewusercomplete");
+			request.setAttribute("addnewusererrors", errors);
+			request.setAttribute("newuser", properties);
+			request.getRequestDispatcher(request.getContextPath() + "/admin/admin.jsp").forward(request, response);
 			return;
 		}
 
@@ -105,10 +102,11 @@ public class Admin extends HttpServlet {
 			if (!errors.isEmpty()) {
 				request.setAttribute("addcontactinfoerrors", errors);
 				request.setAttribute("baduserinfo", properties);
-				request.getRequestDispatcher(request.getContextPath() + "/admin/admin.jsp").forward(request, response);	
-				return;
 			}
-			response.sendRedirect(request.getContextPath() + "/admin#addcontactinfocomplete");
+			else
+				request.setAttribute("newuser", properties);
+			
+			request.getRequestDispatcher(request.getContextPath() + "/admin/admin.jsp").forward(request, response);	
 			return;
 		}
 	

@@ -42,9 +42,9 @@ public class InitialLogin extends HttpServlet{
 			
 			/* DO NOT DELETE */
 			
-//			SoftwareKey appkey = new SoftwareKey();
-//			appkey.setUnlock("63D07BtB09");
-//			store.insertEntity(appkey, appkey.getId());
+			SoftwareKey appkey = new SoftwareKey();
+			appkey.setUnlock("63D07BtB09");
+			store.insertEntity(appkey, appkey.getId());
            
 			 
 

@@ -39,10 +39,10 @@ body {
 	background-color:#000;	
 	color:#fff; 
 	box-shadow: 0 0 4px #888888;
-	background: -webkit-linear-gradient(#fff, #878787);
-    background: -o-linear-gradient(red, #878787);
+	background: -webkit-linear-gradient(#6c6c6c, #202020);
+    background: -o-linear-gradient(#6c6c6c, #878787);
     background: -moz-linear-gradient(#6c6c6c, #202020); 
-    background: linear-gradient(red, b#000);
+    background: linear-gradient(#6c6c6c, #202020);
 }
 a.navbar1-link:link , a.navbar1-link:visited { color: #fff; text-decoration: none; display:block;   padding: 8px 12px;}
 
@@ -129,6 +129,11 @@ input.error-input {
 
 ul.message {
 	margin-left:-38px;"
+}
+
+.list-message {
+	font-size: 12px;
+	
 }
 
 td.submitinfo {

@@ -9,8 +9,6 @@
     <jsp:param name="stylesheet" value="userlist.css" />
 </jsp:include>
 
-<script src="/CSS/sortuserlist.js"></script>
-
 <jsp:include page="/WEB-INF/templates/navagation.jsp" />
 <jsp:include page="/WEB-INF/templates/genericnavagation.jsp">
 	<jsp:param name="content" value="User List" />
@@ -24,6 +22,8 @@
 
 	AccessLevel userAccess = (AccessLevel) self.get("accesslevel");
 	boolean isAdmin = (userAccess == AccessLevel.ADMIN);
+	
+	Map<String,Object> modifyUser = (Map<String,Object>) request.getAttribute("modifyuser");
 %>
 
 <div id="body" style="clear:both;">
@@ -87,7 +87,8 @@
 				</td>
 				
 				<td class="cell">
-					<form action="#viewuserprofile" method="get">
+					<form action="/userlist#viewuserprofile" method="post">
+						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
 						<input type="submit" class="submit" value="View" onclick="viewProfile(<%=i + 1 %>);" />
 					</form>
 				</td>
@@ -98,9 +99,8 @@
 					
 					if(myUsername != null && !myUsername.equals(username)){%>
 				<td class="cell">
-					<form action="/userlist" method="post">
-						<input type="hidden" name="deleteuser" value="deleteuser" />
-						<input type="hidden" name="username" value="<%=user.get("email") %>" />
+					<form action="/userlist#deleteuser" method="post">
+						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
 						<input type="submit" class="submit" value="Delete"/>
 					</form>
 				</td>
@@ -109,8 +109,9 @@
 				<%}%>
 				
 				<td class="cell">
-					<form action="#edituserprofile" method="get">
-						<input type="submit" class="submit" value="Edit" onclick="editProfile(<%=i + 1 %>);" />
+					<form action="/userlist#edituserprofile" method="post">
+						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
+						<input type="submit" class="submit" value="Edit" />
 					</form>
 				</td>
 						
@@ -128,28 +129,32 @@
 
 <aside id="viewuserprofile" class="modal">
     <div>
+    	<% 	if (modifyUser != null) {	%>
   		<form action="/userlist#edituserprofile" method="post">
-  			<input type="hidden" id="edituserprofilefromview" name="edituserprofilefromview" value="" />
+  			<input type="hidden" id="modifyuser" name="modifyuse" value="<%=modifyUser.get("email") %>" />
 			<table>
 				<tr>
 				   <td class="user-label">First Name:</td>
-				   <td class="user-label" id="firstnamemodal"></td>
+				   <td class="user-label"><%=modifyUser.get("firstname") %></td>
 				</tr>
 				<tr>
 					<td class="user-label">Last Name:</td>
-					<td class="user-label" id="lastnamemodal"></td>
+					<td class="user-label"><%=modifyUser.get("lastname") %></td>
 				</tr>
 				<tr>
 				   <td class="user-label">Email:</td>
-				   <td class="user-label" id="emailmodal"></td>
+				   <td class="user-label"><%=modifyUser.get("email") %></td>
 				</tr>
 			   <tr>
 				   <td class="user-label">Phone:</td>
-				   <td class="user-label" id="phonemodal"></td>
+				   <td class="user-label"><%=modifyUser.get("phone") %></td>
 			   </tr>
 			   <tr>
 				   <td class="user-label">Address:</td>
-				   <td class="user-label" id="addressmodal"></td>
+				   <td class="user-label"><%=modifyUser.get("streetaddress") %> <br /> <%=modifyUser.get("city") %>
+				   <% if (modifyUser.get("city") != null && modifyUser.get("") != null) { out.print(" , "); } %>
+				   <%=modifyUser.get("zip") %>
+				   </td>
 			   </tr>
 				<tr>
 				   <td class="submitinfo" colspan="2"><input type="submit" class="submit" name="editprofilesubmit" value="Edit Information"/></td>
@@ -164,6 +169,7 @@
     <div>
 		<p><strong>Contact Information</strong></p>
 		<% 	List<String> editProfileErrors = (List<String>) request.getAttribute("edituserprofileerrors");
+			String goodEditUser = (String) request.getAttribute("goodedituser");
 			if (editProfileErrors != null) { %>
 				<ul class="message">
 		<%	for (String error : editProfileErrors) { %>
@@ -172,34 +178,42 @@
 				</ul>
 		<% } %>
 		
-		<% Map<String,Object> user = (Map<String,Object>) request.getAttribute("user");	
+	<% if (goodEditUser != null) { %>
+		<p><span class="good-message">This Contact Information was successfully edited!</span> </p>
+		<% } %>
+		
+		<% 	if (modifyUser != null) {
 			String state ="";
-			if (user != null) state = (String) user.get("state");
+			state = (String) modifyUser.get("state");
 		%>
 		<form action="/userlist#edituserprofile" method="post">
 			<input type="hidden" name="edituserprofile" id="edituserprofile" value="edituserprofile" />
-			<input type="hidden" name="email" id="email" value="<% if (user != null) out.print(user.get("email")); %>" />
-			<input type="hidden" name="username" id="username" value="<% if (user != null) out.print(user.get("email")); %>" />
+			<input type="hidden" name="email" id="email" value="<%=modifyUser.get("email") %>" />
+			<input type="hidden" name="username" id="username" value="<%=modifyUser.get("email") %>" />
 			<table>
 				<tr>
+				   <td class="user-label">Email:</td>
+				   <td class="user-label"><input type="text" value="<%=modifyUser.get("email") %>" disabled /></td>
+				</tr>
+				<tr>
 				   <td class="user-label">First Name:</td>
-				   <td class="user-label"><input type = "text" name="firstname" id="firstname" value="<% if (user != null) out.print(user.get("firstname")); %>" required /></td>
+				   <td class="user-label"><input type = "text" name="firstname" id="firstname" value="<%=modifyUser.get("firstname") %>" required /></td>
 				</tr>
 				<tr>
 					<td class="user-label">Last Name:</td>
-					<td class="user-label"><input type = "text" name="lastname" id="lastname" value="<% if (user != null) out.print(user.get("lastname")); %>" required /></td>
+					<td class="user-label"><input type = "text" name="lastname" id="lastname" value="<%=modifyUser.get("lastname") %>" required /></td>
 				</tr>
 				<tr>
 				   <td class="user-label">Phone:</td>
-				   <td class="user-label"><input type = "text" name="phone" id="phone" value="<% if (user != null) out.print(user.get("phone")); %>" /></td>
+				   <td class="user-label"><input type = "text" name="phone" id="phone" value="<%=modifyUser.get("phone") %>" /></td>
 				</tr>
 				<tr>
 					<td class="user-label">Address:</td>
-					<td class="user-label"><input type = "text" name="streetaddress" id="streetaddress" value="<% if (user != null) out.print(user.get("streetaddress")); %>"/></td>
+					<td class="user-label"><input type = "text" name="streetaddress" id="streetaddress" value="<%=modifyUser.get("streetaddress") %>"/></td>
 				</tr>
 				<tr>
 					<td class="user-label">City & State:</td>
-					<td class="user-label"><input type = "text" name="city" id="city" value="<% if (user != null) out.print(user.get("city")); %>"/>
+					<td class="user-label"><input type = "text" name="city" id="city" value="<%=modifyUser.get("city") %>"/>
 						<jsp:include page="/WEB-INF/templates/stateselect.jsp">
 					    	<jsp:param name="selected" value='<%=state %>' />
 						</jsp:include>		
@@ -207,41 +221,48 @@
 				</tr>
 				<tr>
 				   <td class="user-label">Zip Code:</td>
-				   <td class="user-label"><input type = "text" name="zip" id="zip" value="<% if (user != null) out.print(user.get("zip")); %>"/></td>
+				   <td class="user-label"><input type = "text" name="zip" id="zip" value="<%=modifyUser.get("zip") %>"/></td>
 				</tr>
 				<tr>
 				   <td class="submitinfo" colspan="2"><input type="submit" class="submit" name="edituserprofilesubmit" value="Edit Information"/></td>
 				</tr>
 			</table>
 		</form>
-		
+		<ul class="message">
+			<li class="list-message">First Name, Last Name required.</li>
+			<li class="list-message">Phone Number must be in a correct format<br />
+		Area Code Follow By 7 Digit Phone Number<br />
+		Each Section can be separated by space, comma or dash<br />
+		(414) 123 4567, 414.123.4567, 414-123-4567, 4141234567
+		<% } %>
+		</ul>
+		<% } %>
 		<a href="#close" title="Close"  class="unselectable">Close</a>
     </div>
 </aside>
-
-<aside id="userprofilechanged" class="modal">
-    <div>
-		<a href="#close" title="Close" class="unselectable">Close</a>
-		<p><strong>Contact Information</strong></p>
-		<ul class="message" style="margin-top:0px;">
-			<li class="good-message">Your contact information was successfully changed.</li>
-		</ul>
-		<form action="#close" method="post">
-			<input type="submit" class="submit" name="gotoprofile" value="Confirm"/>
-		</form>
-    </div>
-</aside>
-
-<aside id="userdeleted" class="modal">
+<aside id="deleteuser" class="modal">
     <div>
 		<a href="#close" title="Close" class="unselectable">Close</a>
 		<p><strong>Delete User</strong></p>
+		<% if (modifyUser == null) { %>
 		<ul class="message" style="margin-top:0px;">
-			<li class="good-message">User has been successfully changed.</li>
+			<li class="good-message">User has been successfully deleted.</li>
 		</ul>
 		<form action="#close" method="post">
 			<input type="submit" class="submit" name="gotoprofile" value="Confirm"/>
 		</form>
+		<% }
+		else {
+		%>
+		<ul class="message" style="margin-top:0px;">
+			<li class="warning-message">Are you sure you want to delete <%=modifyUser.get("email") %>?</li>
+		</ul>
+		<form action="/userlist#userdeleted" method="post">
+			<input type="hidden" name="deleteuserconfirm" value="deleteuserconfirm" />
+			<input type="hidden" name="username" value="<%=modifyUser.get("email") %>" />
+			<input type="submit" class="submit" name="gotoprofile" value="Delete"/>
+		</form>
+		<% } %>
     </div>
 </aside>
 

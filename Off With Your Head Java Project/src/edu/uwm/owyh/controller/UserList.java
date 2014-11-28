@@ -29,7 +29,7 @@ public class UserList extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyUser(response)) return;
 		
-		/* Any Login User View User List */
+		/* Get user info and all userlist */
 		WrapperObject<Person> self = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
 		List<WrapperObject<Person>> clients = self.getAllObjects();
 		
@@ -38,12 +38,19 @@ public class UserList extends HttpServlet {
 		for (WrapperObject<Person> client : clients)
 			clientList.add(Library.makeUserProperties(client));
 		
+		/* Admin edit User Profile, This can come from multiple places */
 		String username = request.getParameter("edituserprofilefromview");
+		if (request.getParameter("viewadduserprofile") != null)
+			username = request.getParameter("viewadduserprofile");
+		else if (request.getParameter("modifyuser") != null)
+			username = request.getParameter("modifyuser");
+		else if (request.getParameter("edituserprofilefromadmin") != null)
+			username = request.getParameter("edituserprofilefromadmin");
 		if (username != null) {
 			Key id = Library.generateIdFromUserName(username);
 			WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
 			if (user != null)
-				request.setAttribute("user", Library.makeUserProperties(user));				
+				request.setAttribute("modifyuser", Library.makeUserProperties(user));				
 		}		
 		
 		request.setAttribute("self", Library.makeUserProperties(self));
@@ -59,12 +66,14 @@ public class UserList extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyAdmin(response)) return;
 		
-		/* User Went From View To Edit Profile */
-		if (request.getParameter("edituserprofilefromview") != null) {
+		/* This allow Admin to edit, delete user Redirected from another page */
+		if (request.getParameter("edituserprofilefromview") != null || 
+				request.getParameter("modifyuser") != null || 
+				request.getParameter("edituserprofilefromadmin") != null) {
 			doGet(request, response);
 			return;
 		}
-		
+
 		List<String> errors = new ArrayList<String>();
 		WrapperObject<Person> user = null;
 		
@@ -86,9 +95,9 @@ public class UserList extends HttpServlet {
 		}
 
 		/* Admin delete a User */
-		if (request.getParameter("deleteuser") != null) {
+		if (request.getParameter("deleteuserconfirm") != null) {
 			if (WrapperObjectFactory.getPerson().removeObject((String)user.getProperty("username"))) {
-				response.sendRedirect(request.getContextPath() + "/userlist#userdeleted");	
+				response.sendRedirect(request.getContextPath() + "/userlist#deleteuser");	
 				return;
 			}
 			errors.add("Could not delete user!");
@@ -97,8 +106,7 @@ public class UserList extends HttpServlet {
 		
 		/* Admin edit someone's Profile */
 		Map<String, Object> properties;
-		request.setAttribute("user", Library.makeUserProperties(user));
-		
+
 		if (request.getParameter("edituserprofile") != null) {
 			properties = 
 					Library.propertyMapBuilder("firstname",request.getParameter("firstname")
@@ -112,12 +120,11 @@ public class UserList extends HttpServlet {
 				             );
 				errors = user.editObject(request.getParameter("email"), properties);
 				
+				request.setAttribute("modifyuser", properties);
 				
-				if (errors.isEmpty()) {
-					response.sendRedirect(request.getContextPath() + "/userlist#userprofilechanged");
-					return;
-				}
 				request.setAttribute("edituserprofileerrors", errors);
+				if (errors.isEmpty())
+					request.setAttribute("goodedituser", "true");
 				doGet(request, response);
 				return;
 		}

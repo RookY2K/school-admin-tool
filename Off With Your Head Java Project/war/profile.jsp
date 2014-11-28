@@ -195,7 +195,7 @@
 				</tr>
 			</table>
 		</form>
-		<ul class="message"><li>Phone Number must be in a correct format<br />
+		<ul class="message"><li class="list-message">Phone Number must be in a correct format<br />
 		Area Code Follow By 7 Digit Phone Number<br />
 		Each Section can be separated by space, comma or dash<br />
 		(414) 123 4567, 414.123.4567, 414-123-4567, 4141234567</li></ul>
