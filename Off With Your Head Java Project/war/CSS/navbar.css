@@ -1,0 +1,65 @@
+.logout {
+	float:right;
+	font: bold 12px/18px sans-serif;
+	cursor: pointer;
+}
+.logout:hover {
+	background: #000;
+}
+
+a.nav-link:link { color: #fff; text-decoration: none; }
+a.nav-link:visited { color: #fff; text-decoration: none; }
+a.nav-link:hover, a.nav-link:active { color: #fff; text-decoration: none; }
+
+ul.nav {
+  text-align: left;
+  display: inline;
+  margin: 0;
+  padding: 15px 4px 17px 0;
+  list-style: none;
+}
+ul.nav li.nav {
+  font: bold 12px/18px sans-serif;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  -webkit-transition: all 0.4s ease-in;
+  -moz-transition: all 0.4s ease-in;
+  -ms-transition: all 0.4s ease-in;
+  -o-transition: all 0.4s ease-in;
+  transition: all 0.4s ease-in;
+}
+ul.nav li.nav:hover {
+  background: #000;
+  color: #fff;
+}
+ul.nav li.nav ul.nav {
+  padding: 0;
+  position: absolute;
+  top: 34px;
+  left: 0;
+  width: 150px;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transiton: all 0.4s ease-in;
+  -moz-transition: all 0.4s ease-in;
+  -ms-transition: all 0.4s ease-in;
+  -o-transition: all 0.4s ease-in;
+  -transition: all 0.4s ease-in;
+  overflow: none;
+}
+ul.nav li.nav ul.nav li.nav { 
+  background: #555; 
+  display: block; 
+  color: #fff;
+  text-shadow: 0 -1px 0 #000;
+}
+ul.nav li.nav ul.nav li.nav:hover { background: #666; }
+ul.nav li.nav:hover ul.nav {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}

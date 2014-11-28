@@ -34,7 +34,7 @@ public class Index extends HttpServlet {
 		
 		if (isLogin) {
 			if (isAdmin){ 
-				response.sendRedirect(request.getContextPath() + "/admin/admin.jsp");
+				response.sendRedirect(request.getContextPath() + "/admin");
 				return;
 			}
 			else{

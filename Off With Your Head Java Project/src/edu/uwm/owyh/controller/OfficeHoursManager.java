@@ -20,7 +20,7 @@ import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 
 @SuppressWarnings("serial")
-public class EditOfficeHours extends HttpServlet {
+public class OfficeHoursManager extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -32,7 +32,7 @@ public class EditOfficeHours extends HttpServlet {
 		WrapperObject<Person> self = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
 		Key myId = Library.generateIdFromUserName((String) self.getProperty("username"));
 		self = WrapperObjectFactory.getPerson().findObjectById(myId);
-		//request.setAttribute("self", Library.makeUserProperties(self));
+		request.setAttribute("self", Library.makeUserProperties(self));
 		
 		/* Admin edit another User's Profile 
 		String username = request.getParameter("username");
@@ -45,19 +45,11 @@ public class EditOfficeHours extends HttpServlet {
 		/* User Edit there Own Profile 
 		if (user == null)
 			user = self;*/
-		
-		request.setAttribute("user", Library.makeUserProperties(self));
-		
-		/* Rewrap OfficeHour JDO back into its Wrapper */
-/*		List<edu.uwm.owyh.jdo.OfficeHours> officeHours = (List<edu.uwm.owyh.jdo.OfficeHours>) self.getProperty("officehours");
-	 	List<WrapperObject<edu.uwm.owyh.jdo.OfficeHours>> officeHoursWrapped = new ArrayList<WrapperObject<edu.uwm.owyh.jdo.OfficeHours>>();
-	 		for (edu.uwm.owyh.jdo.OfficeHours hours : officeHours)
-	 			officeHoursWrapped.add(WrapperObjectFactory.getOfficeHours().findObjectById(hours.getId()));*/
-		
+	
 		List<WrapperObject<OfficeHours>> officeHoursList = WrapperObjectFactory.getOfficeHours().findObject(null, self);
 		
-		request.setAttribute("officehourswrapped", officeHoursList );
-		request.getRequestDispatcher(request.getContextPath() + "editofficehours.jsp").forward(request, response);	
+		request.setAttribute("officehours", Library.makeWrapperProperties(officeHoursList));
+		request.getRequestDispatcher(request.getContextPath() + "officehours.jsp").forward(request, response);	
 			
 	}
 	
@@ -70,7 +62,6 @@ public class EditOfficeHours extends HttpServlet {
 		if (! auth.verifyUser(response)) return;		
 		
 		/* Admin attempt to start editing profile from UserList */
-		//String username = request.getParameter("username");
 		String email = request.getParameter("email");
 		if (email == null) {
 			doGet(request, response);
@@ -115,35 +106,37 @@ public class EditOfficeHours extends HttpServlet {
 											);
 		
 		List<String> errors = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 
 
 		try {
 			if (addofficehour == null && request.getParameter("officehourid") != null) {
 				int officeHourID = Integer.valueOf(request.getParameter("officehourid"));
 				
-				/* Rewrap OfficeHour JDO back into its Wrapper */
-//				List<edu.uwm.owyh.jdo.OfficeHours> officeHours = (List<edu.uwm.owyh.jdo.OfficeHours>) self.getProperty("officehours");
-//			 	List<WrapperObject<edu.uwm.owyh.jdo.OfficeHours>> officeHoursWrapped = new ArrayList<WrapperObject<edu.uwm.owyh.jdo.OfficeHours>>();
+				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(null, self);
 				
-//		 		for (edu.uwm.owyh.jdo.OfficeHours hours : officeHours)
-//		 			officeHoursWrapped.add(WrapperObjectFactory.getOfficeHours().findObjectById(hours.getId()));
-				List<WrapperObject<OfficeHours>> officeHoursWrapped = WrapperObjectFactory.getOfficeHours().findObject(null, self);
-				
-		 		if (officeHourID < 0 || officeHourID > officeHoursWrapped.size()) {
+		 		if (officeHourID < 0 || officeHourID > officeHours.size()) {
 		 			errors.add("Edit ID error!");
 		 		}
 		 		else {
 		 			if (request.getParameter("deleteofficehour") != null) {
-		 				if (! officeHoursWrapped.get(officeHourID).removeObject((String)self.getProperty("username")))
-		 						errors.add("Could not Delete Hours");
+		 				if (! officeHours.get(officeHourID).removeObject((String)self.getProperty("username")))
+		 					errors.add("Could not Delete Hours");
+		 				else 
+		 					messages.add("Office Hours was successfully deleted.");
 		 			}
-		 			else
-		 				errors = officeHoursWrapped.get(officeHourID).editObject(request.getParameter("email"), officehours);
+		 			else {
+		 				errors = officeHours.get(officeHourID).editObject(request.getParameter("email"), officehours);
+		 				if (errors.isEmpty())
+		 					messages.add("Office Hours was successfully added.");
+		 			}
 		 		}
 				
 			}
 			else {
-				errors = WrapperObjectFactory.getOfficeHours().addObject(request.getParameter("email"), officehours);	
+				errors = WrapperObjectFactory.getOfficeHours().addObject(request.getParameter("email"), officehours);
+ 				if (errors.isEmpty())
+ 					messages.add("Office Hours was successfully added.");
 			}
 		}
 		catch (IllegalArgumentException e) {
@@ -157,7 +150,8 @@ public class EditOfficeHours extends HttpServlet {
 		}
 	    else {
 	    	/* Admin edit another Office Hour, go to userList */
-	    	response.sendRedirect("/editofficehours");	
+	    	request.setAttribute("messages", messages);
+	    	doGet(request, response);
 	    }
 	}
 }

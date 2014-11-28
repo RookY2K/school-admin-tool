@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.datastore.Key;
+
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.DataStore;
 
@@ -25,7 +27,7 @@ public class InitialLogin extends HttpServlet{
 			if(noUsers != null && noUsers.booleanValue()){
 												
 				Auth.setSessionVariable(request, "noUsers", noUsers);
-				response.sendRedirect(request.getContextPath() + "/initiallogin.jsp");
+				request.getRequestDispatcher(request.getContextPath() + "/initiallogin.jsp").forward(request, response);
 				return;
 			}else{
 				request.getRequestDispatcher("/").forward(request, response);
@@ -52,7 +54,7 @@ public class InitialLogin extends HttpServlet{
 			
 			if(!isKey){
 				request.setAttribute("isKey", isKey);
-				request.getRequestDispatcher(request.getContextPath() + "/initiallogin.jsp").forward(request, response);;
+				request.getRequestDispatcher(request.getContextPath() + "/initiallogin.jsp").forward(request, response);
 				return;
 			}else{
 				Auth.setSessionVariable(request, "isAddAdmin", true);
@@ -66,7 +68,7 @@ public class InitialLogin extends HttpServlet{
 			
 			@PrimaryKey
 			@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-			private Long id;
+			private Key id;
 			@Persistent
 			private String unlock;
 			
@@ -76,7 +78,7 @@ public class InitialLogin extends HttpServlet{
 			}
 			
 			@SuppressWarnings("unused")
-			private Long getId(){
+			private Key getId(){
 				return id;
 			}
 		}
