@@ -24,24 +24,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	
 	<servlet>
-		<servlet-name>AddClient</servlet-name>
-		<servlet-class>edu.uwm.owyh.controller.AddClient</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>AddClient</servlet-name>
-		<url-pattern>/admin/addclient</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
-		<servlet-name>AddContactInfo</servlet-name>
-		<servlet-class>edu.uwm.owyh.controller.AddContactInfo</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>AddContactInfo</servlet-name>
-		<url-pattern>/admin/addcontactinfo</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
 		<servlet-name>Admin</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.Admin</servlet-class>
 	</servlet>
@@ -51,30 +33,12 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	
 	<servlet>
-	<servlet-name>AdminEditUser</servlet-name>
-	<servlet-class>edu.uwm.owyh.controller.AdminEditUser</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>AdminEditUser</servlet-name>
-		<url-pattern>/admin/adminEditUser</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
 		<servlet-name>InitialLogin</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.InitialLogin</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>InitialLogin</servlet-name>
 		<url-pattern>/initiallogin</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
-		<servlet-name>AddAdmin</servlet-name>
-		<servlet-class>edu.uwm.owyh.controller.AddAdmin</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>AddAdmin</servlet-name>
-		<url-pattern>/admin/addAdmin</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>
@@ -94,16 +58,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>Profile</servlet-name>
 		<url-pattern>/profile</url-pattern>
 	</servlet-mapping>
-	
-	<servlet>
-		<servlet-name>EditProfile</servlet-name>
-		<servlet-class>edu.uwm.owyh.controller.EditProfile</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>EditProfile</servlet-name>
-		<url-pattern>/editprofile</url-pattern>
-	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>OfficeHoursManager</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.OfficeHoursManager</servlet-class>
