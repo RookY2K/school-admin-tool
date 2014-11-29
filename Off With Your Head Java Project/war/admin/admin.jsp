@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.model.Auth" %>
+<%@ page import="edu.uwm.owyh.library.LocalDevLibrary" %>
 
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
@@ -14,7 +15,7 @@
 		<ul id="local-list">
 	      <li><a class="nav-link" href="/admin/addContactInfo">Add New User</a></li>
 	      <li><a class="nav-link" href="/admin/addContactInfo#addcontactinfo">Add Contact Info</a></li>
-	      <li><a class="nav-link" href="/admin/scraper" target="_blank">Get Course List</a></li>
+	      <li><a class="nav-link" href="<%=LocalDevLibrary.getScraperHref()%>">Get Course List</a></li>
 		</ul>
 	</div>
 	  	

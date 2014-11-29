@@ -10,6 +10,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+
 /**
  * Section JDO class
  * @author Vince Maiuri
@@ -59,7 +60,6 @@ public class Section implements Serializable, Cloneable{
 		
 		setId(keyBuilder.addChild(KIND, sectionNum).getKey());
 		setSectionNum(sectionNum);
-		setParentCourse(parentCourse);
 	}
 
 	private Section(){
@@ -70,8 +70,8 @@ public class Section implements Serializable, Cloneable{
 	 * Public accessor for Section JDO
 	 * @return Section jdo
 	 */
-	public static Section getSection(){
-		return new Section();
+	public static Section getSection(String sectionNum, Course parentCourse){
+		return new Section(sectionNum, parentCourse);
 	}
 
 	/**

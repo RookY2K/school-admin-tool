@@ -8,6 +8,7 @@ import java.util.Map;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.jdo.ContactInfo;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
@@ -152,7 +153,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		case "zip":
 			return _person.getContactInfo().getZip();
 		case "officehours":
-			return _person.getOfficeHours();
+			return WrapperObjectFactory.getOfficeHours().findObject(null, this);
 		default:
 			return null;
 		}

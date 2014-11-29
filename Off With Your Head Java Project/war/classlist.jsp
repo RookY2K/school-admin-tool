@@ -74,7 +74,7 @@
 		Course selectedCourse = (Course)request.getAttribute("selectedcourse");
 		boolean isAdmin = Auth.getAuth(request).verifyAdmin();
 		if(selectedCourse != null){
-			int courseNum = selectedCourse.getCourseNum();
+			String courseNum = selectedCourse.getCourseNum();
 			String courseName = selectedCourse.getCourseName();
 			List<Section>sections = selectedCourse.getSections();
 	

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xmlns="http://java.sun.com/xml/ns/javaee"
-xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
 
 	<servlet>
 		<servlet-name>Scraper</servlet-name>
@@ -15,6 +15,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 
 	<servlet>
+		<servlet-name>LocalScraper</servlet-name>
+		<servlet-class>edu.uwm.owyh.controller.LocalScraper</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LocalScraper</servlet-name>
+		<url-pattern>/admin/localscraper</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>Index</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.Index</servlet-class>
 	</servlet>
@@ -22,7 +31,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>Index</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>Login</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.Login</servlet-class>
@@ -31,7 +40,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>Login</servlet-name>
 		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>AddClient</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.AddClient</servlet-class>
@@ -40,7 +49,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>AddClient</servlet-name>
 		<url-pattern>/admin/addClient</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>AddContactInfo</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.AddContactInfo</servlet-class>
@@ -49,16 +58,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>AddContactInfo</servlet-name>
 		<url-pattern>/admin/addContactInfo</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
-	<servlet-name>AdminEditUser</servlet-name>
-	<servlet-class>edu.uwm.owyh.controller.AdminEditUser</servlet-class>
+		<servlet-name>AdminEditUser</servlet-name>
+		<servlet-class>edu.uwm.owyh.controller.AdminEditUser</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>AdminEditUser</servlet-name>
 		<url-pattern>/admin/adminEditUser</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>InitialLogin</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.InitialLogin</servlet-class>
@@ -67,7 +76,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>InitialLogin</servlet-name>
 		<url-pattern>/initiallogin</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>AddAdmin</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.AddAdmin</servlet-class>
@@ -76,7 +85,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>AddAdmin</servlet-name>
 		<url-pattern>/admin/addAdmin</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>UserList</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.UserList</servlet-class>
@@ -85,7 +94,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>UserList</servlet-name>
 		<url-pattern>/userlist</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>Profile</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.Profile</servlet-class>
@@ -94,7 +103,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>Profile</servlet-name>
 		<url-pattern>/profile</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>EditProfile</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.EditProfile</servlet-class>
@@ -103,7 +112,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>EditProfile</servlet-name>
 		<url-pattern>/editprofile</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>EditOfficeHours</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.EditOfficeHours</servlet-class>
@@ -112,7 +121,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>EditOfficeHours</servlet-name>
 		<url-pattern>/editofficehours</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>ClassList</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.ClassList</servlet-class>
@@ -121,8 +130,8 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>ClassList</servlet-name>
 		<url-pattern>/classlist</url-pattern>
 	</servlet-mapping>
-	
-	
+
+
 	<servlet>
 		<servlet-name>HelloWorld</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.HelloWorld</servlet-class>
@@ -131,7 +140,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>HelloWorld</servlet-name>
 		<url-pattern>/helloworld</url-pattern>
 	</servlet-mapping>
-	
+
 	<welcome-file-list>
 		<welcome-file>Index</welcome-file>
 	</welcome-file-list>

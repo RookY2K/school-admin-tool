@@ -4,9 +4,7 @@
 <%@ page import="edu.uwm.owyh.factories.WrapperObjectFactory" %>
 <%@ page import="edu.uwm.owyh.library.Library"%>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="java.util.Set" %>
 <%! @SuppressWarnings("unchecked") %>
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
@@ -61,10 +59,7 @@
 				<tr>
 					<td class="user-label"> Office Hours: </td><td class="user-data">
 					
-				 <% List<OfficeHours> officeHours = (List<OfficeHours>) user.get("officehours");
-				 	List<WrapperObject<OfficeHours>> officeHoursWrapped = new ArrayList<WrapperObject<OfficeHours>>();
-				 	for (OfficeHours hours : officeHours)
-			 			officeHoursWrapped.add(WrapperObjectFactory.getOfficeHours().findObjectById(hours.getId()));
+				 <% List<WrapperObject<OfficeHours>> officeHoursWrapped = (List<WrapperObject<OfficeHours>>) user.get("officehours");
 
 				 	for(WrapperObject<OfficeHours> hours : officeHoursWrapped) {
 		 			  	String startTime = (String) hours.getProperty("starttime");

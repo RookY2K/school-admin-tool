@@ -1,0 +1,317 @@
+COURSE;101;Introduction to PC Application Software
+3;09/02-12/11;MW;5:00 PM-6:15 PM;McNally, Paul;EMS E285;LEC 001
+COURSE;113;Introduction to Web Document Production
+3;09/02-12/11;W;2:00 PM-3:45 PM;Rock, Jayson;EMS E170;LEC 401
+;09/02-12/11;M;2:00 PM-3:45 PM;Mulvey, Matthew;EMS 942;LAB 801
+COURSE;150;Survey of Computer Science
+3;09/02-12/11;TR;2:00 PM-3:15 PM;Sorenson, Robert;EMS E190;LEC 001
+3;09/02-12/11;MW;11:00 AM-12:15 PM;Jones, Sean;LAP 160;LEC 002
+COURSE;201;Introductory Computer Programming
+3;09/02-12/11;;-;Rock, Jayson;ONLINE WEB;LEC 203
+3;09/02-12/11;MW;1:00 PM-1:50 PM;Sorenson, Robert;EMS E180;LEC 401
+3;09/02-12/11;TR;12:00 PM-12:50 PM;Samara, Kamil;EMS E180;LEC 402
+;09/02-12/11;T;11:00 AM-12:50 PM;Sarkar, Md Abdul Halim;EMS W130;LAB 801
+;09/02-12/11;T;12:00 PM-1:50 PM;Alkhushayni, Suboh;EMS E150;LAB 802
+;09/02-12/11;T;1:00 PM-2:50 PM;Shatnawi, Ahmed;EMS E160;LAB 803
+;09/02-12/11;T;3:00 PM-4:50 PM;Mulvey, Matthew;EMS W120;LAB 804
+;09/02-12/11;T;4:00 PM-5:50 PM;Alkhushayni, Suboh;EMS W130;LAB 805
+;09/02-12/11;T;5:00 PM-6:50 PM;Guo, Ye;EMS W120;LAB 806
+;09/02-12/11;W;8:00 AM-9:50 AM;Ghiasvand, Omid;EMS W130;LAB 807
+;09/02-12/11;W;9:00 AM-10:50 AM;Xu, Ming;EMS W120;LAB 808
+;09/02-12/11;W;10:00 AM-11:50 AM;Guo, Ye;EMS W130;LAB 809
+;09/02-12/11;W;11:00 AM-12:50 PM;Imtiaz, Asher;EMS E160;LAB 810
+;09/02-12/11;W;2:00 PM-3:50 PM;Li, Yonglun;EMS E270;LAB 811
+;09/02-12/11;W;4:00 PM-5:50 PM;Sarkar, Md Abdul Halim;EMS W130;LAB 812
+;09/02-12/11;R;2:00 PM-3:50 PM;Li, Yonglun;EMS E150;LAB 814
+;09/02-12/11;R;3:00 PM-4:50 PM;Sarkar, Md Abdul Halim;EMS W130;LAB 815
+;09/02-12/11;F;10:00 AM-11:50 AM;Shatnawi, Ahmed;EMS E150;LAB 816
+;09/02-12/11;F;11:00 AM-12:50 PM;Mulvey, Matthew;EMS E160;LAB 817
+;09/02-12/11;F;12:00 PM-1:50 PM;Ghazaleh, Husam;EMS W120;LAB 818
+COURSE;251;Intermediate Computer Programming
+3;09/02-12/11;MW;9:00 AM-9:50 AM;Munson, Ethan;EMS E190;LEC 401
+;09/02-12/11;M;11:00 AM-12:50 PM;Mandal, Ritankar;EMS W120;LAB 801
+;09/02-12/11;M;1:00 PM-2:50 PM;Rostami, Reihaneh;EMS W120;LAB 802
+;09/02-12/11;M;3:00 PM-4:50 PM;Rostami, Reihaneh;EMS W120;LAB 803
+;09/02-12/11;M;5:00 PM-6:50 PM;Chen, Ke;EMS W120;LAB 804
+;09/02-12/11;T;8:00 AM-9:50 AM;Bajwa, Bilal;EMS W120;LAB 805
+;09/02-12/11;T;10:00 AM-11:50 AM;Bajwa, Bilal;EMS W120;LAB 806
+COURSE;315;Introduction to Computer Organization and Assembly Language Programming
+3;09/02-12/11;TR;1:00 PM-1:50 PM;McNally, Paul;EMS E180;LEC 401
+;09/02-12/11;M;9:00 AM-10:50 AM;;EMS W120;DIS 601
+;09/02-12/11;T;9:00 AM-10:50 AM;;EMS W130;DIS 602
+;09/02-12/11;R;10:00 AM-11:50 AM;;EMS W130;DIS 603
+COURSE;317;Discrete Information Structures
+3;09/02-12/11;MW;11:00 AM-11:50 AM;Suzuki, Ichiro;LAP N103;LEC 401
+;09/02-12/11;W;12:00 PM-1:45 PM;;EMS W120;DIS 601
+;09/02-12/11;W;2:00 PM-3:45 PM;;EMS W120;DIS 602
+;09/02-12/11;R;12:00 PM-1:45 PM;;EMS W120;DIS 603
+COURSE;337;System Programming
+3;09/02-12/11;TR;10:00 AM-10:50 AM;Sorenson, Robert;EMS E145;LEC 401
+;09/02-12/11;T;2:00 PM-3:50 PM;Johnson, Reed;EMS E170;LAB 801
+;09/02-12/11;W;12:00 PM-1:50 PM;Ghazaleh, Husam;ENG B38;LAB 802
+;09/02-12/11;R;12:00 PM-1:50 PM;Johnson, Reed;EMS E150;LAB 803
+COURSE;351;Data Structures and Algorithms
+3;09/02-12/11;TR;9:00 AM-9:50 AM;Boyland, John;EMS E190;LEC 401
+;09/02-12/11;R;11:00 AM-12:50 PM;Fritz, Eric;EMS E160;LAB 801
+;09/02-12/11;R;1:00 PM-2:50 PM;Fritz, Eric;EMS E160;LAB 802
+;09/02-12/11;R;5:00 PM-6:50 PM;Chen, Ke;EMS W130;LAB 803
+;09/02-12/11;F;9:00 AM-10:50 AM;Williamson, Victor;EMS E160;LAB 804
+;09/02-12/11;F;1:00 PM-2:50 PM;Williamson, Victor;EMS E160;LAB 805
+COURSE;361;Introduction to Software Engineering
+3;09/02-12/11;MW;10:00 AM-10:50 AM;Rock, Jayson;EMS E145;LEC 401
+;09/02-12/11;W;11:00 AM-12:50 PM;;EMS 942;LAB 801
+;09/02-12/11;W;1:00 PM-2:50 PM;Khunlertkit, Tanawat;EMS 942;LAB 802
+;09/02-12/11;R;11:00 AM-12:50 PM;Khunlertkit, Tanawat;EMS 942;LAB 803
+COURSE;395;Social, Professional, and Ethical Issues
+3;09/02-12/11;MW;11:00 AM-12:15 PM;Cheng, Christine;EMS E145;LEC 001
+COURSE;417;Introduction to the Theory of Computation
+3;09/02-12/11;TR;2:00 PM-3:15 PM;Dumitrescu, Adrian;EMS E237;LEC 001
+COURSE;422;Introduction to Artificial Intelligence
+3;09/02-12/11;W;11:00 AM-12:15 PM;Mali, Amol;CUN 107;LEC 001
+COURSE;431;Programming Languages Concepts
+3;09/02-12/11;TR;11:00 AM-12:15 PM;Zhao, Tian;PHY 137;LEC 001
+COURSE;458;Computer Architecture
+3;09/02-12/11;TR;12:30 PM-1:45 PM;Retert, William;EMS E145;LEC 001
+COURSE;459;Fundamentals of Computer Graphics
+3;09/02-12/11;MW;2:00 PM-2:50 PM;Suzuki, Ichiro;EMS E250;LEC 401
+;09/02-12/11;W;3:00 PM-4:50 PM;Xu, Ming;EMS 942;LAB 801
+;09/02-12/11;F;10:00 AM-11:50 AM;Xu, Ming;EMS 942;LAB 802
+COURSE;469;Introduction to Computer Security
+3;09/02-12/11;MW;12:30 PM-1:45 PM;Xu, Guangwu;EMS E295;LEC 001
+COURSE;481;Server-side Internet Programming
+3;09/02-12/11;T;2:00 PM-3:45 PM;Rock, Jayson;LUB N110;LEC 401
+;09/02-12/11;R;2:00 PM-3:45 PM;Fu, Zhicheng;EMS 942;LAB 801
+;09/02-12/11;T;4:00 PM-5:45 PM;Fu, Zhicheng;EMS 942;LAB 802
+COURSE;520;Computer Networks
+3;09/02-12/11;TR;9:30 AM-10:45 AM;Hosseini, Seyed;PHY 137;LEC 001
+COURSE;530;Computer Networks Laboratory
+3;09/02-12/11;W;8:30 AM-10:50 AM;Elsharef, Rafat;EMS 962;LAB 801
+COURSE;535;Algorithm Design and Analysis
+3;09/02-12/11;MW;4:00 PM-5:15 PM;Cheng, Christine;CHM 190;LEC 001
+COURSE;537;Introduction to Operating Systems
+3;09/02-12/11;TR;4:00 PM-5:15 PM;Goyal, Mukul;EMS E180;LEC 001
+COURSE;545;FPGA Embedded CPUs & Firmware Development
+3;09/02-12/11;T;5:30 PM-7:10 PM;Lindfors, Michael;EMS E250;LEC 401
+;09/02-12/11;R;5:30 PM-7:10 PM;;EMS E286;LAB 801
+COURSE;552;Advanced Object-Oriented Programming
+3;09/02-12/11;TR;2:00 PM-3:15 PM;Boyland, John;LUB S263;LEC 001
+COURSE;557;Introduction to Database Systems
+3;09/02-12/11;F;9:00 AM-11:50 AM;Borji, Ali;EMS E225;LEC 001
+COURSE;595;Capstone Project
+4;09/02-12/11;M;5:30 PM-8:10 PM;El Afandi, Hamed;EMS E250;LEC 401
+;09/02-12/11;T;6:00 PM-8:40 PM;;EMS 942;LAB 801
+;09/02-12/11;W;5:30 PM-8:10 PM;;EMS 942;LAB 802
+COURSE;599;Senior Thesis
+3;09/02-12/11;;-;Munson, Ethan;TBA;IND 001
+COURSE;657;Topics in Computer Science:
+3;09/02-12/11;TR;4:00 PM-5:15 PM;Zhao, Tian;EMS E159;LEC 001
+3;09/02-12/11;W;5:30 PM-6:45 PM;Mcroy, Susan;LAP N101;LEC 002
+3;09/02-12/11;T;5:00 PM-7:40 PM;Avdeev, Ilya;EMS E173;LEC 004
+;;T;;Stern, Nathaniel;;
+COURSE;699;Independent Study
+1 - 3;09/02-12/11;;-;Hu, Yi;TBA;IND 001
+1 - 3;09/02-12/11;;-;Armstrong, Brian;TBA;IND 002
+1 - 3;09/02-12/11;;-;;TBA;IND 003
+1 - 3;09/02-12/11;;-;Boyland, John;TBA;IND 004
+1 - 3;09/02-12/11;;-;Cheng, Christine;TBA;IND 005
+1 - 3;09/02-12/11;;-;Ranji, Mahsa;TBA;IND 006
+1 - 3;09/02-12/11;;-;Dumitrescu, Adrian;TBA;IND 007
+1 - 3;09/02-12/11;;-;Goyal, Mukul;TBA;IND 008
+1 - 3;09/02-12/11;;-;Pashaie, Ramin;TBA;IND 009
+1 - 3;09/02-12/11;;-;Hanson, George;TBA;IND 010
+1 - 3;09/02-12/11;;-;Hosseini, Seyed;TBA;IND 011
+1 - 3;09/02-12/11;;-;;TBA;IND 012
+1 - 3;09/02-12/11;;-;Kouklin, Nikolai;TBA;IND 013
+1 - 3;09/02-12/11;;-;Law, Chiu;TBA;IND 014
+1 - 3;09/02-12/11;;-;Mali, Amol;TBA;IND 015
+1 - 3;09/02-12/11;;-;Mcroy, Susan;TBA;IND 016
+1 - 3;09/02-12/11;;-;Misra, Devendra;TBA;IND 017
+1 - 3;09/02-12/11;;-;Munson, Ethan;TBA;IND 018
+1 - 3;09/02-12/11;;-;Nasiri, Adel;TBA;IND 019
+1 - 3;09/02-12/11;;-;;TBA;IND 020
+1 - 3;09/02-12/11;;-;Suzuki, Ichiro;TBA;IND 021
+1 - 3;09/02-12/11;;-;Vairavan, K;TBA;IND 022
+1 - 3;09/02-12/11;;-;Wang, Weizhong;TBA;IND 023
+1 - 3;09/02-12/11;;-;;TBA;IND 024
+1 - 3;09/02-12/11;;-;Xu, Guangwu;TBA;IND 025
+1 - 3;09/02-12/11;;-;;TBA;IND 026
+1 - 3;09/02-12/11;;-;Yu, David;TBA;IND 027
+1 - 3;09/02-12/11;;-;Zhang, Jun;TBA;IND 028
+1 - 3;09/02-12/11;;-;Zhao, Tian;TBA;IND 029
+1 - 3;09/02-12/11;;-;;TBA;IND 030
+1 - 3;09/02-12/11;;-;Mafi, Arash;TBA;IND 031
+1 - 3;09/02-12/11;;-;Yu, Zeyun;TBA;IND 032
+1 - 3;09/02-12/11;;-;;TBA;IND 033
+COURSE;700;CEAS Graduate Seminar
+1 - 3;09/02-12/11;F;1:00 PM-3:30 PM;Videkovich, Randolph;EMS E180;SEM 001
+COURSE;704;Analysis of Algorithms
+3;09/02-12/11;TR;5:30 PM-6:45 PM;Dumitrescu, Adrian;PHY 143;LEC 001
+COURSE;710;Artificial Intelligence
+3;09/08-12/11;M;5:30 PM-6:45 PM;Mcroy, Susan;LAP N101;LEC 001
+COURSE;720;Computational Models of Decision Making
+3;09/02-12/11;W;4:00 PM-5:15 PM;Mali, Amol;CHM 197;LEC 001
+COURSE;730;Advanced Computer Networks
+3;09/02-12/11;TR;4:00 PM-5:15 PM;Hosseini, Seyed;PHY 230;LEC 001
+COURSE;755;Information and Coding Theory
+3;09/02-12/11;MW;5:30 PM-6:45 PM;Xu, Guangwu;EMS E159;LEC 001
+COURSE;760;Computer Systems Performance Evaluation
+3;09/02-12/11;MW;7:00 PM-8:15 PM;Goyal, Mukul;EMS E295;LEC 001
+COURSE;790;Advanced Topics in Computer Science:
+3;09/02-12/11;TR;4:00 PM-5:15 PM;Zhao, Tian;EMS E159;LEC 001
+3;09/08-12/11;M;6:00 PM-8:40 PM;Petering, Matthew;EMS E256;LEC 002
+3;09/02-12/11;TR;5:30 PM-6:45 PM;Hopkins, Jon;CHM 197;LEC 003
+3;09/02-12/11;;-;Munson, Ethan;TBA;LEC 104
+COURSE;810;Knowledge Representation
+3;09/02-12/11;W;5:30 PM-6:45 PM;Mcroy, Susan;LAP N101;LEC 001
+COURSE;870;Medical Informatics Seminar
+1;09/02-12/11;W;4:00 PM-5:15 PM;Luo, Zhihui;EMS E225;SEM 0012
+;;W;;Mcroy, Susan;;
+COURSE;880;Bioengineering Seminar
+1;09/02-12/11;F;12:00 PM-12:50 PM;Pashaie, Ramin;EMS E237;SEM 001
+COURSE;888;Candidate for Degree
+0;09/02-12/11;;-;Hu, Yi;TBA;IND 001
+0;09/02-12/11;;-;Armstrong, Brian;TBA;IND 002
+0;09/02-12/11;;-;;TBA;IND 003
+0;09/02-12/11;;-;Boyland, John;TBA;IND 004
+0;09/02-12/11;;-;Cheng, Christine;TBA;IND 005
+0;09/02-12/11;;-;Ranji, Mahsa;TBA;IND 006
+0;09/02-12/11;;-;Dumitrescu, Adrian;TBA;IND 007
+0;09/02-12/11;;-;Goyal, Mukul;TBA;IND 008
+0;09/02-12/11;;-;Cohen, Andrew;TBA;IND 009
+0;09/02-12/11;;-;Hanson, George;TBA;IND 010
+0;09/02-12/11;;-;Hosseini, Seyed;TBA;IND 011
+0;09/02-12/11;;-;Klemer, David;TBA;IND 012
+0;09/02-12/11;;-;Kouklin, Nikolai;TBA;IND 013
+0;09/02-12/11;;-;Law, Chiu;TBA;IND 014
+0;09/02-12/11;;-;Mali, Amol;TBA;IND 015
+0;09/02-12/11;;-;Mcroy, Susan;TBA;IND 016
+0;09/02-12/11;;-;Misra, Devendra;TBA;IND 017
+0;09/02-12/11;;-;Munson, Ethan;TBA;IND 018
+0;09/02-12/11;;-;Nasiri, Adel;TBA;IND 019
+0;09/02-12/11;;-;Suzuki, Ichiro;TBA;IND 021
+0;09/02-12/11;;-;Pashaie, Ramin;TBA;IND 022
+0;09/02-12/11;;-;Wang, Weizhong;TBA;IND 023
+0;09/02-12/11;;-;;TBA;IND 024
+0;09/02-12/11;;-;Xu, Guangwu;TBA;IND 025
+0;09/02-12/11;;-;Ying, Lei;TBA;IND 026
+0;09/02-12/11;;-;Yu, David;TBA;IND 027
+0;09/02-12/11;;-;Zhang, Jun;TBA;IND 028
+0;09/02-12/11;;-;Zhao, Tian;TBA;IND 029
+0;09/02-12/11;;-;Zhang, Hao;TBA;IND 030
+0;09/02-12/11;;-;Mafi, Arash;TBA;IND 031
+0;09/02-12/11;;-;Yu, Zeyun;TBA;IND 032
+0;09/02-12/11;;-;;TBA;IND 033
+COURSE;990;Masters Thesis
+1 - 9;09/02-12/11;;-;Kate, Rohit;TBA;IND 001
+1 - 9;09/02-12/11;;-;Armstrong, Brian;TBA;IND 002
+1 - 9;09/02-12/11;;-;Prasad, Rashmi;TBA;IND 003
+1 - 9;09/02-12/11;;-;Boyland, John;TBA;IND 004
+1 - 9;09/02-12/11;;-;Cheng, Christine;TBA;IND 005
+1 - 9;09/02-12/11;;-;Pashaie, Ramin;TBA;IND 006
+1 - 9;09/02-12/11;;-;Dumitrescu, Adrian;TBA;IND 007
+1 - 9;09/02-12/11;;-;Goyal, Mukul;TBA;IND 008
+1 - 9;09/02-12/11;;-;Cohen, Andrew;TBA;IND 009
+1 - 9;09/02-12/11;;-;Hanson, George;TBA;IND 010
+1 - 9;09/02-12/11;;-;Hosseini, Seyed;TBA;IND 011
+1 - 9;09/02-12/11;;-;Klemer, David;TBA;IND 012
+1 - 9;09/02-12/11;;-;Kouklin, Nikolai;TBA;IND 013
+1 - 9;09/02-12/11;;-;Law, Chiu;TBA;IND 014
+1 - 9;09/02-12/11;;-;Mali, Amol;TBA;IND 015
+1 - 9;09/02-12/11;;-;Mcroy, Susan;TBA;IND 016
+1 - 9;09/02-12/11;;-;Misra, Devendra;TBA;IND 017
+1 - 9;09/02-12/11;;-;Munson, Ethan;TBA;IND 018
+1 - 9;09/02-12/11;;-;Nasiri, Adel;TBA;IND 019
+1 - 9;09/02-12/11;;-;Suzuki, Ichiro;TBA;IND 021
+1 - 9;09/02-12/11;;-;Ranji, Mahsa;TBA;IND 022
+1 - 9;09/02-12/11;;-;Wang, Weizhong;TBA;IND 023
+1 - 9;09/02-12/11;;-;Hu, Yi;TBA;IND 024
+1 - 9;09/02-12/11;;-;Xu, Guangwu;TBA;IND 025
+1 - 9;09/02-12/11;;-;Ying, Lei;TBA;IND 026
+1 - 9;09/02-12/11;;-;Yu, David;TBA;IND 027
+1 - 9;09/02-12/11;;-;Zhang, Jun;TBA;IND 028
+1 - 9;09/02-12/11;;-;Zhao, Tian;TBA;IND 029
+1 - 9;09/02-12/11;;-;Zhang, Hao;TBA;IND 030
+1 - 9;09/02-12/11;;-;Mafi, Arash;TBA;IND 031
+1 - 9;09/02-12/11;;-;Yu, Zeyun;TBA;IND 032
+COURSE;995;Master's Capstone Project
+3;09/02-12/11;;-;;TBA;IND 003
+3;09/02-12/11;;-;Boyland, John;TBA;IND 004
+3;09/02-12/11;;-;Cheng, Christine;TBA;IND 005
+3;09/02-12/11;;-;Prasad, Rashmi;TBA;IND 006
+3;09/02-12/11;;-;Dumitrescu, Adrian;TBA;IND 007
+3;09/02-12/11;;-;Goyal, Mukul;TBA;IND 008
+3;09/02-12/11;;-;Hosseini, Seyed;TBA;IND 011
+3;09/02-12/11;;-;Mali, Amol;TBA;IND 016
+3;09/02-12/11;;-;Mcroy, Susan;TBA;IND 017
+3;09/02-12/11;;-;Munson, Ethan;TBA;IND 019
+3;09/02-12/11;;-;Suzuki, Ichiro;TBA;IND 022
+3;09/02-12/11;;-;;TBA;IND 023
+3;09/02-12/11;;-;Kate, Rohit;TBA;IND 025
+3;09/02-12/11;;-;Xu, Guangwu;TBA;IND 026
+3;09/02-12/11;;-;;TBA;IND 029
+3;09/02-12/11;;-;Yu, Zeyun;TBA;IND 030
+3;09/02-12/11;;-;Zhao, Tian;TBA;IND 033
+COURSE;998;Doctoral Thesis
+1 - 12;09/02-12/11;;-;Kate, Rohit;TBA;IND 001
+1 - 12;09/02-12/11;;-;Armstrong, Brian;TBA;IND 002
+1 - 12;09/02-12/11;;-;;TBA;IND 003
+1 - 12;09/02-12/11;;-;Boyland, John;TBA;IND 004
+1 - 12;09/02-12/11;;-;Cheng, Christine;TBA;IND 005
+1 - 12;09/02-12/11;;-;Yu, Zeyun;TBA;IND 006
+1 - 12;09/02-12/11;;-;Dumitrescu, Adrian;TBA;IND 007
+1 - 12;09/02-12/11;;-;Goyal, Mukul;TBA;IND 008
+1 - 12;09/02-12/11;;-;Cohen, Andrew;TBA;IND 009
+1 - 12;09/02-12/11;;-;Hanson, George;TBA;IND 010
+1 - 12;09/02-12/11;;-;Hosseini, Seyed;TBA;IND 011
+1 - 12;09/02-12/11;;-;Klemer, David;TBA;IND 012
+1 - 12;09/02-12/11;;-;Kouklin, Nikolai;TBA;IND 013
+1 - 12;09/02-12/11;;-;Law, Chiu;TBA;IND 014
+1 - 12;09/02-12/11;;-;Mali, Amol;TBA;IND 015
+1 - 12;09/02-12/11;;-;Mcroy, Susan;TBA;IND 016
+1 - 12;09/02-12/11;;-;Misra, Devendra;TBA;IND 017
+1 - 12;09/02-12/11;;-;Munson, Ethan;TBA;IND 018
+1 - 12;09/02-12/11;;-;Nasiri, Adel;TBA;IND 019
+1 - 12;09/02-12/11;;-;Suzuki, Ichiro;TBA;IND 021
+1 - 12;09/02-12/11;;-;Hu, Yi;TBA;IND 022
+1 - 12;09/02-12/11;;-;Wang, Weizhong;TBA;IND 023
+1 - 12;09/02-12/11;;-;Mafi, Arash;TBA;IND 024
+1 - 12;09/02-12/11;;-;Xu, Guangwu;TBA;IND 025
+1 - 12;09/02-12/11;;-;Ying, Lei;TBA;IND 026
+1 - 12;09/02-12/11;;-;Yu, David;TBA;IND 027
+1 - 12;09/02-12/11;;-;Zhang, Jun;TBA;IND 028
+1 - 12;09/02-12/11;;-;Zhao, Tian;TBA;IND 029
+1 - 12;09/02-12/11;;-;Pashaie, Ramin;TBA;IND 030
+COURSE;999;Advanced Independent Study
+1 - 3;09/02-12/11;;-;Kate, Rohit;TBA;IND 001
+1 - 3;09/02-12/11;;-;Armstrong, Brian;TBA;IND 002
+1 - 3;09/02-12/11;;-;;TBA;IND 003
+1 - 3;09/02-12/11;;-;Boyland, John;TBA;IND 004
+1 - 3;09/02-12/11;;-;Cheng, Christine;TBA;IND 005
+1 - 3;09/02-12/11;;-;Ranji, Mahsa;TBA;IND 006
+1 - 3;09/02-12/11;;-;Dumitrescu, Adrian;TBA;IND 007
+1 - 3;09/02-12/11;;-;Goyal, Mukul;TBA;IND 008
+1 - 3;09/02-12/11;;-;Prasad, Rashmi;TBA;IND 009
+1 - 3;09/02-12/11;;-;Hanson, George;TBA;IND 010
+1 - 3;09/02-12/11;;-;Hosseini, Seyed;TBA;IND 011
+1 - 3;09/02-12/11;;-;Klemer, David;TBA;IND 012
+1 - 3;09/02-12/11;;-;Kouklin, Nikolai;TBA;IND 013
+1 - 3;09/02-12/11;;-;Law, Chiu;TBA;IND 014
+1 - 3;09/02-12/11;;-;Mali, Amol;TBA;IND 015
+1 - 3;09/02-12/11;;-;Mcroy, Susan;TBA;IND 016
+1 - 3;09/02-12/11;;-;Misra, Devendra;TBA;IND 017
+1 - 3;09/02-12/11;;-;Munson, Ethan;TBA;IND 018
+1 - 3;09/02-12/11;;-;Nasiri, Adel;TBA;IND 019
+1 - 3;09/02-12/11;;-;;TBA;IND 020
+1 - 3;09/02-12/11;;-;Suzuki, Ichiro;TBA;IND 021
+1 - 3;09/02-12/11;;-;Ranji, Mahsa;TBA;IND 022
+1 - 3;09/02-12/11;;-;Wang, Weizhong;TBA;IND 023
+1 - 3;09/02-12/11;;-;Mafi, Arash;TBA;IND 024
+1 - 3;09/02-12/11;;-;Xu, Guangwu;TBA;IND 025
+1 - 3;09/02-12/11;;-;;TBA;IND 026
+1 - 3;09/02-12/11;;-;Yu, David;TBA;IND 027
+1 - 3;09/02-12/11;;-;Zhang, Jun;TBA;IND 028
+1 - 3;09/02-12/11;;-;Zhao, Tian;TBA;IND 029
+1 - 3;09/02-12/11;;-;Pashaie, Ramin;TBA;IND 031
+1 - 3;09/02-12/11;;-;Mafi, Arash;TBA;IND 032
+1 - 3;09/02-12/11;;-;Yu, Zeyun;TBA;IND 033
+1 - 3;09/02-12/11;;-;Hu, Yi;TBA;IND 034
