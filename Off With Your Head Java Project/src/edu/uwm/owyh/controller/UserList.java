@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
@@ -38,19 +39,16 @@ public class UserList extends HttpServlet {
 		for (WrapperObject<Person> client : clients)
 			clientList.add(Library.makeUserProperties(client));
 		
-		/* Admin edit User Profile, This can come from multiple places */
-		String username = request.getParameter("edituserprofilefromview");
-		if (request.getParameter("viewadduserprofile") != null)
-			username = request.getParameter("viewadduserprofile");
-		else if (request.getParameter("modifyuser") != null)
-			username = request.getParameter("modifyuser");
-		else if (request.getParameter("edituserprofilefromadmin") != null)
-			username = request.getParameter("edituserprofilefromadmin");
+		/* Admin edit User Profile */
+		String username = request.getParameter("modifyuser");
 		if (username != null) {
 			Key id = Library.generateIdFromUserName(username);
 			WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
-			if (user != null)
-				request.setAttribute("modifyuser", Library.makeUserProperties(user));				
+			if (user != null) {
+				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(null, user);
+				request.setAttribute("officehours", Library.makeWrapperProperties(officeHours));
+				request.setAttribute("modifyuser", Library.makeUserProperties(user));		
+			}
 		}		
 		
 		request.setAttribute("self", Library.makeUserProperties(self));
@@ -67,9 +65,7 @@ public class UserList extends HttpServlet {
 		if (! auth.verifyUser(response)) return;
 		
 		/* This allow Admin to edit, delete user Redirected from another page */
-		if (request.getParameter("edituserprofilefromview") != null || 
-				request.getParameter("modifyuser") != null || 
-				request.getParameter("edituserprofilefromadmin") != null) {
+		if (request.getParameter("modifyuser") != null) {
 			doGet(request, response);
 			return;
 		}

@@ -78,7 +78,7 @@
 	<div style="float:right;width:38%;">
 		<div class="officehour-tab"  style="min-height:300px; height:100%">
 			<p><strong>Office Hours</strong></p>
-			<table style="width: 100%; text-align: center; font-family: Tahoma;">
+			<table class="officehour-table">
 				<tr>
 					<td class="underline">Days</td><td class="underline">Time</td><td class="underline">Room</td>
 				</tr>

@@ -28,25 +28,23 @@ public class OfficeHoursManager extends HttpServlet {
 		
 		Auth auth = Auth.getAuth(request);
 		if(! auth.verifyUser(response)) return;
-		
-		WrapperObject<Person> self = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
-		Key myId = Library.generateIdFromUserName((String) self.getProperty("username"));
-		self = WrapperObjectFactory.getPerson().findObjectById(myId);
-		request.setAttribute("self", Library.makeUserProperties(self));
-		
-		/* Admin edit another User's Profile 
-		String username = request.getParameter("username");
-		WrapperObject<Person> user = null;
-		if (username != null && auth.verifyAdmin()) {
-			Key id = Library.generateIdFromUserName(username);
-			user = WrapperObjectFactory.getPerson().findObjectById(id);
-		}*/
-		
-		/* User Edit there Own Profile 
-		if (user == null)
-			user = self;*/
 	
-		List<WrapperObject<OfficeHours>> officeHoursList = WrapperObjectFactory.getOfficeHours().findObject(null, self);
+		WrapperObject<Person> self = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
+		String username = "";
+		if (request.getParameter("edituserofficehoursfromadmin") != null || request.getParameter("email") != null)
+			username = (String) request.getParameter("email");
+		else 
+			username = (String) self.getProperty("username");
+		
+		Key myId = Library.generateIdFromUserName(username);
+		WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(myId);
+		request.setAttribute("user", Library.makeUserProperties(user));
+		request.setAttribute("isAdmin", auth.verifyAdmin());
+		
+		if (!self.getId().equals(user.getId()))
+			request.setAttribute("adminedituser", request.getParameter("email"));
+				
+		List<WrapperObject<OfficeHours>> officeHoursList = WrapperObjectFactory.getOfficeHours().findObject(null, user);
 		
 		request.setAttribute("officehours", Library.makeWrapperProperties(officeHoursList));
 		request.getRequestDispatcher(request.getContextPath() + "officehours.jsp").forward(request, response);	
@@ -61,29 +59,24 @@ public class OfficeHoursManager extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyUser(response)) return;		
 		
-		/* Admin attempt to start editing profile from UserList */
 		String email = request.getParameter("email");
-		if (email == null) {
+		if (email == null || request.getParameter("edituserofficehoursfromadmin") != null) {
 			doGet(request, response);
 			return;
 		}
-		
-		//Key id = Library.generateIdFromUserName(email);
-		//WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
 		WrapperObject<Person> self = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
-		Key myId = Library.generateIdFromUserName((String) self.getProperty("username"));
-		self = WrapperObjectFactory.getPerson().findObjectById(myId);
-		request.setAttribute("self", Library.makeUserProperties(self));
+		Key myId = Library.generateIdFromUserName(email);
+		WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(myId);
+		request.setAttribute("user", Library.makeUserProperties(user));
+		request.setAttribute("isAdmin", auth.verifyAdmin());
 		
-		/* Prevent non-Admin from editing other people, Redirect to User own profile 
+		/* Prevent non-Admin from editing other people, Redirect to User own profile */
 		if (user == null || (!self.getId().equals(user.getId()) && !auth.verifyAdmin())) {
 			response.sendRedirect("/profile");		
 			return;
-		}*/
+		}
 
-		/* Admin User change office hours */
-		String addofficehour = request.getParameter("addofficehour");
-		
+		/* Admin User change office hours */		
 		String days = "";
 		String starttime = "";
 		String endtime = "";
@@ -110,33 +103,32 @@ public class OfficeHoursManager extends HttpServlet {
 
 
 		try {
-			if (addofficehour == null && request.getParameter("officehourid") != null) {
+			if (request.getParameter("addofficehour") != null){
+				errors = WrapperObjectFactory.getOfficeHours().addObject(email, officehours);
+ 				if (errors.isEmpty())
+ 					messages.add("Office Hours was successfully added.");
+			}
+			else if (request.getParameter("officehourid") != null) {
 				int officeHourID = Integer.valueOf(request.getParameter("officehourid"));
 				
-				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(null, self);
+				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(null, user);
 				
 		 		if (officeHourID < 0 || officeHourID > officeHours.size()) {
 		 			errors.add("Edit ID error!");
 		 		}
 		 		else {
 		 			if (request.getParameter("deleteofficehour") != null) {
-		 				if (! officeHours.get(officeHourID).removeObject((String)self.getProperty("username")))
+		 				if (! officeHours.get(officeHourID).removeObject(email))
 		 					errors.add("Could not Delete Hours");
 		 				else 
 		 					messages.add("Office Hours was successfully deleted.");
 		 			}
 		 			else {
-		 				errors = officeHours.get(officeHourID).editObject(request.getParameter("email"), officehours);
+		 				errors = officeHours.get(officeHourID).editObject(email, officehours);
 		 				if (errors.isEmpty())
-		 					messages.add("Office Hours was successfully added.");
+		 					messages.add("Office Hours was successfully edited.");
 		 			}
 		 		}
-				
-			}
-			else {
-				errors = WrapperObjectFactory.getOfficeHours().addObject(request.getParameter("email"), officehours);
- 				if (errors.isEmpty())
- 					messages.add("Office Hours was successfully added.");
 			}
 		}
 		catch (IllegalArgumentException e) {
@@ -144,12 +136,10 @@ public class OfficeHoursManager extends HttpServlet {
 		}
 		
 		if (!errors.isEmpty()) {
-			request.setAttribute("user", Library.makeUserProperties(self));
 			request.setAttribute("errors", errors);
 			doGet(request, response);
 		}
 	    else {
-	    	/* Admin edit another Office Hour, go to userList */
 	    	request.setAttribute("messages", messages);
 	    	doGet(request, response);
 	    }

@@ -166,7 +166,6 @@ td.submitinfo {
 	width:120px; height:120px;
 }
 
-
 .officehour-tab {
 	background-color:#f1f1f5;
 	border: 1px solid #d7d7d7;
@@ -182,4 +181,10 @@ td.submitinfo {
 	background-color:#f1f1f5;
 	padding:8px 8px;
 	font-size: 13px;
+}
+.officehour-table {
+	width: 100%;
+	text-align: center;
+	font-family: Tahoma;
+}
 }

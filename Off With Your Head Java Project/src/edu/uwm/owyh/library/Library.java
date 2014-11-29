@@ -115,7 +115,7 @@ public class Library {
                                            ,"zip",user.getProperty("zip")
                                            ,"password",user.getProperty("password")
                                            ,"accesslevel",user.getProperty("accesslevel")
-                                           , "officehours",user.getProperty("officehours")
+                                           ,"officehours",user.getProperty("officehours")
                                            );
 		for(String key : properties.keySet())
 			if(properties.get(key) == null) properties.put(key, "");

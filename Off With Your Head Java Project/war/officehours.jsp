@@ -11,9 +11,13 @@
 <jsp:include page="/WEB-INF/templates/navagation.jsp" />
 <jsp:include page="/WEB-INF/templates/homenavagation.jsp" />
 
-<%	Map<String, Object> self = (Map<String, Object>) request.getAttribute("self");
+<%	Map<String, Object> user = (Map<String, Object>) request.getAttribute("user");
 	List<Map<String, Object>> officeHours = (List<Map<String, Object>>) request.getAttribute("officehours");
-	if (self == null || officeHours == null) { out.print("No Correct Attribute Was Passed Into JSP!"); return; }
+	if (user == null || officeHours == null) { out.print("No Correct Attribute Was Passed Into JSP!"); return; }
+
+	Boolean isAdmin = (Boolean)request.getAttribute("isAdmin");
+		
+	String modifyUser = (String) request.getAttribute("adminedituser");
  %>
 
 <div id="body">
@@ -21,7 +25,7 @@
 		if(errors != null){
 			for(String error: errors){
 	%>
-	<span class="error-message"><%=error%></span>
+	<span class="error-message"><%=error%></span><br />
 	<%			
 			}
 		}
@@ -30,17 +34,21 @@
 		if(messages != null){
 			for(String message: messages){
 	%>
-	<span class="good-message"><%=message %></span>
+	<span class="good-message"><%=message %></span><br />
 	<%			
 			}
 		}
 	%>
 		  
+	<% if (modifyUser != null && isAdmin) { %>	  
+	<span class="warning-message">You are currently editing <%= modifyUser %>'s Office Hours, NOT your own.</span><br />
+	<% } %>
+		  
    	<p><strong>Add Office Hours</strong></p>
    	<div class="officehour-tab">
     <form action="/officehours" method="post">
 		<input type="hidden" name="addofficehour" value="addofficehour" />
-		<input type="hidden" name="email" value="<%=self.get("email") %>" />
+		<input type="hidden" name="email" value="<%=user.get("email") %>" />
 	 	<table>	   					   
 	   		<tr>
 	   			<td>Days:</td>
@@ -161,7 +169,7 @@
 	 		<td>
 	 			<form action="/officehours" method="post">
 				<input type="hidden" name="editofficehour" value="editofficehour" />
-				<input type="hidden" name="email" value="<%=self.get("email") %>" />
+				<input type="hidden" name="email" value="<%=user.get("email") %>" />
 				<input type="hidden" name="officehourid" value="<%=k %>" />
 				Days:
 			</td>
@@ -227,7 +235,7 @@
 			<td class="submitinfo">
 				<form action="/officehours" method="post">
 					<input type="hidden" name="deleteofficehour" value="deleteofficehour" />
-					<input type="hidden" name="email" value="<%=self.get("email") %>" />
+					<input type="hidden" name="email" value="<%=user.get("email") %>" />
 					<input type="hidden" name="officehourid" value="<%=k %>" />
 					<input type="submit" class="submit" name="deleteofficehoursubmit" value="Delete Office Hours"/>
 				</form>

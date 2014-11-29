@@ -24,6 +24,7 @@
 	boolean isAdmin = (userAccess == AccessLevel.ADMIN);
 	
 	Map<String,Object> modifyUser = (Map<String,Object>) request.getAttribute("modifyuser");
+	List<Map<String,Object>> officeHours = (List<Map<String,Object>>) request.getAttribute("officehours");
 %>
 
 <div id="body" style="clear:both;">
@@ -50,10 +51,15 @@
 				<td class="cell-header">First Name</td>
 				<td class="cell-header">Email</td>
 				<td class="cell-header">Role</td>
-				<% if (userAccess == AccessLevel.ADMIN) { %>
+				<% if (isAdmin) { %>
 				<td class="cell-header" colspan="3">Profile</td>
 				<% } else {%>
 				<td class="cell-header" colspan="1">Profile</td>
+				<% } %>
+				<% if (isAdmin) { %>
+				<td class="cell-header"colspan="2">Office Hours</td>
+				<% } else {%>
+				<td class="cell-header"colspan="1">Office Hours</td>
 				<% } %>
 			</tr>		
  		<% for (int i = 0; i < users.size(); i++) {
@@ -103,6 +109,22 @@
 					</form>
 				</td>
 						
+				<% } %>
+				<td class="cell">
+					<form action="/userlist#viewofficehours" method="post">
+						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
+						<input type="submit" class="submit" value="View" />
+					</form>
+				</td>
+				
+				<% if (isAdmin) { %>
+				<td class="cell">
+					<form action="/officehours" method="post">
+					<input type="hidden" name="edituserofficehoursfromadmin" value="dituserofficehoursfromadmin" />
+					<input type="hidden" name="email" value="<%=user.get("email") %>" />
+					<input type="submit" class="submit" name="gotoprofile" value="Edit"/>
+					</form>
+				</td>
 				<% } %>
 			</tr>
 		<% } %>
@@ -254,6 +276,41 @@
 			<input type="hidden" name="username" value="<%=modifyUser.get("email") %>" />
 			<input type="submit" class="submit" name="gotoprofile" value="Delete"/>
 		</form>
+		<% } %>
+    </div>
+</aside>
+<aside id="viewofficehours" class="modal">
+    <div>
+		<a href="#close" title="Close" class="unselectable">Close</a>
+		<p><strong>Office Hours</strong></p>
+		<% if (officeHours == null || officeHours.isEmpty()) { %>
+			This user has no Office Hours.
+		<% }
+		else {
+		%>
+			<table class="officehour-table">
+			<tr>
+				<td class="underline">Days</td>
+				<td class="underline">Time</td>
+				<td class="underline">Room</td>
+			</tr>
+		<% for (Map<String, Object> hour : officeHours) { %>
+			<tr>
+				<td><%=hour.get("days") %></td>
+				<td><%=hour.get("starttime") %> - <%=hour.get("endtime") %></td>
+				<td></td>
+			</tr>
+			<tr>
+		<% } %>
+			</table>
+		<% } %>
+		<% if (isAdmin && modifyUser != null) { %>
+		<br /><br />
+			<form action="/officehours" method="post">
+			<input type="hidden" name="edituserofficehoursfromadmin" value="dituserofficehoursfromadmin" />
+			<input type="hidden" name="email" value="<%=modifyUser.get("email") %>" />
+			<input type="submit" class="submit" name="gotoprofile" value="Edit Office Hours"/>
+			</form>
 		<% } %>
     </div>
 </aside>
