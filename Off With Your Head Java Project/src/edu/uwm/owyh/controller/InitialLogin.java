@@ -61,7 +61,7 @@ public class InitialLogin extends HttpServlet{
 				return;
 			}else{
 				Auth.setSessionVariable(request, "isAddAdmin", true);
-				response.sendRedirect("/admin/addAdmin");
+				response.sendRedirect("/admin/addadmin");
 				return;
 			}
 		}

@@ -13,7 +13,7 @@
 				response.sendRedirect(request.getContextPath() + "/");
 			}
 		%>
-		<form id="addAdmin" action="/admin/addAdmin" method="post">
+		<form id="addAdmin" action="/admin/addadmin" method="post">
 			<table id="addAdmin-table">
 			<tr>
 				<td id="addAdmin-title" colspan="2">UWM - Computer Science Administration</td>

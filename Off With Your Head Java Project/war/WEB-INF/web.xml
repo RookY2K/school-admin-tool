@@ -97,6 +97,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/classlist</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>AddAdmin</servlet-name>
+		<servlet-class>edu.uwm.owyh.controller.AddAdmin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddAdmin</servlet-name>
+		<url-pattern>/admin/addadmin</url-pattern>
+	</servlet-mapping>
 
 	
 	<welcome-file-list>
