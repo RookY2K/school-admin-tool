@@ -6,6 +6,24 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
 	<servlet>
+		<servlet-name>Scraper</servlet-name>
+		<servlet-class>edu.uwm.owyh.controller.Scraper</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Scraper</servlet-name>
+		<url-pattern>/admin/scraper</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>LocalScraper</servlet-name>
+		<servlet-class>edu.uwm.owyh.controller.LocalScraper</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LocalScraper</servlet-name>
+		<url-pattern>/admin/localscraper</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>Index</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.Index</servlet-class>
 	</servlet>
@@ -13,7 +31,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>Index</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>Login</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.Login</servlet-class>
@@ -39,6 +57,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet-mapping>
 		<servlet-name>InitialLogin</servlet-name>
 		<url-pattern>/initiallogin</url-pattern>
+	
 	</servlet-mapping>
 	
 	<servlet>
@@ -60,6 +79,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 
 	<servlet>
+	
 		<servlet-name>OfficeHoursManager</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.OfficeHoursManager</servlet-class>
 	</servlet>
@@ -67,7 +87,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>OfficeHoursManager</servlet-name>
 		<url-pattern>/officehours</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>ClassList</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.ClassList</servlet-class>
@@ -76,8 +96,9 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>ClassList</servlet-name>
 		<url-pattern>/classlist</url-pattern>
 	</servlet-mapping>
-	
 
+
+	
 	<welcome-file-list>
 		<welcome-file>Index</welcome-file>
 	</welcome-file-list>

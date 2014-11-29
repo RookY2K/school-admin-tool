@@ -60,6 +60,7 @@
 		<table>
 			<tr>
 				<td class="user-label">Secondary Email:</td><td class="user-data"><%=self.get("email") %></td>
+				 	List<WrapperObject<OfficeHours>> officeHoursWrapped = new ArrayList<WrapperObject<OfficeHours>>();
 			</tr>
 			<tr>
 				<td class="user-label">Phone Number:</td><td class="user-data"><%=self.get("phone") %></td>

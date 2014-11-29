@@ -8,8 +8,8 @@
 </head>
 <body>
 
-	<form method ="post" action="/admin/scraper">
-		<input type="submit" id="delete_courses" value="Don't Press This Button" /> 
+	<form method ="post" action="/admin/localscraper">
+		<input type="submit" name="delete_courses" value="Don't Press This Button" /> 
 	</form>
 
 </body>

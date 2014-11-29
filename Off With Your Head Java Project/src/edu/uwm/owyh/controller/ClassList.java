@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.datastore.KeyFactory;
+
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.DataStore;
@@ -39,7 +41,9 @@ public class ClassList extends HttpServlet{
 		}
 		if(courses == null){
 			List<Course> courseList = (List<Course>) request.getAttribute("courselist");
-			if(courseList == null) courseList = DataStore.getDataStore().findEntities(Course.class, null, null);
+			String parentKey = KeyFactory.keyToString(Course.getParentkey());
+			String filter = "parentKey == '" + parentKey + "'";
+			if(courseList == null) courseList = DataStore.getDataStore().findEntities(Course.class, filter, null);
 			if(courseList.isEmpty()){
 				errors = new ArrayList<String>();
 				errors.add("There is no course information in the Datastore!");
@@ -52,7 +56,7 @@ public class ClassList extends HttpServlet{
 			
 			for(Course course : courseList){
 				course.getSections(); //touching sections to avoid lazy load issues
-				courses.put(course.getCourseNum(),course);
+				courses.put(Integer.parseInt(course.getCourseNum()),course);
 			}
 			
 			List<Integer> courseKeyList = new ArrayList<Integer>(courses.keySet());

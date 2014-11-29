@@ -70,13 +70,13 @@ public class TestWebScraper {
 	@Test
 	public void testConnect(){
 		HtmlPage page = null;
-		String notASite = "http://www.probablynotasite.com";
-		try{
-			page = WebScraper.connectToPage(notASite);
-		}catch(Exception e){
-			fail("Exception should have been caught in method and null returned!");
-		}
-		assertTrue(page == null);
+//		String notASite = "http://www.probablynotasite.com";
+//		try{
+//			page = WebScraper.connectToPage(notASite);
+//		}catch(Exception e){
+//			fail("Exception should have been caught in method and null returned!");
+//		}
+//		assertTrue(page == null);
 		
 		page = WebScraper.connectToPage("http://www.google.com");
 		assertFalse(page == null);

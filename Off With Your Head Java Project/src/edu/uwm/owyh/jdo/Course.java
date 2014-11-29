@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -35,17 +36,18 @@ public class Course implements Serializable, Cloneable{
 	private String parentKey;
 
 	@Persistent(mappedBy = "parentCourse")
+	@Element(dependent="true")
 	private List<Section> sections;
 
 	@Persistent
-	private int courseNum;
+	private String courseNum;
 
 	@Persistent
 	private String courseName;
 
 
 
-	private Course(int courseNum){
+	private Course(String courseNum){
 		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(PARENTKEY);
 
 		id = keyBuilder.addChild(KIND, courseNum).getKey();
@@ -60,7 +62,7 @@ public class Course implements Serializable, Cloneable{
 	 * @param courseNum - course number to instantiate the Course JDO
 	 * @return an instantiated Course JDO
 	 */
-	public static Course getCourse(int courseNum){
+	public static Course getCourse(String courseNum){
 		return new Course(courseNum);
 	}
 
@@ -105,7 +107,7 @@ public class Course implements Serializable, Cloneable{
 	/**
 	 * @return the course number
 	 */
-	public int getCourseNum(){
+	public String getCourseNum(){
 		return courseNum;
 	}
 
@@ -123,7 +125,7 @@ public class Course implements Serializable, Cloneable{
 	//Mutators
 
 	//private mutator to set the course number
-	private void setCourseNum(int courseNum){
+	private void setCourseNum(String courseNum){
 		this.courseNum = courseNum;
 	}
 
@@ -158,5 +160,15 @@ public class Course implements Serializable, Cloneable{
 
 
 	//Utility methods
-
+	@Override
+	public boolean equals(Object obj){
+		if(!(obj instanceof Course)) return false;
+		
+		Course other = (Course) obj;
+		
+		String courseNum = this.getCourseNum();
+		String otherCourseNum = other.getCourseNum();
+		
+		return courseNum == otherCourseNum;
+	}
 }

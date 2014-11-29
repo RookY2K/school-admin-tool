@@ -117,7 +117,6 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 	/* (non-Javadoc)
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#editObject(java.lang.String, java.util.Map)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> editObject(String id, Map<String, Object> properties) {
 	
@@ -141,20 +140,6 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		
 		if(isConflict){
 			errors.add("Edited office hours conflict with established office hours!");
-			return errors;
-		}
-		
-		List<OfficeHours> childHours = (List<OfficeHours>) parent.getProperty("officehours");
-	
-		OfficeHours editedHours = OfficeHours.getOfficeHours();		
-		editedHours.setDays((String) properties.get("days"));
-		editedHours.setStartTime(Library.parseTimeToDouble((String)properties.get("starttime")));
-		editedHours.setEndTime(Library.parseTimeToDouble((String)properties.get("endtime")));
-	
-		Boolean isDuplicate = childHours.contains(editedHours);
-	
-		if(isDuplicate){
-			errors.add("Duplicate Office hours!");
 			return errors;
 		}
 	
@@ -278,19 +263,19 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 
 	@SuppressWarnings("unchecked")
 	private boolean checkConflict(WrapperObject<Person> parent, Map<String, Object> properties) {
-		List<OfficeHours> officeHours = (List<OfficeHours>) parent.getProperty("officehours");
+		List<WrapperObject<OfficeHours>> officeHours = (List <WrapperObject<OfficeHours>>) parent.getProperty("officehours");
 		String days = (String) properties.get("days");
 		double startTime = Library.parseTimeToDouble((String)properties.get("starttime"));
 		double endTime  = Library.parseTimeToDouble((String) properties.get("endtime"));
 		
-		for(OfficeHours conflict : officeHours){
+		for(WrapperObject<OfficeHours> conflict : officeHours){
 			
-			boolean skip = conflict.equals(getOfficeHours());
+			boolean skip = conflict.equals(this);
 			if(skip) continue;
 			
-			String compDays = conflict.getDays();
-			double compStart = conflict.getStartTime();
-			double compEnd = conflict.getEndTime();
+			String compDays = (String) conflict.getProperty("days");
+			double compStart = Library.parseTimeToDouble((String) conflict.getProperty("starttime"));
+			double compEnd = Library.parseTimeToDouble((String)conflict.getProperty("endtime"));
 			
 			for(int i=0;i<days.length();++i){
 				String day = Character.toString(days.charAt(i));
@@ -377,6 +362,28 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		officeHours.setOnWednesday(false);
 		officeHours.setOnThursday(false);
 		officeHours.setOnFriday(false);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean equals(Object obj){
+		if(!(obj instanceof WrapperObject<?>)) return false;
+		
+		WrapperObject<OfficeHours> other = (WrapperObject<OfficeHours>) obj;
+		
+		String days = (String) this.getProperty("days");
+		String otherDays = (String) other.getProperty("days");
+		String startTime = (String) this.getProperty("starttime");
+		String otherStartTime = (String) other.getProperty("starttime");
+		String endTime = (String) this.getProperty("endtime");
+		String otherEndTime = (String) other.getProperty("endtime");
+		
+		return days.equals(otherDays) && startTime.equals(otherStartTime) && endTime.equals(otherEndTime);
+	}
+	
+	@Override 
+	public int hashCode(){
+		return this.getOfficeHours().hashCode();
 	}
 
 }

@@ -1,7 +1,9 @@
+<%@ page import="edu.uwm.owyh.library.LocalDevLibrary" %>
 <%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
 <%@ page import="edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel" %>
 <%@ page import="edu.uwm.owyh.jdo.Person" %>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
+<%! @SuppressWarnings("unchecked") %>
 
 <%
 WrapperObject<Person> user = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
@@ -39,7 +41,7 @@ WrapperObject<Person> user = (WrapperObject<Person>)Auth.getSessionVariable(requ
 						<ul class="global-dropdown-list">
 	   						<li class="global-link-item"><a class="global-link" href="/admin/addContactInfo">Add New User</a></li>
 							<li class="global-link-item"><a class="global-link" href="/admin/addContactInfo#addcontactinfo">Add Contact Info</a></li>
-							<li class="global-link-item"><a class="global-link" href="/admin/scraper" target="_blank">Get Course List</a></li>
+							<li class="global-link-item"><a class="global-link" href="<%=LocalDevLibrary.getScraperHref()%>">Get Course List</a></li>
 							<!--<li class="global-link-item"><a class="global-link" href="/admin/addClient">Edit User Login</a></li>  -->	
 					    </ul>
 					</li>

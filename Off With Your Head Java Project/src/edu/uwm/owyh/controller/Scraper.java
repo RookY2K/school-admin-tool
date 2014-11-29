@@ -28,16 +28,16 @@ public class Scraper extends HttpServlet{
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		
+
 		Auth auth = Auth.getAuth(request);
 		if(!auth.verifyAdmin(response)) return;
-		
+
 		List<Course> courseList = null;	
 		List<String> errors = new ArrayList<String>();
 		int retries = 3;
 		while(retries > 0){
 			try {
-				courseList = getCourseList(response);
+				courseList = getCourseList();
 				retries = 0;
 			} catch (InterruptedException e) {
 				retries--;
@@ -63,32 +63,12 @@ public class Scraper extends HttpServlet{
 		}else{
 			request.setAttribute("errors", errors);
 		}
-		
+
 		request.getRequestDispatcher("/classlist").forward(request, response);
 	}
-
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		Auth auth = Auth.getAuth(request);
-		if(!auth.verifyAdmin(response)) return;
-		
-		DataStore store = DataStore.getDataStore();
-		
-		Key parentKey = KeyFactory.createKey("Courses", "RootCourses");
-		
-		String filterWithParent = "parentKey == '" + KeyFactory.keyToString(parentKey) + "'";
-		List<Course> entities = store.findEntities(Course.class, filterWithParent, null);
-		
-		store.deleteAllEntities(entities);
-		
-		store.closeDataStore();
-		
-		response.sendRedirect(request.getContextPath() + "/");
-	}
-
+	
 	@SuppressWarnings("unchecked")
-	private static List<Course> getCourseList(HttpServletResponse response) throws IOException, InterruptedException{
+	private static List<Course> getCourseList() throws InterruptedException, IOException{
 		List<Course> courses = null;
 		String term = "Fall";
 		String baseUri = "http://www4.uwm.edu/schedule/";
@@ -100,7 +80,7 @@ public class Scraper extends HttpServlet{
 
 		HtmlPage page = WebScraper.connectToPage(baseUri);	
 		if(page == null) return null;
-				
+
 		page = WebScraper.findAndClickAnchor(page, findSpecificTermLink);
 		page = WebScraper.findAndClickAnchor(page, findCompSciLink);
 
@@ -119,27 +99,27 @@ public class Scraper extends HttpServlet{
 
 			List<HtmlTableRow> sectionRows = (List<HtmlTableRow>)WebScraper.findByXPath(courseTable, findSectionRows);
 
-			course.setSections(setAllSectionInfoForCourse(sectionRows));
+			course.setSections(setAllSectionInfoForCourse(sectionRows, course));
 		}		
 		return courses;
 	}
 
-	public static List<Course> setCourseInfo(List<HtmlSpan> courseSpans){
+	private static List<Course> setCourseInfo(List<HtmlSpan> courseSpans){
 		List<Course> courses = new ArrayList<Course>();
 
 		for(int i=0; i<courseSpans.size(); ++i){
 
 			HtmlSpan courseSpan = courseSpans.get(i);
-			
+
 			String courseInfo = courseSpan.asText();
 
 			int startIndex = courseInfo.indexOf('I', courseInfo.indexOf("COMPSCI")) + 2;
 			int endIndex = startIndex + 3;
 
-			int courseNum = -1;
-			
+			String courseNum = courseInfo.substring(startIndex, endIndex);
+
 			try{
-				courseNum = Integer.parseInt(courseInfo.substring(startIndex, endIndex));			
+				isParsableAsInt(courseNum);
 			}catch(NumberFormatException nfe){
 				throw new NumberFormatException("Parse Error! Please contact website adminstrator with this error");
 			}
@@ -155,7 +135,11 @@ public class Scraper extends HttpServlet{
 		return courses;
 	}
 
-	public static List<Section> setAllSectionInfoForCourse(List<HtmlTableRow> sectionRows){
+	private static void isParsableAsInt(String courseNum) throws NumberFormatException {
+		Integer.parseInt(courseNum);		
+	}
+
+	private static List<Section> setAllSectionInfoForCourse(List<HtmlTableRow> sectionRows, Course parent){
 		List<Section> sections = new ArrayList<Section>();
 		int creditIndex = 2;
 		int sectionNumIndex = 3;
@@ -166,14 +150,17 @@ public class Scraper extends HttpServlet{
 		int roomIndex = 9;
 
 		for(HtmlTableRow row : sectionRows){
-			Section section = Section.getSection();
-			String creditLoad = row.getCell(creditIndex).asText();
 			String sectionNum = row.getCell(sectionNumIndex).asText();
+			
+			if(sectionNum == null || sectionNum.trim().length() == 0) continue;
+			
+			String creditLoad = row.getCell(creditIndex).asText();
 			String hours = row.getCell(hoursIndex).asText();
 			String days = row.getCell(daysIndex).asText();
 			String dates = row.getCell(datesIndex).asText();
 			String instructorName = row.getCell(instructorNameIndex).asText();
 			String room = row.getCell(roomIndex).asText();
+			Section section = Section.getSection(sectionNum, parent);
 
 			section.setCredits(creditLoad);
 			section.setSectionNum(sectionNum);
@@ -186,5 +173,6 @@ public class Scraper extends HttpServlet{
 		}		
 		return sections;
 	}
-
+	
+	
 }
