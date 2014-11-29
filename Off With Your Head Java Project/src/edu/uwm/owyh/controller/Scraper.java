@@ -18,6 +18,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.Section;
+import edu.uwm.owyh.library.LocalDevLibrary;
 import edu.uwm.owyh.library.WebScraper;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.DataStore;
@@ -31,6 +32,11 @@ public class Scraper extends HttpServlet{
 
 		Auth auth = Auth.getAuth(request);
 		if(!auth.verifyAdmin(response)) return;
+		
+		if(LocalDevLibrary.isLocal()){
+			request.getRequestDispatcher("/admin/localscraper").forward(request, response);
+			return;
+		}
 
 		List<Course> courseList = null;	
 		List<String> errors = new ArrayList<String>();

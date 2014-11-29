@@ -109,6 +109,10 @@ public class Admin extends HttpServlet {
 			request.getRequestDispatcher(request.getContextPath() + "/admin/admin.jsp").forward(request, response);	
 			return;
 		}
+		if(request.getParameter("reloadclassschedule") != null){
+			response.sendRedirect(request.getContextPath() + "/admin/scraper");
+			return;
+		}
 	
 		response.sendRedirect(request.getContextPath() + "/admin#close");
 	}

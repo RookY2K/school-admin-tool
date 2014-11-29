@@ -101,7 +101,7 @@ Start of CSS Pop Up
 			<table>
 			<tr>
 				<td class="cell">First Name:</td>
-	      <li><a class="nav-link" href="/admin/scraper" target="_blank">Get Course List</a></li>
+				<td class="cell" colspan="3"><input type = "text" name="firstname" id="firstname" value="" required/></td>
 			</tr>
 			<tr>
 				<td class="cell">Last Name:</td>
@@ -314,7 +314,7 @@ Start of CSS Pop Up
 		<ul class="message">
 			<li>You are about to load the class schedule from UWM's website.</li>
 		</ul>
-		<form action="admin.html" method="post">
+		<form action="/admin#reloadclassschedule" method="post">
 			<p><input type="checkbox" name="agreetoreload" required /> I Agree</p>
 			<p><input type="submit" class="submit" name="reloadclassschedule" value="Reload Schedule" /></p>
 		</form>

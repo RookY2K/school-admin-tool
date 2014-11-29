@@ -43,7 +43,7 @@
 				<td class="user-label">Email:</td><td class="user-data"><%=self.get("email") %></td>
 			</tr>
 			<tr>
-				<td class="user-label">Role:</td><td class="user-data">Admin</td>
+				<td class="user-label">Role:</td><td class="user-data"><%=self.get("accesslevel") %></td>
 			</tr>
 			<tr>
 				<td class="user-label">Password:</td>

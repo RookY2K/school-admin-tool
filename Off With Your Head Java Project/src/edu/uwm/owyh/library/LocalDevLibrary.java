@@ -19,14 +19,13 @@ public class LocalDevLibrary {
 		
 	}
 	
-	public static String getScraperHref(){
-		String getCourse = "/";
-		if(SystemProperty.environment.value() == SystemProperty.Environment.Value.Production){
-			getCourse = "/admin/scraper";
-		}else if(SystemProperty.environment.value() == SystemProperty.Environment.Value.Development){
-			getCourse = "/admin/localscraper";	
+	public static boolean isLocal(){
+		boolean isLocal = false;
+		if(SystemProperty.environment.value() == SystemProperty.Environment.Value.Development){
+			isLocal = true;	
 		}
-		return getCourse;
+		
+		return isLocal;		
 	}
 	
 	public static void readCoursePageIntoLocalDataStore(String fullFilePath)

@@ -41,7 +41,7 @@ WrapperObject<Person> user = (WrapperObject<Person>)Auth.getSessionVariable(requ
 						<ul class="global-dropdown-list">
 	   						<li class="global-link-item"><a class="global-link" href="/admin/addContactInfo">Add New User</a></li>
 							<li class="global-link-item"><a class="global-link" href="/admin/addContactInfo#addcontactinfo">Add Contact Info</a></li>
-							<li class="global-link-item"><a class="global-link" href="<%=LocalDevLibrary.getScraperHref()%>">Get Course List</a></li>
+							<li class="global-link-item"><a class="global-link" href="">Get Course List</a></li>
 							<!--<li class="global-link-item"><a class="global-link" href="/admin/addClient">Edit User Login</a></li>  -->	
 					    </ul>
 					</li>
