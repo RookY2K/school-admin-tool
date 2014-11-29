@@ -35,14 +35,14 @@
 	<a href="#reloadclassschedule">
 		<div class="admin-tab">
 			<div class="admin-tab-box"></div>
-			Add A New User!
+			Reload Class List
 		</div>
 	</a>
 	
 	<a href="#triggernewsemester">
 		<div class="admin-tab">
 			<div class="admin-tab-box"></div>
-			Add A New User!
+			Trigger New Semester
 		</div>
 	</a>
 	
@@ -162,34 +162,6 @@ Start of CSS Pop Up
 	 <a href="#close" title="Close" class="unselectable">Close</a>
     </div>
 </aside>
-<aside id="reloadclassschedule" class="modal">
-    <div>
-        <p><strong>Reload Class Schedule</strong></p>
-		<ul class="message">
-			<li>You are about to load the class schedule from UWM's website.</li>
-		</ul>
-		<form action="admin.html" method="post">
-			<p><input type="checkbox" name="agreetoreload" /> I Agree</p>
-			<p><input type="submit" class="submit" name="reloadclassschedule" value="Reload Schedule" /></p>
-		</form>
-       <a href="#close" title="Close" class="unselectable">Close</a>
-    </div>
-</aside>
-<aside id="triggernewsemester" class="modal">
-    <div>
-        <p><strong>Trigger Brand New Semester </strong></p>
-		<ul class="message">
-			<li>You are about to advance to the next semester.</li>
-			<li class="error-message">This will remove all Instructor and TA class assignment!</li>
-			<li class="error-message">This will repopulate the class schedule!</li>
-		</ul>
-		<form action="admin.html" method="post">
-			<p><input type="checkbox" name="agreetotrigger" /> I Agree</p>
-			<p><input type="submit" class="submit" name="triggernewsemester" value="Start New Semester" /></p>
-		</form>
-       <a href="#close" title="Close" class="unselectable">Close</a>
-    </div>
-</aside>
 <aside id="addnewuserconfirm" class="modal">
     <div>
         <p><strong>Add User Account</strong></p>
@@ -206,7 +178,9 @@ Start of CSS Pop Up
 		<p><span class="good-message">The new user <%=goodAddUser.get("email") %> was successfully added!</span> 
 		<form action="/userlist#edituserprofile" method="post" >
 		<input type="hidden" name="modifyuser" value="<%=goodAddUser.get("email") %>" />
-		<input type="submit" class="submit" value="Edit User's Profile" /></form></p>
+		<input type="submit" class="submit" value="Edit User's Profile" /></form> </p>
+		<p><form action="/userlist" method="get" >
+		<input type="submit" class="submit" value="Go To Userlist" /></form></p>
 		<% } %>
 		
 		<form action="/admin#addnewuserconfirm" method="post">
@@ -332,6 +306,34 @@ Start of CSS Pop Up
 		(414) 123 4567, 414.123.4567, 414-123-4567, 4141234567</li>
 		</ul>
         <a href="#close" title="Close" class="unselectable">Close</a>
+    </div>
+</aside>
+<aside id="reloadclassschedule" class="modal">
+    <div>
+        <p><strong>Reload Class Schedule</strong></p>
+		<ul class="message">
+			<li>You are about to load the class schedule from UWM's website.</li>
+		</ul>
+		<form action="admin.html" method="post">
+			<p><input type="checkbox" name="agreetoreload" required /> I Agree</p>
+			<p><input type="submit" class="submit" name="reloadclassschedule" value="Reload Schedule" /></p>
+		</form>
+       <a href="#close" title="Close" class="unselectable">Close</a>
+    </div>
+</aside>
+<aside id="triggernewsemester" class="modal">
+    <div>
+        <p><strong>Trigger Brand New Semester </strong></p>
+		<ul class="message">
+			<li>You are about to advance to the next semester.</li>
+			<li class="error-message">This will remove all Instructor and TA class assignment!</li>
+			<li class="error-message">This will repopulate the class schedule!</li>
+		</ul>
+		<form action="admin.html" method="post">
+			<p><input type="checkbox" name="agreetotrigger" required /> I Agree</p>
+			<p><input type="submit" class="submit" name="triggernewsemester" value="Start New Semester" /></p>
+		</form>
+       <a href="#close" title="Close" class="unselectable">Close</a>
     </div>
 </aside>
 <!--

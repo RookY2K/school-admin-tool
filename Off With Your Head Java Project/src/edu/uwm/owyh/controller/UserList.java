@@ -41,6 +41,8 @@ public class UserList extends HttpServlet {
 		
 		/* Admin edit User Profile */
 		String username = request.getParameter("modifyuser");
+		if (request.getAttribute("modifyuser") != null)
+			username = (String) request.getAttribute("modifyuser");
 		if (username != null) {
 			Key id = Library.generateIdFromUserName(username);
 			WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
@@ -74,7 +76,7 @@ public class UserList extends HttpServlet {
 		WrapperObject<Person> user = null;
 		
 		/* Make sure a correct username was pass through */
-		String username = (String) request.getParameter("username");
+		String username = (String) request.getParameter("email");
 		
 		if (username == null)
 			errors.add("No username was posted!");
@@ -92,7 +94,7 @@ public class UserList extends HttpServlet {
 
 		/* Admin delete a User */
 		if (request.getParameter("deleteuserconfirm") != null) {
-			if (WrapperObjectFactory.getPerson().removeObject((String)user.getProperty("username"))) {
+			if (WrapperObjectFactory.getPerson().removeObject(username)) {
 				response.sendRedirect(request.getContextPath() + "/userlist#deleteuser");	
 				return;
 			}
@@ -114,15 +116,33 @@ public class UserList extends HttpServlet {
 			                  ,"state",request.getParameter("state")
 			                  ,"zip",request.getParameter("zip")
 				             );
-				errors = user.editObject(request.getParameter("email"), properties);
+				errors = user.editObject(username, properties);
 				
-				request.setAttribute("modifyuser", properties);
-				
+				request.setAttribute("modifyuser", username);	
 				request.setAttribute("edituserprofileerrors", errors);
 				if (errors.isEmpty())
 					request.setAttribute("goodedituser", "true");
 				doGet(request, response);
 				return;
+		}
+		
+		/* Admin change user password */
+		if (request.getParameter("changeuserpassword")  != null) {
+			String newPassword = request.getParameter("newpassword");
+			String verifyNewPassword = request.getParameter("verifynewpassword");
+			if (!newPassword.equals(verifyNewPassword))
+				errors.add("Password did not match!");
+			else {
+				properties = Library.propertyMapBuilder("password", newPassword);
+				errors = user.editObject(username, properties);
+			}
+
+			request.setAttribute("changepassworderrors", errors);
+			request.setAttribute("modifyuser", username);
+			if (errors.isEmpty())
+				request.setAttribute("goodchangepassword", "true");
+			doGet(request, response);
+			return;
 		}
 		
 		response.sendRedirect(request.getContextPath() + "/userlist");	

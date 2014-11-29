@@ -79,7 +79,6 @@
 					ADMIN
 				<% } %>
 				</td>
-				
 				<td class="cell">
 					<form action="/userlist#viewuserprofile" method="post">
 						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
@@ -140,6 +139,7 @@
 <aside id="viewuserprofile" class="modal">
     <div>
     	<% 	if (modifyUser != null) {	%>
+    	<p><strong>Viewing Profile of <%=modifyUser.get("email") %></strong></p>
   		<form action="/userlist#edituserprofile" method="post">
   			<input type="hidden" id="modifyuser" name="modifyuser" value="<%=modifyUser.get("email") %>" />
 			<table>
@@ -170,11 +170,16 @@
 				<tr>
 				   <td class="submitinfo" colspan="2">
 				   <% if (isAdmin) { %>
-				   <input type="submit" class="submit" name="editprofilesubmit" value="Edit Information"/></td>
+				   <input type="submit" class="submit" name="editprofilesubmit" value="Edit Information"/>
+				   </form>
+				   <form action="/userlist#changeuserpassword" method="post">
+				   		<input type="hidden" id="modifyuser" name="modifyuser" value="<%=modifyUser.get("email") %>" />
+				   		<input type="submit" class="submit" name="editprofilesubmit" value="ChangePassword" style="margin-top:8px;" />
+				   </form>
+				   </td>
 				   <% } %>
 				</tr>
 			</table>	
-		</form>
 		<a href="#close" title="Close"  class="unselectable">Close</a>
     </div>
 </aside>
@@ -193,7 +198,7 @@
 		<% } %>
 		
 	<% if (goodEditUser != null) { %>
-		<p><span class="good-message">This Contact Information was successfully edited!</span> </p>
+		<ul class="message"><li class="good-message">This Contact Information was successfully edited!</li></ul>
 		<% } %>
 		
 		<% 	if (modifyUser != null) {
@@ -203,11 +208,10 @@
 		<form action="/userlist#edituserprofile" method="post">
 			<input type="hidden" name="edituserprofile" id="edituserprofile" value="edituserprofile" />
 			<input type="hidden" name="email" id="email" value="<%=modifyUser.get("email") %>" />
-			<input type="hidden" name="username" id="username" value="<%=modifyUser.get("email") %>" />
 			<table>
 				<tr>
 				   <td class="user-label">Email:</td>
-				   <td class="user-label"><input type="text" value="<%=modifyUser.get("email") %>" disabled /></td>
+				   <td class="user-label"><%=modifyUser.get("email") %></td>
 				</tr>
 				<tr>
 				   <td class="user-label">First Name:</td>
@@ -238,10 +242,16 @@
 				   <td class="user-label"><input type = "text" name="zip" id="zip" value="<%=modifyUser.get("zip") %>"/></td>
 				</tr>
 				<tr>
-				   <td class="submitinfo" colspan="2"><input type="submit" class="submit" name="edituserprofilesubmit" value="Edit Information"/></td>
+				   <td class="submitinfo" colspan="2"><input type="submit" class="submit" name="edituserprofilesubmit" value="Edit Information"/>
+				   </form>
+				   	<form action="/userlist#changeuserpassword" method="post">
+				   		<input type="hidden" id="modifyuser" name="modifyuser" value="<%=modifyUser.get("email") %>" />
+				   		<input type="submit" class="submit" name="editprofilesubmit" value="ChangePassword" style="margin-top:8px;" />
+				   </form>
+				   </td>
 				</tr>
 			</table>
-		</form>
+		
 		<ul class="message">
 			<li class="list-message">First Name, Last Name required.</li>
 			<li class="list-message">Phone Number must be in a correct format<br />
@@ -271,9 +281,9 @@
 		<ul class="message" style="margin-top:0px;">
 			<li class="warning-message">Are you sure you want to delete <%=modifyUser.get("email") %>?</li>
 		</ul>
-		<form action="/userlist#userdeleted" method="post">
+		<form action="/userlist#deleteuser" method="post">
 			<input type="hidden" name="deleteuserconfirm" value="deleteuserconfirm" />
-			<input type="hidden" name="username" value="<%=modifyUser.get("email") %>" />
+			<input type="hidden" name="email" value="<%=modifyUser.get("email") %>" />
 			<input type="submit" class="submit" name="gotoprofile" value="Delete"/>
 		</form>
 		<% } %>
@@ -310,6 +320,44 @@
 			<input type="hidden" name="edituserofficehoursfromadmin" value="dituserofficehoursfromadmin" />
 			<input type="hidden" name="email" value="<%=modifyUser.get("email") %>" />
 			<input type="submit" class="submit" name="gotoprofile" value="Edit Office Hours"/>
+			</form>
+		<% } %>
+    </div>
+</aside>
+<aside id="changeuserpassword" class="modal">
+    <div>
+		<a href="#close" title="Close" class="unselectable">Close</a>
+		<% if (modifyUser != null) { %>
+		<p><strong>Change Pasword of <%=modifyUser.get("email") %></strong></p>
+		<% 	List<String> changePasswordErrors = (List<String>) request.getAttribute("changepassworderrors");
+			if (changePasswordErrors != null) { %>
+				<ul class="message">
+		<%	for (String error : changePasswordErrors) { %>
+			<li class="error-message"><%=error %></li>
+			<% } %>
+				</ul>
+		<% } %>
+		<% if (request.getAttribute("goodchangepassword") != null) { %>
+			<ul class="message"><li class="good-message">User's password was changed successfully.</li></ul>
+		<% } %>
+		
+			<form action="/userlist#changeuserpassword" method="post">
+				<input type="hidden" name="changeuserpassword" value="changeuserpassword" />
+				<input type="hidden" name="email" value="<%=modifyUser.get("email") %>" />
+				<table>
+					<tr>
+						<td>Change Password:</td>
+						<td><input type="password" name="newpassword" required /></td>
+					</tr>
+					<tr>
+						<td>Verify Password:</td>
+						<td><input type="password" name="verifynewpassword" required /></td>
+					</tr>
+					<tr>
+						<td  class="submitinfo" colspan="2"><input type="submit" class="submit" value="Change User Password"/>
+						</td>
+					</tr>
+				</table>
 			</form>
 		<% } %>
     </div>
