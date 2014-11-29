@@ -60,7 +60,6 @@
 		<table>
 			<tr>
 				<td class="user-label">Secondary Email:</td><td class="user-data"><%=self.get("email") %></td>
-				 	<!--List<WrapperObject<OfficeHours>> officeHoursWrapped = new ArrayList<WrapperObject<OfficeHours>>();-->
 			</tr>
 			<tr>
 				<td class="user-label">Phone Number:</td><td class="user-data"><%=self.get("phone") %></td>
@@ -196,7 +195,9 @@
 				</tr>
 			</table>
 		</form>
-		<ul class="message"><li class="list-message">Phone Number must be in a correct format<br />
+		<ul class="message">
+		<li class="list-message">First Name, Last Name is required.</li>
+		<li class="list-message">Phone Number must be in a correct format<br />
 		Area Code Follow By 7 Digit Phone Number<br />
 		Each Section can be separated by space, comma or dash<br />
 		(414) 123 4567, 414.123.4567, 414-123-4567, 4141234567</li></ul>
