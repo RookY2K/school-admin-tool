@@ -23,11 +23,11 @@ ul.nav li.nav {
   display: inline-block;
   position: relative;
   cursor: pointer;
-  -webkit-transition: all 0.4s ease-in;
-  -moz-transition: all 0.4s ease-in;
-  -ms-transition: all 0.4s ease-in;
-  -o-transition: all 0.4s ease-in;
-  transition: all 0.4s ease-in;
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  -ms-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
 }
 ul.nav li.nav:hover {
   background: #000;
@@ -44,11 +44,11 @@ ul.nav li.nav ul.nav {
   box-shadow: none;
   opacity: 0;
   visibility: hidden;
-  -webkit-transiton: all 0.4s ease-in;
-  -moz-transition: all 0.4s ease-in;
-  -ms-transition: all 0.4s ease-in;
-  -o-transition: all 0.4s ease-in;
-  -transition: all 0.4s ease-in;
+  -webkit-transiton: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  -ms-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
   overflow: none;
 }
 ul.nav li.nav ul.nav li.nav { 
