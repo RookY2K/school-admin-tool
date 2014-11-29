@@ -18,7 +18,7 @@ public class Login extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		if (request.getParameter("login").equals("logout")) {
+		if (request.getParameter("logout") != null && request.getParameter("logout").equals("true")) {
 			Auth.destroySession(request);
 		}
 		

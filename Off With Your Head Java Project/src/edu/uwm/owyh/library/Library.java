@@ -1,11 +1,14 @@
 package edu.uwm.owyh.library;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 
@@ -112,11 +115,32 @@ public class Library {
                                            ,"zip",user.getProperty("zip")
                                            ,"password",user.getProperty("password")
                                            ,"accesslevel",user.getProperty("accesslevel")
-                                           , "officehours",user.getProperty("officehours")
+                                           ,"officehours",user.getProperty("officehours")
                                            );
 		for(String key : properties.keySet())
 			if(properties.get(key) == null) properties.put(key, "");
 		return properties;
+	}
+	
+	/**
+	 * Utility Method to build a person's Property map. 
+	 * @param user - WrapperObject<OfficeHours> object
+	 * @return A map of properties.
+	 */
+	public static List<Map<String, Object>> makeWrapperProperties(List<WrapperObject<OfficeHours>> hours) {
+		if (hours == null) return null;
+		List<Map<String, Object>> officeHours = new ArrayList<Map<String, Object>>();
+		for (WrapperObject<OfficeHours> hour : hours) {
+			Map<String, Object> properties =
+					Library.propertyMapBuilder("starttime",hour.getProperty("starttime")
+	                                           ,"endtime",hour.getProperty("endtime")
+	                                           ,"days",hour.getProperty("days")
+	                                           );
+			for(String key : properties.keySet())
+				if(properties.get(key) == null) properties.put(key, "");
+			officeHours.add(properties);
+		}
+		return officeHours;
 	}
 	
 	/**

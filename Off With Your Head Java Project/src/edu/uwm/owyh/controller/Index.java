@@ -7,13 +7,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.datastore.Key;
+
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
+import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 @SuppressWarnings("serial")
 public class Index extends HttpServlet {
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
@@ -34,11 +38,15 @@ public class Index extends HttpServlet {
 		
 		if (isLogin) {
 			if (isAdmin){ 
-				response.sendRedirect(request.getContextPath() + "/admin/admin.jsp");
+				response.sendRedirect(request.getContextPath() + "/admin");
 				return;
 			}
 			else{
-				response.sendRedirect(request.getContextPath() + "/home.jsp");
+				WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
+				Key myId = Library.generateIdFromUserName((String) self.getProperty("username"));
+				self = WrapperObjectFactory.getPerson().findObjectById(myId);
+				request.setAttribute("self", Library.makeUserProperties(self));
+				request.getRequestDispatcher(request.getContextPath() + "/home.jsp").forward(request, response);	
 				return;
 			}
 		}

@@ -27,7 +27,7 @@ public class InitialLogin extends HttpServlet{
 			if(noUsers != null && noUsers.booleanValue()){
 												
 				Auth.setSessionVariable(request, "noUsers", noUsers);
-				response.sendRedirect(request.getContextPath() + "/initiallogin.jsp");
+				request.getRequestDispatcher(request.getContextPath() + "/initiallogin.jsp").forward(request, response);
 				return;
 			}else{
 				request.getRequestDispatcher("/").forward(request, response);
@@ -57,7 +57,7 @@ public class InitialLogin extends HttpServlet{
 			
 			if(!isKey){
 				request.setAttribute("isKey", isKey);
-				request.getRequestDispatcher(request.getContextPath() + "/initiallogin.jsp").forward(request, response);;
+				request.getRequestDispatcher(request.getContextPath() + "/initiallogin.jsp").forward(request, response);
 				return;
 			}else{
 				Auth.setSessionVariable(request, "isAddAdmin", true);

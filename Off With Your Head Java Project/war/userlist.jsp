@@ -1,68 +1,75 @@
-<%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject" %>
 <%@ page import="edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel" %>
-<%@ page import="edu.uwm.owyh.jdo.Person" %>
-<%@ page import="edu.uwm.owyh.model.Auth" %>
-<%@page import="java.util.List"%>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
 <%! @SuppressWarnings("unchecked") %>
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="User List" />
-    <jsp:param name="stylesheet" value="layout.css" />
-    <jsp:param name="stylesheet" value="users.css" />
+    <jsp:param name="stylesheet" value="main.css" />
+    <jsp:param name="stylesheet" value="userlist.css" />
 </jsp:include>
 
-<jsp:include page="/WEB-INF/templates/layout.jsp" />
+<jsp:include page="/WEB-INF/templates/navagation.jsp" />
+<jsp:include page="/WEB-INF/templates/genericnavagation.jsp">
+	<jsp:param name="content" value="User List" />
+</jsp:include>
+
 <%
-	String userName = "";
-	WrapperObject<Person> self = (WrapperObject<Person>)Auth.getSessionVariable(request, "user");
-	if(self != null ){
-		userName = (String)self.getProperty("username");
-	}
+	Map<String,Object> self = (Map<String,Object>) request.getAttribute("self");
+	List<Map<String,Object>> users = (List<Map<String,Object>>) request.getAttribute("users");
 	
-	List<WrapperObject<Person>> users = (List<WrapperObject<Person>>) request.getAttribute("users");
+	if (self == null || users == null) { out.print("No Correct Attribute Was Passed Into JSP!"); return; }
+
+	AccessLevel userAccess = (AccessLevel) self.get("accesslevel");
+	boolean isAdmin = (userAccess == AccessLevel.ADMIN);
 	
-	AccessLevel userAccess = (AccessLevel) self.getProperty("accesslevel");
+	Map<String,Object> modifyUser = (Map<String,Object>) request.getAttribute("modifyuser");
+	List<Map<String,Object>> officeHours = (List<Map<String,Object>>) request.getAttribute("officehours");
 %>
-<div id="content">
-	<div id="local-nav-bar">
-		<ul id="local-list">
-		</ul>
-	</div>
-	  	
-	<div id="body">
+
+<div id="body" style="clear:both;">
 	
 		<!-- User List  -->
 		
 		<% if (request.getParameter("deleted") != null) { %>
 			<br /><span class="good-message">A user was successfully deleted!</span>
 		<% } %>
-		<fieldset>
-			<legend>User List</legend>
-			
+		
+		<table id="user-search">
+			<tr>
+				<td>User Name: <input type="text" value="" /></td>
+				<td>Email: <input type="text" value="" /></td>
+				<td><input type="checkbox" /> Admin <input type="checkbox" /> Instructor <input type="checkbox" /> TA</td>
+				<td><input type="submit" class="submit" value="Filter Users" /></td>
+			</tr>
+		</table>
+
+		<br /><br />
 		<table id="users">
 			<tr>
 				<td class="cell-header">Last Name</td>
 				<td class="cell-header">First Name</td>
 				<td class="cell-header">Email</td>
 				<td class="cell-header">Role</td>
-				<% if (userAccess == AccessLevel.ADMIN) { %>
+				<% if (isAdmin) { %>
 				<td class="cell-header" colspan="3">Profile</td>
 				<% } else {%>
 				<td class="cell-header" colspan="1">Profile</td>
 				<% } %>
+				<% if (isAdmin) { %>
+				<td class="cell-header"colspan="2">Office Hours</td>
+				<% } else {%>
+				<td class="cell-header"colspan="1">Office Hours</td>
+				<% } %>
 			</tr>		
- 		<% for (WrapperObject<Person> user : users) {
-			
-			String firstname = (String) user.getProperty("firstname");
-		 	String lastname = (String) user.getProperty("lastname");
-		 	String username = (String) user.getProperty("username");
-		 	AccessLevel accesslevel = (AccessLevel) user.getProperty("accesslevel");
-			
-			%>
+ 		<% for (int i = 0; i < users.size(); i++) {
+ 				Map<String,Object> user = users.get(i);
+		 		AccessLevel accesslevel = (AccessLevel) user.get("accesslevel");
+		%>
 			<tr>
-				<td class="cell"><%=lastname %></td>
-				<td class="cell"><%=firstname %></td>
-				<td class="cell"><%=username%></td>
+				<td class="cell"><%=user.get("lastname") %></td>
+				<td class="cell"><%=user.get("firstname") %></td>
+				<td class="cell"><%=user.get("email") %></td>
 				<td class="cell">
 				<% if (accesslevel == AccessLevel.TA) { %>
 					TA
@@ -73,21 +80,22 @@
 				<% } %>
 				</td>
 				
-				
-				
 				<td class="cell">
-					<form action="/profile" method="post">
-						<input type="hidden" name="username" value="<%=username %>" />
-						<input type="submit" value="View" />
+					<form action="/userlist#viewuserprofile" method="post">
+						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
+						<input type="submit" class="submit" value="View" />
 					</form>
 				</td>
-				<% if (userAccess == AccessLevel.ADMIN) { %>
+				<% if (isAdmin) { %>
 				
-				<%if(!userName.equalsIgnoreCase(username)){%>
+				<% String myUsername = (String)self.get("email");
+					String username = (String)user.get("email");
+					
+					if(myUsername != null && !myUsername.equals(username)){%>
 				<td class="cell">
-					<form action="/userlist" method="post">
-						<input type="hidden" name="username" value="<%=username %>" />
-						<input type="submit" value="Delete"/>
+					<form action="/userlist#deleteuser" method="post">
+						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
+						<input type="submit" class="submit" value="Delete"/>
 					</form>
 				</td>
 				<%}else{%>
@@ -95,20 +103,216 @@
 				<%}%>
 				
 				<td class="cell">
-					<form action="/editprofile" method="post">
-						<input type="hidden" name="username" value="<%=username %>" />
-						<input type="submit" value="Edit" />
+					<form action="/userlist#edituserprofile" method="post">
+						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
+						<input type="submit" class="submit" value="Edit" />
 					</form>
 				</td>
 						
 				<% } %>
+				<td class="cell">
+					<form action="/userlist#viewofficehours" method="post">
+						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
+						<input type="submit" class="submit" value="View" />
+					</form>
+				</td>
 				
+				<% if (isAdmin) { %>
+				<td class="cell">
+					<form action="/officehours" method="post">
+					<input type="hidden" name="edituserofficehoursfromadmin" value="dituserofficehoursfromadmin" />
+					<input type="hidden" name="email" value="<%=user.get("email") %>" />
+					<input type="submit" class="submit" name="gotoprofile" value="Edit"/>
+					</form>
+				</td>
+				<% } %>
 			</tr>
 		<% } %>
 		</table>
-		</fieldset>	
-	
-	</div>
+		
+	<br class="clear" />
 </div>
+
+
+
+<!-- CSS Modal Start Here -->
+
+<aside id="viewuserprofile" class="modal">
+    <div>
+    	<% 	if (modifyUser != null) {	%>
+  		<form action="/userlist#edituserprofile" method="post">
+  			<input type="hidden" id="modifyuser" name="modifyuser" value="<%=modifyUser.get("email") %>" />
+			<table>
+				<tr>
+				   <td class="user-label">First Name:</td>
+				   <td class="user-label"><%=modifyUser.get("firstname") %></td>
+				</tr>
+				<tr>
+					<td class="user-label">Last Name:</td>
+					<td class="user-label"><%=modifyUser.get("lastname") %></td>
+				</tr>
+				<tr>
+				   <td class="user-label">Email:</td>
+				   <td class="user-label"><%=modifyUser.get("email") %></td>
+				</tr>
+			   <tr>
+				   <td class="user-label">Phone:</td>
+				   <td class="user-label"><%=modifyUser.get("phone") %></td>
+			   </tr>
+			   <tr>
+				   <td class="user-label">Address:</td>
+				   <td class="user-label"><%=modifyUser.get("streetaddress") %> <br /> <%=modifyUser.get("city") %>
+				   <% if (modifyUser.get("city") != null && modifyUser.get("state") != null && 
+				   		!modifyUser.get("state").equals("") && !modifyUser.get("city").equals("")) { out.print(", "); } %>
+				   <%=modifyUser.get("state") %>  <%=modifyUser.get("zip") %>
+				   </td>
+			   </tr>
+				<tr>
+				   <td class="submitinfo" colspan="2">
+				   <% if (isAdmin) { %>
+				   <input type="submit" class="submit" name="editprofilesubmit" value="Edit Information"/></td>
+				   <% } %>
+				</tr>
+			</table>	
+		</form>
+		<a href="#close" title="Close"  class="unselectable">Close</a>
+    </div>
+</aside>
+
+<aside id="edituserprofile" class="modal">
+    <div>
+		<p><strong>Contact Information</strong></p>
+		<% 	List<String> editProfileErrors = (List<String>) request.getAttribute("edituserprofileerrors");
+			String goodEditUser = (String) request.getAttribute("goodedituser");
+			if (editProfileErrors != null) { %>
+				<ul class="message">
+		<%	for (String error : editProfileErrors) { %>
+			<li class="error-message"><%=error %></li>
+			<% } %>
+				</ul>
+		<% } %>
+		
+	<% if (goodEditUser != null) { %>
+		<p><span class="good-message">This Contact Information was successfully edited!</span> </p>
+		<% } %>
+		
+		<% 	if (modifyUser != null) {
+			String state ="";
+			state = (String) modifyUser.get("state");
+		%>
+		<form action="/userlist#edituserprofile" method="post">
+			<input type="hidden" name="edituserprofile" id="edituserprofile" value="edituserprofile" />
+			<input type="hidden" name="email" id="email" value="<%=modifyUser.get("email") %>" />
+			<input type="hidden" name="username" id="username" value="<%=modifyUser.get("email") %>" />
+			<table>
+				<tr>
+				   <td class="user-label">Email:</td>
+				   <td class="user-label"><input type="text" value="<%=modifyUser.get("email") %>" disabled /></td>
+				</tr>
+				<tr>
+				   <td class="user-label">First Name:</td>
+				   <td class="user-label"><input type = "text" name="firstname" id="firstname" value="<%=modifyUser.get("firstname") %>" required /></td>
+				</tr>
+				<tr>
+					<td class="user-label">Last Name:</td>
+					<td class="user-label"><input type = "text" name="lastname" id="lastname" value="<%=modifyUser.get("lastname") %>" required /></td>
+				</tr>
+				<tr>
+				   <td class="user-label">Phone:</td>
+				   <td class="user-label"><input type = "text" name="phone" id="phone" value="<%=modifyUser.get("phone") %>" /></td>
+				</tr>
+				<tr>
+					<td class="user-label">Address:</td>
+					<td class="user-label"><input type = "text" name="streetaddress" id="streetaddress" value="<%=modifyUser.get("streetaddress") %>"/></td>
+				</tr>
+				<tr>
+					<td class="user-label">City & State:</td>
+					<td class="user-label"><input type = "text" name="city" id="city" value="<%=modifyUser.get("city") %>"/>
+						<jsp:include page="/WEB-INF/templates/stateselect.jsp">
+					    	<jsp:param name="selected" value='<%=state %>' />
+						</jsp:include>		
+					</td>
+				</tr>
+				<tr>
+				   <td class="user-label">Zip Code:</td>
+				   <td class="user-label"><input type = "text" name="zip" id="zip" value="<%=modifyUser.get("zip") %>"/></td>
+				</tr>
+				<tr>
+				   <td class="submitinfo" colspan="2"><input type="submit" class="submit" name="edituserprofilesubmit" value="Edit Information"/></td>
+				</tr>
+			</table>
+		</form>
+		<ul class="message">
+			<li class="list-message">First Name, Last Name required.</li>
+			<li class="list-message">Phone Number must be in a correct format<br />
+		Area Code Follow By 7 Digit Phone Number<br />
+		Each Section can be separated by space, comma or dash<br />
+		(414) 123 4567, 414.123.4567, 414-123-4567, 4141234567
+		<% } %>
+		</ul>
+		<% } %>
+		<a href="#close" title="Close"  class="unselectable">Close</a>
+    </div>
+</aside>
+<aside id="deleteuser" class="modal">
+    <div>
+		<a href="#close" title="Close" class="unselectable">Close</a>
+		<p><strong>Delete User</strong></p>
+		<% if (modifyUser == null) { %>
+		<ul class="message" style="margin-top:0px;">
+			<li class="good-message">User has been successfully deleted.</li>
+		</ul>
+		<form action="#close" method="post">
+			<input type="submit" class="submit" name="gotoprofile" value="Confirm"/>
+		</form>
+		<% }
+		else {
+		%>
+		<ul class="message" style="margin-top:0px;">
+			<li class="warning-message">Are you sure you want to delete <%=modifyUser.get("email") %>?</li>
+		</ul>
+		<form action="/userlist#userdeleted" method="post">
+			<input type="hidden" name="deleteuserconfirm" value="deleteuserconfirm" />
+			<input type="hidden" name="username" value="<%=modifyUser.get("email") %>" />
+			<input type="submit" class="submit" name="gotoprofile" value="Delete"/>
+		</form>
+		<% } %>
+    </div>
+</aside>
+<aside id="viewofficehours" class="modal">
+    <div>
+		<a href="#close" title="Close" class="unselectable">Close</a>
+		<p><strong>Office Hours</strong></p>
+		<% if (officeHours == null || officeHours.isEmpty()) { %>
+			This user has no Office Hours.
+		<% }
+		else {
+		%>
+			<table class="officehour-table">
+			<tr>
+				<td class="underline">Days</td>
+				<td class="underline">Time</td>
+				<td class="underline">Room</td>
+			</tr>
+		<% for (Map<String, Object> hour : officeHours) { %>
+			<tr>
+				<td><%=hour.get("days") %></td>
+				<td><%=hour.get("starttime") %> - <%=hour.get("endtime") %></td>
+				<td></td>
+			</tr>
+			<tr>
+		<% } %>
+			</table>
+		<% } %>
+		<% if (isAdmin && modifyUser != null) { %>
+		<br /><br />
+			<form action="/officehours" method="post">
+			<input type="hidden" name="edituserofficehoursfromadmin" value="dituserofficehoursfromadmin" />
+			<input type="hidden" name="email" value="<%=modifyUser.get("email") %>" />
+			<input type="submit" class="submit" name="gotoprofile" value="Edit Office Hours"/>
+			</form>
+		<% } %>
+    </div>
+</aside>
 
 <jsp:include page="/WEB-INF/templates/footer.jsp" />
