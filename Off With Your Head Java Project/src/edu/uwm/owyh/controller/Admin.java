@@ -25,8 +25,7 @@ public class Admin extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if(!auth.verifyAdmin(response)) return;
 		
-		request.getRequestDispatcher(request.getContextPath() + "/admin/admin.jsp").forward(request, response);	
-		//response.sendRedirect(request.getContextPath() + "/admin/admin.jsp");
+		request.getRequestDispatcher(request.getContextPath() + "/admin/admin.jsp").forward(request, response);
 	}
 	
 	@Override
@@ -50,6 +49,7 @@ public class Admin extends HttpServlet {
 			}
 		}
 		
+		// Add new User
 		if (request.getParameter("addnewuser") !=null) {
 			
 			String password = request.getParameter("password");	
@@ -83,6 +83,7 @@ public class Admin extends HttpServlet {
 			return;
 		}
 
+		// Add Contact Information
 		if (request.getParameter("addcontactinfo") !=null) {
 			properties = Library.propertyMapBuilder("firstname", request.getParameter("firstname")
 		              ,"lastname", request.getParameter("lastname")
@@ -109,6 +110,8 @@ public class Admin extends HttpServlet {
 			request.getRequestDispatcher(request.getContextPath() + "/admin/admin.jsp").forward(request, response);	
 			return;
 		}
+		
+		// Load Classlist
 		if(request.getParameter("reloadclassschedule") != null){
 			response.sendRedirect(request.getContextPath() + "/admin/scraper");
 			return;

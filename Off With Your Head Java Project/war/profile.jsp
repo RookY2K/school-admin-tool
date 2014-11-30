@@ -141,8 +141,8 @@
 		<ul class="message" style="margin-top:0px;">
 			<li class="good-message">Your password was successfully changed.</li>
 		</ul>
-		<form action="#close" method="post">
-			<input type="submit" class="submit" name="gotoprofile" value="Confirm"/>
+		<form action="#close" method="get">
+			<input type="submit" class="submit" value="Confirm"/>
 		</form>
     </div>
 </aside>
@@ -213,8 +213,8 @@
 		<ul class="message" style="margin-top:0px;">
 			<li class="good-message">Your contact information was successfully changed.</li>
 		</ul>
-		<form action="#close" method="post">
-			<input type="submit" class="submit" name="gotoprofile" value="Confirm"/>
+		<form action="#close" method="get">
+			<input type="submit" class="submit" value="Confirm"/>
 		</form>
     </div>
 </aside>

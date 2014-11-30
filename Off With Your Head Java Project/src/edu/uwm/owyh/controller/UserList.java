@@ -66,11 +66,14 @@ public class UserList extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (! auth.verifyUser(response)) return;
 		
-		/* This allow Admin to edit, delete user Redirected from another page */
+		/* This allow non-Admin to view and Admin to edit, delete user Redirected from another page */
 		if (request.getParameter("modifyuser") != null) {
 			doGet(request, response);
 			return;
 		}
+		
+		/* Only Admin can Edit Users, and go beyond this point */
+		if (! auth.verifyAdmin(response)) return;
 
 		List<String> errors = new ArrayList<String>();
 		WrapperObject<Person> user = null;
