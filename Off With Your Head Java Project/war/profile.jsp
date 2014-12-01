@@ -155,6 +155,7 @@
 				</ul>
 		<% } %>
 		<form action="/profile#editprofile" method="post">
+			<input type="hidden" name="email" value="<%=self.get("email") %>" />
 			<input type="hidden" name="editprofile" value="editprofile" />
 			<table>
 				<tr>
