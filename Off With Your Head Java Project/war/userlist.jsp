@@ -155,6 +155,11 @@
 				   <td class="user-label">Email:</td>
 				   <td class="user-label"><%=modifyUser.get("email") %></td>
 				</tr>
+				<tr>
+				   <td class="user-label">Role:</td>
+				   <td class="user-label"><%=modifyUser.get("accesslevel") %></td>
+				</tr>
+				<% if (isAdmin) { %>
 			   <tr>
 				   <td class="user-label">Phone:</td>
 				   <td class="user-label"><%=modifyUser.get("phone") %></td>
@@ -167,6 +172,7 @@
 				   <%=modifyUser.get("state") %>  <%=modifyUser.get("zip") %>
 				   </td>
 			   </tr>
+			   <% } %>
 				<tr>
 				   <td class="submitinfo" colspan="2">
 				   <% if (isAdmin) { %>

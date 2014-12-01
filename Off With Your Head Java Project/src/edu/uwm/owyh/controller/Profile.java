@@ -88,7 +88,7 @@ public class Profile extends HttpServlet {
 			
 			if (errors.isEmpty()) {
 				properties = Library.propertyMapBuilder("password", newPassword);
-				errors = self.editObject(request.getParameter("email"), properties);
+				errors = WrapperObjectFactory.getPerson().editObject((String) self.getProperty("email"), properties);
 				if (errors.isEmpty()) {
 					response.sendRedirect(request.getContextPath() + "/profile#passwordchanged");
 					return;
@@ -109,7 +109,7 @@ public class Profile extends HttpServlet {
 		                  ,"state",request.getParameter("state")
 		                  ,"zip",request.getParameter("zip")
 			             );
-			errors = WrapperObjectFactory.getPerson().editObject(request.getParameter("email"), properties);
+			errors = WrapperObjectFactory.getPerson().editObject((String) self.getProperty("email"), properties);
 			if (errors.isEmpty()) {
 				response.sendRedirect(request.getContextPath() + "/profile#profilechanged");
 				return;

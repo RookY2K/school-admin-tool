@@ -59,9 +59,6 @@
 		
 		<table>
 			<tr>
-				<td class="user-label">Secondary Email:</td><td class="user-data"><%=self.get("email") %></td>
-			</tr>
-			<tr>
 				<td class="user-label">Phone Number:</td><td class="user-data"><%=self.get("phone") %></td>
 			</tr>
 			<tr>
@@ -112,7 +109,6 @@
 		
         <form action="/profile#changepassword" method="post">
 			<input type="hidden" name="changepassword" value="changepassword" />
-			<input type="hidden" name="email" value="admin@uwm.edu" />
 			<table>
 				<tr>
 				   <td class="user-label">Original Password:</td>
@@ -160,7 +156,6 @@
 		<% } %>
 		<form action="/profile#editprofile" method="post">
 			<input type="hidden" name="editprofile" value="editprofile" />
-			<input type="hidden" name="email" value="<%=self.get("email") %>" />
 			<table>
 				<tr>
 				   <td class="user-label">First Name:</td>
@@ -218,6 +213,5 @@
 		</form>
     </div>
 </aside>
-
         
 <jsp:include page="/WEB-INF/templates/footer.jsp" />
