@@ -66,7 +66,7 @@
  				Map<String,Object> user = users.get(i);
 		 		AccessLevel accesslevel = (AccessLevel) user.get("accesslevel");
 		%>
-			<tr>
+			<tr class="line<% out.print(i % 2 + 1); %>">
 				<td class="cell"><%=user.get("lastname") %></td>
 				<td class="cell"><%=user.get("firstname") %></td>
 				<td class="cell"><%=user.get("email") %></td>

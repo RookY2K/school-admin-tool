@@ -11,16 +11,14 @@
     <jsp:param name="stylesheet" value="main.css" />
     <jsp:param name="stylesheet" value="home.css" />
 </jsp:include>
-
-<% Map<String, Object> self = (Map<String, Object>)request.getAttribute("self");
-if (self == null) { out.print("No Correct Attribute Was Passed Into JSP!"); return; }
-%>
-
 <jsp:include page="/WEB-INF/templates/navagation.jsp" />
 <jsp:include page="/WEB-INF/templates/genericnavagation.jsp">
 	<jsp:param name="content" value="Welcome Back!" />
 </jsp:include>
 
+<% Map<String, Object> self = (Map<String, Object>)request.getAttribute("self");
+if (self == null) { out.print("No Correct Attribute Was Passed Into JSP!"); return; }
+%>
 	
 	<div id="body">
 		<div id="welcome">

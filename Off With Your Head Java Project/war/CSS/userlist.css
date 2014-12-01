@@ -26,8 +26,15 @@
 }
 
 .cell {
-	background-color: #fff;
 	padding: 6px;
+}
+
+.line1 {
+	background-color: #fff;
+}
+
+.line2 {
+	background-color: #f2f0f0;
 }
 
 #user-search {

@@ -66,7 +66,7 @@ public class ClassList extends HttpServlet{
 		
 		Auth.setSessionVariable(request, "courses", courses);		
 		
-		response.sendRedirect(request.getContextPath() + "/classlist.jsp");
+		request.getRequestDispatcher(request.getContextPath() + "/classlist.jsp").forward(request, response);
 	}
 
 	@SuppressWarnings("unchecked")
