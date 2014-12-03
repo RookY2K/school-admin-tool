@@ -192,6 +192,11 @@ public class Library {
 		return hours + minutes;
 	}
 	
+	public static Key generateIdFromCourseNum(String courseNum) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	private static String parseAmPm(String time) {
 		int startIndex = time.length() - 2;
 		String AmPm = time.substring(startIndex);

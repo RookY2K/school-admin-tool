@@ -73,48 +73,54 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 		// TODO Auto-generated method stub
 		DataStore store = DataStore.getDataStore();
 		String error;
-		Key id = Library.generateIdFromUserName(userName);
+		Key id = Library.generateIdFromCourseNum(courseNum);
 		
-		boolean hasAccessLevel = false;
 		List<String> errors = new ArrayList<String>();
 	
 		if(findObjectById(id) != null){
-			errors.add("Error: User already exists!");
+			errors.add("Error: Course already exists!");
 		}
 	
-		error = checkProperty("username", userName);
+		error = checkProperty("coursenum", courseNum);
 	
 		if(!error.equals("")){
 			errors.add(error);
 		}
 	
 		for(String propertyKey : properties.keySet()){
-			if(propertyKey.equals("accesslevel")) hasAccessLevel = true;
 			error = checkProperty(propertyKey, properties.get(propertyKey));
 			if(!error.equals("")){
 				errors.add(error);
 			}
 		}
 	
-		if(!hasAccessLevel) errors.add("Error: Role is a required field!");
-	
 		if(!errors.isEmpty()) return errors;
 	
-		setPerson(userName);		
-	
-		setProperty("email", userName);
+		setCourse(courseNum);		
 	
 		for(String propertyKey : properties.keySet()){
 			setProperty(propertyKey, properties.get(propertyKey));
 		}
 	
-		if(!store.insertEntity(_person, _person.getId())){
+		if(!store.insertEntity(_course, _course.getId())){
 			errors.add("Error: Datastore insert failed for unexpected reason!");
 		}
 	
 		return errors;
+	}
 
+	private void setProperty(String propertyKey, Object object) {
+		// TODO Auto-generated method stub
 		
+	}
+
+	private void setCourse(String courseNum) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private String checkProperty(String propertyKey, Object propertyValue ) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -182,6 +188,11 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 			throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public static WrapperObject<Course> getCourseWrapper() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -17,15 +17,16 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.PersonWrapper;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
+import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.DataStore;
 
-public class TestBasicUser {
+public class TestWrapperObjectInterface {
 
 	private DataStore datastore;
 	private WrapperObject<Person> parent;
@@ -538,6 +539,111 @@ public class TestBasicUser {
 		assertFalse("".equals(hours.getProperty("days")));
 	}
 	
+	@Test
+	public void testAddCourseUnique(){
+		WrapperObject<Course> course = WrapperObjectFactory.getCourse();
+		String courseNum = "101";
+		String courseName = "Introduction to Programming";
+		Map<String,Object> properties = Library.propertyMapBuilder("coursename", courseName);
+		
+		assertTrue(course.addObject(courseNum, properties).isEmpty());
+		assertEquals(courseNum,course.getProperty("coursenum"));
+		assertEquals(courseName, course.getProperty(courseName));
+	}
+	
+	@Test
+	public void testAddMultipleCourseUnique(){
+		WrapperObject<Course> course1 = WrapperObjectFactory.getCourse();
+		WrapperObject<Course> course2 = WrapperObjectFactory.getCourse();
+		
+		String courseNum1 = "101";
+		String courseName1 = "Introduction to Programming";
+		String courseNum2 = "251";
+		String courseName2 = "Intermediate Programming";
+		
+		Map<String, Object> properties1 = Library.propertyMapBuilder("coursename", courseName1);
+		Map<String, Object> properties2 = Library.propertyMapBuilder("coursename", courseName2);
+		
+		assertTrue(course1.addObject(courseNum1, properties1).isEmpty());
+		assertTrue(course2.addObject(courseNum2, properties2).isEmpty());
+		
+		assertEquals(2,DataStore.getDataStore().findEntities(course1.getTable(), null, null).size());
+	}
+	
+	@Test
+	public void testAddCourseWithBadProperties(){
+		WrapperObject<Course> course = WrapperObjectFactory.getCourse();
+		DataStore store = DataStore.getDataStore();
+		assertTrue(store.findEntities(course.getTable(), null, null).isEmpty());
+		String badNum1 = "1b1";
+		String badNum2 = "97";
+		String badNum3 = "1004";
+		String badNum4 = " ";
+		String badNum5 = null;
+		
+		String courseName = "This is a course";
+		
+		Map<String, Object> properties = Library.propertyMapBuilder("coursename", courseName);
+		
+		for(int i=0; i<5; ++i){
+			try{
+				switch(i){
+				case 1:
+					course.addObject(badNum1, properties);
+					fail("An exception should have been thrown for a non digit string");
+				case 2:
+					course.addObject(badNum2, properties);
+					fail("An exception should have been thrown for a string less than 3 characters long");
+				case 3:
+					course.addObject(badNum3, properties);
+					fail("An exception should have been thrown for a string greater than 3 characters long");
+				case 4: 
+					course.addObject(badNum4, properties);
+					fail("An exception should have been thrown for an empty string");
+				case 5: 
+					course.addObject(badNum5, properties);
+					fail("an exception should have been thrown for a null pointer");				
+				}
+			}catch(NumberFormatException nfe){
+				//pass test
+			}catch(IllegalArgumentException iae){
+				//pass test
+			}catch(NullPointerException npe){
+				//pass test
+			}catch(Exception e){
+				fail("Unexpected exception occurred: " + e.getMessage());
+			}
+			assertTrue(store.findEntities(course.getTable(), null, null).isEmpty());
+		}
+		
+		
+		
+		properties = Library.propertyMapBuilder("coursename"," ");
+		
+		try{
+			course.addObject("101", properties);
+			fail("An exception should have been thrown for an empty string");
+		}catch(IllegalArgumentException e){
+			//pass test
+		}catch(Exception e){
+			fail("Unexpected exception occurred: " + e.getMessage());
+		}
+		
+		assertTrue(store.findEntities(course.getTable(), null, null).isEmpty());
+		
+		properties = Library.propertyMapBuilder("coursename", null);
+		
+		try{
+			course.addObject("101", properties);
+			fail("An exception should have been thrown for a null pointer");
+		}catch(NullPointerException e){
+			//pass test
+		}catch(Exception e){
+			fail("Unexpected exception occurred: " + e.getMessage());
+		}
+		
+		assertTrue(store.findEntities(course.getTable(), null, null).isEmpty());
+	}
 	
 	private void addFourOfficeHours(){
 		parent = getPerson("admin@uwm.edu");
