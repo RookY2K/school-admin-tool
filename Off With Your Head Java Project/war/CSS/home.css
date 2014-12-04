@@ -43,6 +43,18 @@ td.hours {
 	font-size:0.9em;
 }
 
+td.hours-background {
+	border-style: solid;
+	border-top-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-right-width: 2px;
+	border-top-color: rgb(255,255,255);
+	border-bottom-color: rgb(128,128,128);
+	border-left-color: rgb(255,255,255);
+	border-right-color: rgb(128,128,128);
+}
+
 .large-title {
 	font-size: 1.4em;
 	font-weight: bold;
@@ -55,7 +67,20 @@ td.hours {
 
 .class-hour {
 	font-weight: bold;
-	color: #66984b; 
+	color: #66984b;
+	display: block;
+	padding-top: 1px;
+	padding-bottom: 1px; 
+}
+
+.class-key {
+	font-weight: bold;
+	color: #66984b;
+}
+
+.office-key {
+	font-weight: bold;
+	color: #6f649e;
 }
 
 a:visited {

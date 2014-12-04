@@ -17,6 +17,7 @@
 </jsp:include>
 
 <% Map<String, Object> self = (Map<String, Object>)request.getAttribute("self");
+List<Map<String,Object>> officeHours = (List<Map<String,Object>>) request.getAttribute("officehours");
 if (self == null) { out.print("No Correct Attribute Was Passed Into JSP!"); return; }
 %>
 	
@@ -57,7 +58,7 @@ if (self == null) { out.print("No Correct Attribute Was Passed Into JSP!"); retu
 					<td class="time">10:00 AM</td>	
 					<td class="hours"><!--<span class="class-hour">COMPSCI 361 Section 801</span>--></td>
 					<td class="hours"></td>
-					<td class="hours"><!--<span class="class-hour">COMPSCI 361 Section 801</span>--></td>
+					<td class="hours-background"><span class="class-hour">COMPSCI 361 Section 801</span></td>
 					<td class="hours"></td>
 					<td class="hours"></td>
 				</tr>
@@ -159,8 +160,8 @@ if (self == null) { out.print("No Correct Attribute Was Passed Into JSP!"); retu
 				</tr>
 			</table>
 			<p>
-				<span class="class-hour">*Classes</span> <br />
-				<span class="office-hour">*Office Hours</span> 
+				<span class="class-key">*Classes</span> <br />
+				<span class="office-key">*Office Hours</span> 
 			</p>
 		</div>
 	
