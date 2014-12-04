@@ -8,6 +8,7 @@ import java.util.Map;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
@@ -92,6 +93,7 @@ public class Library {
 	 * @return Key - Person JDO primary key
 	 */
 	public static Key generateIdFromUserName(String userName){
+		if(userName == null) return null;
 		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(Person.getParentkey());
 
 		return keyBuilder.addChild(Person.getKind(), userName.toLowerCase()).getKey();		
@@ -192,6 +194,19 @@ public class Library {
 		return hours + minutes;
 	}
 	
+	/**
+	 * <pre>Utility method to build a Course JDO primary key from the inputed courseNum. Will
+	 * always return a Key, even if the Course does not exist in the Datastore. </pre>
+	 * @param courseNum - 3 digit string identifier of course (COMPSCI-XXX) where XXX is courseNum
+	 * @return Key - Course JDO primary key
+	 */
+	public static Key generateIdFromCourseNum(String courseNum) {
+		if(courseNum == null) return null;
+		
+		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(Course.getParentkey());
+		return keyBuilder.addChild(Course.getKind(), courseNum.toLowerCase()).getKey();
+	}
+
 	private static String parseAmPm(String time) {
 		int startIndex = time.length() - 2;
 		String AmPm = time.substring(startIndex);

@@ -1,10 +1,12 @@
 package edu.uwm.owyh.factories;
 
+import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.OfficeHoursWrapper;
 import edu.uwm.owyh.jdowrappers.PersonWrapper;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
+import edu.uwm.owyh.jdowrappers.CourseWrapper;
 
 /**
  * Factories for instantiation of WrapperObjects.
@@ -35,5 +37,15 @@ public class WrapperObjectFactory {
 	 */
 	public static WrapperObject<OfficeHours> getOfficeHours(){
 		return OfficeHoursWrapper.getOfficeHoursWrapper();
+	}
+
+	/**
+	 * <pre>
+	 * Instantiates and returns a Course Wrapper Object
+	 * Course will have all fields set to default values (NULL)
+	 * @return WrapperObject<Course>
+	 */
+	public static WrapperObject<Course> getCourse() {
+		return CourseWrapper.getCourseWrapper();
 	}
 }

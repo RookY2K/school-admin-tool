@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import edu.uwm.owyh.library.Library;
+
 public class UserScheduleElement {
 	String days;
 	double startTime;
@@ -17,8 +19,8 @@ public class UserScheduleElement {
 		try {
 			days = parseDays(scheduleString);
 			List<String> times = parseTimes(scheduleString);
-			startTime = parseTime(times.get(0));
-			endTime = parseTime(times.get(1));
+			startTime = Library.parseTimeToDouble(times.get(0));
+			endTime = Library.parseTimeToDouble(times.get(1));
 
 			if (room != null && room.isEmpty() == false) {
 				this.room = room;
@@ -39,8 +41,8 @@ public class UserScheduleElement {
 			String room, String title) {
 		try {
 			this.days = days;
-			this.startTime = parseTime(startTime);
-			this.endTime = parseTime(endTime);
+			this.startTime = Library.parseTimeToDouble(startTime);
+			this.endTime = Library.parseTimeToDouble(endTime);
 			this.room = room;
 			this.title = title;
 		} catch (Exception e) {
@@ -48,28 +50,7 @@ public class UserScheduleElement {
 		}
 	}
 
-	private double parseTime(String time) {
-		List<String> splitTime = Arrays.asList(time.split(":"));
-
-		double hours = Double.valueOf(splitTime.get(0));
-		double mins = Double.valueOf(splitTime.get(1).substring(0, 2)) / 60;
-
-		if (parseAmPm(splitTime.get(1)).charAt(0) == 'P') {
-			/* PM */
-			if (hours != 12)
-				hours += 12;
-		} else {
-			/* AM */
-			if (hours == 0)
-				hours += 12;
-		}
-
-		return hours + mins;
-	}
-
-	private String parseAmPm(String time) {
-		return time.substring(2);
-	}
+	
 
 	private String parseDays(String dayString) {
 		if (!StringUtils.isBlank(dayString)) {
@@ -115,8 +96,8 @@ public class UserScheduleElement {
 	public boolean isPartOfElement(CharSequence day, String startOfRange,
 			String endOfRange) {
 
-		double startOfRangeVal = parseTime(startOfRange);
-		double endOfRangeVal = parseTime(endOfRange);
+		double startOfRangeVal = Library.parseTimeToDouble(startOfRange);
+		double endOfRangeVal = Library.parseTimeToDouble(endOfRange);
 
 		if (days.contains(day)) {
 

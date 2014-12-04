@@ -391,7 +391,8 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 			_person.getContactInfo().setZip((String) obj);
 			break;			
 		default:
-			throw new IllegalArgumentException(propertyKey + " is not a valid property of " + getClass().getSimpleName());
+			throw new IllegalArgumentException(propertyKey + 
+					" is not a valid property of " + getClass().getSimpleName());
 		}
 
 //		return error;
