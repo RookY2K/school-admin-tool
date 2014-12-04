@@ -548,7 +548,7 @@ public class TestWrapperObjectInterface {
 		
 		assertTrue(course.addObject(courseNum, properties).isEmpty());
 		assertEquals(courseNum,course.getProperty("coursenum"));
-		assertEquals(courseName, course.getProperty(courseName));
+		assertEquals(courseName, course.getProperty("coursename"));
 	}
 	
 	@Test
@@ -643,6 +643,10 @@ public class TestWrapperObjectInterface {
 		}
 		
 		assertTrue(store.findEntities(course.getTable(), null, null).isEmpty());
+	}
+	
+	private void addFourCourses(){
+		
 	}
 	
 	private void addFourOfficeHours(){

@@ -11,7 +11,6 @@ import java.util.Map;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
-import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.DataStore;
@@ -52,9 +51,9 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 		if(propertyKey == null) return null;
 		
 		switch(propertyKey.toLowerCase()){
-		case "officenum":
+		case "coursenum":
 			return _course.getCourseNum();
-		case "officename":
+		case "coursename":
 			return _course.getCourseName();
 		case "sections":
 			//TODO Return WrapperObject<Section> once I finish sectionWrapper
@@ -70,7 +69,8 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 	 */
 	@Override
 	public List<String> addObject(String courseNum, Map<String, Object> properties) {
-		// TODO Auto-generated method stub
+		if(courseNum == null || properties == null) 
+			throw new NullPointerException("Arguments are null!");
 		DataStore store = DataStore.getDataStore();
 		String error;
 		Key id = Library.generateIdFromCourseNum(courseNum);
@@ -109,28 +109,95 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 		return errors;
 	}
 
-	private void setProperty(String propertyKey, Object object) {
-		// TODO Auto-generated method stub
-		
+	private void setProperty(String propertyKey, Object propertyValue) {
+		switch(propertyKey.toLowerCase()){
+		case "coursename":
+			_course.setCourseName((String)propertyValue);
+			break;
+		}
 	}
 
 	private void setCourse(String courseNum) {
-		// TODO Auto-generated method stub
+		_course = getCourse(courseNum);
+	}
+
+	private Course getCourse(String courseNum) {
+		Key id = Library.generateIdFromCourseNum(courseNum);
 		
+		Course course = (Course)DataStore.getDataStore().findEntityById(getTable(), id);
+		
+		if(course == null){
+			course = Course.getCourse(courseNum);
+		}
+		
+		return course;
 	}
 
 	private String checkProperty(String propertyKey, Object propertyValue ) {
-		// TODO Auto-generated method stub
-		return null;
+		String error = "";
+		if(propertyValue == null)
+			throw new NullPointerException("Property " + propertyKey + " cannot be null!");
+		
+		switch(propertyKey.toLowerCase()){
+		case "coursename":
+			if(!(propertyValue instanceof String))
+				throw new IllegalArgumentException(propertyKey + " is not a String!");
+			if(((String)propertyValue).trim().length() == 0)
+				throw new IllegalArgumentException(propertyKey + " cannot be an empty string!");
+			break;
+			
+		case "coursenum":
+			if(!(propertyValue instanceof String))
+				throw new IllegalArgumentException(propertyKey + " is not a String!");
+			String value = (String)propertyValue;
+			if(value.trim().length() != 3)
+				throw new IllegalArgumentException(propertyKey + " must be 3 digits long");
+			try{
+				Integer.parseInt(value);
+			}catch(NumberFormatException nfe){
+				throw new NumberFormatException("Course number could not be parsed to an Integer. "
+						+ "Check that scrape is working correctly");
+			}
+			break;
+		}
+		
+		return error;
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#editObject(java.lang.String, java.util.Map)
 	 */
 	@Override
-	public List<String> editObject(String id, Map<String, Object> properties) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<String> editObject(String courseNum, Map<String, Object> properties) {
+		DataStore store = DataStore.getDataStore();
+		String error;
+		List<String> errors = new ArrayList<String>();
+		Key id = Library.generateIdFromCourseNum(courseNum);
+	
+		if(findObjectById(id) == null){
+			throw new IllegalArgumentException("That course does not exist!");
+		}
+	
+		for(String propertyKey : properties.keySet()){
+			error = checkProperty(propertyKey, properties.get(propertyKey));
+			if(!error.equals("")){
+				errors.add(error);
+			}
+		}
+	
+		if(!errors.isEmpty()) return errors;
+	
+		setCourse(courseNum);
+	
+		for(String propertyKey : properties.keySet()){
+			setProperty(propertyKey, properties.get(propertyKey));
+		}
+	
+		if(!store.updateEntity(_course, _course.getId())){
+			errors.add("Error: Datastore update failed for unexpected reason!");
+		}
+	
+		return errors;
 	}
 
 	/* (non-Javadoc)
@@ -191,8 +258,7 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 	}
 
 	public static WrapperObject<Course> getCourseWrapper() {
-		// TODO Auto-generated method stub
-		return null;
+		return new CourseWrapper();
 	}
 
 }
