@@ -18,6 +18,7 @@ import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
+import edu.uwm.owyh.model.Email;
 
 @SuppressWarnings("serial")
 public class UserList extends HttpServlet {
@@ -140,10 +141,14 @@ public class UserList extends HttpServlet {
 				errors = user.editObject(username, properties);
 			}
 
+			if (errors.isEmpty()) {
+				request.setAttribute("goodchangepassword", "true");
+				String name = (String) user.getProperty("firstname") + " " + (String) user.getProperty("lastname");
+				String msg = "Off With Your Head \n Your password has been change by the Administrator. \n Your new Password is: " + newPassword;
+				errors = Email.sendMessage(username, name, "OWYH Password Change", msg);		
+			}
 			request.setAttribute("changepassworderrors", errors);
 			request.setAttribute("modifyuser", username);
-			if (errors.isEmpty())
-				request.setAttribute("goodchangepassword", "true");
 			doGet(request, response);
 			return;
 		}

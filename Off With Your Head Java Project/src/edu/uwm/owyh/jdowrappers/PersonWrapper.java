@@ -154,6 +154,10 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 			return _person.getContactInfo().getZip();
 		case "officehours":
 			return WrapperObjectFactory.getOfficeHours().findObject(null, this);
+		case "officeroom":
+			return _person.getOfficeRoom();
+		case "temporarypassword":
+			return _person.getTempPassword();
 		default:
 			return null;
 		}
@@ -389,7 +393,13 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 			break;
 		case "zip":
 			_person.getContactInfo().setZip((String) obj);
-			break;			
+			break;
+		case "officeroom":
+			_person.setOfficeRoom((String) obj);
+			break;
+		case "temporarypassword":
+			_person.setTempPassword((String) obj);
+			break;
 		default:
 			throw new IllegalArgumentException(propertyKey + 
 					" is not a valid property of " + getClass().getSimpleName());

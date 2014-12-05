@@ -32,9 +32,10 @@
 	if(errors != null){
 		for(String error : errors){
 %>
-	<span class="error-message"><br /><%=error %></span>
+	<span class="error-message"><%=error %><br /></span>
 <%
 		}
+	%><br /> <%
 	}
 	Auth.removeSessionVariable(request, "errors");
 	

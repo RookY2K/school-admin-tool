@@ -6,6 +6,7 @@
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="Profile Manager" />
     <jsp:param name="stylesheet" value="main.css" />
+    <jsp:param name="stylesheet" value="officehour.css" />
 </jsp:include>
 
 <jsp:include page="/WEB-INF/templates/navagation.jsp" />
@@ -29,7 +30,7 @@
 			<li class="warning-message">You should edit your phone number so you can be contacted!</li>
 			<% } %>
 			<% if (self.get("streetaddress") == null || self.get("streetaddress").equals("")) { %>
-			<li class="warning-message">You should edit your mailing address number so you can be contacted!</li>
+			<li class="warning-message">You should edit your mailing address number so you can be mailed!</li>
 			<% } %>
 		</ul>
 
@@ -72,17 +73,20 @@
 		<br /><ul class="message"><li>Contact information is private and only viewable by you and the Administrators.</li></ul>
 	</div>
 
-	<div style="float:right;width:38%;">
+	<div style="float:right;width:35%;">
 		<div class="officehour-tab"  style="min-height:300px; height:100%">
-			<p><strong>Office Hours</strong></p>
 			<table class="officehour-table">
 				<tr>
-					<td class="underline">Days</td><td class="underline">Time</td><td class="underline">Room</td>
+					<td style="text-align:left;padding-bottom:20px;"><strong>Office Hours</strong></td>
+					<td style="text-align:right;padding-bottom:20px;"><%=self.get("officeroom") %></td>
+				</tr>
+				<tr>
+					<td class="underline">Days</td><td class="underline">Time</td>
 				</tr>
 				<% if (officeHours != null) { %>
 				<% for (Map<String,Object> hour : officeHours) { %>
 				<tr>
-					<td><%=hour.get("days") %></td><td> <%=hour.get("starttime") %> - <%=hour.get("endtime") %></td><td></td>
+					<td><%=hour.get("days") %></td><td> <%=hour.get("starttime") %> - <%=hour.get("endtime") %></td>
 				</tr>
 				<% } } %>
 			</table>

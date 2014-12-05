@@ -1,6 +1,8 @@
 package edu.uwm.owyh.model;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -95,11 +97,38 @@ public class Auth {
 		
 		if(user == null) return null;
 		
-		/* TODO: user password should never be null. and yet it was, so temporary fix */
 		if (user.getProperty("password") == null) return null;
 		
 		if(!user.getProperty("password").equals(password)) return null;
 		
+		
+		return user;
+	}
+	
+	/**
+	 * <pre> Verifies a Login To a temporary Password requested from Forgot Password, If verified,
+	 * replaces regular password with temporary Password. </pre>
+	 * @param userName
+	 * @param password
+	 * @return the WrapperObject<Person>
+	 */
+	public WrapperObject<Person> verifyTempLogin(String userName, String password){
+		if(userName == null || password == null)return null;
+				
+		WrapperObject<Person> client = WrapperObjectFactory.getPerson();
+		Key id = Library.generateIdFromUserName(userName);
+		WrapperObject<Person> user = client.findObjectById(id);
+		
+		if(user == null) return null;
+		
+		if (user.getProperty("temporarypassword") == null) return null;
+		
+		if(!user.getProperty("temporarypassword").equals(password)) return null;
+		
+		Map<String, Object> properties = Library.propertyMapBuilder("password", password, "temporarypassword", "");
+		List<String >errors = WrapperObjectFactory.getPerson().editObject(userName, properties);
+		
+		if (!errors.isEmpty()) return null;
 		
 		return user;
 	}

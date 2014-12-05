@@ -75,8 +75,19 @@ public class OfficeHoursManager extends HttpServlet {
 			response.sendRedirect("/profile");		
 			return;
 		}
-
-		/* Admin User change office hours */		
+		
+		List<String> errors = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
+			
+		// Admin and User change Offce Location
+		if (request.getParameter("editofficeroom") != null) {
+			Map<String, Object> properties = Library.propertyMapBuilder("officeroom", request.getParameter("officeroom"));
+			errors = WrapperObjectFactory.getPerson().editObject(email, properties);
+			messages.add("Office Location was successfully edited!");
+		}
+		else {
+		
+		/* Admin and User change office hours */		
 		String days = "";
 		String starttime = "";
 		String endtime = "";
@@ -98,15 +109,11 @@ public class OfficeHoursManager extends HttpServlet {
 	    				                  ,"endtime",endtime
 											);
 		
-		List<String> errors = new ArrayList<String>();
-		List<String> messages = new ArrayList<String>();
-
-
-		try {
-			if (request.getParameter("addofficehour") != null){
+			// Admin and User add Office Hours
+			if (request.getParameter("addofficehour") != null) {
 				errors = WrapperObjectFactory.getOfficeHours().addObject(email, officehours);
- 				if (errors.isEmpty())
- 					messages.add("Office Hours was successfully added.");
+				if (errors.isEmpty())
+					messages.add("Office Hours was successfully added.");
 			}
 			else if (request.getParameter("officehourid") != null) {
 				int officeHourID = Integer.valueOf(request.getParameter("officehourid"));
@@ -130,9 +137,6 @@ public class OfficeHoursManager extends HttpServlet {
 		 			}
 		 		}
 			}
-		}
-		catch (IllegalArgumentException e) {
-			errors.add("Bad pattern for days!");
 		}
 		
 		if (!errors.isEmpty()) {
