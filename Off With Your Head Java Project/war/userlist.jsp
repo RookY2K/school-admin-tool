@@ -299,6 +299,13 @@
     <div>
 		<a href="#close" title="Close" class="unselectable">Close</a>
 		<p><strong>Office Hours</strong></p>
+		<p> 
+		<% if (modifyUser == null || modifyUser.get("officeroom") == null || modifyUser.get("officeroom").equals("")) { %>
+		This user did not set an Office Location.
+		<% } else { %>
+		Office Location: <%=modifyUser.get("officeroom") %>
+		<% } %>
+		</p>
 		<% if (officeHours == null || officeHours.isEmpty()) { %>
 			This user has no Office Hours.
 		<% }
@@ -308,7 +315,6 @@
 			<tr>
 				<td class="underline">Days</td>
 				<td class="underline">Time</td>
-				<td class="underline">Room</td>
 			</tr>
 		<% for (Map<String, Object> hour : officeHours) { %>
 			<tr>

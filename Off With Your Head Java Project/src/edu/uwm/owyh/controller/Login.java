@@ -32,16 +32,19 @@ public class Login extends HttpServlet {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		WrapperObject<Person> user = Auth.getAuth(null).verifyLogin(username,password);
+		if (user == null) {
+			user = Auth.getAuth(null).verifyTempLogin(username,password);
+		}
+			
 		boolean isLogin = (user != null);
-		request.setAttribute("isLogin", isLogin);
 		
 		if (isLogin){
-//			WrapperObject user = WrapperObjectFactory.getUser().findPerson(username);
 			Auth.setSessionVariable(request, "user", user);		
 			response.sendRedirect(request.getContextPath() + "/");
 			return;
 		}
+
 		
-		response.sendRedirect(request.getContextPath() + "/index.jsp?login=fail");
+		response.sendRedirect(request.getContextPath() + "/?login=fail");
 	}
 }

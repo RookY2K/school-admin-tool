@@ -51,7 +51,7 @@ public class Index extends HttpServlet {
 			}
 		}
 		else {
-			response.sendRedirect(request.getContextPath() + "/index.jsp");
+			request.getRequestDispatcher(request.getContextPath() + "/index.jsp").forward(request, response);	
 			return;
 		}		
 	}

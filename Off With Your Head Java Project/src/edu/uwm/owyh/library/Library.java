@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -123,7 +124,7 @@ public class Library {
                                            ,"zip",user.getProperty("zip")
                                            ,"password",user.getProperty("password")
                                            ,"accesslevel",user.getProperty("accesslevel")
-                                           ,"officehours",user.getProperty("officehours")
+                                           ,"officeroom", user.getProperty("officeroom")
                                            );
 		for(String key : properties.keySet())
 			if(properties.get(key) == null) properties.put(key, "");
@@ -294,6 +295,19 @@ public class Library {
 		return numHours;		
 	}
 	
-	
-
+	private static final String passwordKey = "ABCEDFGHIJKLMNOPQRSTUVWXYZabcedfghijklmnopqrstuvwxyz1234567890";
+	private static final int passwordKeySize = 6;
+	/**
+	 * Utility method that generate a temporary random password for user who forgot there password
+	 * @return String password
+	 */
+	public static String genderateRandomPassword() {
+		String result ="";
+		Random rnd = new Random();	
+		for (int i = 0; i < passwordKeySize; i++) {
+			int pos = rnd.nextInt(passwordKey.length());
+			result += passwordKey.substring(pos, pos + 1);
+		}
+		return result;
+	}
 }

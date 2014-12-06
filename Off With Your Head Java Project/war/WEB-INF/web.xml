@@ -42,6 +42,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>ForgotPassword</servlet-name>
+		<servlet-class>edu.uwm.owyh.controller.ForgotPassword</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ForgotPassword</servlet-name>
+		<url-pattern>/forgotpassword</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>Admin</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.Admin</servlet-class>
 	</servlet>

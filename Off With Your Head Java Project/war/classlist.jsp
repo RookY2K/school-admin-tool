@@ -32,9 +32,10 @@
 	if(errors != null){
 		for(String error : errors){
 %>
-	<span class="error-message"><br /><%=error %></span>
+	<span class="error-message"><%=error %><br /></span>
 <%
 		}
+	%><br /> <%
 	}
 	Auth.removeSessionVariable(request, "errors");
 	
@@ -90,19 +91,19 @@
 		</thead>
 		<tbody>
   	<%
-  		int row = -1;
-  	  			for(Section section : sections){
-  	  				row++;
-  	  				String className = row % 2 == 0 ? "evenrow" : "oddrow";
-  	  				
-  		String sectionNum = section.getSectionNum();
-  		String credits = section.getCredits();
-  		String dates = section.getDates();
-  		String days = section.getDays();
-  		String hours = section.getHours();
-  		String room = section.getRoom();
-  		String instructor = section.getInstructorName();
-  	%>
+  			int row = -1;
+  			for(Section section : sections){
+  				row++;
+  				String className = row % 2 == 0 ? "evenrow" : "oddrow";
+  				
+			String sectionNum = section.getSectionNum();
+			String credits = section.getCredits();
+			String dates = section.getDates();
+			String days = section.getDays();
+			String hours = section.getHours();
+			String room = section.getRoom();
+			String instructor = section.getInstructor();
+%>
 			<tr class="<%=className %>">
 				<td class="section_cell"><%=sectionNum %></td>
 				<td class="section_cell"><%=credits %></td>

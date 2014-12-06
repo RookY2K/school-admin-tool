@@ -10,10 +10,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.datastore.Key;
+
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
+import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
+import edu.uwm.owyh.model.Email;
 
 
 @SuppressWarnings("serial")
@@ -54,27 +59,41 @@ public class Admin extends HttpServlet {
 			
 			String password = request.getParameter("password");	
 			String verifyPassword = request.getParameter("verifypassword");	
+			String email = request.getParameter("email");
 			
 			if (password == null || password.equals("") || verifyPassword == null)
 				errors.add("Invalid Password!");
 			if (password != null && !password.equals(verifyPassword))
-				errors.add("Passwords does not Match!");
+				errors.add("Passwords does not match!");
+			if (email == null || email.equals(""))
+				errors.add("Bad Email input!");
 			
 			if (errors.isEmpty()) {			
 				properties = Library.propertyMapBuilder("firstname",""
 			              ,"lastname",""
-			              ,"email", request.getParameter("email")
+			              ,"email", email
 			              ,"phone",""
 			              ,"streetaddress",""
 			              ,"city",""
 			              ,"state",""
 			              ,"zip",""
-			              ,"password", request.getParameter("password")
+			              ,"password", password
 			              ,"accesslevel", accessLevel
+			              ,"officeroom", ""
 			             );
 				for(String key : properties.keySet())
 					if(properties.get(key) == null) properties.put(key, "");
-				errors = WrapperObjectFactory.getPerson().addObject(request.getParameter("email"), properties);
+				errors = WrapperObjectFactory.getPerson().addObject(email, properties);
+				if (errors.isEmpty()) {
+					Key id = Library.generateIdFromUserName(email);
+					WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
+					if (user == null)
+						errors.add("Username was not found!");
+					
+					String name = user.getProperty("firstname") + " " + user.getProperty("lastname");
+					String msg = "Off With Your Head \n Your Account has been created. \n Your username is: " + email +  "\n Your password is: " + password;
+					errors = Email.sendMessage(email, name, "OWYH New Account", msg);
+				}
 			}
 			
 			request.setAttribute("addnewusererrors", errors);
@@ -95,6 +114,7 @@ public class Admin extends HttpServlet {
 		              ,"zip",request.getParameter("zip")
 		              ,"password", ""
 		              ,"accesslevel", accessLevel
+		              ,"officeroom", ""
 		             );
 			for(String key : properties.keySet())
 				if(properties.get(key) == null) properties.put(key, "");

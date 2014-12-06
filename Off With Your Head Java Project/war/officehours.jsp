@@ -6,6 +6,7 @@
 <jsp:include page="/WEB-INF/templates/header.jsp">
     <jsp:param name="title" value="User List" />
     <jsp:param name="stylesheet" value="main.css" />
+    <jsp:param name="stylesheet" value="officehour.css" />
 </jsp:include>
 
 <jsp:include page="/WEB-INF/templates/navagation.jsp" />
@@ -43,6 +44,20 @@
 	<% if (modifyUser != null && isAdmin) { %>	  
 	<span class="warning-message">You are currently editing <%= modifyUser %>'s Office Hours, NOT your own.</span><br />
 	<% } %>
+		 
+	<p><strong>Office Room Location</strong> : 
+	<% if (user.get("officeroom") == null || user.get("officeroom").equals("")) { %>
+	<span class="warning-message">No have not set your office room location.</span>
+	<% } else {%>
+	<%=user.get("officeroom") %>
+	<% } %>
+	</p>
+	
+	<form action="#editofficeroom" method="post">
+		<input type="hidden" name="email" value="<%=user.get("email") %>" />
+		<input type="submit" class="submit" name="editofficeroomsubmit" value="Edit Office Room"/>
+	</form>
+	<br />
 		  
    	<p><strong>Add Office Hours</strong></p>
    	<div class="officehour-tab">
@@ -144,6 +159,10 @@
 	
 	
 	<br /><p><strong>Edit Office Hours</strong></p>
+	
+	<% if (officeHours == null || officeHours.size() == 0) { %>
+	There is currently no Office Hours.
+	<% } %>
 	
 	<% 
 	for (int k = 0; k < officeHours.size(); k++) {
@@ -247,6 +266,31 @@
 
 
 </div>
+
+
+<!-- CSS Modal Start Here -->
+<aside id="editofficeroom" class="modal">
+    <div>	
+    	<p><strong>Office Room Location</strong></p>
+    	<form action="/officehours" method="post">
+		<input type="hidden" name="editofficeroom" value="editofficeroom" />
+		<input type="hidden" name="email" value="<%=user.get("email") %>" />
+    	<table>
+    		<tr>
+	    		<td>Room Number: </td>
+	    		<td><input type="text" name="officeroom" value="<%=user.get("officeroom") %>" required /></td>
+	    		</tr>
+			<tr>
+				<td class="submitinfo" colspan="2">
+				<input type="submit" class="submit" name="editofficeroomsubmit" value="Edit Office Room"/>
+				</td>
+			</tr>
+		</table>
+		</form>
+		<a href="#close" title="Close" class="unselectable">Close</a>
+    </div>
+</aside>
+
 
 <jsp:include page="/WEB-INF/templates/footer.jsp" />
  
