@@ -6,7 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
 @SuppressWarnings("serial")
-public class HelloWorld extends HttpServlet {
+public class ExampleController extends HttpServlet {
 	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)

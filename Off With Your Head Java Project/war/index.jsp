@@ -5,7 +5,7 @@
 </jsp:include>
 		
 <form id="login" method="post" action="login" >
-	<table id=login_table>
+	<table id="login_table">
 		<tr>
 			<td id="login-title" colspan="2"><span id="site-title">UWM - Computer Science Administration</span></td>
 		</tr>
@@ -18,12 +18,12 @@
 		 </tr> 
 		<% } %>
 		<tr>
-			<td id="user_name">User Name</td>
-			<td class="text_block"><input type="text" name="username" placeholder="somename@uwm.edu" required /></td>
+			<td class="text_info">User Name</td>
+			<td class="text_block"><input type="text" name="username" id="email" placeholder="somename@uwm.edu" required /></td>
 		</tr>
 		<tr>
-			<td id="password">Password</td>
-			<td class="text_block"><input type="password" name="password"  required /></td>
+			<td class="text_info">Password</td>
+			<td class="text_block"><input type="password" name="password" id="password" required /></td>
 		</tr>
 		<tr>
 			<td id="footer" colspan="2">

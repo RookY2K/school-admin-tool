@@ -77,8 +77,8 @@
 		<div class="officehour-tab"  style="min-height:300px; height:100%">
 			<table class="officehour-table">
 				<tr>
-					<td style="text-align:left;padding-bottom:20px;"><strong>Office Hours</strong></td>
-					<td style="text-align:right;padding-bottom:20px;"><%=self.get("officeroom") %></td>
+					<td style="text-align:left;padding-bottom:20px;width:45%;"><strong>Office Hours</strong></td>
+					<td style="text-align:right;padding-bottom:20px;width:45%;"><%=self.get("officeroom") %></td>
 				</tr>
 				<tr>
 					<td class="underline">Days</td><td class="underline">Time</td>

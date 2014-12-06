@@ -1,10 +1,13 @@
+body {
+	background-image: url('/images/circuit-lines-vector.jpg'); 
+}
 
-#login{
+#login, #addAdmin {
 	position: relative;
 	top: 200px;
 }
 
-#login_table{
+#login_table, #addAdmin-table{
 	margin: auto;
 	width: 400px;
 	height: 300px;
@@ -15,7 +18,7 @@
 	box-shadow: 1px 1px 4px #888888;
 }
 
-#login-title{
+#login-title, #addAdmin-title {
 	background: #FFBD00 url('/images/bg1.png') no-repeat scroll center top;
 	font-weight: bold;
 	text-align: center;
@@ -24,20 +27,24 @@
 	height:30px;
 }
 
-#user_name, #password{
-	text-align: center;
+#user_name, #password {
+
 }
 
-input[type=text], input[type=password] {
-	width: 80%;
-}
-
-input[type=submit] {
-	height: 60%;
-	width: 40%;
-}
 
 #footer{
 	text-align: center;
 	font-size: 14px;
 }
+
+#app_key {
+	padding-left:20px;
+}
+
+.text_info {
+	padding: 0 0 0 20px;
+}
+
+.text_block {
+}
+
