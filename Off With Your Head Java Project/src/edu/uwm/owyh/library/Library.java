@@ -1,6 +1,10 @@
 package edu.uwm.owyh.library;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +15,8 @@ import com.google.appengine.api.datastore.KeyFactory;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
+import edu.uwm.owyh.jdowrappers.OfficeHoursWrapper;
+import edu.uwm.owyh.jdowrappers.SectionWrapper;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 
 /**
@@ -181,6 +187,9 @@ public class Library {
 	 *         1-24 where 24 is 12AM. Exponent value is the minutes divided by 60 (e.g. 15/60 = .25). </pre>
 	 */
 	public static double parseTimeToDouble(String time){
+		if(time == null) return -1;
+		if(!time.toUpperCase().matches(OfficeHoursWrapper.HOURS_PATTERN))
+			throw new IllegalArgumentException("Time does not match dD:DDXM pattern!");
 		double hours = parseHours(time);
 		double minutes = parseMinutes(time)/60;
 		String AmPm = parseAmPm(time);
@@ -205,6 +214,26 @@ public class Library {
 		
 		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(Course.getParentkey());
 		return keyBuilder.addChild(Course.getKind(), courseNum.toLowerCase()).getKey();
+	}
+	
+	public static String dateToString(Date date){
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd");
+		
+		return dateFormat.format(date);
+	}
+	
+	public static Date stringToDate(String date) throws ParseException{
+		if(date == null) return null;
+
+		if(!date.matches(SectionWrapper.SECTION_DATE_PATTERN)) 
+			throw new IllegalArgumentException("Date does not match pattern: MM/DD");
+		
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		String year = "2014";
+		
+		date += "/" + year;
+		
+		return dateFormat.parse(date);
 	}
 
 	private static String parseAmPm(String time) {

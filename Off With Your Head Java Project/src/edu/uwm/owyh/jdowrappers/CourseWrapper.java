@@ -12,6 +12,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 import edu.uwm.owyh.jdo.Course;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.DataStore;
 
@@ -26,6 +27,14 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 	
 	private Course _course;
 
+
+	private CourseWrapper(Course course) {
+		_course = course;
+	}
+
+	private CourseWrapper() {
+		// Default constructor
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#getId()
@@ -204,9 +213,12 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#removeObject(java.lang.String)
 	 */
 	@Override
-	public boolean removeObject(String id) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean removeObject(String courseNum) {
+		DataStore store = DataStore.getDataStore();
+		
+		setCourse(courseNum);
+	
+		return store.deleteEntity(_course, _course.getId());		
 	}
 
 	/* (non-Javadoc)
@@ -215,8 +227,22 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 	@Override
 	public <T> List<WrapperObject<Course>> findObject(String filter,
 			WrapperObject<T> parent) {
-		// TODO Auto-generated method stub
-		return null;
+		DataStore store = DataStore.getDataStore();
+		List<WrapperObject<Course>> courses = null;
+	
+		String filterWithParent = "parentKey == '" + PARENT + "'" +
+						"&& " + filter;
+		List<Course> entities = store.findEntities(getTable(), filterWithParent, null);
+		courses = getCoursesFromList(entities);
+		
+		return courses;
+	}
+	
+	private List<WrapperObject<Course>> getCoursesFromList(List<Course> entities) {
+		List<WrapperObject<Course>> courses = new ArrayList<WrapperObject<Course>>();
+		for (Course item : entities)
+			courses.add(CourseWrapper.getCourseWrapper(item));
+		return courses;
 	}
 
 	/* (non-Javadoc)
@@ -224,8 +250,16 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 	 */
 	@Override
 	public WrapperObject<Course> findObjectById(Key key) {
-		// TODO Auto-generated method stub
-		return null;
+		DataStore store = DataStore.getDataStore();
+		Course course =  (Course) store.findEntityById(getTable(), key);
+		
+		if(course == null) return null;
+		
+		return getCourseWrapper(course);
+	}
+
+	private static WrapperObject<Course> getCourseWrapper(Course course) {
+		return new CourseWrapper(course);
 	}
 
 	/* (non-Javadoc)
@@ -233,8 +267,13 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 	 */
 	@Override
 	public List<WrapperObject<Course>> getAllObjects() {
-		// TODO Auto-generated method stub
-		return null;
+		DataStore store = DataStore.getDataStore();
+		List<WrapperObject<Course>> courses = null;
+		String filter = "parentKey == '" + PARENT + "'";
+	
+		courses = getCoursesFromList(store.findEntities(getTable(), filter, null));
+	
+		return courses;
 	}
 
 	/* (non-Javadoc)

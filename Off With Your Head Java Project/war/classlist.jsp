@@ -90,19 +90,19 @@
 		</thead>
 		<tbody>
   	<%
-  			int row = -1;
-  			for(Section section : sections){
-  				row++;
-  				String className = row % 2 == 0 ? "evenrow" : "oddrow";
-  				
-			String sectionNum = section.getSectionNum();
-			String credits = section.getCredits();
-			String dates = section.getDates();
-			String days = section.getDays();
-			String hours = section.getHours();
-			String room = section.getRoom();
-			String instructor = section.getInstructor();
-%>
+  		int row = -1;
+  	  			for(Section section : sections){
+  	  				row++;
+  	  				String className = row % 2 == 0 ? "evenrow" : "oddrow";
+  	  				
+  		String sectionNum = section.getSectionNum();
+  		String credits = section.getCredits();
+  		String dates = section.getDates();
+  		String days = section.getDays();
+  		String hours = section.getHours();
+  		String room = section.getRoom();
+  		String instructor = section.getInstructorName();
+  	%>
 			<tr class="<%=className %>">
 				<td class="section_cell"><%=sectionNum %></td>
 				<td class="section_cell"><%=credits %></td>

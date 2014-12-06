@@ -173,7 +173,7 @@ public class Scraper extends HttpServlet{
 			section.setHours(hours);
 			section.setDays(days);
 			section.setDates(dates);
-			section.setInstructor(instructorName);
+			section.setInstructorName(instructorName);
 			section.setRoom(room);
 			sections.add(section);				
 		}		

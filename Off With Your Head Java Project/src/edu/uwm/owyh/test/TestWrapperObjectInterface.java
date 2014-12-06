@@ -31,6 +31,8 @@ public class TestWrapperObjectInterface {
 	private DataStore datastore;
 	private WrapperObject<Person> parent;
 	private WrapperObject<Person> parent2;
+	private WrapperObject<Course> course1;
+	private WrapperObject<Course> course2;
 	
 
 	private final LocalServiceTestHelper helper =
@@ -645,8 +647,27 @@ public class TestWrapperObjectInterface {
 		assertTrue(store.findEntities(course.getTable(), null, null).isEmpty());
 	}
 	
-	private void addFourCourses(){
+	@Test
+	public void testEditCourse(){
+		addTwoCourses();
+		assertEquals(2, DataStore.getDataStore().findEntities(course1.getTable(), null, null).size());
+		String courseName = "This is a different course";
+		Map<String,Object>properties = Library.propertyMapBuilder("coursename",courseName);
+		assertEquals("This is a course",course1.getProperty("coursename"));
 		
+		assertTrue(course1.editObject("101", properties).isEmpty());
+		
+		assertEquals(courseName, course1.getProperty("coursename"));
+		assertEquals(2, DataStore.getDataStore().findEntities(course1.getTable(), null, null).size());		
+	}
+	
+	private void addTwoCourses(){
+		Map<String,Object> properties1 = Library.propertyMapBuilder("coursename","This is a course");
+		Map<String,Object> properties2 = Library.propertyMapBuilder("coursename", "This is another course");
+		course1 = WrapperObjectFactory.getCourse();
+		course1.addObject("101", properties1);
+		course2 = WrapperObjectFactory.getCourse();
+		course2.addObject("102", properties2);
 	}
 	
 	private void addFourOfficeHours(){

@@ -1,6 +1,7 @@
 package edu.uwm.owyh.jdo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -16,7 +17,7 @@ import com.google.appengine.api.datastore.KeyFactory;
  * @author Vince Maiuri
  */
 @PersistenceCapable
-public class Section implements Serializable, Cloneable{
+public class Section implements Serializable, Cloneable{	
 	private static final long serialVersionUID = -6125753884855098249L;
 	
 	private static final String KIND = Section.class.getSimpleName();
@@ -27,7 +28,13 @@ public class Section implements Serializable, Cloneable{
 	
 	//TODO implement this as a Person object (Maybe?)
 	@Persistent
-	private String instructor;
+	private String instructorName;
+	
+	@Persistent
+	private String instructorFirstName;
+	
+	@Persistent
+	private String instructorLastName;
 
 	@PrimaryKey
 	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
@@ -39,16 +46,199 @@ public class Section implements Serializable, Cloneable{
 	@Persistent
 	private String days;
 	
+	@Persistent
+	private boolean onMonday;
+	
+	@Persistent
+	private boolean onTuesday;
+	
+	@Persistent
+	private boolean onWednesday;
+	
+	@Persistent
+	private boolean onThursday;
+	
+	@Persistent
+	private boolean onFriday;
+	
+	/**
+	 * @return the onMonday
+	 */
+	public boolean isOnMonday() {
+		return onMonday;
+	}
+
+	/**
+	 * @return the onTuesday
+	 */
+	public boolean isOnTuesday() {
+		return onTuesday;
+	}
+
+	/**
+	 * @return the onWednesday
+	 */
+	public boolean isOnWednesday() {
+		return onWednesday;
+	}
+
+	/**
+	 * @return the onThursday
+	 */
+	public boolean isOnThursday() {
+		return onThursday;
+	}
+
+	/**
+	 * @return the onFriday
+	 */
+	public boolean isOnFriday() {
+		return onFriday;
+	}
+
+	/**
+	 * @param onMonday the onMonday to set
+	 */
+	public void setOnMonday(boolean onMonday) {
+		this.onMonday = onMonday;
+	}
+
+	/**
+	 * @param onTuesday the onTuesday to set
+	 */
+	public void setOnTuesday(boolean onTuesday) {
+		this.onTuesday = onTuesday;
+	}
+
+	/**
+	 * @param onWednesday the onWednesday to set
+	 */
+	public void setOnWednesday(boolean onWednesday) {
+		this.onWednesday = onWednesday;
+	}
+
+	/**
+	 * @param onThursday the onThursday to set
+	 */
+	public void setOnThursday(boolean onThursday) {
+		this.onThursday = onThursday;
+	}
+
+	/**
+	 * @param onFriday the onFriday to set
+	 */
+	public void setOnFriday(boolean onFriday) {
+		this.onFriday = onFriday;
+	}
+
+
 	//TODO split into start and end date
 	//TODO set type as java.util.Date
 	@Persistent
 	private String dates;
+	
+	@Persistent 
+	private Date startDate;
+	
+	@Persistent
+	private Date endDate;
 	
 	//TODO split into start and end time
 	//TODO set type as double
 	@Persistent
 	private String hours;
 	
+	@Persistent
+	private double startTime;
+	
+	@Persistent
+	private double endTime;
+	
+	/**
+	 * @return the instructorFirstName
+	 */
+	public String getInstructorFirstName() {
+		return instructorFirstName;
+	}
+
+	/**
+	 * @return the instructorLastName
+	 */
+	public String getInstructorLastName() {
+		return instructorLastName;
+	}
+
+	/**
+	 * @return the startDate
+	 */
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	/**
+	 * @return the endDate
+	 */
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	/**
+	 * @return the startTime
+	 */
+	public double getStartTime() {
+		return startTime;
+	}
+
+	/**
+	 * @return the endTime
+	 */
+	public double getEndTime() {
+		return endTime;
+	}
+
+	/**
+	 * @param instructorFirstName the instructorFirstName to set
+	 */
+	public void setInstructorFirstName(String instructorFirstName) {
+		this.instructorFirstName = instructorFirstName;
+	}
+
+	/**
+	 * @param instructorLastName the instructorLastName to set
+	 */
+	public void setInstructorLastName(String instructorLastName) {
+		this.instructorLastName = instructorLastName;
+	}
+
+	/**
+	 * @param startDate the startDate to set
+	 */
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	/**
+	 * @param endDate the endDate to set
+	 */
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	/**
+	 * @param startTime the startTime to set
+	 */
+	public void setStartTime(double startTime) {
+		this.startTime = startTime;
+	}
+
+	/**
+	 * @param endTime the endTime to set
+	 */
+	public void setEndTime(double endTime) {
+		this.endTime = endTime;
+	}
+
+
 	@Persistent
 	private String room;
 	
@@ -133,8 +323,8 @@ public class Section implements Serializable, Cloneable{
 	/**
 	 * @return the teacher
 	 */
-	public String getInstructor() {
-		return instructor;
+	public String getInstructorName() {
+		return instructorName;
 	}
 
 	/**
@@ -173,10 +363,10 @@ public class Section implements Serializable, Cloneable{
 	}
 	
 	/**
-	 * @param instructor the teacher to set
+	 * @param instructorName the teacher to set
 	 */
-	public void setInstructor(String instructor) {
-		this.instructor = instructor;
+	public void setInstructorName(String instructorName) {
+		this.instructorName = instructorName;
 	}
 
 	/**

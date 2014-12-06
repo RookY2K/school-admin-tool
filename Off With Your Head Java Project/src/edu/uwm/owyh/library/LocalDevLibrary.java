@@ -79,7 +79,7 @@ public class LocalDevLibrary {
 		section.setDates(dates);
 		section.setDays(days);
 		section.setHours(hours);
-		section.setInstructor(instructor);
+		section.setInstructorName(instructor);
 		section.setRoom(room);
 
 		return section;
