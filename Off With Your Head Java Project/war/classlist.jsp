@@ -102,7 +102,7 @@
 			String days = section.getDays();
 			String hours = section.getHours();
 			String room = section.getRoom();
-			String instructor = section.getInstructor();
+			String instructor = section.getInstructorName();
 %>
 			<tr class="<%=className %>">
 				<td class="section_cell"><%=sectionNum %></td>
