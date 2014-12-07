@@ -25,6 +25,7 @@
 	
 	Map<String,Object> modifyUser = (Map<String,Object>) request.getAttribute("modifyuser");
 	List<Map<String,Object>> officeHours = (List<Map<String,Object>>) request.getAttribute("officehours");
+	String skills = (String)request.getAttribute("skills");
 %>
 
 <div id="body" style="clear:both;">
@@ -60,6 +61,9 @@
 				<td class="cell-header"colspan="2">Office Hours</td>
 				<% } else {%>
 				<td class="cell-header"colspan="1">Office Hours</td>
+				<% } %>
+				<% if (isAdmin) { %>
+				<td class="cell-header"colspan="2">Skills</td>
 				<% } %>
 			</tr>		
  		<% for (int i = 0; i < users.size(); i++) {
@@ -122,6 +126,21 @@
 					<input type="hidden" name="edituserofficehoursfromadmin" value="dituserofficehoursfromadmin" />
 					<input type="hidden" name="email" value="<%=user.get("email") %>" />
 					<input type="submit" class="submit" name="gotoprofile" value="Edit"/>
+					</form>
+				</td>
+				<% } %>
+				<% if (isAdmin) { %>
+				<td class="cell">
+					<form action="/userlist#viewuserskills" method="post">
+						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
+						<input type="submit" class="submit" value="View" />
+					</form>
+				</td>
+				
+				<td class="cell">
+					<form action="/userlist#edituserskills" method="post">
+						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
+						<input type="submit" class="submit" value="Edit" />
 					</form>
 				</td>
 				<% } %>
@@ -374,5 +393,72 @@
 		<% } %>
     </div>
 </aside>
+
+<aside id="viewuserskills" class="modal">
+    <div>
+    	<% 	if (modifyUser != null) {	%>
+    	<p><strong>Viewing Skills of <%=modifyUser.get("email") %></strong></p>
+  		<form action="/userlist#edituserskills" method="post">
+  			<input type="hidden" id="modifyuser" name="modifyuser" value="<%=modifyUser.get("email") %>" />
+			<table>
+			    <tr>
+				   <td class="user-label"><%=skills%></td>
+				</tr>
+				<tr>
+				   <td class="submitinfo" colspan="2">
+				   <% if (isAdmin) { %>
+				   <input type="submit" class="submit" name="editskillssubmit" value="Edit Skills"/>
+				   </form>
+				   </td>
+				   <% } %>
+				</tr>
+			</table>	
+		<a href="#close" title="Close"  class="unselectable">Close</a>
+		<% } %>
+    </div>
+</aside>
+<aside id="edituserskills" class="modal">
+    <div>
+		<p><strong>Skills</strong></p>
+		<% 	List<String> editSkillsErrors = (List<String>) request.getAttribute("edituserskillserrors");
+			String goodEditUser = (String) request.getAttribute("goodedituser");
+			if (editSkillsErrors != null) { %>
+				<ul class="message">
+		<%	for (String error : editSkillsErrors) { %>
+			<li class="error-message"><%=error %></li>
+			<% } %>
+				</ul>
+		<% } %>
+		
+	<% if (goodEditUser != null) { %>
+		<ul class="message"><li class="good-message">The User's skills were successfully edited!</li></ul>
+		<% } %>
+		
+		<% 	if (modifyUser != null) {
+			String state ="";
+			state = (String) modifyUser.get("state");
+		%>
+		<form action="/userlist#edituserskills" method="post" id="editskillsform">
+			<input type="hidden" name="edituserskills" id="edituserskills" value="edituserskills" />
+			<input type="hidden" name="email" id="email" value="<%=modifyUser.get("email") %>" />
+			
+			<textarea rows="4" cols="40" name="skilllist" form="editskillsform"><%=skills%></textarea>
+			
+			<table>
+				<tr>
+				   <td class="submitinfo" colspan="2"><input type="submit" class="submit" name="edituserskillssubmit" value="Edit Skills"/>
+				   </form>
+				   </td>
+				</tr>
+			</table>
+		
+		<ul class="message">
+			<li class="list-message">Skills must be a comma separated list.</li>
+		</ul>
+		<% } %>
+		<a href="#close" title="Close"  class="unselectable">Close</a>
+    </div>
+</aside>
+
 
 <jsp:include page="/WEB-INF/templates/footer.jsp" />
