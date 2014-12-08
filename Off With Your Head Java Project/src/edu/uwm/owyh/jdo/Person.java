@@ -43,7 +43,7 @@ public class Person implements Serializable,Cloneable{
 	@Persistent(dependent="true")
 	private ContactInfo contactInfo;
 	
-	@Persistent(mappedBy = "parentPerson")
+	@Persistent(mappedBy = "parent")
 	@Element(dependent = "true")
 	private List<OfficeHours> officeHours;
 	

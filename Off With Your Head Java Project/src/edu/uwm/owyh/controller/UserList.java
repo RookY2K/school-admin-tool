@@ -48,7 +48,7 @@ public class UserList extends HttpServlet {
 			Key id = Library.generateIdFromUserName(username);
 			WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
 			if (user != null) {
-				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(null, user);
+				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(null, user, null);
 				request.setAttribute("officehours", Library.makeWrapperProperties(officeHours));
 				request.setAttribute("modifyuser", Library.makeUserProperties(user));		
 			}

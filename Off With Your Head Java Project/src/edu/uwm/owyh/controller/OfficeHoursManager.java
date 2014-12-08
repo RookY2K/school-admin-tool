@@ -44,7 +44,7 @@ public class OfficeHoursManager extends HttpServlet {
 		if (!self.getId().equals(user.getId()))
 			request.setAttribute("adminedituser", request.getParameter("email"));
 				
-		List<WrapperObject<OfficeHours>> officeHoursList = WrapperObjectFactory.getOfficeHours().findObject(null, user);
+		List<WrapperObject<OfficeHours>> officeHoursList = WrapperObjectFactory.getOfficeHours().findObject(null, user, null);
 		
 		request.setAttribute("officehours", Library.makeWrapperProperties(officeHoursList));
 		request.getRequestDispatcher(request.getContextPath() + "officehours.jsp").forward(request, response);	
@@ -118,7 +118,7 @@ public class OfficeHoursManager extends HttpServlet {
 			else if (request.getParameter("officehourid") != null) {
 				int officeHourID = Integer.valueOf(request.getParameter("officehourid"));
 				
-				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(null, user);
+				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(null, user, null);
 				
 		 		if (officeHourID < 0 || officeHourID > officeHours.size()) {
 		 			errors.add("Edit ID error!");

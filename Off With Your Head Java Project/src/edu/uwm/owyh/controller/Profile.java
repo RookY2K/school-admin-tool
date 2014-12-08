@@ -35,7 +35,7 @@ public class Profile extends HttpServlet {
 		Key myId = Library.generateIdFromUserName((String) self.getProperty("username"));
 		self = WrapperObjectFactory.getPerson().findObjectById(myId);
 		WrapperObject<Person> user = self;
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(null, self);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(null, self, null);
 		request.setAttribute("officehours", Library.makeWrapperProperties(officeHours));
 		
 		if (user != null)

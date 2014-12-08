@@ -3,8 +3,10 @@ package edu.uwm.owyh.factories;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
+import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.jdowrappers.OfficeHoursWrapper;
 import edu.uwm.owyh.jdowrappers.PersonWrapper;
+import edu.uwm.owyh.jdowrappers.SectionWrapper;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.jdowrappers.CourseWrapper;
 
@@ -47,5 +49,9 @@ public class WrapperObjectFactory {
 	 */
 	public static WrapperObject<Course> getCourse() {
 		return CourseWrapper.getCourseWrapper();
+	}
+
+	public static WrapperObject<Section> getSection() {
+		return SectionWrapper.getSectionWrapper();
 	}
 }

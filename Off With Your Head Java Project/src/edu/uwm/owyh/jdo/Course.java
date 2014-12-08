@@ -14,6 +14,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.library.Library;
 
 /**
@@ -37,7 +38,7 @@ public class Course implements Serializable, Cloneable{
 	@Extension(vendorName="datanucleus", key="gae.parent-pk", value="true")
 	private String parentKey;
 
-	@Persistent(mappedBy = "parentCourse")
+	@Persistent(mappedBy = "parent")
 	@Element(dependent="true")
 	private List<Section> sections;
 
@@ -137,14 +138,6 @@ public class Course implements Serializable, Cloneable{
 		this.courseName = courseName;
 	}
 
-	/**
-	 * Adds a section jdo to the Sections List field
-	 * @param section
-	 */
-	public void addSection(Section section){
-		sections.add(section);
-	}
-
 	//TODO remove later
 	/**
 	 * <pre>
@@ -154,9 +147,9 @@ public class Course implements Serializable, Cloneable{
 	 * </pre>
 	 * @param sections
 	 */
-	public void setSections(List<Section> sections){
-		this.sections = sections;
-	}
+//	public void setSections(List<Section> sections){
+//		this.sections = sections;
+//	}
 
 
 	//Utility methods
@@ -170,5 +163,17 @@ public class Course implements Serializable, Cloneable{
 		String otherCourseNum = other.getCourseNum();
 		
 		return courseNum == otherCourseNum;
+	}
+
+	/**
+	 * Adds a section jdo to the Sections List field
+	 * @param section
+	 */
+	public void addSection(Section section) {
+		if(section == null) 
+			throw new NullPointerException("Section cannot be null!");
+		if(getSections().contains(section))
+			throw new IllegalArgumentException("Duplicate section entry!");
+		this.sections.add(section);
 	}
 }

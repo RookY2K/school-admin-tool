@@ -83,7 +83,7 @@ public interface WrapperObject<E> extends Serializable{
 	 *                 with the given parent</pre>
 	 * @return a list of found objects. List will be empty if nothing found. 
 	 */
-	abstract <T> List<WrapperObject<E>> findObject(String filter, WrapperObject<T> parent);
+	abstract <T> List<WrapperObject<E>> findObject(String filter, WrapperObject<T> parent, String order);
 	
 	/**
 	 * Finds an object by it's primary key
@@ -107,7 +107,7 @@ public interface WrapperObject<E> extends Serializable{
 	 *         not empty, then no child was added.</pre>
 	 * @throws <pre>UnsupportedOperationException - If JDO class has no child classes, this method will not
 	 *                                         be implemented</pre>
-	 */
+	 */	
 	abstract List<String> addChildObject(Object childJDO) throws UnsupportedOperationException;	
 	
 	/**

@@ -44,28 +44,29 @@ public final class DataStore{
 	 * Returns a list of entities based on filter from specified table
 	 * @param table - The JDO class that is being searched for
 	 * @param filter - The JDOQL filter
-	 * @param parent - Optional parameter that will do search by parent if not null
+	 * @param parentEntity - Optional parameter that will do search by parent if not null
 	 * @return List<E> matching filter
 	 */
 	@SuppressWarnings("unchecked")
-	public <E, T> List<E> findEntities(Class<E> table,String filter, WrapperObject<T> parent){
+	public <E, T> List<E> findEntities(Class<E> table,String filter, WrapperObject<T> parentEntity, String order){
 		if(_service.isClosed()) getDataStore();
 		List<E> results = null;
 		Key parentKey = null;
 		
 		Query query = _service.newQuery(table);
 		
-		if(parent != null){
+		if(parentEntity != null){
 			if(filter != null){
-				filter = "parentPerson == parent && " + filter;
+				filter = "parent == parentEntity && " + filter;
 			}else{
-				filter = "parentPerson == parent";
+				filter = "parent == parentEntity";
 			}
-			parentKey = parent.getId();
+			parentKey = parentEntity.getId();
 		}
 		query.setFilter(filter);
+		if(order != null)query.setOrdering(order);
 		
-		if(parent != null) query.declareParameters("String parent");		
+		if(parentEntity != null) query.declareParameters("String parentEntity");		
 
 		results = (List<E>) query.execute(parentKey);
 

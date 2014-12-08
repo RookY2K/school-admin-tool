@@ -86,13 +86,13 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#findObject(java.lang.String, edu.uwm.owyh.jdowrappers.WrapperObject)
 	 */
 	@Override
-	public <T> List<WrapperObject<Person>> findObject(String filter, WrapperObject<T> parent) {
+	public <T> List<WrapperObject<Person>> findObject(String filter, WrapperObject<T> parent, String order) {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<Person>> persons = null;
 	
 		String filterWithParent = "parentKey == '" + PARENT + "'" +
 						"&& " + filter;
-		List<Person> entities = store.findEntities(getTable(), filterWithParent, null);
+		List<Person> entities = store.findEntities(getTable(), filterWithParent, null, order);
 		persons = getPersonsFromList(entities);
 		
 		return persons;
@@ -106,7 +106,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		List<WrapperObject<Person>> persons = null;
 		String filter = "parentKey == '" + PARENT + "'";
 
-		persons = getPersonsFromList(store.findEntities(getTable(), filter, null));
+		persons = getPersonsFromList(store.findEntities(getTable(), filter, null, null));
 
 		return persons;
 	}
@@ -153,7 +153,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		case "zip":
 			return _person.getContactInfo().getZip();
 		case "officehours":
-			return WrapperObjectFactory.getOfficeHours().findObject(null, this);
+			return WrapperObjectFactory.getOfficeHours().findObject(null, this, "startTime");
 		case "officeroom":
 			return _person.getOfficeRoom();
 		case "temporarypassword":

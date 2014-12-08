@@ -16,6 +16,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
+import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.jdowrappers.OfficeHoursWrapper;
 import edu.uwm.owyh.jdowrappers.SectionWrapper;
 import edu.uwm.owyh.jdowrappers.WrapperObject;
@@ -158,6 +159,8 @@ public class Library {
 	 * @return a String time of format: dD:DDXM where d is for times >= 10 and X is A or P
 	 */
 	public static String timeToString(double time) {
+		if(time == -1) return "";
+		
 		int hoursIn24Cycle = (int)time;
 		double fractionalMinutes = time - hoursIn24Cycle;
 
@@ -188,7 +191,7 @@ public class Library {
 	 *         1-24 where 24 is 12AM. Exponent value is the minutes divided by 60 (e.g. 15/60 = .25). </pre>
 	 */
 	public static double parseTimeToDouble(String time){
-		if(time == null) return -1;
+		if(time == null || time.trim().isEmpty()) return -1;
 		if(!time.toUpperCase().matches(OfficeHoursWrapper.HOURS_PATTERN))
 			throw new IllegalArgumentException("Time does not match dD:DDXM pattern!");
 		double hours = parseHours(time);
@@ -215,6 +218,16 @@ public class Library {
 		
 		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(Course.getParentkey());
 		return keyBuilder.addChild(Course.getKind(), courseNum.toLowerCase()).getKey();
+	}
+	
+	public static Key generateSectionIdFromSectionAndCourseNum(String sectionNum, String courseNum){
+		if(courseNum == null || sectionNum == null) return null;
+		
+		Key parentKey = generateIdFromCourseNum(courseNum);
+		
+		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(parentKey);
+		
+		return keyBuilder.addChild(Section.getKind(), sectionNum.toLowerCase()).getKey();
 	}
 	
 	public static String dateToString(Date date){
@@ -309,5 +322,20 @@ public class Library {
 			result += passwordKey.substring(pos, pos + 1);
 		}
 		return result;
+	}
+
+	public static Map<String, Object> MakeSectionProperties(
+			WrapperObject<Section> section) {		
+		Map<String, Object> properties = Library.propertyMapBuilder("instructorfirstname",section.getProperty("instructorfirstname")
+														,"instructorlastname", section.getProperty("instructorlastname")
+														,"sectionnum", section.getProperty("sectionnum")
+														,"days", section.getProperty("days")
+														,"startdate", section.getProperty("startdate")
+														,"enddate", section.getProperty("endddate")
+														,"starttime", section.getProperty("starttime")
+														,"endtime", section.getProperty("endtime")
+														);
+		
+		return properties;
 	}
 }

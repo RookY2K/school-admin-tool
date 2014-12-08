@@ -25,7 +25,7 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 	private static final long serialVersionUID = 6788916101743070177L;
 	public static final String OFFICEHOURPATTERN = "^(M?T?W?R?F?) (\\d{2}|\\d):(\\d{2})(A|P)M-(\\d{2}|\\d):(\\d{2})(A|P)M$";
 	public static final String DAYS_PATTERN = "^M?T?W?R?F?$";
-	public static final String HOURS_PATTERN = "^(\\d{2}|\\d):(\\d{2})(A|P)M$";
+	public static final String HOURS_PATTERN = "^(\\d{2}|\\d):(\\d{2})\\s{0,1}(A|P)M$";
 
 	private OfficeHours _officeHours;
 
@@ -171,10 +171,10 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#findObject(java.lang.String, edu.uwm.owyh.jdowrappers.WrapperObject)
 	 */
 	@Override
-	public <T> List<WrapperObject<OfficeHours>> findObject(String filter, WrapperObject<T> parent) {
+	public <T> List<WrapperObject<OfficeHours>> findObject(String filter, WrapperObject<T> parent, String order) {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<OfficeHours>> officeHours = null;
-		List<OfficeHours> entities = store.findEntities(getTable(), filter, parent);
+		List<OfficeHours> entities = store.findEntities(getTable(), filter, parent, order);
 		officeHours = getOfficeHoursFromList(entities);
 		
 		return officeHours;
@@ -200,7 +200,7 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 	public List<WrapperObject<OfficeHours>> getAllObjects() {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<OfficeHours>> officeHours = null;
-		officeHours = getOfficeHoursFromList(store.findEntities(getTable(), null, null));
+		officeHours = getOfficeHoursFromList(store.findEntities(getTable(), null, null, null));
 	
 		return officeHours;
 	}
@@ -364,21 +364,13 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		officeHours.setOnFriday(false);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object obj){
-		if(!(obj instanceof WrapperObject<?>)) return false;
+		if(!(obj instanceof OfficeHoursWrapper)) return false;
 		
-		WrapperObject<OfficeHours> other = (WrapperObject<OfficeHours>) obj;
+		OfficeHoursWrapper other = (OfficeHoursWrapper) obj;
 		
-		String days = (String) this.getProperty("days");
-		String otherDays = (String) other.getProperty("days");
-		String startTime = (String) this.getProperty("starttime");
-		String otherStartTime = (String) other.getProperty("starttime");
-		String endTime = (String) this.getProperty("endtime");
-		String otherEndTime = (String) other.getProperty("endtime");
-		
-		return days.equals(otherDays) && startTime.equals(otherStartTime) && endTime.equals(otherEndTime);
+		return this._officeHours.equals(other._officeHours);
 	}
 	
 	@Override 

@@ -11,16 +11,19 @@ import java.util.Map;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import edu.uwm.owyh.exceptions.BuildJDOException;
+import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.jdo.Course;
-import edu.uwm.owyh.jdo.Person;
+import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.NonPersistedWrapperObject;
 import edu.uwm.owyh.model.DataStore;
 
 /**
  * @author Vince Maiuri
  *
  */
-public class CourseWrapper implements Serializable, WrapperObject<Course> {
+public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPersistedWrapperObject<Course> {
 
 	private static final long serialVersionUID = 6739430153706318925L;
 	public static final String PARENT = KeyFactory.keyToString(Course.getParentkey());
@@ -65,12 +68,10 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 		case "coursename":
 			return _course.getCourseName();
 		case "sections":
-			//TODO Return WrapperObject<Section> once I finish sectionWrapper
-			break;
+			return WrapperObjectFactory.getSection().findObject(null, this, "sectionNum");
 		default:
 			return null;
 		}
-		return null;
 	}
 
 	/* (non-Javadoc)
@@ -81,35 +82,10 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 		if(courseNum == null || properties == null) 
 			throw new NullPointerException("Arguments are null!");
 		DataStore store = DataStore.getDataStore();
-		String error;
-		Key id = Library.generateIdFromCourseNum(courseNum);
 		
-		List<String> errors = new ArrayList<String>();
-	
-		if(findObjectById(id) != null){
-			errors.add("Error: Course already exists!");
-		}
-	
-		error = checkProperty("coursenum", courseNum);
-	
-		if(!error.equals("")){
-			errors.add(error);
-		}
-	
-		for(String propertyKey : properties.keySet()){
-			error = checkProperty(propertyKey, properties.get(propertyKey));
-			if(!error.equals("")){
-				errors.add(error);
-			}
-		}
+		List<String> errors = buildNewCourseWrapper(courseNum, properties);
 	
 		if(!errors.isEmpty()) return errors;
-	
-		setCourse(courseNum);		
-	
-		for(String propertyKey : properties.keySet()){
-			setProperty(propertyKey, properties.get(propertyKey));
-		}
 	
 		if(!store.insertEntity(_course, _course.getId())){
 			errors.add("Error: Datastore insert failed for unexpected reason!");
@@ -118,12 +94,29 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 		return errors;
 	}
 
-	private void setProperty(String propertyKey, Object propertyValue) {
+	private boolean setProperty(String propertyKey, Object propertyValue) {
+		String propertyVal = ((String)propertyValue).trim();
+		if(!checkNewInfo(propertyKey, propertyVal)) return false; 
 		switch(propertyKey.toLowerCase()){
 		case "coursename":
-			_course.setCourseName((String)propertyValue);
+			_course.setCourseName(propertyVal);
 			break;
 		}
+		return true;		
+	}
+
+	private boolean checkNewInfo(String propertyKey, String propertyValue) {
+		boolean isNewInfo = true;
+		
+		switch(propertyKey.toLowerCase()){
+		case "coursename":
+			String oldCourseName = _course.getCourseName();
+			if(oldCourseName != null){
+				isNewInfo = !oldCourseName.equalsIgnoreCase(propertyValue);
+			}
+			break;
+		}
+		return isNewInfo;
 	}
 
 	private void setCourse(String courseNum) {
@@ -180,6 +173,7 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 	public List<String> editObject(String courseNum, Map<String, Object> properties) {
 		DataStore store = DataStore.getDataStore();
 		String error;
+		boolean isNewInfo = false;
 		List<String> errors = new ArrayList<String>();
 		Key id = Library.generateIdFromCourseNum(courseNum);
 	
@@ -197,11 +191,12 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 		if(!errors.isEmpty()) return errors;
 	
 		setCourse(courseNum);
-	
 		for(String propertyKey : properties.keySet()){
-			setProperty(propertyKey, properties.get(propertyKey));
+			isNewInfo |= setProperty(propertyKey, properties.get(propertyKey));
 		}
-	
+		
+		if(!isNewInfo) return errors;
+		
 		if(!store.updateEntity(_course, _course.getId())){
 			errors.add("Error: Datastore update failed for unexpected reason!");
 		}
@@ -226,13 +221,13 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 	 */
 	@Override
 	public <T> List<WrapperObject<Course>> findObject(String filter,
-			WrapperObject<T> parent) {
+			WrapperObject<T> parent, String order) {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<Course>> courses = null;
 	
 		String filterWithParent = "parentKey == '" + PARENT + "'" +
 						"&& " + filter;
-		List<Course> entities = store.findEntities(getTable(), filterWithParent, null);
+		List<Course> entities = store.findEntities(getTable(), filterWithParent, null, order);
 		courses = getCoursesFromList(entities);
 		
 		return courses;
@@ -271,7 +266,7 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 		List<WrapperObject<Course>> courses = null;
 		String filter = "parentKey == '" + PARENT + "'";
 	
-		courses = getCoursesFromList(store.findEntities(getTable(), filter, null));
+		courses = getCoursesFromList(store.findEntities(getTable(), filter, null, null));
 	
 		return courses;
 	}
@@ -282,8 +277,32 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 	@Override
 	public List<String> addChildObject(Object childJDO)
 			throws UnsupportedOperationException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		String kind = childJDO.getClass().getSimpleName();
+		List<String> errors = new ArrayList<String>();
+		switch(kind.toLowerCase()){
+		case "section":
+			if(getCourse().getSections().contains(childJDO)){
+				errors.add("Duplicate section!");
+			}else{
+				getCourse().addSection((Section)childJDO);
+			}
+			break;
+		default: 
+			throw new IllegalArgumentException("Course jdo does not have " + kind + " as a child jdo!");
+		}
+		
+		if(!errors.isEmpty()) return errors;
+		
+		if(!DataStore.getDataStore().updateEntity(getCourse(), getCourse().getId())){
+			errors.add("DataStore update failed for unknown reason! Please try again.");
+		}
+		
+		return errors;
+	}
+
+	private Course getCourse() {
+		return _course;
 	}
 
 	/* (non-Javadoc)
@@ -298,6 +317,98 @@ public class CourseWrapper implements Serializable, WrapperObject<Course> {
 
 	public static WrapperObject<Course> getCourseWrapper() {
 		return new CourseWrapper();
+	}
+
+	@Override
+	public WrapperObject<Course> buildObject(String courseNum, Map<String, Object> properties) throws BuildJDOException {
+		List<String> errors = buildNewCourseWrapper(courseNum, properties);
+		
+		if(!errors.isEmpty()) throw new BuildJDOException(errors);
+		
+		return getCourseWrapper(_course);
+	}
+
+	@Override
+	public boolean saveAllObjects(List<WrapperObject<Course>> objects) {
+		List<Course> courses = new ArrayList<Course>();
+		
+		for(WrapperObject<Course> object : objects){
+			if(!(object instanceof CourseWrapper)) continue;
+			
+			CourseWrapper course = (CourseWrapper)object;
+			
+			courses.add(course.getCourse());
+		}
+		
+		return DataStore.getDataStore().insertEntities(courses);
+	}
+
+	@Override
+	public boolean deleteAllObjects(String kind) {
+		if(!kind.equalsIgnoreCase(Course.getKind())) return false;
+		
+		List<WrapperObject<Course>> courseWrappers = getAllObjects();
+		
+		List<Course> courses = new ArrayList<Course>();
+		
+		for(WrapperObject<Course> object : courseWrappers){
+			if(!(object instanceof CourseWrapper)) continue;
+			
+			CourseWrapper course = (CourseWrapper)object;
+			
+			courses.add(course.getCourse());
+		}
+		
+		return DataStore.getDataStore().deleteAllEntities(courses);
+	}
+	
+	private List<String> buildNewCourseWrapper(String courseNum, Map<String, Object> properties){
+		if(courseNum == null || properties == null) 
+			throw new NullPointerException("Arguments are null!");
+		String error;
+		Key id = Library.generateIdFromCourseNum(courseNum);
+		
+		List<String> errors = new ArrayList<String>();
+	
+		if(findObjectById(id) != null){
+			errors.add("Error: Course already exists!");
+		}
+	
+		error = checkProperty("coursenum", courseNum);
+	
+		if(!error.equals("")){
+			errors.add(error);
+		}
+	
+		for(String propertyKey : properties.keySet()){
+			error = checkProperty(propertyKey, properties.get(propertyKey));
+			if(!error.equals("")){
+				errors.add(error);
+			}
+		}
+	
+		if(!errors.isEmpty()) return errors;
+	
+		setCourse(courseNum);		
+	
+		for(String propertyKey : properties.keySet()){
+			setProperty(propertyKey, properties.get(propertyKey));
+		}
+		
+		return errors;
+	}
+
+	@Override
+	public boolean addChild(WrapperObject<?> child) {
+		if(!(child instanceof SectionWrapper)) return false;
+		
+		SectionWrapper sectionChild = (SectionWrapper)child;
+		
+		if(this.getCourse().getSections().contains(sectionChild)) return false;
+		
+		this.getCourse().addSection(sectionChild._section);
+		
+		return true;		
 	}
 
 }

@@ -12,11 +12,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.datastore.KeyFactory;
-
+import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.jdo.Course;
+import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.DataStore;
 
 @SuppressWarnings("serial")
 public class ClassList extends HttpServlet{
@@ -31,7 +30,7 @@ public class ClassList extends HttpServlet{
 		if(!auth.verifyUser(response)) return;
 		
 		
-		Map<Integer, Course> courses = (Map<Integer, Course>) Auth.getSessionVariable(request, "courses");
+		Map<Integer, WrapperObject<Course>> courses = (Map<Integer, WrapperObject<Course>>) Auth.getSessionVariable(request, "courses");
 		List<String> errors = (List<String>)request.getAttribute("errors");
 		
 		if(errors != null){
@@ -40,10 +39,9 @@ public class ClassList extends HttpServlet{
 			return;
 		}
 		if(courses == null){
-			List<Course> courseList = (List<Course>) request.getAttribute("courselist");
-			String parentKey = KeyFactory.keyToString(Course.getParentkey());
-			String filter = "parentKey == '" + parentKey + "'";
-			if(courseList == null) courseList = DataStore.getDataStore().findEntities(Course.class, filter, null);
+			List<WrapperObject<Course>> courseList = (List<WrapperObject<Course>>) request.getAttribute("courselist");
+			if(courseList == null) 
+				courseList = (List<WrapperObject<Course>>)WrapperObjectFactory.getCourse().getAllObjects();
 			if(courseList.isEmpty()){
 				errors = new ArrayList<String>();
 				errors.add("There is no course information in the Datastore!");
@@ -52,11 +50,11 @@ public class ClassList extends HttpServlet{
 				return;
 			}
 			
-			courses = new HashMap<Integer, Course>();			
+			courses = new HashMap<Integer, WrapperObject<Course>>();			
 			
-			for(Course course : courseList){
-				course.getSections(); //touching sections to avoid lazy load issues
-				courses.put(Integer.parseInt(course.getCourseNum()),course);
+			for(WrapperObject<Course> course : courseList){
+				course.getProperty("sections"); //touching sections to avoid lazy load issues
+				courses.put(Integer.parseInt((String)course.getProperty("coursenum")),course);
 			}
 			
 			List<Integer> courseKeyList = new ArrayList<Integer>(courses.keySet());
@@ -77,10 +75,10 @@ public class ClassList extends HttpServlet{
 		
 		if(!auth.verifyUser(response)) return;
 		
-		Map<Integer, Course> courses = (Map<Integer, Course>) Auth.getSessionVariable(request, "courses");
+		Map<Integer, WrapperObject<Course>> courses = (Map<Integer, WrapperObject<Course>>) Auth.getSessionVariable(request, "courses");
 		int courseNum = Integer.parseInt(request.getParameter("courselist"));
 		
-		Course selectedCourse = courses.get(courseNum);
+		WrapperObject<Course> selectedCourse = courses.get(courseNum);
 				
 		request.setAttribute("selectedcourse", selectedCourse);
 		
