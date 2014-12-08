@@ -329,7 +329,7 @@ Start of CSS Pop Up
 			<li class="error-message">This will remove all Instructor and TA class assignment!</li>
 			<li class="error-message">This will repopulate the class schedule!</li>
 		</ul>
-		<form action="admin.html" method="post">
+		<form action="/admin#triggernewsemester" method="post">
 			<p><input type="checkbox" name="agreetotrigger" required /> I Agree</p>
 			<p><input type="submit" class="submit" name="triggernewsemester" value="Start New Semester" /></p>
 		</form>

@@ -64,6 +64,10 @@ public class Person implements Serializable,Cloneable{
 	
 	@Persistent
 	private String tempPassword;
+	
+	@Persistent
+	private List<String> skills;
+	
 
 	//Private constructors
 	/*
@@ -195,6 +199,13 @@ public class Person implements Serializable,Cloneable{
 		return tempPassword;
 	}
 	
+	/**
+	 * return Person's skills
+	 */
+	public List<String> getSkils() {
+		return skills;
+	}
+	
 	//Mutators
 	/**
 	 * Sets the contactinfo for the Person
@@ -226,6 +237,14 @@ public class Person implements Serializable,Cloneable{
 	 */
 	public void setOfficeRoom(String room) {
 		this.officeRoom = room;
+	}
+	
+	/**
+	 * Sets TA's skills
+	 * @param Strings of skill in a List<String>
+	 */
+	public void setSkills(List<String> skills) {
+		this.skills = skills;
 	}
 	
 	/**

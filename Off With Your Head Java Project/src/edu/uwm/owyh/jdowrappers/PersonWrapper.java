@@ -158,6 +158,8 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 			return _person.getOfficeRoom();
 		case "temporarypassword":
 			return _person.getTempPassword();
+		case "skills":
+			return _person.getSkils();
 		default:
 			return null;
 		}
@@ -356,6 +358,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		_person = getPerson(userName);		
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void setProperty(String propertyKey, Object object) {
 //		String error = "";
 		Object obj = object;
@@ -399,6 +402,9 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 			break;
 		case "temporarypassword":
 			_person.setTempPassword((String) obj);
+			break;
+		case "skills":
+			_person.setSkills((List<String>) obj);
 			break;
 		default:
 			throw new IllegalArgumentException(propertyKey + 
@@ -484,6 +490,12 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 			if(!checkOfficeHours((String)object)){
 				error = "Error: Incorrectly Formatted Office Hours String!";
 			}
+			break;
+		case "skills":
+			if (! (object instanceof List<?>)) {
+				error = "Error: Incorrectly Formatted Skills, must be List<String>!";
+			}
+			break;
 		default:
 			checkObjectIsString(object);
 			break;

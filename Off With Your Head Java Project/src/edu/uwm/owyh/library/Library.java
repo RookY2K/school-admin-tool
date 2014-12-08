@@ -126,6 +126,7 @@ public class Library {
                                            ,"password",user.getProperty("password")
                                            ,"accesslevel",user.getProperty("accesslevel")
                                            ,"officeroom", user.getProperty("officeroom")
+                                           ,"skills", user.getProperty("skills")
                                            );
 		for(String key : properties.keySet())
 			if(properties.get(key) == null) properties.put(key, "");
@@ -322,20 +323,5 @@ public class Library {
 			result += passwordKey.substring(pos, pos + 1);
 		}
 		return result;
-	}
-
-	public static Map<String, Object> MakeSectionProperties(
-			WrapperObject<Section> section) {		
-		Map<String, Object> properties = Library.propertyMapBuilder("instructorfirstname",section.getProperty("instructorfirstname")
-														,"instructorlastname", section.getProperty("instructorlastname")
-														,"sectionnum", section.getProperty("sectionnum")
-														,"days", section.getProperty("days")
-														,"startdate", section.getProperty("startdate")
-														,"enddate", section.getProperty("endddate")
-														,"starttime", section.getProperty("starttime")
-														,"endtime", section.getProperty("endtime")
-														);
-		
-		return properties;
 	}
 }
