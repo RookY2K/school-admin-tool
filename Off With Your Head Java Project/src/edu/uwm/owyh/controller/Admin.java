@@ -79,7 +79,7 @@ public class Admin extends HttpServlet {
 						"lastname", "", "email", email, "phone", "",
 						"streetaddress", "", "city", "", "state", "", "zip",
 						"", "password", password, "accesslevel", accessLevel,
-						"officeroom", "");
+						"officeroom", "", "skills", new ArrayList<String>());
 				for (String key : properties.keySet())
 					if (properties.get(key) == null)
 						properties.put(key, "");
@@ -120,7 +120,9 @@ public class Admin extends HttpServlet {
 					request.getParameter("city"), "state",
 					request.getParameter("state"), "zip",
 					request.getParameter("zip"), "password", "", "accesslevel",
-					accessLevel, "officeroom", "");
+					accessLevel, "officeroom", ""
+					,"skills", new ArrayList<String>()
+					);
 			for (String key : properties.keySet())
 				if (properties.get(key) == null)
 					properties.put(key, "");

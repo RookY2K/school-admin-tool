@@ -125,6 +125,7 @@ public class Library {
                                            ,"password",user.getProperty("password")
                                            ,"accesslevel",user.getProperty("accesslevel")
                                            ,"officeroom", user.getProperty("officeroom")
+                                           ,"skills", user.getProperty("skills")
                                            );
 		for(String key : properties.keySet())
 			if(properties.get(key) == null) properties.put(key, "");

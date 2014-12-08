@@ -15,7 +15,7 @@ List<String> messages = (List<String>) request.getAttribute("messages");
 		<tr>
 			<td id="login-title" colspan="2"><span id="site-title">UWM - Computer Science Administration</span></td>
 		</tr>
-		<tr><td><div style="margin: 10px;"></div></td></tr>
+
 		<% if (errors != null) { 
 			for (String error : errors) {
 		%>
@@ -33,7 +33,7 @@ List<String> messages = (List<String>) request.getAttribute("messages");
 		 </tr> 
 		<% } } %>
 		<tr>
-			<td id="user_name">User Name</td>
+			<td class="text_info">User Name</td>
 			<td class="text_block"><input type="text" name="email" placeholder="somename@uwm.edu" required /></td>
 		</tr>
 		<tr>
