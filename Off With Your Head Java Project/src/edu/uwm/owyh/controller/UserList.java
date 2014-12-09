@@ -60,7 +60,7 @@ public class UserList extends HttpServlet {
 				filterUsername = "";
 
 			if (filterUsername.length() + filterRole.length() != 0)
-				clients = self.findObject(filterRole + filterUsername, null, "userName");
+				clients = self.findObjects(filterRole + filterUsername, null, "userName");
 			request.setAttribute("filteruser", searchUser);
 		}
 
