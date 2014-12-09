@@ -232,8 +232,9 @@ public class Library {
 	}
 	
 	public static String dateToString(Date date){
+		if (date == null) return "";
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd");
-		
+
 		return dateFormat.format(date);
 	}
 	

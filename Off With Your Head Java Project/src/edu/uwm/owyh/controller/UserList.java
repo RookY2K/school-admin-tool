@@ -58,19 +58,18 @@ public class UserList extends HttpServlet {
 						Library.makeWrapperProperties(officeHours));
 				request.setAttribute("modifyuser",
 						Library.makeUserProperties(user));
-				// List<String> userSkills = (List<String>)
-				// user.getProperty("skills");
+				
+				List<String> userSkills = (List<String>)
+				user.getProperty("skills");
 
 				String userSkillString = "";
 
-				// for(String skill: userSkills)
-				for (int x = 0; x < 5; x++)
-					// userSkillString += skill += ",";
-					userSkillString += "testSkill" + Integer.toString(x) + ", ";
+				 for(String skill: userSkills)
+					userSkillString += skill += ", ";
 
 				/* Remove the last comma. */
-				userSkillString = userSkillString.substring(0,
-						userSkillString.length() - 2);
+				if (userSkillString.endsWith(", "))
+					userSkillString = userSkillString.substring(0, userSkillString.length() - 2);
 
 				request.setAttribute("skills", userSkillString);
 			}
@@ -193,17 +192,26 @@ public class UserList extends HttpServlet {
 
 		List<String> skillList = new ArrayList<String>(
 				Arrays.asList(inputString.split(",")));
+		
+		for (int i = 0; i < skillList.size();) {
+			skillList.set(i, skillList.get(i).trim());
+			if (skillList.get(i).equals(""))
+				skillList.remove(i);
+			else 
+				i++;	
+		}
 
 		if (request.getParameter("edituserskills") != null) {
-			// properties = Library.propertyMapBuilder("skills", skillList);
-			// errors = user.editObject(username, properties);
+			properties = Library.propertyMapBuilder("skills", skillList);
+			errors = user.editObject(username, properties);
 
-			// request.setAttribute("modifyuser", username);
-			// request.setAttribute("edituserprofileerrors", errors);
-			// if (errors.isEmpty())
-			request.setAttribute("goodedituser", "true");
-			doGet(request, response);
-			return;
+			request.setAttribute("modifyuser", username);
+			request.setAttribute("edituserprofileerrors", errors);
+			if (errors.isEmpty()) {
+				request.setAttribute("goodedituser", "true");
+				doGet(request, response);
+				return;
+			}
 		}
 
 		response.sendRedirect(request.getContextPath() + "/userlist");

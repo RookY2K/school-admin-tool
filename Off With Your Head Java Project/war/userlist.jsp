@@ -58,12 +58,12 @@
 				<td class="cell-header" colspan="1">Profile</td>
 				<% } %>
 				<% if (isAdmin) { %>
-				<td class="cell-header"colspan="2">Office Hours</td>
+				<td class="cell-header" colspan="2">Office Hours</td>
 				<% } else {%>
-				<td class="cell-header"colspan="1">Office Hours</td>
+				<td class="cell-header" colspan="1">Office Hours</td>
 				<% } %>
 				<% if (isAdmin) { %>
-				<td class="cell-header"colspan="2">Skills</td>
+				<td class="cell-header" colspan="2">Skills</td>
 				<% } %>
 			</tr>		
  		<% for (int i = 0; i < users.size(); i++) {
@@ -413,8 +413,8 @@
 				   <% } %>
 				</tr>
 			</table>	
-		<a href="#close" title="Close"  class="unselectable">Close</a>
 		<% } %>
+		<a href="#close" title="Close"  class="unselectable">Close</a>
     </div>
 </aside>
 <aside id="edituserskills" class="modal">
@@ -435,8 +435,6 @@
 		<% } %>
 		
 		<% 	if (modifyUser != null) {
-			String state ="";
-			state = (String) modifyUser.get("state");
 		%>
 		<form action="/userlist#edituserskills" method="post" id="editskillsform">
 			<input type="hidden" name="edituserskills" id="edituserskills" value="edituserskills" />

@@ -75,37 +75,40 @@ public class Admin extends HttpServlet {
 				errors.add("Bad Email input!");
 
 			if (errors.isEmpty()) {
-				properties = Library.propertyMapBuilder("firstname", "",
-						"lastname", "", "email", email, "phone", "",
-						"streetaddress", "", "city", "", "state", "", "zip",
-						"", "password", password, "accesslevel", accessLevel,
-						"officeroom", "", "skills", new ArrayList<String>());
+				properties = Library.propertyMapBuilder("firstname", ""
+						,"lastname", ""
+						,"email", email
+						,"phone", "",
+						"streetaddress", "",
+						"city", "",
+						"state", "",
+						"zip", ""
+						,"password",password
+						,"accesslevel", accessLevel
+						,"officeroom", "",
+						"skills", new ArrayList<String>()
+					);
 				for (String key : properties.keySet())
 					if (properties.get(key) == null)
 						properties.put(key, "");
-				errors = WrapperObjectFactory.getPerson().addObject(email,
-						properties);
+				
+				errors = WrapperObjectFactory.getPerson().addObject(email, properties);
 				if (errors.isEmpty()) {
 					Key id = Library.generateIdFromUserName(email);
-					WrapperObject<Person> user = WrapperObjectFactory
-							.getPerson().findObjectById(id);
+					WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
 					if (user == null)
 						errors.add("Username was not found!");
 
-					String name = user.getProperty("firstname") + " "
-							+ user.getProperty("lastname");
+					String name = user.getProperty("firstname") + " " + user.getProperty("lastname");
 					String msg = "Off With Your Head \n Your Account has been created. \n Your username is: "
 							+ email + "\n Your password is: " + password;
-					errors = Email.sendMessage(email, name, "OWYH New Account",
-							msg);
+					errors = Email.sendMessage(email, name, "OWYH New Account",	msg);
 				}
 			}
 
 			request.setAttribute("addnewusererrors", errors);
 			request.setAttribute("newuser", properties);
-			request.getRequestDispatcher(
-					request.getContextPath() + "/admin/admin.jsp").forward(
-					request, response);
+			request.getRequestDispatcher(request.getContextPath() + "/admin/admin.jsp").forward(request, response);			
 			return;
 		}
 
@@ -156,6 +159,8 @@ public class Admin extends HttpServlet {
 
 			for (WrapperObject<Course> course : courses)
 				course.removeObject((String) course.getProperty("coursenum"));
+			
+			Auth.removeSessionVariable(request, "courses");
 
 			/* Get all users. */
 			WrapperObject<Person> personWrapperObject = WrapperObjectFactory
@@ -166,14 +171,12 @@ public class Admin extends HttpServlet {
 			for (WrapperObject<Person> person : personList) {
 				/* Remove all officehours from every person. */
 				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory
-						.getOfficeHours().findObject(null, person);
+						.getOfficeHours().findObject(null, person, null);
 
 				for (WrapperObject<OfficeHours> officeHoursElement : officeHours)
 					officeHoursElement.removeObject((String) person
 							.getProperty("username"));
 			}
-
-			return;
 		}
 
 		response.sendRedirect(request.getContextPath() + "/admin#close");
