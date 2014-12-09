@@ -90,8 +90,8 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<Person>> persons = null;
 	
-		String filterWithParent = "parentKey == '" + PARENT + "'" +
-						"&& " + filter;
+		String filterWithParent = "parentKey == '" + PARENT + "'";
+		if (filter != null)	filterWithParent +=	"&& " + filter;
 		List<Person> entities = store.findEntities(getTable(), filterWithParent, null, order);
 		persons = getPersonsFromList(entities);
 		
