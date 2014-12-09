@@ -3,6 +3,7 @@ package edu.uwm.owyh.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,47 +31,83 @@ public class UserList extends HttpServlet {
 			throws IOException, ServletException {
 
 		Auth auth = Auth.getAuth(request);
-		if (!auth.verifyUser(response))
-			return;
+		if (!auth.verifyUser(response))	return;
+		
+		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
+		List<WrapperObject<Person>> clients = null;
+		
+		/* Search User */
+		Map<String, String> searchUser = new HashMap<String, String>();
+		searchUser.put("name", request.getParameter("searchName"));
+		searchUser.put("Admin", request.getParameter("searchAdmin"));
+		searchUser.put("Instructor", request.getParameter("searchInstructor"));
+		searchUser.put("TA", request.getParameter("searchTA"));
+		
+		if (request.getParameter("filteruser") != null) {
+			// Filter by Role, Inclusively
+			String filterRole = "(";
+			if (searchUser.get("Admin") != null) filterRole += "accessLevel == 1";
+			if (searchUser.get("Instructor") != null) filterRole += (filterRole.length() > 1) ? " || accessLevel == 2" : "accessLevel == 2";
+			if (searchUser.get("TA") != null) filterRole += (filterRole.length() > 1) ? " || accessLevel == 3" : "accessLevel == 3";
+			filterRole += ")";
+			if (filterRole.length() < 3) filterRole = "";
+			
+			// FIlter by Email, Exclusively
+			String filterUsername = (filterRole.length() > 0) ? " && " : "" ;
+			if (searchUser.get("name") != null && !searchUser.get("name").equals("") && searchUser.get("name").toLowerCase().indexOf("@uwm.edu") >= 0)
+				filterUsername += "(toUpperUserName == '" + searchUser.get("name").toUpperCase() + "')";
+			else 
+				filterUsername = "";
 
-		/* Get user info and all userlist */
-		WrapperObject<Person> self = (WrapperObject<Person>) Auth
-				.getSessionVariable(request, "user");
-		List<WrapperObject<Person>> clients = self.getAllObjects();
+			if (filterUsername.length() + filterRole.length() != 0)
+				clients = self.findObject(filterRole + filterUsername, null, "userName");
+			request.setAttribute("filteruser", searchUser);
+		}
 
+		/* Get list, if no search was entered */
+		if (clients == null) clients = self.findObjects(null, null, "userName");
 		List<Map<String, Object>> clientList = new ArrayList<Map<String, Object>>();
-
+		
 		for (WrapperObject<Person> client : clients)
 			clientList.add(Library.makeUserProperties(client));
+		
+		/* Filter By First or Last Name, Exclusively */
+		if (searchUser.get("name") != null && !searchUser.get("name").equals("") && searchUser.get("name").toLowerCase().indexOf("@uwm.edu") < 0) {
+			for (int i = 0; i < clientList.size();) {
+				String firstName = (String) clientList.get(i).get("firstname");
+				String lastName = (String) clientList.get(i).get("lastname");
+				
+				if (firstName.equalsIgnoreCase(searchUser.get("name")) || lastName.equalsIgnoreCase(searchUser.get("name")))
+						i++;
+				else
+					clientList.remove(i);
+			}
+		}
 
-		/* Admin edit User Profile */
+		/* Admin view User Profile */
 		String username = request.getParameter("modifyuser");
 		if (request.getAttribute("modifyuser") != null)
 			username = (String) request.getAttribute("modifyuser");
 		if (username != null) {
 			Key id = Library.generateIdFromUserName(username);
-			WrapperObject<Person> user = WrapperObjectFactory.getPerson()
-					.findObjectById(id);
+			WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
 			if (user != null) {
 				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory
 						.getOfficeHours().findObjects(null, user, null);
-				request.setAttribute("officehours",
-						Library.makeWrapperProperties(officeHours));
-				request.setAttribute("modifyuser",
-						Library.makeUserProperties(user));
-				// List<String> userSkills = (List<String>)
-				// user.getProperty("skills");
+				request.setAttribute("officehours", Library.makeWrapperProperties(officeHours));
+				request.setAttribute("modifyuser", Library.makeUserProperties(user));
+				
+				/* User Skills */
+				List<String> userSkills = (List<String>) user.getProperty("skills");
 
 				String userSkillString = "";
 
-				// for(String skill: userSkills)
-				for (int x = 0; x < 5; x++)
-					// userSkillString += skill += ",";
-					userSkillString += "testSkill" + Integer.toString(x) + ", ";
+				 for(String skill: userSkills)
+					userSkillString += skill += ", ";
 
 				/* Remove the last comma. */
-				userSkillString = userSkillString.substring(0,
-						userSkillString.length() - 2);
+				if (userSkillString.endsWith(", "))
+					userSkillString = userSkillString.substring(0, userSkillString.length() - 2);
 
 				request.setAttribute("skills", userSkillString);
 			}
@@ -94,7 +131,7 @@ public class UserList extends HttpServlet {
 		 * This allow non-Admin to view and Admin to edit, delete user
 		 * Redirected from another page
 		 */
-		if (request.getParameter("modifyuser") != null) {
+		if (request.getParameter("modifyuser") != null || request.getParameter("filteruser") != null) {
 			doGet(request, response);
 			return;
 		}
@@ -193,17 +230,26 @@ public class UserList extends HttpServlet {
 
 		List<String> skillList = new ArrayList<String>(
 				Arrays.asList(inputString.split(",")));
+		
+		for (int i = 0; i < skillList.size();) {
+			skillList.set(i, skillList.get(i).trim());
+			if (skillList.get(i).equals(""))
+				skillList.remove(i);
+			else 
+				i++;	
+		}
 
 		if (request.getParameter("edituserskills") != null) {
-			// properties = Library.propertyMapBuilder("skills", skillList);
-			// errors = user.editObject(username, properties);
+			properties = Library.propertyMapBuilder("skills", skillList);
+			errors = user.editObject(username, properties);
 
-			// request.setAttribute("modifyuser", username);
-			// request.setAttribute("edituserprofileerrors", errors);
-			// if (errors.isEmpty())
-			request.setAttribute("goodedituser", "true");
-			doGet(request, response);
-			return;
+			request.setAttribute("modifyuser", username);
+			request.setAttribute("edituserprofileerrors", errors);
+			if (errors.isEmpty()) {
+				request.setAttribute("goodedituser", "true");
+				doGet(request, response);
+				return;
+			}
 		}
 
 		response.sendRedirect(request.getContextPath() + "/userlist");

@@ -36,15 +36,20 @@
 			<br /><span class="good-message">A user was successfully deleted!</span>
 		<% } %>
 		
+		<% Map<String, String> searchUser = (Map<String, String>)request.getAttribute("filteruser"); %>
+		<form action="/userlist" method="post">
 		<table id="user-search">
 			<tr>
-				<td>User Name: <input type="text" value="" /></td>
-				<td>Email: <input type="text" value="" /></td>
-				<td><input type="checkbox" /> Admin <input type="checkbox" /> Instructor <input type="checkbox" /> TA</td>
-				<td><input type="submit" class="submit" value="Filter Users" /></td>
+				<td>Search User: <input type="text" name="searchName" value="<% if (searchUser != null) { out.print(searchUser.get("name")); } %>" placeholder="Fist Name, Last Name, or Email" style="width:250px;" /></td>
+				<td><input type="checkbox" name="searchAdmin" <% if (searchUser != null && searchUser.get("Admin") != null) { out.print("checked"); } %> /> Admin 
+				<input type="checkbox" name="searchInstructor" <% if (searchUser != null && searchUser.get("Instructor") != null) { out.print("checked"); } %> /> Instructor 
+				<input type="checkbox" name="searchTA" <% if (searchUser != null && searchUser.get("TA") != null) { out.print("checked"); } %> /> TA</td>
+				<td><input type="submit" class="submit" name="filteruser" value="Filter Users" />
+				<input type="submit" class="submit" name="clearfilter" value="Clear Filter" /></td>
 			</tr>
 		</table>
-
+		</form>
+		
 		<br /><br />
 		<table id="users">
 			<tr>
@@ -58,12 +63,12 @@
 				<td class="cell-header" colspan="1">Profile</td>
 				<% } %>
 				<% if (isAdmin) { %>
-				<td class="cell-header"colspan="2">Office Hours</td>
+				<td class="cell-header" colspan="2">Office Hours</td>
 				<% } else {%>
-				<td class="cell-header"colspan="1">Office Hours</td>
+				<td class="cell-header" colspan="1">Office Hours</td>
 				<% } %>
 				<% if (isAdmin) { %>
-				<td class="cell-header"colspan="2">Skills</td>
+				<td class="cell-header" colspan="2">Skills</td>
 				<% } %>
 			</tr>		
  		<% for (int i = 0; i < users.size(); i++) {
@@ -147,6 +152,10 @@
 			</tr>
 		<% } %>
 		</table>
+		
+		<% if (searchUser != null && users.size() == 0) { %>
+			<br />No user was found with those parameters.
+		<% } %>
 		
 	<br class="clear" />
 </div>
@@ -413,8 +422,8 @@
 				   <% } %>
 				</tr>
 			</table>	
-		<a href="#close" title="Close"  class="unselectable">Close</a>
 		<% } %>
+		<a href="#close" title="Close"  class="unselectable">Close</a>
     </div>
 </aside>
 <aside id="edituserskills" class="modal">
@@ -435,8 +444,6 @@
 		<% } %>
 		
 		<% 	if (modifyUser != null) {
-			String state ="";
-			state = (String) modifyUser.get("state");
 		%>
 		<form action="/userlist#edituserskills" method="post" id="editskillsform">
 			<input type="hidden" name="edituserskills" id="edituserskills" value="edituserskills" />
