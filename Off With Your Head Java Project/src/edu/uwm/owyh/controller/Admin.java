@@ -31,7 +31,7 @@ public class Admin extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (!auth.verifyAdmin(response))
 			return;
-
+		
 		request.getRequestDispatcher(
 				request.getContextPath() + "/admin/admin.jsp").forward(request,
 				response);
@@ -161,6 +161,8 @@ public class Admin extends HttpServlet {
 				course.removeObject((String) course.getProperty("coursenum"));
 			
 			Auth.removeSessionVariable(request, "courses");
+			Auth.removeSessionVariable(request, "errors");
+			Auth.removeSessionVariable(request, "coursekeys");
 
 			/* Get all users. */
 			WrapperObject<Person> personWrapperObject = WrapperObjectFactory
