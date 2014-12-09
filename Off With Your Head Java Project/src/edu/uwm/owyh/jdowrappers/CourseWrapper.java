@@ -13,10 +13,11 @@ import com.google.appengine.api.datastore.KeyFactory;
 
 import edu.uwm.owyh.exceptions.BuildJDOException;
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.NonPersistedWrapperObject;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.library.Library;
-import edu.uwm.owyh.library.NonPersistedWrapperObject;
 import edu.uwm.owyh.model.DataStore;
 
 /**
@@ -68,7 +69,9 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		case "coursename":
 			return _course.getCourseName();
 		case "sections":
-			return WrapperObjectFactory.getSection().findObject(null, this, "sectionNum");
+			return WrapperObjectFactory.getSection().findObjects(null, this, "sectionNum");
+		case "eligibletakeys":
+			return new ArrayList<Key>().addAll(_course.getEligibleTAKeys());
 		default:
 			return null;
 		}
@@ -94,27 +97,37 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		return errors;
 	}
 
+	@SuppressWarnings("unchecked")
 	private boolean setProperty(String propertyKey, Object propertyValue) {
-		String propertyVal = ((String)propertyValue).trim();
-		if(!checkNewInfo(propertyKey, propertyVal)) return false; 
+		if(!checkNewInfo(propertyKey, propertyValue)) return false; 
 		switch(propertyKey.toLowerCase()){
 		case "coursename":
-			_course.setCourseName(propertyVal);
+			_course.setCourseName((String)propertyValue);
 			break;
+		case "eligibletakeys":
+			_course.setEligibleTAKeys((List<Key>)propertyValue);
 		}
+		
 		return true;		
 	}
 
-	private boolean checkNewInfo(String propertyKey, String propertyValue) {
+	@SuppressWarnings("unchecked")
+	private boolean checkNewInfo(String propertyKey, Object propertyValue) {
 		boolean isNewInfo = true;
 		
 		switch(propertyKey.toLowerCase()){
 		case "coursename":
 			String oldCourseName = _course.getCourseName();
 			if(oldCourseName != null){
-				isNewInfo = !oldCourseName.equalsIgnoreCase(propertyValue);
+				isNewInfo = !oldCourseName.equalsIgnoreCase((String) propertyValue);
 			}
 			break;
+		case "eligibletakeys":
+			List<Key> oldEligibleList = _course.getEligibleTAKeys();
+			List<Key> newEligibleList = (List<Key>)propertyValue;
+			if(!oldEligibleList.isEmpty())
+				isNewInfo = !oldEligibleList.equals(newEligibleList);
+			break;			
 		}
 		return isNewInfo;
 	}
@@ -220,7 +233,7 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#findObject(java.lang.String, edu.uwm.owyh.jdowrappers.WrapperObject)
 	 */
 	@Override
-	public <T> List<WrapperObject<Course>> findObject(String filter,
+	public <T> List<WrapperObject<Course>> findObjects(String filter,
 			WrapperObject<T> parent, String order) {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<Course>> courses = null;
@@ -311,8 +324,21 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 	@Override
 	public boolean removeChildObject(Object childJDO)
 			throws UnsupportedOperationException {
-		// TODO Auto-generated method stub
-		return false;
+		
+		String kind = childJDO.getClass().getSimpleName();
+		switch(kind.toLowerCase()){
+		case "section":
+			if(!getCourse().getSections().contains(childJDO)){
+				return false;
+			}else{
+				getCourse().removeSection((Section)childJDO);
+			}
+			break;
+		default: 
+			throw new IllegalArgumentException("Course jdo does not have " + kind + " as a child jdo!");
+		}
+		
+		return DataStore.getDataStore().updateEntity(getCourse(), getCourse().getId());
 	}
 
 	public static WrapperObject<Course> getCourseWrapper() {
@@ -344,22 +370,16 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 	}
 
 	@Override
-	public boolean deleteAllObjects(String kind) {
-		if(!kind.equalsIgnoreCase(Course.getKind())) return false;
+	public boolean removeObjects(List<WrapperObject<Course>> courses) {
+		List<Course> courseList = new ArrayList<Course>();
 		
-		List<WrapperObject<Course>> courseWrappers = getAllObjects();
-		
-		List<Course> courses = new ArrayList<Course>();
-		
-		for(WrapperObject<Course> object : courseWrappers){
-			if(!(object instanceof CourseWrapper)) continue;
+		for(WrapperObject<Course> course : courses){
+			CourseWrapper courseWrapper = (CourseWrapper)course;
 			
-			CourseWrapper course = (CourseWrapper)object;
-			
-			courses.add(course.getCourse());
+			courseList.add(courseWrapper.getCourse());
 		}
 		
-		return DataStore.getDataStore().deleteAllEntities(courses);
+		return DataStore.getDataStore().deleteAllEntities(courseList);
 	}
 	
 	private List<String> buildNewCourseWrapper(String courseNum, Map<String, Object> properties){

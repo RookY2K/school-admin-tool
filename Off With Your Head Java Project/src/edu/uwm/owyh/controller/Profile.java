@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 
@@ -35,7 +35,7 @@ public class Profile extends HttpServlet {
 		Key myId = Library.generateIdFromUserName((String) self.getProperty("username"));
 		self = WrapperObjectFactory.getPerson().findObjectById(myId);
 		WrapperObject<Person> user = self;
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(null, self, null);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(null, self, null);
 		request.setAttribute("officehours", Library.makeWrapperProperties(officeHours));
 		
 		if (user != null)

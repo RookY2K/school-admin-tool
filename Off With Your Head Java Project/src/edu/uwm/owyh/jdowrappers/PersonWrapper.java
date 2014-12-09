@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.ContactInfo;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
@@ -86,7 +87,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#findObject(java.lang.String, edu.uwm.owyh.jdowrappers.WrapperObject)
 	 */
 	@Override
-	public <T> List<WrapperObject<Person>> findObject(String filter, WrapperObject<T> parent, String order) {
+	public <T> List<WrapperObject<Person>> findObjects(String filter, WrapperObject<T> parent, String order) {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<Person>> persons = null;
 	
@@ -153,7 +154,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		case "zip":
 			return _person.getContactInfo().getZip();
 		case "officehours":
-			return WrapperObjectFactory.getOfficeHours().findObject(null, this, "startTime");
+			return WrapperObjectFactory.getOfficeHours().findObjects(null, this, "startTime");
 		case "officeroom":
 			return _person.getOfficeRoom();
 		case "temporarypassword":
@@ -501,5 +502,18 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 			break;
 		}
 		return error;
+	}
+
+	@Override
+	public boolean removeObjects(List<WrapperObject<Person>> persons) {
+		List<Person> personList = new ArrayList<Person>();
+		
+		for(WrapperObject<Person> person : persons){
+			PersonWrapper personWrapper = (PersonWrapper) person;
+			
+			personList.add(personWrapper.getPerson());
+		}
+		
+		return DataStore.getDataStore().deleteAllEntities(personList);
 	}
 }

@@ -11,11 +11,11 @@ import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.exceptions.BuildJDOException;
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.NonPersistedWrapperObject;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
-import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.library.Library;
-import edu.uwm.owyh.library.NonPersistedWrapperObject;
 import edu.uwm.owyh.model.DataStore;
 
 public class SectionWrapper implements WrapperObject<Section>, Serializable, NonPersistedWrapperObject<Section>{
@@ -93,6 +93,8 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 			return _section.getCredits();
 		case "room":
 			return _section.getRoom();
+		case "overwritenames":
+			return _section.isOverwriteNames();
 		default:
 			return null;
 		}
@@ -162,8 +164,8 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 
 		if(!errors.isEmpty()) return errors;
 		
-		String sectionNum = (String)properties.get("sectionnum");
-		setSection(courseNum, sectionNum);
+//		String sectionNum = (String)properties.get("sectionnum");
+//		setSection(courseNum, sectionNum);
 		
 		if(!setAllProperties(properties)) return errors;
 
@@ -193,7 +195,7 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#findObject(java.lang.String, edu.uwm.owyh.jdowrappers.WrapperObject)
 	 */
 	@Override
-	public <T> List<WrapperObject<Section>> findObject(String filter, WrapperObject<T> parent, String order) {
+	public <T> List<WrapperObject<Section>> findObjects(String filter, WrapperObject<T> parent, String order) {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<Section>> sections = null;
 		List<Section> entities = store.findEntities(getTable(), filter, parent, order);
@@ -252,7 +254,9 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		double startTime = Library.parseTimeToDouble((String) properties.get("starttime"));
 		double endTime = Library.parseTimeToDouble((String)properties.get("endtime"));
 		if(sectionNum == null){
-			throw new NullPointerException("Section number is missing!");
+			if(_section == null || _section.getSectionNum() == null){
+				throw new NullPointerException("Section number is missing!");
+			}
 		}
 
 		if(startDate != null && endDate != null){
@@ -384,6 +388,9 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		Section section = getSection();
 		
 		switch(propertyKey.toLowerCase()){
+		case "sectionnum":
+			isNewInfo = false;
+			break;
 		case "days":
 			String days = section.getDays();
 			if(days != null){
@@ -490,26 +497,6 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		return this.getSection().hashCode();
 	}
 
-	public static void main(String[] args) throws ParseException{
-		String sectionNum = "Sem 00121";
-		System.out.println(sectionNum.toUpperCase() + " matches " + SECTION_NUM_PATTERN + ": " + sectionNum.toUpperCase().matches(SECTION_NUM_PATTERN));
-
-		String date = "32/27";
-
-		System.out.println(date + " matches " + SECTION_DATE_PATTERN + ": " + date.matches(SECTION_DATE_PATTERN));
-		//		String date2 = "02/27";
-		Date today = Library.stringToDate(date);
-		//		Date tomorrow = Library.stringToDate(date2);
-		//		
-		System.out.println(today.toString());
-		//		
-		String todayString = Library.dateToString(today);
-		//		
-		System.out.println(todayString);	
-		//		System.out.println("Today is before tomorrow: " + today.before(tomorrow));
-		//		System.out.println("Tomorrow is before today: " + tomorrow.before(today));
-	}
-
 	@Override
 	public WrapperObject<Section> buildObject(String courseNum, Map<String, Object> properties) throws BuildJDOException {
 		List<String> errors = buildNewSectionWrapper(courseNum, properties);
@@ -535,19 +522,13 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 	}
 
 	@Override
-	public boolean deleteAllObjects(String kind) {
-		if(!kind.equalsIgnoreCase(Section.getKind())) return false;
+	public boolean removeObjects(List<WrapperObject<Section>> sections) {
+		List<Section> sectionList = new ArrayList<Section>();
 		
-		List<WrapperObject<Section>> sectionWrappers = getAllObjects();
-		
-		List<Section> sections = new ArrayList<Section>();
-		
-		for(WrapperObject<Section> object : sectionWrappers){
-			if(!(object instanceof SectionWrapper)) continue;
+		for(WrapperObject<Section> sectionWrapper : sections){
+			SectionWrapper section = (SectionWrapper)sectionWrapper;
 			
-			SectionWrapper section = (SectionWrapper)object;
-			
-			sections.add(section.getSection());
+			sectionList.add(section.getSection());
 		}
 		
 		return DataStore.getDataStore().deleteAllEntities(sections);
@@ -581,6 +562,6 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 
 	@Override
 	public boolean addChild(WrapperObject<?> child) {
-		return false;
+		throw new UnsupportedOperationException("Section do not have any children entities");
 	}
 }

@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.model.Auth;
 
 @SuppressWarnings("serial")

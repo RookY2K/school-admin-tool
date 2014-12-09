@@ -11,8 +11,8 @@ import javax.servlet.http.HttpSession;
 import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
 import edu.uwm.owyh.library.Library;
 

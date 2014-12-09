@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,14 +14,14 @@ import com.google.appengine.api.utils.SystemProperty;
 
 import edu.uwm.owyh.exceptions.BuildJDOException;
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.NonPersistedWrapperObject;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.Section;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
-import edu.uwm.owyh.model.DataStore;
 
-public class LocalDevLibrary {
+public class ScrapeUtility {
 	
-	private LocalDevLibrary(){
+	private ScrapeUtility(){
 		
 	}
 	
@@ -63,6 +61,7 @@ public class LocalDevLibrary {
 				WrapperObject<Section> section = setSectionJdo(split, course);
 				if(section != null){
 					((NonPersistedWrapperObject<Course>)course).addChild(section);
+					if(!courseList.contains(course)) courseList.add(course);
 				}
 			}
 		}
@@ -127,6 +126,11 @@ public class LocalDevLibrary {
 			return section;
 		}
 		else{
+			boolean overwriteNames = (boolean)editSection.getProperty("overwritenames");
+			if(!overwriteNames){
+				properties.remove("instructorfirstname");
+				properties.remove("instructorlastname");
+			}
 			editSection.editObject(courseNum, properties);
 			return null; 
 		}

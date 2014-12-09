@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject"%>
+<%@ page import="edu.uwm.owyh.interfaces.WrapperObject"%>
 <%@ page import="edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel" %>
 <%@ page import="java.util.List"%>
 <%! @SuppressWarnings("unchecked")%>

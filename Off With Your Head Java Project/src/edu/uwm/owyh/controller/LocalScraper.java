@@ -14,7 +14,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 
 import edu.uwm.owyh.exceptions.BuildJDOException;
 import edu.uwm.owyh.jdo.Course;
-import edu.uwm.owyh.library.LocalDevLibrary;
+import edu.uwm.owyh.library.ScrapeUtility;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.DataStore;
 
@@ -34,7 +34,7 @@ public class LocalScraper extends HttpServlet{
 
 		String fullPath = _context.getRealPath("/WEB-INF/resources/coursePage.txt");
 		try {
-			LocalDevLibrary.readCoursePageIntoLocalDataStore(fullPath);
+			ScrapeUtility.readCoursePageIntoLocalDataStore(fullPath);
 		} catch (BuildJDOException e) {
 			throw new IllegalArgumentException(e.getLocalizedMessage());
 		}

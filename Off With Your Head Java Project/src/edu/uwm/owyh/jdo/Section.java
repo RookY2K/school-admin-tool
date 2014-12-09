@@ -273,7 +273,7 @@ public class Section implements Serializable, Cloneable{
 		String num = sectionNum.trim().substring(3);
 		setStartTime(-1);
 		setEndTime(-1);
-		setOverwriteNames(true);
+		setOverwriteNames(false);
 		
 		setId(sectionKey);
 		

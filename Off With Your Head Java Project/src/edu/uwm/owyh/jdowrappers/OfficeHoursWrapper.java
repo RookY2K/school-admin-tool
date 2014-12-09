@@ -8,6 +8,7 @@ import java.util.Map;
 import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.library.Library;
@@ -171,7 +172,7 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#findObject(java.lang.String, edu.uwm.owyh.jdowrappers.WrapperObject)
 	 */
 	@Override
-	public <T> List<WrapperObject<OfficeHours>> findObject(String filter, WrapperObject<T> parent, String order) {
+	public <T> List<WrapperObject<OfficeHours>> findObjects(String filter, WrapperObject<T> parent, String order) {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<OfficeHours>> officeHours = null;
 		List<OfficeHours> entities = store.findEntities(getTable(), filter, parent, order);
@@ -376,6 +377,18 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 	@Override 
 	public int hashCode(){
 		return this.getOfficeHours().hashCode();
+	}
+
+	@Override
+	public boolean removeObjects(List<WrapperObject<OfficeHours>> officeHours) {
+		List<OfficeHours> officeHoursList = new ArrayList<OfficeHours>();
+		
+		for(WrapperObject<OfficeHours> hours : officeHours){
+			OfficeHoursWrapper officeHoursWrapper = (OfficeHoursWrapper)hours;
+			
+			officeHoursList.add(officeHoursWrapper.getOfficeHours());
+		}
+		return DataStore.getDataStore().deleteAllEntities(officeHoursList);
 	}
 
 }

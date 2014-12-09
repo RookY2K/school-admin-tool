@@ -16,11 +16,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
 
 import edu.uwm.owyh.exceptions.BuildJDOException;
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.NonPersistedWrapperObject;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.Section;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
-import edu.uwm.owyh.library.LocalDevLibrary;
-import edu.uwm.owyh.library.NonPersistedWrapperObject;
+import edu.uwm.owyh.library.ScrapeUtility;
 import edu.uwm.owyh.library.WebScraper;
 import edu.uwm.owyh.model.Auth;
 
@@ -34,7 +34,7 @@ public class Scraper extends HttpServlet{
 		Auth auth = Auth.getAuth(request);
 		if(!auth.verifyAdmin(response)) return;
 
-		if(LocalDevLibrary.isLocal()){
+		if(ScrapeUtility.isLocal()){
 			request.getRequestDispatcher("/admin/localscraper").forward(request, response);
 			return;
 		}
@@ -147,7 +147,7 @@ public class Scraper extends HttpServlet{
 			
 			String[] aCourseInfo = {"COURSE", courseNum, courseName};
 			
-			LocalDevLibrary.setCourseJdo(aCourseInfo, courses);
+			ScrapeUtility.setCourseJdo(aCourseInfo, courses);
 		}
 		return courses;
 	}
@@ -180,7 +180,7 @@ public class Scraper extends HttpServlet{
 			
 			String[] sectionInfo = {creditLoad, dates, days, hours, instructorName, room, sectionNum};
 
-			WrapperObject<Section> section = LocalDevLibrary.setSectionJdo(sectionInfo, parent);
+			WrapperObject<Section> section = ScrapeUtility.setSectionJdo(sectionInfo, parent);
 			
 			if(section != null){
 				((NonPersistedWrapperObject<Course>)parent).addChild(section);

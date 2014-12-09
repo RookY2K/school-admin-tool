@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Email;
@@ -53,7 +53,7 @@ public class UserList extends HttpServlet {
 					.findObjectById(id);
 			if (user != null) {
 				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory
-						.getOfficeHours().findObject(null, user, null);
+						.getOfficeHours().findObjects(null, user, null);
 				request.setAttribute("officehours",
 						Library.makeWrapperProperties(officeHours));
 				request.setAttribute("modifyuser",

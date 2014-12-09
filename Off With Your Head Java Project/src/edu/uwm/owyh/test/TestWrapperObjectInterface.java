@@ -17,12 +17,12 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.PersonWrapper;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.DataStore;
 
@@ -378,7 +378,7 @@ public class TestWrapperObjectInterface {
 				      + " && startTime == " + Library.parseTimeToDouble(startTime)
 				      + " && endTime == " + Library.parseTimeToDouble(endTime);
 		
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent, null);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertFalse(officeHours.isEmpty());
 		assertEquals(1, officeHours.size());
 		
@@ -396,19 +396,19 @@ public class TestWrapperObjectInterface {
 		
 		String filter = "onMonday == " + onM;
 				      
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent, null);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertFalse(officeHours.isEmpty());
 		assertEquals(2, officeHours.size());
 		
 		filter = "startTime < " + Library.parseTimeToDouble(startTime);
-		officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent,null);
+		officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent,null);
 		assertFalse(officeHours.isEmpty());
 		assertEquals(2, officeHours.size());
 		
 		filter = "startTime > " + Library.parseTimeToDouble(endTime)
 				+" && startTime < " + Library.parseTimeToDouble(startTime);
 		
-		officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent, null);
+		officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertFalse(officeHours.isEmpty());
 		assertEquals(1, officeHours.size());		
 		
@@ -416,7 +416,7 @@ public class TestWrapperObjectInterface {
 				+" && onThursday == " + true
 				+" && onTuesday == " + true 
 				+" && onFriday == " + false;
-		officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent, null);
+		officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertFalse(officeHours.isEmpty());
 		assertEquals(1, officeHours.size());
 	}
@@ -434,7 +434,7 @@ public class TestWrapperObjectInterface {
 	public void findOfficeHoursByParent(){
 		addFourOfficeHours();
 		
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(null, parent, null);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(null, parent, null);
 		
 		assertEquals(3, officeHours.size());
 	}
@@ -445,7 +445,7 @@ public class TestWrapperObjectInterface {
 		
 		String filter = "days == 'MTR'";
 		
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent, null);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertEquals(1, officeHours.size());
 		
 		WrapperObject<OfficeHours> hours = officeHours.get(0);
@@ -466,7 +466,7 @@ public class TestWrapperObjectInterface {
 		
 		String filter = "days == 'MTR'";
 		
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent, null);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertEquals(1, officeHours.size());
 		
 		WrapperObject<OfficeHours> hours = officeHours.get(0);
@@ -495,7 +495,7 @@ public class TestWrapperObjectInterface {
 		addFourOfficeHours();
 		
 		String filter = "days == 'MTR'";		
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent, null);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertEquals(1, officeHours.size());
 		
 		WrapperObject<OfficeHours> hours = officeHours.get(0);

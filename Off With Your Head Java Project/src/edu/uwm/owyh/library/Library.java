@@ -13,13 +13,13 @@ import java.util.Random;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.jdowrappers.OfficeHoursWrapper;
 import edu.uwm.owyh.jdowrappers.SectionWrapper;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
 
 /**
  * Library class with miscellaneous, general, utility methods that are called by several classes.

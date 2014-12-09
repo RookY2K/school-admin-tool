@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 
@@ -49,7 +49,7 @@ public class OfficeHoursManager extends HttpServlet {
 			request.setAttribute("adminedituser", request.getParameter("email"));
 
 		List<WrapperObject<OfficeHours>> officeHoursList = WrapperObjectFactory
-				.getOfficeHours().findObject(null, user, null);
+				.getOfficeHours().findObjects(null, user, null);
 
 		request.setAttribute("officehours",
 				Library.makeWrapperProperties(officeHoursList));
@@ -145,7 +145,7 @@ public class OfficeHoursManager extends HttpServlet {
 						.getParameter("officehourid"));
 
 				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory
-						.getOfficeHours().findObject(null, user, null);
+						.getOfficeHours().findObjects(null, user, null);
 
 				if (officeHourID < 0 || officeHourID > officeHours.size()) {
 					errors.add("Edit ID error!");

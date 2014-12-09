@@ -10,7 +10,7 @@ import javax.jdo.Transaction;
 
 import com.google.appengine.api.datastore.Key;
 
-import edu.uwm.owyh.jdowrappers.WrapperObject;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.library.PMF;
 
 /**

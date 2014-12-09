@@ -1,4 +1,4 @@
-<%@ page import="edu.uwm.owyh.jdowrappers.WrapperObject"%>
+<%@ page import="edu.uwm.owyh.interfaces.WrapperObject"%>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@ page import="edu.uwm.owyh.model.DataStore" %>
 <%@ page import="edu.uwm.owyh.library.Library" %>

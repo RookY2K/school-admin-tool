@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Email;
@@ -166,7 +166,7 @@ public class Admin extends HttpServlet {
 			for (WrapperObject<Person> person : personList) {
 				/* Remove all officehours from every person. */
 				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory
-						.getOfficeHours().findObject(null, person);
+						.getOfficeHours().findObjects(null, person, null);
 
 				for (WrapperObject<OfficeHours> officeHoursElement : officeHours)
 					officeHoursElement.removeObject((String) person

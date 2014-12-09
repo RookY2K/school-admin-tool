@@ -1,4 +1,4 @@
-package edu.uwm.owyh.jdowrappers;
+package edu.uwm.owyh.interfaces;
 
 import java.io.Serializable;
 import java.util.List;
@@ -75,6 +75,8 @@ public interface WrapperObject<E> extends Serializable{
 	 */
 	abstract boolean removeObject(String id);
 	
+	abstract boolean removeObjects(List<WrapperObject<E>> objects);
+	
 	/**
 	 * Finds all objects with the given filter with given parent(optional)
 	 * @param filter <pre> JDOQL filter used to find specific object(s). If null, then equivalent to calling
@@ -83,7 +85,7 @@ public interface WrapperObject<E> extends Serializable{
 	 *                 with the given parent</pre>
 	 * @return a list of found objects. List will be empty if nothing found. 
 	 */
-	abstract <T> List<WrapperObject<E>> findObject(String filter, WrapperObject<T> parent, String order);
+	abstract <T> List<WrapperObject<E>> findObjects(String filter, WrapperObject<T> parent, String order);
 	
 	/**
 	 * Finds an object by it's primary key
@@ -120,4 +122,6 @@ public interface WrapperObject<E> extends Serializable{
 	 *                                         be implemented</pre>
 	 */
 	abstract boolean removeChildObject(Object childJDO) throws UnsupportedOperationException;
+	
+	
 }
