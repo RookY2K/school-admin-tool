@@ -84,6 +84,8 @@ Off With Your Head Java Project/src/edu/uwm/owyh/jdowrappers/PersonWrapper.java.
 Off With Your Head Java Project/src/edu/uwm/owyh/library/Library.java.orig
 Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/jdowrappers/PersonWrapper.java.orig
 Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/library/Library.java.orig
+Off With Your Head Java Project/src/edu/uwm/owyh/controller/OfficeHoursManager.java.orig
+Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/controller/OfficeHoursManager.java.orig
 syntax: regexp
 ^(.*[\\/])?gen[\\/].*
 ^(.*[\\/])?bin[\\/].*
