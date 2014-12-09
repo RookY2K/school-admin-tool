@@ -3,7 +3,9 @@ package edu.uwm.owyh.model;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
+import javax.jdo.JDOHelper;
 import javax.jdo.JDOObjectNotFoundException;
+import javax.jdo.ObjectState;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
@@ -139,6 +141,8 @@ public final class DataStore{
 		if(_service.isClosed()) getDataStore();
 		try{
 			E result = _service.getObjectById(cls, id);
+			boolean isDeleted = JDOHelper.getObjectState(result).equals(ObjectState.PERSISTENT_DELETED);
+			if(isDeleted) result = null;
 			return result;
 		}catch(JDOObjectNotFoundException nfe){
 			return null;
@@ -197,7 +201,7 @@ public final class DataStore{
 		while(!success){
 			try{
 				_service.deletePersistentAll(entities);
-				tnx.commit();
+				tnx.commit();				
 				success = true;
 			}catch(ConcurrentModificationException cme){
 				if(retries == 0) throw cme;
