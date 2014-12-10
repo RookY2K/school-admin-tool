@@ -114,16 +114,17 @@ public class Admin extends HttpServlet {
 
 		// Add Contact Information
 		if (request.getParameter("addcontactinfo") != null) {
-			properties = Library.propertyMapBuilder("firstname",
-					request.getParameter("firstname"), "lastname",
-					request.getParameter("lastname"), "email",
-					request.getParameter("email"), "phone",
-					request.getParameter("phone"), "streetaddress",
-					request.getParameter("streetaddress"), "city",
-					request.getParameter("city"), "state",
-					request.getParameter("state"), "zip",
-					request.getParameter("zip"), "password", "", "accesslevel",
-					accessLevel, "officeroom", ""
+			properties = Library.propertyMapBuilder("firstname", request.getParameter("firstname")
+					, "lastname",request.getParameter("lastname")
+					, "email",request.getParameter("email")
+					, "phone",request.getParameter("phone")
+					, "streetaddress",	request.getParameter("streetaddress")
+					, "city",request.getParameter("city")
+					, "state",request.getParameter("state")
+					, "zip",request.getParameter("zip")
+					, "password", ""
+					, "accesslevel", accessLevel
+					,"officeroom", ""
 					,"skills", new ArrayList<String>()
 					);
 			for (String key : properties.keySet())
@@ -161,7 +162,6 @@ public class Admin extends HttpServlet {
 				course.removeObject((String) course.getProperty("coursenum"));
 			
 			Auth.removeSessionVariable(request, "courses");
-			Auth.removeSessionVariable(request, "errors");
 			Auth.removeSessionVariable(request, "coursekeys");
 
 			/* Get all users. */

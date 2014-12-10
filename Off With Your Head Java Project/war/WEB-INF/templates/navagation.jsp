@@ -26,6 +26,9 @@
 				</ul>
 				<li class="nav"><a href="/userlist" class="navbar1-link">User List</a></li>
 				<li class="nav"><a href="/classlist" class="navbar1-link">Class List</a></li>
+				<% if (!auth.verifyAdmin() && auth.verifyUser()) { %>
+				<li class="nav"><a href="/emailadmin" class="navbar1-link">Contact Us</a></li>
+				<% } %>
 				<li class="nav" style="float:right;"><a href="/login?logout=true" class="navbar1-link">Log Out</a></li>
 			</ul>
 		

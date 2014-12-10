@@ -30,12 +30,15 @@
 			<input type="submit" class="submit" id="login_button" value="Log In" /> <br /><br />
 			<a href="/forgotpassword">Forgot Password?</a><br /><br />
 			For help, please contact help desk at <br />
-			<a href="mailto:vamaiuri@uwm.edu?subject=UWMCSA%20Help">vamaiuri@uwm.edu</a><br />
+			<!-- <a href="mailto:vamaiuri@uwm.edu?subject=UWMCSA%20Help">vamaiuri@uwm.edu</a><br /> -->
+			<a href="#emailforhelp">vamaiuri@uwm.edu</a><br />
 			</td>
 		</tr>
 	</table>
 </form>
 
-<br class="clear" />
+<!-- CSS Modal Start Here -->
+<jsp:include page="/WEB-INF/templates/emailadminmodal.jsp" />
 	
-<jsp:include page="/WEB-INF/templates/footer.jsp" />
+	</body>
+</html> 
