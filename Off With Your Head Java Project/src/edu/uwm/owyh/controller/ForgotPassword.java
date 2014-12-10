@@ -52,16 +52,13 @@ public class ForgotPassword extends HttpServlet {
 			Auth.setSessionVariable(request, "requestpassword", "1");
 		}
 		
-		/* Prevent Email Spam by Limiting Password Request to 6 */ 
-		int requestPasswordCount = Integer.parseInt(requestPassword);
-		if (requestPasswordCount > 6) {
-			errors.add("You have tried to reset your password too many times. Please Email the Administrator (<a href=\"mailto:vamaiuri@uwm.edu?subject=UWMCSA%20Help\">vamaiuri@uwm.edu</a>) for more help.");
+		/* Prevent Email Spam by Limiting Password Request to 4 */ 
+		if (Library.setSessionActionLimit(request, "sendForgotPasswordEmail", 4)) {
+			errors.add("You have tried to reset your password too many times. Please Email the Administrator (<a href=\"/forgotpassword#emailforhelp\">vamaiuri@uwm.edu</a>) for more help.");
 			request.setAttribute("errors", errors);
 			doGet(request, response);
 			return;
 		}
-		
-		Auth.setSessionVariable(request, "requestpassword", String.valueOf(requestPasswordCount + 1));
 		
 		if (user == null) {
 			errors.add("The email was not found!");

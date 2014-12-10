@@ -18,6 +18,7 @@ import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
+import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Email;
@@ -60,7 +61,7 @@ public class UserList extends HttpServlet {
 				filterUsername = "";
 
 			if (filterUsername.length() + filterRole.length() != 0)
-				clients = self.findObjects(filterRole + filterUsername, null, "userName");
+				clients = WrapperObjectFactory.getPerson().findObjects(filterRole + filterUsername, null, "userName");
 			request.setAttribute("filteruser", searchUser);
 		}
 
@@ -99,16 +100,15 @@ public class UserList extends HttpServlet {
 				
 				/* User Skills */
 				List<String> userSkills = (List<String>) user.getProperty("skills");
-
 				String userSkillString = "";
-
-				 for(String skill: userSkills)
-					userSkillString += skill += ", ";
-
-				/* Remove the last comma. */
-				if (userSkillString.endsWith(", "))
-					userSkillString = userSkillString.substring(0, userSkillString.length() - 2);
-
+				if (userSkills != null) {
+					 for(String skill: userSkills)
+						userSkillString += skill += ", ";
+	
+					/* Remove the last comma. */
+					if (userSkillString.endsWith(", "))
+						userSkillString = userSkillString.substring(0, userSkillString.length() - 2);
+				}
 				request.setAttribute("skills", userSkillString);
 			}
 		}
@@ -174,16 +174,28 @@ public class UserList extends HttpServlet {
 		/* Admin edit someone's Profile */
 		Map<String, Object> properties;
 
+		AccessLevel accessLevel = null;
+		if (request.getParameter("accesslevel") != null) {
+			try {
+				int access = Integer.parseInt(request
+						.getParameter("accesslevel"));
+				accessLevel = AccessLevel.getAccessLevel(access);
+			} catch (NumberFormatException e) {
+				errors.add("Invalid AccessLevel!");
+			}
+		}
+		
 		if (request.getParameter("edituserprofile") != null) {
-			properties = Library.propertyMapBuilder("firstname",
-					request.getParameter("firstname"), "lastname",
-					request.getParameter("lastname"), "email",
-					request.getParameter("email"), "phone",
-					request.getParameter("phone"), "streetaddress",
-					request.getParameter("streetaddress"), "city",
-					request.getParameter("city"), "state",
-					request.getParameter("state"), "zip",
-					request.getParameter("zip"));
+			properties = Library.propertyMapBuilder("firstname", request.getParameter("firstname")
+					, "lastname", request.getParameter("lastname")
+					, "email", request.getParameter("email")
+					, "phone", request.getParameter("phone")
+					, "streetaddress", request.getParameter("streetaddress")
+					, "city", request.getParameter("city")
+					, "state", request.getParameter("state")
+					, "zip", request.getParameter("zip")
+					, "accesslevel", accessLevel
+					);
 			errors = user.editObject(username, properties);
 
 			request.setAttribute("modifyuser", username);

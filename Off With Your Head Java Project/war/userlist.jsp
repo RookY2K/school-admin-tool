@@ -68,7 +68,7 @@
 				<td class="cell-header" colspan="1">Office Hours</td>
 				<% } %>
 				<% if (isAdmin) { %>
-				<td class="cell-header" colspan="2">Skills</td>
+				<td class="cell-header" colspan="2">TA Skills</td>
 				<% } %>
 			</tr>		
  		<% for (int i = 0; i < users.size(); i++) {
@@ -135,6 +135,7 @@
 				</td>
 				<% } %>
 				<% if (isAdmin) { %>
+					<% if (accesslevel == AccessLevel.TA){ %>
 				<td class="cell">
 					<form action="/userlist#viewuserskills" method="post">
 						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
@@ -148,7 +149,9 @@
 						<input type="submit" class="submit" value="Edit" />
 					</form>
 				</td>
-				<% } %>
+				 <% } else {%>
+				 <td class="cell"></td><td class="cell"></td>
+				<% } } %>
 			</tr>
 		<% } %>
 		</table>
@@ -275,6 +278,19 @@
 				   <td class="user-label">Zip Code:</td>
 				   <td class="user-label"><input type = "text" name="zip" id="zip" value="<%=modifyUser.get("zip") %>"/></td>
 				</tr>
+				<% if (modifyUser.get("accesslevel") != AccessLevel.ADMIN && self.get("accesslevel") == AccessLevel.ADMIN) { %>
+				<tr>
+					<td class="user-label">User Role:</td>
+					<td class="user-data">
+						<select name="accesslevel" required>
+						  <option value="">Please Select</option>
+						  <option value="3" <% if (modifyUser.get("accesslevel") == AccessLevel.TA) { out.print("selected"); } %> >TA</option>
+						  <option value="2" <% if (modifyUser.get("accesslevel") == AccessLevel.INSTRUCTOR) { out.print("selected"); } %>>INSTRUCTOR</option>
+						  <option value="1" <% if (modifyUser.get("accesslevel") == AccessLevel.ADMIN) { out.print("selected"); } %>>ADMIN</option>
+						</select>
+					</td>
+				</tr>
+				<% } %>
 				<tr>
 				   <td class="submitinfo" colspan="2"><input type="submit" class="submit" name="edituserprofilesubmit" value="Edit Information"/>
 				   </form>
@@ -411,7 +427,11 @@
   			<input type="hidden" id="modifyuser" name="modifyuser" value="<%=modifyUser.get("email") %>" />
 			<table>
 			    <tr>
-				   <td class="user-label"><%=skills%></td>
+			    	<% if (skills != null && !skills.isEmpty()) { %>
+				   <td class="user-label"><%=skills %></td>
+				   <% } else { %>
+				   <td class="user-label">This user currently have no TA Skills</td>
+				   <% } %>
 				</tr>
 				<tr>
 				   <td class="submitinfo" colspan="2">

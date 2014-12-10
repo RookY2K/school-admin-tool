@@ -64,13 +64,14 @@
 		<td id="footer" colspan="2">
 			<br />Username must be in the format "someone@uwm.edu" <br /><br />
 			For help, please contact help desk at <br />
-			<a href="mailto:vamaiuri@uwm.edu?subject=UWMCSA%20Help">vamaiuri@uwm.edu</a><br /><br />
+			<a href="#emailforhelp">vamaiuri@uwm.edu</a><br /><br />
 		</td>
 	</tr>
 	</table>
 </form>
 
-
-<br class="clear" />
+<!-- CSS Modal Start Here -->
+<jsp:include page="/WEB-INF/templates/emailadminmodal.jsp" />
 	
-<jsp:include page="/WEB-INF/templates/footer.jsp" />
+	</body>
+</html> 

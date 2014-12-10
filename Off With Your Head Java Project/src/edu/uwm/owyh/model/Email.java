@@ -20,6 +20,8 @@ public final class Email {
 	private static final String senderEmail = "ryoko.dragon.fly@gmail.com";
 	private static final String senderName = "Off With Your Head Admin";
 	
+	public static final String adminEmail = "xiong225@uwm.edu";
+	
 	/**
 	 * Send an Email
 	 * @param recipientEmail the email address that this email will be sent

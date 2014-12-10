@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
@@ -20,6 +22,7 @@ import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.jdowrappers.OfficeHoursWrapper;
 import edu.uwm.owyh.jdowrappers.SectionWrapper;
+import edu.uwm.owyh.model.Auth;
 
 /**
  * Library class with miscellaneous, general, utility methods that are called by several classes.
@@ -326,5 +329,26 @@ public class Library {
 			result += passwordKey.substring(pos, pos + 1);
 		}
 		return result;
+	}
+	
+	/**
+	 * Utility method that restricts an action per user Session
+	 * @return boolean base on if action limit has been reached
+	 */
+	public static boolean setSessionActionLimit(HttpServletRequest request, String sessionID, int max) {
+		String limit = (String) Auth.getSessionVariable(request, sessionID);
+		
+		if (limit == null) {	
+			limit = "0";
+			Auth.setSessionVariable(request, sessionID, "1");
+		}
+		
+		int limitCount = Integer.parseInt(limit);
+		if (limitCount >= max) {
+			return true;
+		}
+		
+		Auth.setSessionVariable(request, sessionID, String.valueOf(limitCount + 1));
+		return false;
 	}
 }
