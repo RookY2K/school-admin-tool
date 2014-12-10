@@ -193,6 +193,8 @@ public class Library {
 	 */
 	public static double parseTimeToDouble(String time){
 		if(time == null || time.trim().isEmpty()) return -1;
+		
+		time = time.trim();
 		if(!time.toUpperCase().matches(OfficeHoursWrapper.HOURS_PATTERN))
 			throw new IllegalArgumentException("Time does not match dD:DDXM pattern!");
 		double hours = parseHours(time);

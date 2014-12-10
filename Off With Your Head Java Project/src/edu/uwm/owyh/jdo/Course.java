@@ -57,6 +57,7 @@ public class Course implements Serializable, Cloneable{
 		id = Library.generateIdFromCourseNum(courseNum);
 
 		sections = new ArrayList<Section>();
+		eligibleTAKeys = new ArrayList<Key>();
 
 		setCourseNum(courseNum);
 	}

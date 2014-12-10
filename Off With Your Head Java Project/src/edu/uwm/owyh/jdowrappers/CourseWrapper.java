@@ -16,6 +16,7 @@ import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.NonPersistedWrapperObject;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.DataStore;
@@ -105,7 +106,9 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 			_course.setCourseName((String)propertyValue);
 			break;
 		case "eligibletakeys":
-			_course.setEligibleTAKeys((List<Key>)propertyValue);
+			List<Key> taKeys = new ArrayList<Key>();
+			taKeys.addAll((List<Key>) propertyValue);
+			_course.setEligibleTAKeys(taKeys);
 		}
 		
 		return true;		
@@ -125,7 +128,7 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		case "eligibletakeys":
 			List<Key> oldEligibleList = _course.getEligibleTAKeys();
 			List<Key> newEligibleList = (List<Key>)propertyValue;
-			if(!oldEligibleList.isEmpty())
+			if(oldEligibleList != null)
 				isNewInfo = !oldEligibleList.equals(newEligibleList);
 			break;			
 		}
@@ -174,6 +177,21 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 						+ "Check that scrape is working correctly");
 			}
 			break;
+		case "eligibletakeys":
+			if(!(propertyValue instanceof List<?>))
+				throw new IllegalArgumentException(propertyKey + " must be a List!");
+			List<?> objects = (List<?>)propertyValue;
+			for(Object obj : objects){
+				if(!(obj instanceof Key)){
+					throw new IllegalArgumentException(propertyKey + " must be a list of Keys!");
+				}
+				Key key = (Key)obj;
+				
+				String kind = key.getKind();
+				
+				if(!Person.getKind().equalsIgnoreCase(kind))
+					throw new IllegalArgumentException(propertyKey + " must be a list of Person Keys!");
+			}
 		}
 		
 		return error;
