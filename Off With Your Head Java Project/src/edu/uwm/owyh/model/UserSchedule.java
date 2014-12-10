@@ -1,6 +1,7 @@
 package edu.uwm.owyh.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -11,7 +12,8 @@ import java.util.List;
  *         it easier to display when we want to write it to the calendar.
  *
  */
-public class UserSchedule {
+public class UserSchedule implements Iterable<UserScheduleElement>
+{
 
 	List<UserScheduleElement> schedule;
 
@@ -45,4 +47,11 @@ public class UserSchedule {
 	{
 		return schedule.get(index);
 	}
+
+	@Override
+	public Iterator<UserScheduleElement> iterator() {
+		Iterator<UserScheduleElement> isched = schedule.iterator();
+        return isched;
+	}
+	
 }

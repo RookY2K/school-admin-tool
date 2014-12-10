@@ -146,4 +146,5 @@ public class UserScheduleElement {
 
 		return false;
 	}
+
 }

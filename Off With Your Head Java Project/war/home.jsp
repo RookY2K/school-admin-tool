@@ -4,6 +4,8 @@
 <%@ page import="edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="edu.uwm.owyh.model.UserSchedule"%>
+<%@ page import="edu.uwm.owyh.model.UserScheduleElement"%>
 <%! @SuppressWarnings("unchecked") %>
 
 <jsp:include page="/WEB-INF/templates/header.jsp">
@@ -17,7 +19,7 @@
 </jsp:include>
 
 <% Map<String, Object> self = (Map<String, Object>)request.getAttribute("self");
-List<Map<String,Object>> officeHours = (List<Map<String,Object>>) request.getAttribute("officehours");
+UserSchedule schedule = (UserSchedule) request.getAttribute("userschedule");
 if (self == null) { out.print("No Correct Attribute Was Passed Into JSP!"); return; }
 %>
 	
@@ -71,52 +73,442 @@ if (self == null) { out.print("No Correct Attribute Was Passed Into JSP!"); retu
 					<td class="hours"></td>
 				</tr>
 				<tr>
-					<td class="time">12:00 PM</td>	
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
+					<td class="time">12:00 PM</td>
+					<%for(int i = 0; i < 5; i++)
+						{
+							for(UserScheduleElement element : schedule)
+							{
+								if(i == 0)
+								{
+									if(element.isPartOfElement("M", "12:00PM", "1:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 1)
+								{
+									if(element.isPartOfElement("T", "12:00PM", "1:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 2)
+								{
+									if(element.isPartOfElement("W", "12:00PM", "1:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 3)
+								{
+									if(element.isPartOfElement("R", "12:00PM", "1:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 4)
+								{
+									if(element.isPartOfElement("F", "12:00PM", "1:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+							}
+						}%>	
 				</tr>
 				<tr>
-					<td class="time">1:00 PM</td>	
-					<td class="hours"><!--<span class="office-hour">COMPSCI 361 EMS W301</span>--></td>
-					<td class="hours"></td>
-					<td class="hours"><!--<span class="office-hour">COMPSCI 361 EMS W301</span>--></td>
-					<td class="hours"></td>
-					<td class="hours"><!--<span class="office-hour">COMPSCI 361 EMS W301</span>--></td>
+					<td class="time">1:00 PM</td>
+					<%for(int i = 0; i < 5; i++)
+						{
+							for(UserScheduleElement element : schedule)
+							{
+								if(i == 0)
+								{
+									if(element.isPartOfElement("M", "1:00PM", "1:59PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 1)
+								{
+									if(element.isPartOfElement("T", "1:00PM", "2:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 2)
+								{
+									if(element.isPartOfElement("W", "1:00PM", "1:59PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 3)
+								{
+									if(element.isPartOfElement("R", "1:00PM", "2:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 4)
+								{
+									if(element.isPartOfElement("F", "1:00PM", "2:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+							}
+						}%>	
 				</tr>
 				<tr>
-					<td class="time">2:00 PM</td>	
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
+					<td class="time">2:00 PM</td>
+					<%for(int i = 0; i < 5; i++)
+						{
+							for(UserScheduleElement element : schedule)
+							{
+								if(i == 0)
+								{
+									if(element.isPartOfElement("M", "2:00PM", "3:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 1)
+								{
+									if(element.isPartOfElement("T", "2:00PM", "3:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 2)
+								{
+									if(element.isPartOfElement("W", "2:00PM", "3:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 3)
+								{
+									if(element.isPartOfElement("R", "2:00PM", "3:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 4)
+								{
+									if(element.isPartOfElement("F", "2:00PM", "3:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+							}
+						}%>
 				</tr>
 				<tr>
-					<td class="time">3:00 PM</td>	
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
+					<td class="time">3:00 PM</td>
+					<%for(int i = 0; i < 5; i++)
+						{
+							for(UserScheduleElement element : schedule)
+							{
+								if(i == 0)
+								{
+									if(element.isPartOfElement("M", "3:00PM", "4:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 1)
+								{
+									if(element.isPartOfElement("T", "3:00PM", "4:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 2)
+								{
+									if(element.isPartOfElement("W", "3:00PM", "4:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 3)
+								{
+									if(element.isPartOfElement("R", "3:00PM", "4:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 4)
+								{
+									if(element.isPartOfElement("F", "3:00PM", "4:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+							}
+						}%>
 				</tr>
 				<tr>
-					<td class="time">4:00 PM</td>	
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
+					<td class="time">4:00 PM</td>
+					<%for(int i = 0; i < 5; i++)
+						{
+							for(UserScheduleElement element : schedule)
+							{
+								if(i == 0)
+								{
+									if(element.isPartOfElement("M", "4:00PM", "5:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 1)
+								{
+									if(element.isPartOfElement("T", "4:00PM", "5:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 2)
+								{
+									if(element.isPartOfElement("W", "4:00PM", "5:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 3)
+								{
+									if(element.isPartOfElement("R", "4:00PM", "5:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 4)
+								{
+									if(element.isPartOfElement("F", "4:00PM", "5:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+							}
+						}%>
 				</tr>
 				<tr>
-					<td class="time">5:00 PM</td>	
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
-					<td class="hours"></td>
+					<td class="time">5:00 PM</td>
+					<%for(int i = 0; i < 5; i++)
+						{
+							for(UserScheduleElement element : schedule)
+							{
+								if(i == 0)
+								{
+									if(element.isPartOfElement("M", "5:00PM", "6:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 1)
+								{
+									if(element.isPartOfElement("T", "5:00PM", "6:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 2)
+								{
+									if(element.isPartOfElement("W", "5:00PM", "6:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 3)
+								{
+									if(element.isPartOfElement("R", "5:00PM", "6:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+								
+								if(i == 4)
+								{
+									if(element.isPartOfElement("F", "5:00PM", "6:00PM"))
+									{%>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+									<%}
+									
+									else
+									{%>
+										<td class="hours"><span class="office-hour"></span></td>
+									<%}
+								}
+							}
+						}%>
 				</tr>
 				<tr>
 					<td class="time">6:00 PM</td>	
