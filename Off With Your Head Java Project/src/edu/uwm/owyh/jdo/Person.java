@@ -43,7 +43,7 @@ public class Person implements Serializable,Cloneable{
 	@Persistent(dependent="true")
 	private ContactInfo contactInfo;
 	
-	@Persistent(mappedBy = "parentPerson")
+	@Persistent(mappedBy = "parent")
 	@Element(dependent = "true")
 	private List<OfficeHours> officeHours;
 	
@@ -59,7 +59,15 @@ public class Person implements Serializable,Cloneable{
 	@Persistent
 	private Integer accessLevel;
 	
-
+	@Persistent
+	private String officeRoom;
+	
+	@Persistent
+	private String tempPassword;
+	
+	@Persistent
+	private List<String> skills;
+	
 
 	//Private constructors
 	/*
@@ -176,6 +184,28 @@ public class Person implements Serializable,Cloneable{
 		return officeHours;
 	}
 	
+	/**
+	 * return office room
+	 * @param room
+	 */
+	public String getOfficeRoom() {
+		return officeRoom;
+	}
+	
+	/**
+	 * return temporary password
+	 */
+	public String getTempPassword() {
+		return tempPassword;
+	}
+	
+	/**
+	 * return Person's skills
+	 */
+	public List<String> getSkils() {
+		return skills;
+	}
+	
 	//Mutators
 	/**
 	 * Sets the contactinfo for the Person
@@ -199,6 +229,30 @@ public class Person implements Serializable,Cloneable{
 	 */
 	public void setAccessLevel(Integer accessLevel) {
 		this.accessLevel = accessLevel;
+	}
+	
+	/**
+	 * Sets the offceRoom for the Person
+	 * @param room
+	 */
+	public void setOfficeRoom(String room) {
+		this.officeRoom = room;
+	}
+	
+	/**
+	 * Sets TA's skills
+	 * @param Strings of skill in a List<String>
+	 */
+	public void setSkills(List<String> skills) {
+		this.skills = skills;
+	}
+	
+	/**
+	 * Sets the tempPassword for the Person
+	 * @param password
+	 */
+	public void setTempPassword(String password) {
+		this.tempPassword = password;
 	}
 	
 	private void setUserName(String userName) {

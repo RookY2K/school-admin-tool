@@ -9,6 +9,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.ContactInfo;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
@@ -53,9 +54,9 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 	}
 
 	//Private constructors
-		private PersonWrapper(Person person) {
-			_person = person;	
-		}
+	private PersonWrapper(Person person) {
+		_person = person;	
+	}
 
 	private PersonWrapper(){
 		//Default constructor that returns a WrapperObject object with default (null) 
@@ -86,13 +87,13 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#findObject(java.lang.String, edu.uwm.owyh.jdowrappers.WrapperObject)
 	 */
 	@Override
-	public <T> List<WrapperObject<Person>> findObject(String filter, WrapperObject<T> parent) {
+	public <T> List<WrapperObject<Person>> findObjects(String filter, WrapperObject<T> parent, String order) {
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<Person>> persons = null;
 	
-		String filterWithParent = "parentKey == '" + PARENT + "'" +
-						"&& " + filter;
-		List<Person> entities = store.findEntities(getTable(), filterWithParent, null);
+		String filterWithParent = "parentKey == '" + PARENT + "'";
+		if (filter != null)	filterWithParent +=	"&& " + filter;
+		List<Person> entities = store.findEntities(getTable(), filterWithParent, null, order);
 		persons = getPersonsFromList(entities);
 		
 		return persons;
@@ -105,9 +106,9 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		DataStore store = DataStore.getDataStore();
 		List<WrapperObject<Person>> persons = null;
 		String filter = "parentKey == '" + PARENT + "'";
-	
-		persons = getPersonsFromList(store.findEntities(getTable(), filter, null));
-	
+
+		persons = getPersonsFromList(store.findEntities(getTable(), filter, null, null));
+
 		return persons;
 	}
 
@@ -153,7 +154,13 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		case "zip":
 			return _person.getContactInfo().getZip();
 		case "officehours":
-			return WrapperObjectFactory.getOfficeHours().findObject(null, this);
+			return WrapperObjectFactory.getOfficeHours().findObjects(null, this, "startTime");
+		case "officeroom":
+			return _person.getOfficeRoom();
+		case "temporarypassword":
+			return _person.getTempPassword();
+		case "skills":
+			return _person.getSkils();
 		default:
 			return null;
 		}
@@ -352,6 +359,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		_person = getPerson(userName);		
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void setProperty(String propertyKey, Object object) {
 //		String error = "";
 		Object obj = object;
@@ -389,7 +397,16 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 			break;
 		case "zip":
 			_person.getContactInfo().setZip((String) obj);
-			break;			
+			break;
+		case "officeroom":
+			_person.setOfficeRoom((String) obj);
+			break;
+		case "temporarypassword":
+			_person.setTempPassword((String) obj);
+			break;
+		case "skills":
+			_person.setSkills((List<String>) obj);
+			break;
 		default:
 			throw new IllegalArgumentException(propertyKey + 
 					" is not a valid property of " + getClass().getSimpleName());
@@ -474,10 +491,29 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 			if(!checkOfficeHours((String)object)){
 				error = "Error: Incorrectly Formatted Office Hours String!";
 			}
+			break;
+		case "skills":
+			if (! (object instanceof List<?>)) {
+				error = "Error: Incorrectly Formatted Skills, must be List<String>!";
+			}
+			break;
 		default:
 			checkObjectIsString(object);
 			break;
 		}
 		return error;
+	}
+
+	@Override
+	public boolean removeObjects(List<WrapperObject<Person>> persons) {
+		List<Person> personList = new ArrayList<Person>();
+		
+		for(WrapperObject<Person> person : persons){
+			PersonWrapper personWrapper = (PersonWrapper) person;
+			
+			personList.add(personWrapper.getPerson());
+		}
+		
+		return DataStore.getDataStore().deleteAllEntities(personList);
 	}
 }

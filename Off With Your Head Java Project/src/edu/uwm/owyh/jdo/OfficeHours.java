@@ -30,7 +30,7 @@ public class OfficeHours implements Serializable, Cloneable{
 	private Key id;
 	
 	@Persistent
-	private Person parentPerson;
+	private Person parent;
 	
 	@Persistent
 	private String days;
@@ -92,10 +92,10 @@ public class OfficeHours implements Serializable, Cloneable{
 	}
 
 	/**
-	 * @param parentPerson the parentPerson to set
+	 * @param parent the parent to set
 	 */
 	public void setParentPerson(Person parentPerson) {
-		this.parentPerson = parentPerson;
+		this.parent = parentPerson;
 	}
 
 	/**
@@ -177,10 +177,10 @@ public class OfficeHours implements Serializable, Cloneable{
 	}
 
 	/**
-	 * @return the parentPerson
+	 * @return the parent
 	 */
 	public Person getParentPerson() {
-		return parentPerson;
+		return parent;
 	}
 	
 	/**

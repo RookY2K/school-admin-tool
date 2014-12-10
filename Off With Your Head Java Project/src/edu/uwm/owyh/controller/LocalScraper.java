@@ -12,8 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import edu.uwm.owyh.exceptions.BuildJDOException;
 import edu.uwm.owyh.jdo.Course;
-import edu.uwm.owyh.library.LocalDevLibrary;
+import edu.uwm.owyh.library.ScrapeUtility;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.DataStore;
 
@@ -32,7 +33,11 @@ public class LocalScraper extends HttpServlet{
 			throws IOException, ServletException {
 
 		String fullPath = _context.getRealPath("/WEB-INF/resources/coursePage.txt");
-		LocalDevLibrary.readCoursePageIntoLocalDataStore(fullPath);
+		try {
+			ScrapeUtility.readCoursePageIntoLocalDataStore(fullPath);
+		} catch (BuildJDOException e) {
+			throw new IllegalArgumentException(e.getLocalizedMessage());
+		}
 
 		response.sendRedirect("/classlist");
 	}
@@ -49,7 +54,7 @@ public class LocalScraper extends HttpServlet{
 			Key parentKey = KeyFactory.createKey("Courses", "RootCourses");
 
 			String filterWithParent = "parentKey == '" + KeyFactory.keyToString(parentKey) + "'";
-			List<Course> entities = store.findEntities(Course.class, filterWithParent, null);
+			List<Course> entities = store.findEntities(Course.class, filterWithParent, null, null);
 			
 			Auth.removeSessionVariable(request, "courses");
 			Auth.removeSessionVariable(request, "coursekeys");

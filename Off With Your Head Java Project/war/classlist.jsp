@@ -1,7 +1,9 @@
-<%@ page import="edu.uwm.owyh.jdo.Course" %>
-<%@ page import="edu.uwm.owyh.jdo.Section" %>
+<%@ page import="edu.uwm.owyh.interfaces.WrapperObject"%>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@ page import="edu.uwm.owyh.model.DataStore" %>
+<%@ page import="edu.uwm.owyh.library.Library" %>
+<%@ page import="edu.uwm.owyh.jdo.Course" %>
+<%@ page import="edu.uwm.owyh.jdo.Section" %>
 <%@ page import="java.util.Collections" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
@@ -22,7 +24,7 @@
 
 <%
 	List<String> errors = (List<String>)Auth.getSessionVariable(request, "errors");
-	Map<Integer, Course> courses = (Map<Integer, Course>)Auth.getSessionVariable(request, "courses");
+	Map<Integer, WrapperObject<Course>> courses = (Map<Integer, WrapperObject<Course>>)Auth.getSessionVariable(request, "courses");
 	List<Integer> courseKeyList = (List<Integer>) Auth.getSessionVariable(request, "coursekeys");
 %>
 
@@ -32,9 +34,10 @@
 	if(errors != null){
 		for(String error : errors){
 %>
-	<span class="error-message"><br /><%=error %></span>
+	<span class="error-message"><%=error %><br /></span>
 <%
 		}
+	%><br /> <%
 	}
 	Auth.removeSessionVariable(request, "errors");
 	
@@ -50,7 +53,7 @@
 						if(courseKeyList != null){
 							for(int key : courseKeyList){
 %>
-					  <option value="<%=key%>">COMPSCI-<%=key%>: <%=courses.get(key).getCourseName() %></option>
+					  <option value="<%=key%>">COMPSCI-<%=key%>: <%=courses.get(key).getProperty("coursename") %></option>
 <%
 							}
 						}
@@ -63,12 +66,12 @@
 				
 	</form>
 <%
-	Course selectedCourse = (Course)request.getAttribute("selectedcourse");
+	WrapperObject<Course> selectedCourse = (WrapperObject<Course>)request.getAttribute("selectedcourse");
 	boolean isAdmin = Auth.getAuth(request).verifyAdmin();
 	if(selectedCourse != null){
-		String courseNum = selectedCourse.getCourseNum();
-		String courseName = selectedCourse.getCourseName();
-		List<Section>sections = selectedCourse.getSections();
+		String courseNum = (String)selectedCourse.getProperty("coursenum");
+		String courseName = (String)selectedCourse.getProperty("coursename");
+		List<WrapperObject<Section>>sections = (List<WrapperObject<Section>>)selectedCourse.getProperty("sections");
 
 %>	
 	<br />
@@ -91,17 +94,23 @@
 		<tbody>
   	<%
   			int row = -1;
-  			for(Section section : sections){
+  			for(WrapperObject<Section> section : sections){
   				row++;
   				String className = row % 2 == 0 ? "evenrow" : "oddrow";
   				
-			String sectionNum = section.getSectionNum();
-			String credits = section.getCredits();
-			String dates = section.getDates();
-			String days = section.getDays();
-			String hours = section.getHours();
-			String room = section.getRoom();
-			String instructor = section.getInstructor();
+			String sectionNum = (String)section.getProperty("sectionnum");
+			String credits = (String)section.getProperty("credits");
+			String startDate = (String)section.getProperty("startdate");
+			String endDate = (String)section.getProperty("enddate");
+			String dates = startDate + "-" + endDate;
+			String days = (String)section.getProperty("days");
+			String startTime = (String)section.getProperty("starttime");
+			String endTime = (String)section.getProperty("endtime");
+			String hours = startTime + "-" + endTime;
+			String room = (String)section.getProperty("room");
+			String firstName = (String)section.getProperty("instructorfirstname");
+			String lastName = (String)section.getProperty("instructorlastname");
+			String instructor = lastName.trim().isEmpty() ? firstName : lastName + ", " + firstName;
 %>
 			<tr class="<%=className %>">
 				<td class="section_cell"><%=sectionNum %></td>

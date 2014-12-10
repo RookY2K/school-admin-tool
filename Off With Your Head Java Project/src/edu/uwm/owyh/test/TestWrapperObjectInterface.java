@@ -17,12 +17,12 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.PersonWrapper;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.DataStore;
 
@@ -31,6 +31,8 @@ public class TestWrapperObjectInterface {
 	private DataStore datastore;
 	private WrapperObject<Person> parent;
 	private WrapperObject<Person> parent2;
+	private WrapperObject<Course> course1;
+	private WrapperObject<Course> course2;
 	
 
 	private final LocalServiceTestHelper helper =
@@ -42,7 +44,7 @@ public class TestWrapperObjectInterface {
 		Map<String, Object> properties = Library.propertyMapBuilder("password","owyh"
 				,"accesslevel", AccessLevel.ADMIN);
 		user.addObject("admin@uwm.edu", properties);	
-		List<?> search = datastore.findEntities(user.getTable(), null, null);
+		List<?> search = datastore.findEntities(user.getTable(), null, null, null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));	
 
 		WrapperObject<Person> user2 = WrapperObjectFactory.getPerson();
@@ -50,7 +52,7 @@ public class TestWrapperObjectInterface {
 				,"accesslevel",AccessLevel.ADMIN);
 
 		user2.addObject("admin@uwm.edu", properties);
-		search = datastore.findEntities(user2.getTable(), null, null);
+		search = datastore.findEntities(user2.getTable(), null, null, null);
 		assertFalse("Two User of the same name was SAVED!", (search.size() == 2));
 
 		WrapperObject<Person> user3 = WrapperObjectFactory.getPerson();
@@ -58,7 +60,7 @@ public class TestWrapperObjectInterface {
 				,"accesslevel", AccessLevel.ADMIN);
 
 		user3.addObject("admin2@uwm.edu",properties);
-		search = datastore.findEntities(user3.getTable(), null, null);
+		search = datastore.findEntities(user3.getTable(), null, null, null);
 		assertTrue("Two User of different name was NOT SAVED!", (search.size() == 2));
 
 		WrapperObject<Person> user4 = WrapperObjectFactory.getPerson();
@@ -86,7 +88,7 @@ public class TestWrapperObjectInterface {
 		properties.put("accesslevel", AccessLevel.ADMIN);
 		assertTrue("User should have been added!"
 				,user5.addObject("admin3@uwm.edu", properties).isEmpty());
-		search = datastore.findEntities(user5.getTable(), null, null);
+		search = datastore.findEntities(user5.getTable(), null, null, null);
 		assertEquals("Three clients should have been added!", 3, search.size());
 	}
 
@@ -97,11 +99,11 @@ public class TestWrapperObjectInterface {
 				,"accesslevel", AccessLevel.ADMIN
 				);
 		user.addObject("admin@uwm.edu",properties);	
-		List<?> search = datastore.findEntities(user.getTable(), null, null);
+		List<?> search = datastore.findEntities(user.getTable(), null, null, null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));
 
 		user.removeObject("admin@uwm.edu");
-		search = datastore.findEntities(user.getTable(), null, null);
+		search = datastore.findEntities(user.getTable(), null, null, null);
 		assertTrue("User Was Not Removed", (search.size() == 0));	
 	}
 
@@ -157,7 +159,7 @@ public class TestWrapperObjectInterface {
 				,"accesslevel",AccessLevel.ADMIN
 				);
 		user.addObject("admin@uwm.edu",properties);	
-		List<?> search = datastore.findEntities(user.getTable(), null, null);
+		List<?> search = datastore.findEntities(user.getTable(), null, null, null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));
 
 		properties = Library.propertyMapBuilder("password","newPassword"
@@ -184,7 +186,7 @@ public class TestWrapperObjectInterface {
 		assertEquals("WI",user.getProperty("state"));
 		assertEquals("12345",user.getProperty("zip"));
 
-		search = datastore.findEntities(user.getTable(), null, null);
+		search = datastore.findEntities(user.getTable(), null, null, null);
 		assertTrue("User Was Saved Improperly", (search.size() == 1));
 	}
 
@@ -376,7 +378,7 @@ public class TestWrapperObjectInterface {
 				      + " && startTime == " + Library.parseTimeToDouble(startTime)
 				      + " && endTime == " + Library.parseTimeToDouble(endTime);
 		
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertFalse(officeHours.isEmpty());
 		assertEquals(1, officeHours.size());
 		
@@ -394,19 +396,19 @@ public class TestWrapperObjectInterface {
 		
 		String filter = "onMonday == " + onM;
 				      
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertFalse(officeHours.isEmpty());
 		assertEquals(2, officeHours.size());
 		
 		filter = "startTime < " + Library.parseTimeToDouble(startTime);
-		officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent);
+		officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent,null);
 		assertFalse(officeHours.isEmpty());
 		assertEquals(2, officeHours.size());
 		
 		filter = "startTime > " + Library.parseTimeToDouble(endTime)
 				+" && startTime < " + Library.parseTimeToDouble(startTime);
 		
-		officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent);
+		officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertFalse(officeHours.isEmpty());
 		assertEquals(1, officeHours.size());		
 		
@@ -414,7 +416,7 @@ public class TestWrapperObjectInterface {
 				+" && onThursday == " + true
 				+" && onTuesday == " + true 
 				+" && onFriday == " + false;
-		officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent);
+		officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertFalse(officeHours.isEmpty());
 		assertEquals(1, officeHours.size());
 	}
@@ -432,7 +434,7 @@ public class TestWrapperObjectInterface {
 	public void findOfficeHoursByParent(){
 		addFourOfficeHours();
 		
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(null, parent);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(null, parent, null);
 		
 		assertEquals(3, officeHours.size());
 	}
@@ -443,7 +445,7 @@ public class TestWrapperObjectInterface {
 		
 		String filter = "days == 'MTR'";
 		
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertEquals(1, officeHours.size());
 		
 		WrapperObject<OfficeHours> hours = officeHours.get(0);
@@ -464,7 +466,7 @@ public class TestWrapperObjectInterface {
 		
 		String filter = "days == 'MTR'";
 		
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertEquals(1, officeHours.size());
 		
 		WrapperObject<OfficeHours> hours = officeHours.get(0);
@@ -493,7 +495,7 @@ public class TestWrapperObjectInterface {
 		addFourOfficeHours();
 		
 		String filter = "days == 'MTR'";		
-		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObject(filter, parent);
+		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertEquals(1, officeHours.size());
 		
 		WrapperObject<OfficeHours> hours = officeHours.get(0);
@@ -567,14 +569,14 @@ public class TestWrapperObjectInterface {
 		assertTrue(course1.addObject(courseNum1, properties1).isEmpty());
 		assertTrue(course2.addObject(courseNum2, properties2).isEmpty());
 		
-		assertEquals(2,DataStore.getDataStore().findEntities(course1.getTable(), null, null).size());
+		assertEquals(2,DataStore.getDataStore().findEntities(course1.getTable(), null, null, null).size());
 	}
 	
 	@Test
 	public void testAddCourseWithBadProperties(){
 		WrapperObject<Course> course = WrapperObjectFactory.getCourse();
 		DataStore store = DataStore.getDataStore();
-		assertTrue(store.findEntities(course.getTable(), null, null).isEmpty());
+		assertTrue(store.findEntities(course.getTable(), null, null, null).isEmpty());
 		String badNum1 = "1b1";
 		String badNum2 = "97";
 		String badNum3 = "1004";
@@ -613,7 +615,7 @@ public class TestWrapperObjectInterface {
 			}catch(Exception e){
 				fail("Unexpected exception occurred: " + e.getMessage());
 			}
-			assertTrue(store.findEntities(course.getTable(), null, null).isEmpty());
+			assertTrue(store.findEntities(course.getTable(), null, null, null).isEmpty());
 		}
 		
 		
@@ -629,7 +631,7 @@ public class TestWrapperObjectInterface {
 			fail("Unexpected exception occurred: " + e.getMessage());
 		}
 		
-		assertTrue(store.findEntities(course.getTable(), null, null).isEmpty());
+		assertTrue(store.findEntities(course.getTable(), null, null, null).isEmpty());
 		
 		properties = Library.propertyMapBuilder("coursename", null);
 		
@@ -642,11 +644,30 @@ public class TestWrapperObjectInterface {
 			fail("Unexpected exception occurred: " + e.getMessage());
 		}
 		
-		assertTrue(store.findEntities(course.getTable(), null, null).isEmpty());
+		assertTrue(store.findEntities(course.getTable(), null, null, null).isEmpty());
 	}
 	
-	private void addFourCourses(){
+	@Test
+	public void testEditCourse(){
+		addTwoCourses();
+		assertEquals(2, DataStore.getDataStore().findEntities(course1.getTable(), null, null, null).size());
+		String courseName = "This is a different course";
+		Map<String,Object>properties = Library.propertyMapBuilder("coursename",courseName);
+		assertEquals("This is a course",course1.getProperty("coursename"));
 		
+		assertTrue(course1.editObject("101", properties).isEmpty());
+		
+		assertEquals(courseName, course1.getProperty("coursename"));
+		assertEquals(2, DataStore.getDataStore().findEntities(course1.getTable(), null, null, null).size());		
+	}
+	
+	private void addTwoCourses(){
+		Map<String,Object> properties1 = Library.propertyMapBuilder("coursename","This is a course");
+		Map<String,Object> properties2 = Library.propertyMapBuilder("coursename", "This is another course");
+		course1 = WrapperObjectFactory.getCourse();
+		course1.addObject("101", properties1);
+		course2 = WrapperObjectFactory.getCourse();
+		course2.addObject("102", properties2);
 	}
 	
 	private void addFourOfficeHours(){

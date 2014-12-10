@@ -13,15 +13,16 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSpan;
 import com.gargoylesoftware.htmlunit.html.HtmlTable;
 import com.gargoylesoftware.htmlunit.html.HtmlTableRow;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 
+import edu.uwm.owyh.exceptions.BuildJDOException;
+import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.NonPersistedWrapperObject;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.Section;
-import edu.uwm.owyh.library.LocalDevLibrary;
+import edu.uwm.owyh.library.ScrapeUtility;
 import edu.uwm.owyh.library.WebScraper;
 import edu.uwm.owyh.model.Auth;
-import edu.uwm.owyh.model.DataStore;
 
 @SuppressWarnings("serial")
 public class Scraper extends HttpServlet{
@@ -32,13 +33,13 @@ public class Scraper extends HttpServlet{
 
 		Auth auth = Auth.getAuth(request);
 		if(!auth.verifyAdmin(response)) return;
-		
-		if(LocalDevLibrary.isLocal()){
+
+		if(ScrapeUtility.isLocal()){
 			request.getRequestDispatcher("/admin/localscraper").forward(request, response);
 			return;
 		}
 
-		List<Course> courseList = null;	
+		List<WrapperObject<Course>> courseList = null;	
 		List<String> errors = new ArrayList<String>();
 		int retries = 3;
 		while(retries > 0){
@@ -55,27 +56,30 @@ public class Scraper extends HttpServlet{
 			} catch (NumberFormatException nfe) {
 				errors.add(nfe.getMessage());
 				retries = 0;
+			} catch(BuildJDOException bje){
+				throw new IllegalArgumentException(bje.getLocalizedMessage());
 			} catch(Exception e){
-				errors.add(e.getMessage());
-				retries = 0;
+				throw e;
 			}
 		}
 		if(courseList == null){
 			errors.add("Error connecting to uwm website! Please try again later.");
 		}
 		if(errors.isEmpty()){			
+			NonPersistedWrapperObject<Course> course = (NonPersistedWrapperObject<Course>) WrapperObjectFactory.getCourse();
+			course.saveAllObjects(courseList);			
+			courseList = WrapperObjectFactory.getCourse().getAllObjects();
 			request.setAttribute("courselist", courseList);
-			DataStore.getDataStore().insertEntities(courseList);
 		}else{
 			request.setAttribute("errors", errors);
 		}
 
 		request.getRequestDispatcher("/classlist").forward(request, response);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private static List<Course> getCourseList() throws InterruptedException, IOException{
-		List<Course> courses = null;
+	private static List<WrapperObject<Course>> getCourseList() throws InterruptedException, IOException, BuildJDOException{
+		List<WrapperObject<Course>> courses = null;
 		String term = "Fall";
 		String baseUri = "http://www4.uwm.edu/schedule/";
 		String findSpecificTermLink = "//a[@class = 'term_link' and contains(@href,'" + term + "')]";
@@ -98,23 +102,31 @@ public class Scraper extends HttpServlet{
 		}
 
 		List<HtmlTable> courseTables = (List<HtmlTable>) WebScraper.findByXPath(page, findCourseTables);
-
+		List<WrapperObject<Course>> tempCourses = courses; 
+		if(courses.isEmpty()){
+			courses = WrapperObjectFactory.getCourse().getAllObjects(); 
+		}
 		for(int i=0; i<courseTables.size(); ++i){
 			HtmlTable courseTable = courseTables.get(i);
-			Course course = courses.get(i);
+			
+			WrapperObject<Course> course = courses.get(i);
 
 			List<HtmlTableRow> sectionRows = (List<HtmlTableRow>)WebScraper.findByXPath(courseTable, findSectionRows);
 
-			course.setSections(setAllSectionInfoForCourse(sectionRows, course));
+			if(setAllSectionInfoForCourse(sectionRows, course)){
+				if(!tempCourses.contains(course)){
+					tempCourses.add(course);
+				}
+			}
 		}		
+		courses = tempCourses;
 		return courses;
 	}
 
-	private static List<Course> setCourseInfo(List<HtmlSpan> courseSpans){
-		List<Course> courses = new ArrayList<Course>();
+	private static List<WrapperObject<Course>> setCourseInfo(List<HtmlSpan> courseSpans) throws BuildJDOException{
+		List<WrapperObject<Course>> courses = new ArrayList<WrapperObject<Course>>();
 
 		for(int i=0; i<courseSpans.size(); ++i){
-
 			HtmlSpan courseSpan = courseSpans.get(i);
 
 			String courseInfo = courseSpan.asText();
@@ -128,15 +140,14 @@ public class Scraper extends HttpServlet{
 				isParsableAsInt(courseNum);
 			}catch(NumberFormatException nfe){
 				throw new NumberFormatException("Parse Error! Please contact website adminstrator with this error");
-			}
-
-			Course course = Course.getCourse(courseNum);
+			}			
+			
 			startIndex = courseInfo.indexOf(':') + 1;
-
 			String courseName = courseInfo.substring(startIndex);
-			course.setCourseName(courseName);
-
-			courses.add(course);
+			
+			String[] aCourseInfo = {"COURSE", courseNum, courseName};
+			
+			ScrapeUtility.setCourseJdo(aCourseInfo, courses);
 		}
 		return courses;
 	}
@@ -145,8 +156,7 @@ public class Scraper extends HttpServlet{
 		Integer.parseInt(courseNum);		
 	}
 
-	private static List<Section> setAllSectionInfoForCourse(List<HtmlTableRow> sectionRows, Course parent){
-		List<Section> sections = new ArrayList<Section>();
+	private static boolean setAllSectionInfoForCourse(List<HtmlTableRow> sectionRows, WrapperObject<Course> parent) throws BuildJDOException{
 		int creditIndex = 2;
 		int sectionNumIndex = 3;
 		int hoursIndex = 5;
@@ -154,31 +164,79 @@ public class Scraper extends HttpServlet{
 		int datesIndex = 7;
 		int instructorNameIndex = 8;
 		int roomIndex = 9;
+		boolean addParent = false;
 
 		for(HtmlTableRow row : sectionRows){
 			String sectionNum = row.getCell(sectionNumIndex).asText();
-			
+
 			if(sectionNum == null || sectionNum.trim().length() == 0) continue;
-			
+
 			String creditLoad = row.getCell(creditIndex).asText();
 			String hours = row.getCell(hoursIndex).asText();
 			String days = row.getCell(daysIndex).asText();
 			String dates = row.getCell(datesIndex).asText();
 			String instructorName = row.getCell(instructorNameIndex).asText();
 			String room = row.getCell(roomIndex).asText();
-			Section section = Section.getSection(sectionNum, parent);
+			
+			String[] sectionInfo = {creditLoad, dates, days, hours, instructorName, room, sectionNum};
 
-			section.setCredits(creditLoad);
-			section.setSectionNum(sectionNum);
-			section.setHours(hours);
-			section.setDays(days);
-			section.setDates(dates);
-			section.setInstructor(instructorName);
-			section.setRoom(room);
-			sections.add(section);				
-		}		
-		return sections;
+			WrapperObject<Section> section = ScrapeUtility.setSectionJdo(sectionInfo, parent);
+			
+			if(section != null){
+				((NonPersistedWrapperObject<Course>)parent).addChild(section);
+				addParent = true;
+			}
+		}
+		
+		return addParent;
 	}
-	
-	
+
+//	private static void setHours(String hours, Section section){
+//		if(hours.trim().length() == 1) return;
+//		String[] aHours = hours.split("-");
+//
+//		if(aHours.length != 2)
+//			throw new IllegalArgumentException("Hours did not split into start and end time as expected!");
+//
+//		String startTime = aHours[0];
+//		String endTime = aHours[1];
+//
+//		section.setStartTime(Library.parseTimeToDouble(startTime));
+//		section.setEndTime(Library.parseTimeToDouble(endTime));
+//	}
+//
+//	private static void setDates(String dates, Section section){
+//		String[] aDates = dates.split("-");
+//
+//		if(aDates.length != 2)
+//			throw new IllegalArgumentException("Dates did not split into start and end date as expected!");
+//
+//		String startDate = aDates[0].trim();
+//		String endDate = aDates[1].trim();
+//
+//		try{
+//			section.setStartDate(Library.stringToDate(startDate));
+//			section.setEndDate(Library.stringToDate(endDate));
+//		}catch(ParseException pe){
+//			throw new IllegalArgumentException(pe.getMessage());
+//		}
+//	}
+//
+//	private static void setInstructorName(String instructorName, Section section){
+//		String lastName = "";
+//		String firstName = "";
+//
+//		if(!instructorName.trim().isEmpty()){
+//			String[] aNames = instructorName.split(",");
+//
+//			if(aNames.length != 2)
+//				throw new IllegalArgumentException("Instructor names did not split into first and last as expected!");
+//
+//			lastName = aNames[0].trim();
+//			firstName = aNames[1].trim();
+//		}
+//
+//		section.setInstructorFirstName(firstName);
+//		section.setInstructorLastName(lastName);
+//	}
 }

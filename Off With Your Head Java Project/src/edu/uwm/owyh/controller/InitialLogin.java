@@ -42,7 +42,7 @@ public class InitialLogin extends HttpServlet{
 			String userEnteredKey = request.getParameter("appkey");
 			boolean isKey = false;
 			
-			if(store.findEntities(SoftwareKey.class, null, null).isEmpty()){
+			if(store.findEntities(SoftwareKey.class, null, null, null).isEmpty()){
 				/* DO NOT DELETE */
 
 				SoftwareKey appkey = new SoftwareKey();
@@ -52,7 +52,7 @@ public class InitialLogin extends HttpServlet{
 				isKey = userEnteredKey.equals(appkey.getUnlock());
 			}else{
 				String filter = "unlock== '" + userEnteredKey + "'";
-				isKey = !(store.findEntities(SoftwareKey.class, filter, null).isEmpty());
+				isKey = !(store.findEntities(SoftwareKey.class, filter, null, null).isEmpty());
 			} 
 			
 			if(!isKey){

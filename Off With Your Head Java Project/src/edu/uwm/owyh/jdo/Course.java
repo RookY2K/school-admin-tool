@@ -14,6 +14,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.library.Library;
 
 /**
@@ -37,7 +38,7 @@ public class Course implements Serializable, Cloneable{
 	@Extension(vendorName="datanucleus", key="gae.parent-pk", value="true")
 	private String parentKey;
 
-	@Persistent(mappedBy = "parentCourse")
+	@Persistent(mappedBy = "parent")
 	@Element(dependent="true")
 	private List<Section> sections;
 
@@ -46,6 +47,9 @@ public class Course implements Serializable, Cloneable{
 
 	@Persistent
 	private String courseName;
+	
+	@Persistent
+	private List<Key> eligibleTAKeys;
 
 
 
@@ -53,6 +57,7 @@ public class Course implements Serializable, Cloneable{
 		id = Library.generateIdFromCourseNum(courseNum);
 
 		sections = new ArrayList<Section>();
+		eligibleTAKeys = new ArrayList<Key>();
 
 		setCourseNum(courseNum);
 	}
@@ -138,26 +143,11 @@ public class Course implements Serializable, Cloneable{
 	}
 
 	/**
-	 * Adds a section jdo to the Sections List field
-	 * @param section
+	 * @return the eligibleTAKeys
 	 */
-	public void addSection(Section section){
-		sections.add(section);
+	public List<Key> getEligibleTAKeys() {
+		return eligibleTAKeys;
 	}
-
-	//TODO remove later
-	/**
-	 * <pre>
-	 * Temporary convenience method that will be removed once a wrapper is 
-	 * designed. DO NOT hook into this method unless you are prepared to change
-	 * code once this "goes away" during the next sprint.
-	 * </pre>
-	 * @param sections
-	 */
-	public void setSections(List<Section> sections){
-		this.sections = sections;
-	}
-
 
 	//Utility methods
 	@Override
@@ -170,5 +160,27 @@ public class Course implements Serializable, Cloneable{
 		String otherCourseNum = other.getCourseNum();
 		
 		return courseNum == otherCourseNum;
+	}
+
+	/**
+	 * Adds a section jdo to the Sections List field
+	 * @param section
+	 */
+	public void addSection(Section section) {
+		if(section == null) 
+			throw new NullPointerException("Section cannot be null!");
+		if(getSections().contains(section))
+			throw new IllegalArgumentException("Duplicate section entry!");
+		this.sections.add(section);
+	}
+	
+	public void removeSection(Section section) {
+		if(section == null)
+			throw new NullPointerException("Section cannot be null!");
+		this.getSections().remove(section);
+	}
+	
+	public void setEligibleTAKeys(List<Key> eligibleTAKeys){
+		this.eligibleTAKeys = eligibleTAKeys;
 	}
 }

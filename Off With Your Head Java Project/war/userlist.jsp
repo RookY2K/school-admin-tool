@@ -25,6 +25,7 @@
 	
 	Map<String,Object> modifyUser = (Map<String,Object>) request.getAttribute("modifyuser");
 	List<Map<String,Object>> officeHours = (List<Map<String,Object>>) request.getAttribute("officehours");
+	String skills = (String)request.getAttribute("skills");
 %>
 
 <div id="body" style="clear:both;">
@@ -35,15 +36,20 @@
 			<br /><span class="good-message">A user was successfully deleted!</span>
 		<% } %>
 		
+		<% Map<String, String> searchUser = (Map<String, String>)request.getAttribute("filteruser"); %>
+		<form action="/userlist" method="post">
 		<table id="user-search">
 			<tr>
-				<td>User Name: <input type="text" value="" /></td>
-				<td>Email: <input type="text" value="" /></td>
-				<td><input type="checkbox" /> Admin <input type="checkbox" /> Instructor <input type="checkbox" /> TA</td>
-				<td><input type="submit" class="submit" value="Filter Users" /></td>
+				<td>Search User: <input type="text" name="searchName" value="<% if (searchUser != null) { out.print(searchUser.get("name")); } %>" placeholder="Fist Name, Last Name, or Email" style="width:250px;" /></td>
+				<td><input type="checkbox" name="searchAdmin" <% if (searchUser != null && searchUser.get("Admin") != null) { out.print("checked"); } %> /> Admin 
+				<input type="checkbox" name="searchInstructor" <% if (searchUser != null && searchUser.get("Instructor") != null) { out.print("checked"); } %> /> Instructor 
+				<input type="checkbox" name="searchTA" <% if (searchUser != null && searchUser.get("TA") != null) { out.print("checked"); } %> /> TA</td>
+				<td><input type="submit" class="submit" name="filteruser" value="Filter Users" />
+				<input type="submit" class="submit" name="clearfilter" value="Clear Filter" /></td>
 			</tr>
 		</table>
-
+		</form>
+		
 		<br /><br />
 		<table id="users">
 			<tr>
@@ -57,9 +63,12 @@
 				<td class="cell-header" colspan="1">Profile</td>
 				<% } %>
 				<% if (isAdmin) { %>
-				<td class="cell-header"colspan="2">Office Hours</td>
+				<td class="cell-header" colspan="2">Office Hours</td>
 				<% } else {%>
-				<td class="cell-header"colspan="1">Office Hours</td>
+				<td class="cell-header" colspan="1">Office Hours</td>
+				<% } %>
+				<% if (isAdmin) { %>
+				<td class="cell-header" colspan="2">TA Skills</td>
 				<% } %>
 			</tr>		
  		<% for (int i = 0; i < users.size(); i++) {
@@ -125,9 +134,31 @@
 					</form>
 				</td>
 				<% } %>
+				<% if (isAdmin) { %>
+					<% if (accesslevel == AccessLevel.TA){ %>
+				<td class="cell">
+					<form action="/userlist#viewuserskills" method="post">
+						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
+						<input type="submit" class="submit" value="View" />
+					</form>
+				</td>
+				
+				<td class="cell">
+					<form action="/userlist#edituserskills" method="post">
+						<input type="hidden" name="modifyuser" value="<%=user.get("email") %>" />
+						<input type="submit" class="submit" value="Edit" />
+					</form>
+				</td>
+				 <% } else {%>
+				 <td class="cell"></td><td class="cell"></td>
+				<% } } %>
 			</tr>
 		<% } %>
 		</table>
+		
+		<% if (searchUser != null && users.size() == 0) { %>
+			<br />No user was found with those parameters.
+		<% } %>
 		
 	<br class="clear" />
 </div>
@@ -247,6 +278,19 @@
 				   <td class="user-label">Zip Code:</td>
 				   <td class="user-label"><input type = "text" name="zip" id="zip" value="<%=modifyUser.get("zip") %>"/></td>
 				</tr>
+				<% if (modifyUser.get("accesslevel") != AccessLevel.ADMIN && self.get("accesslevel") == AccessLevel.ADMIN) { %>
+				<tr>
+					<td class="user-label">User Role:</td>
+					<td class="user-data">
+						<select name="accesslevel" required>
+						  <option value="">Please Select</option>
+						  <option value="3" <% if (modifyUser.get("accesslevel") == AccessLevel.TA) { out.print("selected"); } %> >TA</option>
+						  <option value="2" <% if (modifyUser.get("accesslevel") == AccessLevel.INSTRUCTOR) { out.print("selected"); } %>>INSTRUCTOR</option>
+						  <option value="1" <% if (modifyUser.get("accesslevel") == AccessLevel.ADMIN) { out.print("selected"); } %>>ADMIN</option>
+						</select>
+					</td>
+				</tr>
+				<% } %>
 				<tr>
 				   <td class="submitinfo" colspan="2"><input type="submit" class="submit" name="edituserprofilesubmit" value="Edit Information"/>
 				   </form>
@@ -299,6 +343,13 @@
     <div>
 		<a href="#close" title="Close" class="unselectable">Close</a>
 		<p><strong>Office Hours</strong></p>
+		<p> 
+		<% if (modifyUser == null || modifyUser.get("officeroom") == null || modifyUser.get("officeroom").equals("")) { %>
+		This user did not set an Office Location.
+		<% } else { %>
+		Office Location: <%=modifyUser.get("officeroom") %>
+		<% } %>
+		</p>
 		<% if (officeHours == null || officeHours.isEmpty()) { %>
 			This user has no Office Hours.
 		<% }
@@ -308,7 +359,6 @@
 			<tr>
 				<td class="underline">Days</td>
 				<td class="underline">Time</td>
-				<td class="underline">Room</td>
 			</tr>
 		<% for (Map<String, Object> hour : officeHours) { %>
 			<tr>
@@ -368,5 +418,74 @@
 		<% } %>
     </div>
 </aside>
+
+<aside id="viewuserskills" class="modal">
+    <div>
+    	<% 	if (modifyUser != null) {	%>
+    	<p><strong>Viewing Skills of <%=modifyUser.get("email") %></strong></p>
+  		<form action="/userlist#edituserskills" method="post">
+  			<input type="hidden" id="modifyuser" name="modifyuser" value="<%=modifyUser.get("email") %>" />
+			<table>
+			    <tr>
+			    	<% if (skills != null && !skills.isEmpty()) { %>
+				   <td class="user-label"><%=skills %></td>
+				   <% } else { %>
+				   <td class="user-label">This user currently have no TA Skills</td>
+				   <% } %>
+				</tr>
+				<tr>
+				   <td class="submitinfo" colspan="2">
+				   <% if (isAdmin) { %>
+				   <input type="submit" class="submit" name="editskillssubmit" value="Edit Skills"/>
+				   </form>
+				   </td>
+				   <% } %>
+				</tr>
+			</table>	
+		<% } %>
+		<a href="#close" title="Close"  class="unselectable">Close</a>
+    </div>
+</aside>
+<aside id="edituserskills" class="modal">
+    <div>
+		<p><strong>Skills</strong></p>
+		<% 	List<String> editSkillsErrors = (List<String>) request.getAttribute("edituserskillserrors");
+			String goodEditUser = (String) request.getAttribute("goodedituser");
+			if (editSkillsErrors != null) { %>
+				<ul class="message">
+		<%	for (String error : editSkillsErrors) { %>
+			<li class="error-message"><%=error %></li>
+			<% } %>
+				</ul>
+		<% } %>
+		
+	<% if (goodEditUser != null) { %>
+		<ul class="message"><li class="good-message">The User's skills were successfully edited!</li></ul>
+		<% } %>
+		
+		<% 	if (modifyUser != null) {
+		%>
+		<form action="/userlist#edituserskills" method="post" id="editskillsform">
+			<input type="hidden" name="edituserskills" id="edituserskills" value="edituserskills" />
+			<input type="hidden" name="email" id="email" value="<%=modifyUser.get("email") %>" />
+			
+			<textarea rows="4" cols="40" name="skilllist" form="editskillsform"><%=skills%></textarea>
+			
+			<table>
+				<tr>
+				   <td class="submitinfo" colspan="2"><input type="submit" class="submit" name="edituserskillssubmit" value="Edit Skills"/>
+				   </form>
+				   </td>
+				</tr>
+			</table>
+		
+		<ul class="message">
+			<li class="list-message">Skills must be a comma separated list.</li>
+		</ul>
+		<% } %>
+		<a href="#close" title="Close"  class="unselectable">Close</a>
+    </div>
+</aside>
+
 
 <jsp:include page="/WEB-INF/templates/footer.jsp" />

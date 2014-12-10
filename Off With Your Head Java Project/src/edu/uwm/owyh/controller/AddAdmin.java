@@ -12,11 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
 import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
+import edu.uwm.owyh.model.Email;
 
 @SuppressWarnings("serial")
 public class AddAdmin extends HttpServlet{
@@ -28,10 +29,11 @@ public class AddAdmin extends HttpServlet{
 		Boolean isAddAdmin = (Boolean)session.getAttribute("isAddAdmin");
 		
 		if(isAddAdmin != null && isAddAdmin.booleanValue()){
-			response.sendRedirect(request.getContextPath() + "/admin/addadmin.jsp");
+			request.getRequestDispatcher(request.getContextPath() + "/admin/addadmin.jsp").forward(request, response);
 			return;
 		}else{
-			request.getRequestDispatcher("/").forward(request,response);
+			response.sendRedirect(request.getContextPath() + "/");	
+			return;		
 		}
 	}
 	
@@ -39,7 +41,14 @@ public class AddAdmin extends HttpServlet{
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
-		// TODO: prevent direct access input, when initial admin already exist
+		/* Protect against direct access */
+		HttpSession session = request.getSession();
+		Boolean isAddAdmin = (Boolean)session.getAttribute("isAddAdmin");
+		
+		if(isAddAdmin == null) {
+			response.sendRedirect(request.getContextPath() + "/");	
+			return;		
+		}
 		
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
@@ -66,7 +75,11 @@ public class AddAdmin extends HttpServlet{
 			if (errors.isEmpty()){
 				Auth.setSessionVariable(request, "user", newUser);
 				Auth.removeSessionVariable(request, "isAddAdmin");
+				String message = "Off With Your Head \n You have just created an Admin Account \n Your username is: " + email + " \n Your password is: " + password;
+				Email.sendMessage(email, "OWY Admin", "OWYH Admin Account Creation", message);
+				
 				response.sendRedirect(request.getContextPath() + "/profile#editprofile");	
+				return;
 			}else{ 
 				forwardForError(request, response, errors);
 			}

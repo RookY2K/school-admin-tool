@@ -3,14 +3,16 @@ package edu.uwm.owyh.model;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
+import javax.jdo.JDOHelper;
 import javax.jdo.JDOObjectNotFoundException;
+import javax.jdo.ObjectState;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 
 import com.google.appengine.api.datastore.Key;
 
-import edu.uwm.owyh.jdowrappers.WrapperObject;
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.library.PMF;
 
 /**
@@ -44,28 +46,29 @@ public final class DataStore{
 	 * Returns a list of entities based on filter from specified table
 	 * @param table - The JDO class that is being searched for
 	 * @param filter - The JDOQL filter
-	 * @param parent - Optional parameter that will do search by parent if not null
+	 * @param parentEntity - Optional parameter that will do search by parent if not null
 	 * @return List<E> matching filter
 	 */
 	@SuppressWarnings("unchecked")
-	public <E, T> List<E> findEntities(Class<E> table,String filter, WrapperObject<T> parent){
+	public <E, T> List<E> findEntities(Class<E> table,String filter, WrapperObject<T> parentEntity, String order){
 		if(_service.isClosed()) getDataStore();
 		List<E> results = null;
 		Key parentKey = null;
 		
 		Query query = _service.newQuery(table);
 		
-		if(parent != null){
+		if(parentEntity != null){
 			if(filter != null){
-				filter = "parentPerson == parent && " + filter;
+				filter = "parent == parentEntity && " + filter;
 			}else{
-				filter = "parentPerson == parent";
+				filter = "parent == parentEntity";
 			}
-			parentKey = parent.getId();
+			parentKey = parentEntity.getId();
 		}
 		query.setFilter(filter);
+		if(order != null)query.setOrdering(order);
 		
-		if(parent != null) query.declareParameters("String parent");		
+		if(parentEntity != null) query.declareParameters("String parentEntity");		
 
 		results = (List<E>) query.execute(parentKey);
 
@@ -138,6 +141,8 @@ public final class DataStore{
 		if(_service.isClosed()) getDataStore();
 		try{
 			E result = _service.getObjectById(cls, id);
+			boolean isDeleted = JDOHelper.getObjectState(result).equals(ObjectState.PERSISTENT_DELETED);
+			if(isDeleted) result = null;
 			return result;
 		}catch(JDOObjectNotFoundException nfe){
 			return null;
@@ -196,7 +201,7 @@ public final class DataStore{
 		while(!success){
 			try{
 				_service.deletePersistentAll(entities);
-				tnx.commit();
+				tnx.commit();				
 				success = true;
 			}catch(ConcurrentModificationException cme){
 				if(retries == 0) throw cme;

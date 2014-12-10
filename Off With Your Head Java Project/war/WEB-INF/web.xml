@@ -42,6 +42,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>ForgotPassword</servlet-name>
+		<servlet-class>edu.uwm.owyh.controller.ForgotPassword</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ForgotPassword</servlet-name>
+		<url-pattern>/forgotpassword</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>Admin</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.Admin</servlet-class>
 	</servlet>
@@ -104,6 +113,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet-mapping>
 		<servlet-name>AddAdmin</servlet-name>
 		<url-pattern>/admin/addadmin</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>EmailAdmin</servlet-name>
+		<servlet-class>edu.uwm.owyh.controller.EmailAdmin</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EmailAdmin</servlet-name>
+		<url-pattern>/emailadmin</url-pattern>
 	</servlet-mapping>
 
 	

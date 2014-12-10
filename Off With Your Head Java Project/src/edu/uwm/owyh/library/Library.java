@@ -1,17 +1,28 @@
 package edu.uwm.owyh.library;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.jdowrappers.WrapperObject;
+import edu.uwm.owyh.jdo.Section;
+import edu.uwm.owyh.jdowrappers.OfficeHoursWrapper;
+import edu.uwm.owyh.jdowrappers.SectionWrapper;
+import edu.uwm.owyh.model.Auth;
 
 /**
  * Library class with miscellaneous, general, utility methods that are called by several classes.
@@ -117,7 +128,8 @@ public class Library {
                                            ,"zip",user.getProperty("zip")
                                            ,"password",user.getProperty("password")
                                            ,"accesslevel",user.getProperty("accesslevel")
-                                           ,"officehours",user.getProperty("officehours")
+                                           ,"officeroom", user.getProperty("officeroom")
+                                           ,"skills", user.getProperty("skills")
                                            );
 		for(String key : properties.keySet())
 			if(properties.get(key) == null) properties.put(key, "");
@@ -151,6 +163,8 @@ public class Library {
 	 * @return a String time of format: dD:DDXM where d is for times >= 10 and X is A or P
 	 */
 	public static String timeToString(double time) {
+		if(time == -1) return "";
+		
 		int hoursIn24Cycle = (int)time;
 		double fractionalMinutes = time - hoursIn24Cycle;
 
@@ -181,6 +195,11 @@ public class Library {
 	 *         1-24 where 24 is 12AM. Exponent value is the minutes divided by 60 (e.g. 15/60 = .25). </pre>
 	 */
 	public static double parseTimeToDouble(String time){
+		if(time == null || time.trim().isEmpty()) return -1;
+		
+		time = time.trim();
+		if(!time.toUpperCase().matches(OfficeHoursWrapper.HOURS_PATTERN))
+			throw new IllegalArgumentException("Time does not match dD:DDXM pattern!");
 		double hours = parseHours(time);
 		double minutes = parseMinutes(time)/60;
 		String AmPm = parseAmPm(time);
@@ -205,6 +224,37 @@ public class Library {
 		
 		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(Course.getParentkey());
 		return keyBuilder.addChild(Course.getKind(), courseNum.toLowerCase()).getKey();
+	}
+	
+	public static Key generateSectionIdFromSectionAndCourseNum(String sectionNum, String courseNum){
+		if(courseNum == null || sectionNum == null) return null;
+		
+		Key parentKey = generateIdFromCourseNum(courseNum);
+		
+		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(parentKey);
+		
+		return keyBuilder.addChild(Section.getKind(), sectionNum.toLowerCase()).getKey();
+	}
+	
+	public static String dateToString(Date date){
+		if (date == null) return "";
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd");
+
+		return dateFormat.format(date);
+	}
+	
+	public static Date stringToDate(String date) throws ParseException{
+		if(date == null) return null;
+
+		if(!date.matches(SectionWrapper.SECTION_DATE_PATTERN)) 
+			throw new IllegalArgumentException("Date does not match pattern: MM/DD");
+		
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		String year = "2014";
+		
+		date += "/" + year;
+		
+		return dateFormat.parse(date);
 	}
 
 	private static String parseAmPm(String time) {
@@ -265,6 +315,40 @@ public class Library {
 		return numHours;		
 	}
 	
+	private static final String passwordKey = "ABCEDFGHIJKLMNOPQRSTUVWXYZabcedfghijklmnopqrstuvwxyz1234567890";
+	private static final int passwordKeySize = 6;
+	/**
+	 * Utility method that generate a temporary random password for user who forgot there password
+	 * @return String password
+	 */
+	public static String genderateRandomPassword() {
+		String result ="";
+		Random rnd = new Random();	
+		for (int i = 0; i < passwordKeySize; i++) {
+			int pos = rnd.nextInt(passwordKey.length());
+			result += passwordKey.substring(pos, pos + 1);
+		}
+		return result;
+	}
 	
-
+	/**
+	 * Utility method that restricts an action per user Session
+	 * @return boolean base on if action limit has been reached
+	 */
+	public static boolean setSessionActionLimit(HttpServletRequest request, String sessionID, int max) {
+		String limit = (String) Auth.getSessionVariable(request, sessionID);
+		
+		if (limit == null) {	
+			limit = "0";
+			Auth.setSessionVariable(request, sessionID, "1");
+		}
+		
+		int limitCount = Integer.parseInt(limit);
+		if (limitCount >= max) {
+			return true;
+		}
+		
+		Auth.setSessionVariable(request, sessionID, String.valueOf(limitCount + 1));
+		return false;
+	}
 }
