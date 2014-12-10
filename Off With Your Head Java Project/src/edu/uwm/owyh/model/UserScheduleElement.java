@@ -141,7 +141,7 @@ public class UserScheduleElement {
 	}
 
 	private boolean doesElementEndInRange(double startOfRange, double endOfRange) {
-		if (endTime >= startOfRange && endTime < endOfRange)
+		if (endTime > startOfRange && endTime <= endOfRange)
 			return true;
 
 		return false;
