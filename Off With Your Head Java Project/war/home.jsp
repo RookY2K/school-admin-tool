@@ -634,7 +634,7 @@ if (self == null) { out.print("No Correct Attribute Was Passed Into JSP!"); retu
 									if(element.isPartOfElement("M", "6:00PM", "7:00PM"))
 									{
 										++count;%>
-										<td class="office-background"><span class="office-hour"><%= element.getTitle()%></span></td>
+										<td class="office-background"><span class="office-hour"><%= element.getTitle() %></span></td>
 									<%}
 								}
 								
