@@ -71,10 +71,10 @@ public class ScrapeUtility {
 	public static WrapperObject<Course> setCourseJdo(String[] courseInfo, List<WrapperObject<Course>> courseList) throws BuildJDOException{
 		String courseNum = courseInfo[1];
 		String courseName = courseInfo[2];
-		Map<String,Object> properties = Library.propertyMapBuilder("coursename",courseName);
+		Map<String,Object> properties = PropertyHelper.propertyMapBuilder("coursename",courseName);
 		NonPersistedWrapperObject<Course> course = (NonPersistedWrapperObject<Course>) WrapperObjectFactory.getCourse();
 		WrapperObject<Course> editCourse = null;
-		Key courseKey = Library.generateIdFromCourseNum(courseNum);
+		Key courseKey = WrapperObjectFactory.generateIdFromCourseNum(courseNum);
 		
 		editCourse = course.findObjectById(courseKey);
 		if(editCourse == null){
@@ -83,7 +83,7 @@ public class ScrapeUtility {
 			return course;
 		}		
 		else {
-			editCourse.editObject(courseNum, properties);
+			editCourse.editObject(properties);
 			return editCourse;
 		}
 	}
@@ -105,7 +105,7 @@ public class ScrapeUtility {
 		NonPersistedWrapperObject<Section> section = (NonPersistedWrapperObject<Section>)WrapperObjectFactory.getSection();
 		WrapperObject<Section> editSection = null;
 		
-		Map<String,Object> properties = Library.propertyMapBuilder("credits", credits
+		Map<String,Object> properties = PropertyHelper.propertyMapBuilder("credits", credits
 																  ,"startdate", startDate
 																  ,"enddate", endDate
 																  ,"days", days
@@ -119,7 +119,7 @@ public class ScrapeUtility {
 		
 		String courseNum = (String)course.getProperty("coursenum");
 		
-		Key sectionKey = Library.generateSectionIdFromSectionAndCourseNum(sectionNum, courseNum);
+		Key sectionKey = WrapperObjectFactory.generateSectionIdFromSectionAndCourseNum(sectionNum, courseNum);
 		editSection = section.findObjectById(sectionKey);
 		if(editSection == null){
 			section.buildObject(courseNum, properties);
@@ -131,7 +131,7 @@ public class ScrapeUtility {
 				properties.remove("instructorfirstname");
 				properties.remove("instructorlastname");
 			}
-			editSection.editObject(courseNum, properties);
+			editSection.editObject(properties);
 			return null; 
 		}
 	}

@@ -11,7 +11,7 @@ import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.StringHelper;
 import edu.uwm.owyh.model.DataStore;
 
 
@@ -75,11 +75,11 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 			return _officeHours.getDays();
 		case "starttime":
 			double startTime = _officeHours.getStartTime();
-			String startTimeString = Library.timeToString(startTime);
+			String startTimeString = StringHelper.timeToString(startTime);
 			return startTimeString;
 		case "endtime":
 			double endTime = _officeHours.getEndTime();
-			String endTimeString = Library.timeToString(endTime);
+			String endTimeString = StringHelper.timeToString(endTime);
 			return endTimeString;
 		default:
 			return null;
@@ -91,7 +91,7 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 	 */
 	@Override
 	public List<String> addObject(String id, Map<String, Object> properties) {
-		Key parentId = Library.generateIdFromUserName(id);
+		Key parentId = WrapperObjectFactory.generateIdFromUserName(id);
 		List<String> errors = new ArrayList<String>();
 
 		WrapperObject<Person> parent = WrapperObjectFactory.getPerson().findObjectById(parentId);
@@ -119,19 +119,19 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#editObject(java.lang.String, java.util.Map)
 	 */
 	@Override
-	public List<String> editObject(String id, Map<String, Object> properties) {
+	public List<String> editObject(Map<String, Object> properties) {
 	
 		OfficeHours childJDO = getOfficeHours();
 	
 		if(childJDO.getId() == null) throw new IllegalStateException("Calling object is not a Persisted JDO!");
 	
-		Key parentId = Library.generateIdFromUserName(id);
+		Key parentId = childJDO.getId().getParent();
 		List<String> errors = new ArrayList<String>();
 	
 		WrapperObject<Person> parent = WrapperObjectFactory.getPerson().findObjectById(parentId);
 	
 		if(parent == null) throw new IllegalArgumentException("No parent exists with ID: " 
-				+ id + " to edit office hours!");
+				+ parentId.getName() + " to edit office hours!");
 	
 		errors = checkAllProperties(properties);
 		
@@ -161,7 +161,7 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		OfficeHours childJDO = getOfficeHours();		
 		if(childJDO.getId() == null) throw new IllegalStateException("Calling object is not a Persisted JDO!");
 	
-		Key parentKey = Library.generateIdFromUserName(id);
+		Key parentKey = WrapperObjectFactory.generateIdFromUserName(id);
 	
 		WrapperObject<Person> parent = WrapperObjectFactory.getPerson().findObjectById(parentKey);
 	
@@ -242,11 +242,11 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		
 		if(startTime == null || startTime.trim() == "") errors.add("Please enter a value for start time!");
 		else if(!startTime.trim().matches(HOURS_PATTERN)) throw new IllegalArgumentException("Bad pattern for startTime!");
-		start = Library.parseTimeToDouble(startTime);
+		start = StringHelper.parseTimeToDouble(startTime);
 		
 		if(endTime == null || endTime.trim() == "") errors.add("Please enter a value for end time!");
 		else if(!endTime.trim().matches(HOURS_PATTERN)) throw new IllegalArgumentException("Bad pattern for endTime!");
-		end = Library.parseTimeToDouble(endTime);
+		end = StringHelper.parseTimeToDouble(endTime);
 		
 		if(start >= end) errors.add("Office hours cannot start at or after end time");
 		
@@ -266,8 +266,8 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 	private boolean checkConflict(WrapperObject<Person> parent, Map<String, Object> properties) {
 		List<WrapperObject<OfficeHours>> officeHours = (List <WrapperObject<OfficeHours>>) parent.getProperty("officehours");
 		String days = (String) properties.get("days");
-		double startTime = Library.parseTimeToDouble((String)properties.get("starttime"));
-		double endTime  = Library.parseTimeToDouble((String) properties.get("endtime"));
+		double startTime = StringHelper.parseTimeToDouble((String)properties.get("starttime"));
+		double endTime  = StringHelper.parseTimeToDouble((String) properties.get("endtime"));
 		
 		for(WrapperObject<OfficeHours> conflict : officeHours){
 			
@@ -275,8 +275,8 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 			if(skip) continue;
 			
 			String compDays = (String) conflict.getProperty("days");
-			double compStart = Library.parseTimeToDouble((String) conflict.getProperty("starttime"));
-			double compEnd = Library.parseTimeToDouble((String)conflict.getProperty("endtime"));
+			double compStart = StringHelper.parseTimeToDouble((String) conflict.getProperty("starttime"));
+			double compEnd = StringHelper.parseTimeToDouble((String)conflict.getProperty("endtime"));
 			
 			for(int i=0;i<days.length();++i){
 				String day = Character.toString(days.charAt(i));
@@ -320,11 +320,11 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 			setDayBooleans(propertyValue);
 			break;
 		case "starttime":
-			time = Library.parseTimeToDouble(propertyValue);
+			time = StringHelper.parseTimeToDouble(propertyValue);
 			officeHours.setStartTime(time);
 			break;
 		case "endtime":
-			time = Library.parseTimeToDouble(propertyValue);
+			time = StringHelper.parseTimeToDouble(propertyValue);
 			officeHours.setEndTime(time);
 			break;
 		}

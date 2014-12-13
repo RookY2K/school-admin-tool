@@ -1,7 +1,6 @@
 <%@ page import="edu.uwm.owyh.interfaces.WrapperObject"%>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@ page import="edu.uwm.owyh.model.DataStore" %>
-<%@ page import="edu.uwm.owyh.library.Library" %>
 <%@ page import="edu.uwm.owyh.jdo.Course" %>
 <%@ page import="edu.uwm.owyh.jdo.Section" %>
 <%@ page import="java.util.Collections" %>

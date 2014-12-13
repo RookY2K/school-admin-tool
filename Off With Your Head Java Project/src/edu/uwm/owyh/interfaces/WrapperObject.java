@@ -62,11 +62,10 @@ public interface WrapperObject<E> extends Serializable{
 	 * Edits an existing calling object in the datastore. Returns any errors that occur. If errors do occur,
 	 * then nothing was edited. 
 	 * </pre>
-	 * @param id - Equal to objects identifying property, if it has one, else equal to its parent's identifying property
 	 * @param properties - Map of properties to set
 	 * @return List of errors if there were any. A non-empty list means the object was not edited in the datastore.
 	 */
-	abstract List<String> editObject(String id, Map<String,Object> properties);
+	abstract List<String> editObject(Map<String,Object> properties);
 
 	/**
 	 * Removes calling object from the datastore.

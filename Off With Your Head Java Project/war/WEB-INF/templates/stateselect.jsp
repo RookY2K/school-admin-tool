@@ -1,7 +1,7 @@
-<%@ page import="edu.uwm.owyh.library.Library" %>
+<%@ page import="edu.uwm.owyh.library.Utility" %>
 
 <%
-	String[] states = Library.getStates();
+	String[] states = Utility.getStates();
 	String selected = request.getParameter("selected");
 %>
 

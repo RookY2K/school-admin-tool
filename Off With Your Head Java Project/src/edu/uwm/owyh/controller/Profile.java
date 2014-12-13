@@ -16,7 +16,7 @@ import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.PropertyHelper;
 import edu.uwm.owyh.model.Auth;
 
 @SuppressWarnings("serial")
@@ -32,16 +32,16 @@ public class Profile extends HttpServlet {
 		
 		/* Find the logged in user. They're the only ones who can view their profile. */
 		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
-		Key myId = Library.generateIdFromUserName((String) self.getProperty("username"));
+		Key myId = WrapperObjectFactory.generateIdFromUserName((String) self.getProperty("username"));
 		self = WrapperObjectFactory.getPerson().findObjectById(myId);
 		WrapperObject<Person> user = self;
 		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(null, self, null);
-		request.setAttribute("officehours", Library.makeWrapperProperties(officeHours));
+		request.setAttribute("officehours", PropertyHelper.makeOfficeHoursProperties(officeHours));
 		
 		if (user != null)
 		{
-			request.setAttribute("user", Library.makeUserProperties(user));
-			request.setAttribute("self", Library.makeUserProperties(self));
+			request.setAttribute("user", PropertyHelper.makeUserProperties(user));
+			request.setAttribute("self", PropertyHelper.makeUserProperties(self));
 			request.getRequestDispatcher(request.getContextPath() + "/profile.jsp").forward(request, response);		
 		}
 		else
@@ -64,9 +64,9 @@ public class Profile extends HttpServlet {
 		/* Stuff to get User Profile Information */
 		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
 		String username = (String) self.getProperty("email");
-		Key myId = Library.generateIdFromUserName(username);
+		Key myId = WrapperObjectFactory.generateIdFromUserName(username);
 		self = WrapperObjectFactory.getPerson().findObjectById(myId);
-		request.setAttribute("self", Library.makeUserProperties(self));
+		request.setAttribute("self", PropertyHelper.makeUserProperties(self));
 		
 		Map<String, Object> properties;
 		List<String> errors = new ArrayList<String>();
@@ -88,8 +88,8 @@ public class Profile extends HttpServlet {
 				errors.add("Password Does Not Match Original!");
 			
 			if (errors.isEmpty()) {
-				properties = Library.propertyMapBuilder("password", newPassword);
-				errors = WrapperObjectFactory.getPerson().editObject(username, properties);
+				properties = PropertyHelper.propertyMapBuilder("password", newPassword);
+				errors = self.editObject(properties);
 				if (errors.isEmpty()) {
 					response.sendRedirect(request.getContextPath() + "/profile#passwordchanged");
 					return;
@@ -101,7 +101,7 @@ public class Profile extends HttpServlet {
 		/* User tries to edit contact information */
 		if (request.getParameter("editprofile") !=null) {
 			properties = 
-				Library.propertyMapBuilder("firstname",request.getParameter("firstname")
+				PropertyHelper.propertyMapBuilder("firstname",request.getParameter("firstname")
 						  ,"lastname",request.getParameter("lastname")
 						  ,"email",request.getParameter("email")
 		                  ,"phone",request.getParameter("phone")
@@ -110,7 +110,7 @@ public class Profile extends HttpServlet {
 		                  ,"state",request.getParameter("state")
 		                  ,"zip",request.getParameter("zip")
 			             );
-			errors = WrapperObjectFactory.getPerson().editObject(username, properties);
+			errors = self.editObject(properties);
 			if (errors.isEmpty()) {
 				response.sendRedirect(request.getContextPath() + "/profile#profilechanged");
 				return;

@@ -11,7 +11,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.factories.WrapperObjectFactory;
 
 
 /**
@@ -51,6 +51,9 @@ public class Section implements Serializable, Cloneable{
 	public void setSectionType(String sectionType) {
 		this.sectionType = sectionType;
 	}
+	
+	@Persistent
+	private Person instructor;
 
 	@Persistent
 	private String instructorFirstName;
@@ -268,7 +271,7 @@ public class Section implements Serializable, Cloneable{
 
 
 	private Section(String sectionNum, String courseNum){		
-		Key sectionKey = Library.generateSectionIdFromSectionAndCourseNum(sectionNum, courseNum);
+		Key sectionKey = WrapperObjectFactory.generateSectionIdFromSectionAndCourseNum(sectionNum, courseNum);
 		String sectionType = sectionNum.trim().substring(0, 3);
 		String num = sectionNum.trim().substring(3);
 		setStartTime(-1);

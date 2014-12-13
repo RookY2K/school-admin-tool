@@ -15,7 +15,7 @@ import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.PropertyHelper;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.UserSchedule;
 import edu.uwm.owyh.model.UserScheduleElement;
@@ -48,7 +48,7 @@ public class Index extends HttpServlet {
 			}
 			else{
 				WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
-				Key myId = Library.generateIdFromUserName((String) self.getProperty("username"));
+				Key myId = WrapperObjectFactory.generateIdFromUserName((String) self.getProperty("username"));
 				self = WrapperObjectFactory.getPerson().findObjectById(myId);
 				
 				UserSchedule schedule = new UserSchedule();
@@ -92,7 +92,7 @@ public class Index extends HttpServlet {
 					}
 				}*/
 				request.setAttribute("userschedule", schedule);
-				request.setAttribute("self", Library.makeUserProperties(self));
+				request.setAttribute("self", PropertyHelper.makeUserProperties(self));
 				request.getRequestDispatcher(request.getContextPath() + "/home.jsp").forward(request, response);	
 				return;
 			}

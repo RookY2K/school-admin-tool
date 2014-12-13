@@ -15,7 +15,8 @@ import com.google.appengine.api.datastore.Key;
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.PasswordGenerator;
+import edu.uwm.owyh.library.PropertyHelper;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Email;
 
@@ -40,7 +41,7 @@ public class ForgotPassword extends HttpServlet {
 			return;
 		}
 		
-		Key myId = Library.generateIdFromUserName(username);
+		Key myId = WrapperObjectFactory.generateIdFromUserName(username);
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(myId);
 		List<String> errors = new ArrayList<String>();
 		List<String> messages = new ArrayList<String>();
@@ -53,7 +54,7 @@ public class ForgotPassword extends HttpServlet {
 		}
 		
 		/* Prevent Email Spam by Limiting Password Request to 4 */ 
-		if (Library.setSessionActionLimit(request, "sendForgotPasswordEmail", 4)) {
+		if (Auth.setSessionActionLimit(request, "sendForgotPasswordEmail", 4)) {
 			errors.add("You have tried to reset your password too many times. Please Email the Administrator (<a href=\"/forgotpassword#emailforhelp\">vamaiuri@uwm.edu</a>) for more help.");
 			request.setAttribute("errors", errors);
 			doGet(request, response);
@@ -71,9 +72,9 @@ public class ForgotPassword extends HttpServlet {
 		String tempPassword = (String) user.getProperty("temporarypassword");
 		
 		if (tempPassword == null || tempPassword.equals("")) {
-			tempPassword = Library.genderateRandomPassword();
-			Map<String, Object> properties = Library.propertyMapBuilder("temporarypassword", tempPassword);
-			errors = WrapperObjectFactory.getPerson().editObject(username, properties);
+			tempPassword = PasswordGenerator.generateRandomPassword();
+			Map<String, Object> properties = PropertyHelper.propertyMapBuilder("temporarypassword", tempPassword);
+			errors = user.editObject(properties);
 			
 			if (!errors.isEmpty()) {
 				request.setAttribute("errors", errors);

@@ -15,7 +15,7 @@ import edu.uwm.owyh.interfaces.NonPersistedWrapperObject;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.Section;
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.StringHelper;
 import edu.uwm.owyh.model.DataStore;
 
 public class SectionWrapper implements WrapperObject<Section>, Serializable, NonPersistedWrapperObject<Section>{
@@ -24,7 +24,7 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 	public static final String SECTION_DATE_PATTERN = "^((0?[1-9])|(1[0-2]))/(([0-2][1-9])|(3[01]))$";
 	private static final long serialVersionUID = -7911639006979553905L;
 
-	Section _section;
+	private Section _section;
 
 	private SectionWrapper(){
 		//default constructor
@@ -79,16 +79,16 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 			return _section.getDays();
 		case "startdate":
 			Date startDate = _section.getStartDate();
-			return Library.dateToString(startDate);
+			return StringHelper.dateToString(startDate);
 		case "enddate":
 			Date endDate = _section.getEndDate();
-			return Library.dateToString(endDate);
+			return StringHelper.dateToString(endDate);
 		case "starttime":
 			double startTime = _section.getStartTime();
-			return Library.timeToString(startTime);
+			return StringHelper.timeToString(startTime);
 		case "endtime":
 			double endTime = _section.getEndTime();
-			return Library.timeToString(endTime);	
+			return StringHelper.timeToString(endTime);	
 		case "credits":
 			return _section.getCredits();
 		case "room":
@@ -107,7 +107,7 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 	public List<String> addObject(String courseNum, Map<String, Object> properties) {
 		List<String> errors = new ArrayList<String>();
 		
-		Key parentId = Library.generateIdFromCourseNum(courseNum);		
+		Key parentId = WrapperObjectFactory.generateIdFromCourseNum(courseNum);		
 
 		WrapperObject<Course> parent = WrapperObjectFactory.getCourse().findObjectById(parentId);
 
@@ -127,7 +127,7 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 	}
 
 	private Section getSection(String courseNum, String sectionNum) {
-		Key sectionKey = Library.generateSectionIdFromSectionAndCourseNum(sectionNum, courseNum);
+		Key sectionKey = WrapperObjectFactory.generateSectionIdFromSectionAndCourseNum(sectionNum, courseNum);
 		
 		Section section = DataStore.getDataStore().findEntityById(getTable(), sectionKey);
 		
@@ -142,19 +142,19 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#editObject(java.lang.String, java.util.Map)
 	 */
 	@Override
-	public List<String> editObject(String courseNum, Map<String, Object> properties) {
+	public List<String> editObject(Map<String, Object> properties) {
 
 		Section childJDO = getSection();
 
 		if(childJDO.getId() == null) throw new IllegalStateException("Calling object is not a Persisted JDO!");
 
-		Key parentId = Library.generateIdFromCourseNum(courseNum);
+		Key parentId = childJDO.getId().getParent();
 		List<String> errors = new ArrayList<String>();
 
 		WrapperObject<Course> parent = WrapperObjectFactory.getCourse().findObjectById(parentId);
 
 		if(parent == null) throw new IllegalArgumentException("No parent exists with ID: " 
-				+ courseNum + " to edit section!");
+				+ parentId.getName() + " to edit section!");
 
 		try {
 			errors = checkAllProperties(properties);
@@ -184,7 +184,7 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		Section childJDO = getSection();		
 		if(childJDO.getId() == null) throw new IllegalStateException("Calling object is not a Persisted JDO!");
 
-		Key parentKey = Library.generateIdFromCourseNum(id);
+		Key parentKey = WrapperObjectFactory.generateIdFromCourseNum(id);
 
 		WrapperObject<Course> parent = WrapperObjectFactory.getCourse().findObjectById(parentKey);
 
@@ -249,10 +249,10 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		List<String> errors = new ArrayList<String>();
 
 		String sectionNum = (String) properties.get("sectionnum");
-		Date startDate = Library.stringToDate((String) properties.get("startdate"));
-		Date endDate = Library.stringToDate((String) properties.get("enddate"));
-		double startTime = Library.parseTimeToDouble((String) properties.get("starttime"));
-		double endTime = Library.parseTimeToDouble((String)properties.get("endtime"));
+		Date startDate = StringHelper.stringToDate((String) properties.get("startdate"));
+		Date endDate = StringHelper.stringToDate((String) properties.get("enddate"));
+		double startTime = StringHelper.parseTimeToDouble((String) properties.get("starttime"));
+		double endTime = StringHelper.parseTimeToDouble((String)properties.get("endtime"));
 		if(sectionNum == null){
 			if(_section == null || _section.getSectionNum() == null){
 				throw new NullPointerException("Section number is missing!");
@@ -331,7 +331,7 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		return officeHours;
 	}
 
-	private Section getSection() {
+	Section getSection() {
 		if(_section == null) _section= Section.getSection();
 
 		return _section;
@@ -351,19 +351,19 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 			setDayBooleans(propertyValue);
 			break;
 		case "starttime":
-			time = Library.parseTimeToDouble(propertyValue);
+			time = StringHelper.parseTimeToDouble(propertyValue);
 			section.setStartTime(time);
 			break;
 		case "endtime":
-			time = Library.parseTimeToDouble(propertyValue);
+			time = StringHelper.parseTimeToDouble(propertyValue);
 			section.setEndTime(time);
 			break;
 		case "startdate":
-			date = Library.stringToDate(propertyValue);
+			date = StringHelper.stringToDate(propertyValue);
 			section.setStartDate(date);
 			break;
 		case "enddate":
-			date = Library.stringToDate(propertyValue);
+			date = StringHelper.stringToDate(propertyValue);
 			section.setEndDate(date);
 			break;
 		case "credits":
@@ -398,24 +398,24 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 			}
 			break;
 		case "starttime":
-			double newStartTime = Library.parseTimeToDouble(propertyValue);
+			double newStartTime = StringHelper.parseTimeToDouble(propertyValue);
 			double oldStartTime = section.getStartTime(); 
 			isNewInfo = newStartTime != oldStartTime;
 			break;
 		case "endtime":
-			double newEndTime = Library.parseTimeToDouble(propertyValue);
+			double newEndTime = StringHelper.parseTimeToDouble(propertyValue);
 			double oldEndTime = section.getEndTime();
 			isNewInfo = newEndTime != oldEndTime;
 			break;
 		case "startdate":
-			Date newStartDate = Library.stringToDate(propertyValue);
+			Date newStartDate = StringHelper.stringToDate(propertyValue);
 			Date oldStartDate = section.getStartDate();
 			if(oldStartDate != null){
 				isNewInfo = !oldStartDate.equals(newStartDate);
 			}
 			break;
 		case "enddate":
-			Date newEndDate = Library.stringToDate(propertyValue);
+			Date newEndDate = StringHelper.stringToDate(propertyValue);
 			Date oldEndDate = section.getEndDate();
 			if(oldEndDate != null){
 				isNewInfo = !oldEndDate.equals(newEndDate);
@@ -547,7 +547,7 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		
 		String sectionNum = (String)properties.get("sectionnum");
 		
-		Key sectionKey = Library.generateSectionIdFromSectionAndCourseNum(sectionNum, courseNum);
+		Key sectionKey = WrapperObjectFactory.generateSectionIdFromSectionAndCourseNum(sectionNum, courseNum);
 		
 		if(findObjectById(sectionKey) != null){
 			throw new IllegalArgumentException("COMPSCI-" + courseNum + ":" + sectionNum + "- Duplicate Section exists!");

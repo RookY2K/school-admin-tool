@@ -13,7 +13,7 @@ import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.ContactInfo;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.model.DataStore;
 
 /**
@@ -160,7 +160,9 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		case "temporarypassword":
 			return _person.getTempPassword();
 		case "skills":
-			return _person.getSkils();
+			return _person.getSkills();
+		case "sections":
+			return WrapperObjectFactory.getSection().findObjects(null, this, "sectionNum");
 		default:
 			return null;
 		}
@@ -173,7 +175,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 	public List<String> addObject(String userName, Map<String, Object> properties) {
 		DataStore store = DataStore.getDataStore();
 		String error;
-		Key id = Library.generateIdFromUserName(userName);
+		Key id = WrapperObjectFactory.generateIdFromUserName(userName);
 		
 		boolean hasAccessLevel = false;
 		List<String> errors = new ArrayList<String>();
@@ -219,11 +221,11 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#editObject(java.lang.String, java.util.Map)
 	 */
 	@Override
-	public List<String> editObject(String userName, Map<String, Object> properties) {
+	public List<String> editObject(Map<String, Object> properties) {
 		DataStore store = DataStore.getDataStore();
 		String error;
 		List<String> errors = new ArrayList<String>();
-		Key id = Library.generateIdFromUserName(userName);
+		Key id = this.getId();
 	
 		if(findObjectById(id) == null){
 			throw new IllegalArgumentException("That user does not exist!");
@@ -237,14 +239,14 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		}
 	
 		if(!errors.isEmpty()) return errors;
-	
-		setPerson(userName);
+//		String userName = id.getName();
+//		setPerson(userName);
 	
 		for(String propertyKey : properties.keySet()){
 			setProperty(propertyKey, properties.get(propertyKey));
 		}
 	
-		if(!store.updateEntity(_person, _person.getId())){
+		if(!store.updateEntity(this.getPerson(), id)){
 			errors.add("Error: Datastore update failed for unexpected reason!");
 		}
 	
@@ -362,51 +364,60 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 	@SuppressWarnings("unchecked")
 	private void setProperty(String propertyKey, Object object) {
 //		String error = "";
-		Object obj = object;
 
 //		error = checkProperty(propertyKey, obj);
 
 		switch(propertyKey){
 		case "password":
-			_person.setPassword((String) obj);
+			_person.setPassword((String) object);
 			break;
 		case "accesslevel":
-			Integer accessLevel = ((AccessLevel)obj).getVal();
+			Integer accessLevel = ((AccessLevel)object).getVal();
 			_person.setAccessLevel(accessLevel);
 			break;
 		case "firstname":
-			_person.getContactInfo().setFirstName((String) obj);
+			_person.getContactInfo().setFirstName((String) object);
 			break;
 		case "lastname":
-			_person.getContactInfo().setLastName((String) obj);
+			_person.getContactInfo().setLastName((String) object);
 			break;
 		case "email":
-			_person.getContactInfo().setEmail((String) obj);
+			_person.getContactInfo().setEmail((String) object);
 			break;
 		case "phone":
-			_person.getContactInfo().setPhone((String) obj);
+			_person.getContactInfo().setPhone((String) object);
 			break;
 		case "streetaddress":
-			_person.getContactInfo().setStreetAddress((String)obj);
+			_person.getContactInfo().setStreetAddress((String)object);
 			break;
 		case "city":
-			_person.getContactInfo().setCity((String) obj);
+			_person.getContactInfo().setCity((String) object);
 			break;
 		case "state":
-			_person.getContactInfo().setState((String) obj);
+			_person.getContactInfo().setState((String) object);
 			break;
 		case "zip":
-			_person.getContactInfo().setZip((String) obj);
+			_person.getContactInfo().setZip((String) object);
 			break;
 		case "officeroom":
-			_person.setOfficeRoom((String) obj);
+			_person.setOfficeRoom((String) object);
 			break;
 		case "temporarypassword":
-			_person.setTempPassword((String) obj);
+			_person.setTempPassword((String) object);
 			break;
 		case "skills":
-			_person.setSkills((List<String>) obj);
+			_person.setSkills((List<String>) object);
 			break;
+		case "sections":
+			List<Section> sections = new ArrayList<Section>();
+			List<?> objects = (List<?>)object;
+			
+			for(Object obj : objects){
+				SectionWrapper section = (SectionWrapper) obj;
+				
+				sections.add(section.getSection());
+			}
+			_person.setSections(sections);
 		default:
 			throw new IllegalArgumentException(propertyKey + 
 					" is not a valid property of " + getClass().getSimpleName());
@@ -420,7 +431,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 	private Person getPerson(String userName) {
 		DataStore store = DataStore.getDataStore();
 
-		Key id = Library.generateIdFromUserName(userName);
+		Key id = WrapperObjectFactory.generateIdFromUserName(userName);
 
 		Person user = (Person) store.findEntityById(getTable(), id);
 
@@ -430,7 +441,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		return user;
 	}
 	
-	private Person getPerson(){
+	Person getPerson(){
 		return _person;
 	}
 	
@@ -495,6 +506,17 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		case "skills":
 			if (! (object instanceof List<?>)) {
 				error = "Error: Incorrectly Formatted Skills, must be List<String>!";
+			}
+			break;
+		case "sections":
+			if(! (object instanceof List<?>))
+				throw new IllegalArgumentException("sections must be a List!");
+			List<?> objects = (List<?>)object;
+			for(Object obj : objects){
+				if(obj == null)
+					throw new NullPointerException("A section in Sections cannot be null!");
+				if(!(obj instanceof SectionWrapper))
+					throw new IllegalArgumentException("Sections must be a list of SectionWrappers!");
 			}
 			break;
 		default:

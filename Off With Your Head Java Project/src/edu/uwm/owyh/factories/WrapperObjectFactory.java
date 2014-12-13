@@ -1,5 +1,9 @@
 package edu.uwm.owyh.factories;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.KeyFactory.Builder;
+
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
@@ -53,5 +57,44 @@ public class WrapperObjectFactory {
 
 	public static WrapperObject<Section> getSection() {
 		return SectionWrapper.getSectionWrapper();
+	}
+
+	/**
+	 * <pre>Utility method to build a Person JDO primary key from the inputted userName. Will
+	 * always return a Key, even if the Person does not exist in the Datastore. </pre>
+	 * @param userName - uwm email address
+	 * @return Key - Person JDO primary key
+	 */
+	public static Key generateIdFromUserName(String userName){
+		//TODO move into WrapperObjectFactory
+		if(userName == null) return null;
+		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(Person.getParentkey());
+	
+		return keyBuilder.addChild(Person.getKind(), userName.toLowerCase()).getKey();		
+	}
+
+	/**
+	 * <pre>Utility method to build a Course JDO primary key from the inputed courseNum. Will
+	 * always return a Key, even if the Course does not exist in the Datastore. </pre>
+	 * @param courseNum - 3 digit string identifier of course (COMPSCI-XXX) where XXX is courseNum
+	 * @return Key - Course JDO primary key
+	 */
+	public static Key generateIdFromCourseNum(String courseNum) {
+		//TODO move into WrapperObjectFactory
+		if(courseNum == null) return null;
+		
+		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(Course.getParentkey());
+		return keyBuilder.addChild(Course.getKind(), courseNum.toLowerCase()).getKey();
+	}
+
+	public static Key generateSectionIdFromSectionAndCourseNum(String sectionNum, String courseNum){
+		//TODO move into WrapperObjectFactory
+		if(courseNum == null || sectionNum == null) return null;
+		
+		Key parentKey = generateIdFromCourseNum(courseNum);
+		
+		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(parentKey);
+		
+		return keyBuilder.addChild(Section.getKind(), sectionNum.toLowerCase()).getKey();
 	}
 }

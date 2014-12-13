@@ -16,7 +16,7 @@ import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.PropertyHelper;
 import edu.uwm.owyh.model.Auth;
 
 @SuppressWarnings("serial")
@@ -39,10 +39,10 @@ public class OfficeHoursManager extends HttpServlet {
 		else
 			username = (String) self.getProperty("username");
 
-		Key myId = Library.generateIdFromUserName(username);
+		Key myId = WrapperObjectFactory.generateIdFromUserName(username);
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson()
 				.findObjectById(myId);
-		request.setAttribute("user", Library.makeUserProperties(user));
+		request.setAttribute("user", PropertyHelper.makeUserProperties(user));
 		request.setAttribute("isAdmin", auth.verifyAdmin());
 
 		if (!self.getId().equals(user.getId()))
@@ -52,7 +52,7 @@ public class OfficeHoursManager extends HttpServlet {
 				.getOfficeHours().findObjects(null, user, null);
 
 		request.setAttribute("officehours",
-				Library.makeWrapperProperties(officeHoursList));
+				PropertyHelper.makeOfficeHoursProperties(officeHoursList));
 		request.getRequestDispatcher(
 				request.getContextPath() + "officehours.jsp").forward(request,
 				response);
@@ -76,10 +76,10 @@ public class OfficeHoursManager extends HttpServlet {
 		}
 		WrapperObject<Person> self = (WrapperObject<Person>) Auth
 				.getSessionVariable(request, "user");
-		Key myId = Library.generateIdFromUserName(email);
+		Key myId = WrapperObjectFactory.generateIdFromUserName(email);
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson()
 				.findObjectById(myId);
-		request.setAttribute("user", Library.makeUserProperties(user));
+		request.setAttribute("user", PropertyHelper.makeUserProperties(user));
 		request.setAttribute("isAdmin", auth.verifyAdmin());
 
 		/*
@@ -97,10 +97,9 @@ public class OfficeHoursManager extends HttpServlet {
 
 		// Admin and User change Offce Location
 		if (request.getParameter("editofficeroom") != null) {
-			Map<String, Object> properties = Library.propertyMapBuilder(
+			Map<String, Object> properties = PropertyHelper.propertyMapBuilder(
 					"officeroom", request.getParameter("officeroom"));
-			errors = WrapperObjectFactory.getPerson().editObject(email,
-					properties);
+			errors = user.editObject(properties);
 			messages.add("Office Location was successfully edited!");
 		} else {
 
@@ -131,7 +130,7 @@ public class OfficeHoursManager extends HttpServlet {
 			if (request.getParameter("end_ampm") != null)
 				endtime += request.getParameter("end_ampm");
 
-			Map<String, Object> officehours = Library.propertyMapBuilder(
+			Map<String, Object> officehours = PropertyHelper.propertyMapBuilder(
 					"days", days, "starttime", starttime, "endtime", endtime);
 
 			// Admin and User add Office Hours
@@ -156,8 +155,7 @@ public class OfficeHoursManager extends HttpServlet {
 						else
 							messages.add("Office Hours was successfully deleted.");
 					} else {
-						errors = officeHours.get(officeHourID).editObject(
-								email, officehours);
+						errors = officeHours.get(officeHourID).editObject(officehours);
 						if (errors.isEmpty())
 							messages.add("Office Hours was successfully edited.");
 					}

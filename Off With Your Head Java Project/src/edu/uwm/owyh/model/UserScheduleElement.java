@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.StringHelper;
 
 public class UserScheduleElement {
 	String days;
@@ -19,8 +19,8 @@ public class UserScheduleElement {
 		try {
 			days = parseDays(scheduleString);
 			List<String> times = parseTimes(scheduleString);
-			startTime = Library.parseTimeToDouble(times.get(0));
-			endTime = Library.parseTimeToDouble(times.get(1));
+			startTime = StringHelper.parseTimeToDouble(times.get(0));
+			endTime = StringHelper.parseTimeToDouble(times.get(1));
 
 			if (room != null && room.isEmpty() == false) {
 				this.room = room;
@@ -41,8 +41,8 @@ public class UserScheduleElement {
 			String room, String title) {
 		try {
 			this.days = days;
-			this.startTime = Library.parseTimeToDouble(startTime);
-			this.endTime = Library.parseTimeToDouble(endTime);
+			this.startTime = StringHelper.parseTimeToDouble(startTime);
+			this.endTime = StringHelper.parseTimeToDouble(endTime);
 			this.room = room;
 			this.title = title;
 		} catch (Exception e) {
@@ -96,8 +96,8 @@ public class UserScheduleElement {
 	public boolean isPartOfElement(CharSequence day, String startOfRange,
 			String endOfRange) {
 
-		double startOfRangeVal = Library.parseTimeToDouble(startOfRange);
-		double endOfRangeVal = Library.parseTimeToDouble(endOfRange);
+		double startOfRangeVal = StringHelper.parseTimeToDouble(startOfRange);
+		double endOfRangeVal = StringHelper.parseTimeToDouble(endOfRange);
 
 		if (days.contains(day)) {
 

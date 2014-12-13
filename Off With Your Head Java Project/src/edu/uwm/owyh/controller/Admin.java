@@ -18,7 +18,7 @@ import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.PropertyHelper;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Email;
 
@@ -75,7 +75,7 @@ public class Admin extends HttpServlet {
 				errors.add("Bad Email input!");
 
 			if (errors.isEmpty()) {
-				properties = Library.propertyMapBuilder("firstname", ""
+				properties = PropertyHelper.propertyMapBuilder("firstname", ""
 						,"lastname", ""
 						,"email", email
 						,"phone", "",
@@ -94,7 +94,7 @@ public class Admin extends HttpServlet {
 				
 				errors = WrapperObjectFactory.getPerson().addObject(email, properties);
 				if (errors.isEmpty()) {
-					Key id = Library.generateIdFromUserName(email);
+					Key id = WrapperObjectFactory.generateIdFromUserName(email);
 					WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
 					if (user == null)
 						errors.add("Username was not found!");
@@ -114,7 +114,7 @@ public class Admin extends HttpServlet {
 
 		// Add Contact Information
 		if (request.getParameter("addcontactinfo") != null) {
-			properties = Library.propertyMapBuilder("firstname", request.getParameter("firstname")
+			properties = PropertyHelper.propertyMapBuilder("firstname", request.getParameter("firstname")
 					, "lastname",request.getParameter("lastname")
 					, "email",request.getParameter("email")
 					, "phone",request.getParameter("phone")

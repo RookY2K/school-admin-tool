@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Email;
 
@@ -44,7 +43,7 @@ public class EmailAdmin extends HttpServlet {
 			returnURI = returnURI.replace(".jsp", "");
 		
 		/* Limit Email to 4 per Sessions */
-		if (Library.setSessionActionLimit(request, "sendAdminEmail", 4)) {
+		if (Auth.setSessionActionLimit(request, "sendAdminEmail", 4)) {
 			response.sendRedirect(request.getContextPath() + returnURI + "#emailtoomany");
 			return;
 		}

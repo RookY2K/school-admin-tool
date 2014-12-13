@@ -14,7 +14,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.factories.WrapperObjectFactory;
 
 /**
  * Person jdo class
@@ -77,7 +77,7 @@ public class Person implements Serializable,Cloneable{
 	 * keeping strong consistency in queries.
 	 */
 	private Person(String userName){
-		id = Library.generateIdFromUserName(userName);
+		id = WrapperObjectFactory.generateIdFromUserName(userName);
 		
 		setUserName(userName);
 		setToUpperUserName(userName);
@@ -202,10 +202,24 @@ public class Person implements Serializable,Cloneable{
 	/**
 	 * return Person's skills
 	 */
-	public List<String> getSkils() {
+	public List<String> getSkills() {
 		return skills;
 	}
 	
+	/**
+	 * @return the sections
+	 */
+	public List<Section> getSections() {
+		return sections;
+	}
+
+	/**
+	 * @param sections the sections to set
+	 */
+	public void setSections(List<Section> sections) {
+		this.sections = sections;
+	}
+
 	//Mutators
 	/**
 	 * Sets the contactinfo for the Person

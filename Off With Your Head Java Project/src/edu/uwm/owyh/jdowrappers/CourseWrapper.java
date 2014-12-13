@@ -18,7 +18,6 @@ import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
-import edu.uwm.owyh.library.Library;
 import edu.uwm.owyh.model.DataStore;
 
 /**
@@ -140,7 +139,7 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 	}
 
 	private Course getCourse(String courseNum) {
-		Key id = Library.generateIdFromCourseNum(courseNum);
+		Key id = WrapperObjectFactory.generateIdFromCourseNum(courseNum);
 		
 		Course course = (Course)DataStore.getDataStore().findEntityById(getTable(), id);
 		
@@ -201,12 +200,13 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#editObject(java.lang.String, java.util.Map)
 	 */
 	@Override
-	public List<String> editObject(String courseNum, Map<String, Object> properties) {
+	public List<String> editObject(Map<String, Object> properties) {
 		DataStore store = DataStore.getDataStore();
 		String error;
 		boolean isNewInfo = false;
 		List<String> errors = new ArrayList<String>();
-		Key id = Library.generateIdFromCourseNum(courseNum);
+		
+		Key id = this.getId();
 	
 		if(findObjectById(id) == null){
 			throw new IllegalArgumentException("That course does not exist!");
@@ -221,7 +221,8 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 	
 		if(!errors.isEmpty()) return errors;
 	
-		setCourse(courseNum);
+//		String courseNum = id.getName();
+//		setCourse(courseNum);
 		for(String propertyKey : properties.keySet()){
 			isNewInfo |= setProperty(propertyKey, properties.get(propertyKey));
 		}
@@ -404,7 +405,7 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		if(courseNum == null || properties == null) 
 			throw new NullPointerException("Arguments are null!");
 		String error;
-		Key id = Library.generateIdFromCourseNum(courseNum);
+		Key id = WrapperObjectFactory.generateIdFromCourseNum(courseNum);
 		
 		List<String> errors = new ArrayList<String>();
 	
@@ -444,7 +445,7 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		
 		if(this.getCourse().getSections().contains(sectionChild)) return false;
 		
-		this.getCourse().addSection(sectionChild._section);
+		this.getCourse().addSection(sectionChild.getSection());
 		
 		return true;		
 	}

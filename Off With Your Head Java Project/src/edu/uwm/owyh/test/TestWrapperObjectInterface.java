@@ -23,7 +23,8 @@ import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.PersonWrapper;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.PropertyHelper;
+import edu.uwm.owyh.library.StringHelper;
 import edu.uwm.owyh.model.DataStore;
 
 public class TestWrapperObjectInterface {
@@ -41,14 +42,14 @@ public class TestWrapperObjectInterface {
 	@Test
 	public <T> void testAddPerson() {
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
-		Map<String, Object> properties = Library.propertyMapBuilder("password","owyh"
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("password","owyh"
 				,"accesslevel", AccessLevel.ADMIN);
 		user.addObject("admin@uwm.edu", properties);	
 		List<?> search = datastore.findEntities(user.getTable(), null, null, null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));	
 
 		WrapperObject<Person> user2 = WrapperObjectFactory.getPerson();
-		properties = Library.propertyMapBuilder("password","owyh"
+		properties = PropertyHelper.propertyMapBuilder("password","owyh"
 				,"accesslevel",AccessLevel.ADMIN);
 
 		user2.addObject("admin@uwm.edu", properties);
@@ -56,7 +57,7 @@ public class TestWrapperObjectInterface {
 		assertFalse("Two User of the same name was SAVED!", (search.size() == 2));
 
 		WrapperObject<Person> user3 = WrapperObjectFactory.getPerson();
-		properties = Library.propertyMapBuilder("password", "owyh"
+		properties = PropertyHelper.propertyMapBuilder("password", "owyh"
 				,"accesslevel", AccessLevel.ADMIN);
 
 		user3.addObject("admin2@uwm.edu",properties);
@@ -64,7 +65,7 @@ public class TestWrapperObjectInterface {
 		assertTrue("Two User of different name was NOT SAVED!", (search.size() == 2));
 
 		WrapperObject<Person> user4 = WrapperObjectFactory.getPerson();
-		properties = Library.propertyMapBuilder("firstname", "Admin"
+		properties = PropertyHelper.propertyMapBuilder("firstname", "Admin"
 				,"phone", "(414)123-1234"
 				,"streetaddress", "123 Elm St"
 				,"city","Milwaukee"
@@ -75,7 +76,7 @@ public class TestWrapperObjectInterface {
 		assertFalse("User already exists!",user4.addObject("admin@uwm.edu", properties).isEmpty());
 
 		WrapperObject<Person> user5 = WrapperObjectFactory.getPerson();
-		properties = Library.propertyMapBuilder("firstname", "Admin3"
+		properties = PropertyHelper.propertyMapBuilder("firstname", "Admin3"
 				,"phone", "123.543.8787"
 				,"streetaddress","321 Maple Ln"
 				,"city","Brookfield"
@@ -95,7 +96,7 @@ public class TestWrapperObjectInterface {
 	@Test
 	public void testRemoveUser() {
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
-		Map<String, Object> properties = Library.propertyMapBuilder("password","owyh"
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("password","owyh"
 				,"accesslevel", AccessLevel.ADMIN
 				);
 		user.addObject("admin@uwm.edu",properties);	
@@ -110,12 +111,12 @@ public class TestWrapperObjectInterface {
 	@Test
 	public void testFindUser() {
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
-		Map<String, Object> properties = Library.propertyMapBuilder("password", "owyh"
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("password", "owyh"
 				,"accesslevel",AccessLevel.ADMIN
 				);
 
 		user.addObject("admin@uwm.edu", properties);	
-		Key id = Library.generateIdFromUserName("admin@uwm.edu");
+		Key id = WrapperObjectFactory.generateIdFromUserName("admin@uwm.edu");
 		WrapperObject<Person> foundUser = user.findObjectById(id);
 		assertTrue("User Was Not Found", (((String)user.getProperty("username"))
 				.equalsIgnoreCase(
@@ -126,7 +127,7 @@ public class TestWrapperObjectInterface {
 	public void testGetAllUser() {
 		// Incomplete Test, Update Later On
 		WrapperObject<Person> user1 = WrapperObjectFactory.getPerson();
-		Map<String, Object> properties = Library.propertyMapBuilder("password","owyh"
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("password","owyh"
 				,"accesslevel", AccessLevel.ADMIN
 				);
 		user1.addObject("admin1@uwm.edu", properties);
@@ -155,14 +156,14 @@ public class TestWrapperObjectInterface {
 	@Test
 	public void testEditUser(){
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
-		Map<String, Object> properties = Library.propertyMapBuilder("password","owyh"
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("password","owyh"
 				,"accesslevel",AccessLevel.ADMIN
 				);
 		user.addObject("admin@uwm.edu",properties);	
 		List<?> search = datastore.findEntities(user.getTable(), null, null, null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));
 
-		properties = Library.propertyMapBuilder("password","newPassword"
+		properties = PropertyHelper.propertyMapBuilder("password","newPassword"
 				,"accesslevel", AccessLevel.INSTRUCTOR
 				,"firstname","First"
 				,"lastname","Last"
@@ -173,7 +174,7 @@ public class TestWrapperObjectInterface {
 				,"zip","12345"				                               
 				);
 
-		assertTrue("User info was not editted!", user.editObject("admin@uwm.edu", properties).isEmpty());
+		assertTrue("User info was not editted!", user.editObject(properties).isEmpty());
 
 		assertEquals("newPassword",user.getProperty("password"));
 		assertEquals(AccessLevel.INSTRUCTOR, user.getProperty("accesslevel"));
@@ -228,7 +229,7 @@ public class TestWrapperObjectInterface {
 		WrapperObject<OfficeHours> officeHours = WrapperObjectFactory.getOfficeHours();
 		List<String> errors;
 
-		Map<String, Object> properties = Library.propertyMapBuilder("days", "MTR"
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("days", "MTR"
 				,"starttime", "11:15AM"
 				,"endtime", "2:35PM");
 
@@ -239,7 +240,7 @@ public class TestWrapperObjectInterface {
 		assertEquals("2:35PM", officeHours.getProperty("endtime"));
 		assertEquals("MTR", officeHours.getProperty("days"));
 
-		properties = Library.propertyMapBuilder("days", "MWF"
+		properties = PropertyHelper.propertyMapBuilder("days", "MWF"
 				,"starttime", "9:05AM"
 				,"endtime", "11:14AM");
 
@@ -254,7 +255,7 @@ public class TestWrapperObjectInterface {
 		assertEquals(2, ((List<?>)user.getProperty("officehours")).size());	
 		assertTrue(!officeHours.equals(officeHours2));
 
-		properties = Library.propertyMapBuilder("days", "TRF"
+		properties = PropertyHelper.propertyMapBuilder("days", "TRF"
 				,"starttime", "2:36PM"
 				,"endtime", "4:14PM");
 
@@ -276,7 +277,7 @@ public class TestWrapperObjectInterface {
 
 		WrapperObject<OfficeHours> officeHours = WrapperObjectFactory.getOfficeHours();
 
-		Map<String,Object> properties = Library.propertyMapBuilder("days", "MTSF"
+		Map<String,Object> properties = PropertyHelper.propertyMapBuilder("days", "MTSF"
 				,"starttime", "3:45PM"
 				,"endtime", "5:45PM");
 
@@ -287,7 +288,7 @@ public class TestWrapperObjectInterface {
 			//pass test
 		}
 
-		properties = Library.propertyMapBuilder("days", "MTF"
+		properties = PropertyHelper.propertyMapBuilder("days", "MTF"
 				,"starttime", "01:65AM"
 				,"endtime", "12:30PM");
 
@@ -298,7 +299,7 @@ public class TestWrapperObjectInterface {
 			//pass test
 		}
 
-		properties = Library.propertyMapBuilder("days", "MTF"
+		properties = PropertyHelper.propertyMapBuilder("days", "MTF"
 				,"starttime", "01:45AM"
 				,"endtime", "12:30PW");
 
@@ -309,7 +310,7 @@ public class TestWrapperObjectInterface {
 			//pass test
 		}
 		
-		properties = Library.propertyMapBuilder("days", ""
+		properties = PropertyHelper.propertyMapBuilder("days", ""
 				,"starttime", "1:45AM"
 				,"endtime", "3:50AM");
 		
@@ -324,7 +325,7 @@ public class TestWrapperObjectInterface {
 		WrapperObject<OfficeHours> officeHours = WrapperObjectFactory.getOfficeHours();
 		List<String> errors;
 
-		Map<String, Object> properties = Library.propertyMapBuilder("days", "MTR"
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("days", "MTR"
 				,"starttime", "11:15AM"
 				,"endtime", "2:35PM");
 
@@ -335,7 +336,7 @@ public class TestWrapperObjectInterface {
 		assertEquals("2:35PM", officeHours.getProperty("endtime"));
 		assertEquals("MTR", officeHours.getProperty("days"));
 
-		properties = Library.propertyMapBuilder("days", "MWF"
+		properties = PropertyHelper.propertyMapBuilder("days", "MWF"
 				,"starttime", "9:05AM"
 				,"endtime", "11:16AM");
 
@@ -345,7 +346,7 @@ public class TestWrapperObjectInterface {
 
 		assertEquals(1, ((List<?>)user.getProperty("officehours")).size());	
 
-		properties = Library.propertyMapBuilder("days", "TRF"
+		properties = PropertyHelper.propertyMapBuilder("days", "TRF"
 				,"starttime", "2:34PM"
 				,"endtime", "4:14PM");
 
@@ -355,7 +356,7 @@ public class TestWrapperObjectInterface {
 
 		assertEquals(1, ((List<?>)user.getProperty("officehours")).size());	
 		
-		properties = Library.propertyMapBuilder("days", "TRF"
+		properties = PropertyHelper.propertyMapBuilder("days", "TRF"
 				,"starttime", "9:05AM"
 				,"endtime", "7:30AM");
 		
@@ -375,8 +376,8 @@ public class TestWrapperObjectInterface {
 		String endTime = "2:35PM";
 		
 		String filter = "days == " + days
-				      + " && startTime == " + Library.parseTimeToDouble(startTime)
-				      + " && endTime == " + Library.parseTimeToDouble(endTime);
+				      + " && startTime == " + StringHelper.parseTimeToDouble(startTime)
+				      + " && endTime == " + StringHelper.parseTimeToDouble(endTime);
 		
 		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertFalse(officeHours.isEmpty());
@@ -400,19 +401,19 @@ public class TestWrapperObjectInterface {
 		assertFalse(officeHours.isEmpty());
 		assertEquals(2, officeHours.size());
 		
-		filter = "startTime < " + Library.parseTimeToDouble(startTime);
+		filter = "startTime < " + StringHelper.parseTimeToDouble(startTime);
 		officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent,null);
 		assertFalse(officeHours.isEmpty());
 		assertEquals(2, officeHours.size());
 		
-		filter = "startTime > " + Library.parseTimeToDouble(endTime)
-				+" && startTime < " + Library.parseTimeToDouble(startTime);
+		filter = "startTime > " + StringHelper.parseTimeToDouble(endTime)
+				+" && startTime < " + StringHelper.parseTimeToDouble(startTime);
 		
 		officeHours = WrapperObjectFactory.getOfficeHours().findObjects(filter, parent, null);
 		assertFalse(officeHours.isEmpty());
 		assertEquals(1, officeHours.size());		
 		
-		filter = "endTime > " + Library.parseTimeToDouble(endTime)
+		filter = "endTime > " + StringHelper.parseTimeToDouble(endTime)
 				+" && onThursday == " + true
 				+" && onTuesday == " + true 
 				+" && onFriday == " + false;
@@ -449,11 +450,11 @@ public class TestWrapperObjectInterface {
 		assertEquals(1, officeHours.size());
 		
 		WrapperObject<OfficeHours> hours = officeHours.get(0);
-		Map<String, Object> properties = Library.propertyMapBuilder("days", "MF"
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("days", "MF"
 																   ,"starttime","12:30PM"
 																   ,"endtime","2:00PM");		
 		
-		hours.editObject("admin@uwm.edu", properties);
+		hours.editObject(properties);
 		
 		assertEquals("MF", hours.getProperty("days"));
 		assertEquals("12:30PM", hours.getProperty("starttime"));
@@ -470,20 +471,20 @@ public class TestWrapperObjectInterface {
 		assertEquals(1, officeHours.size());
 		
 		WrapperObject<OfficeHours> hours = officeHours.get(0);
-		Map<String, Object> properties = Library.propertyMapBuilder("days", "MTR"
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("days", "MTR"
 				,"starttime","9:06AM"
 				,"endtime", "2:30PM");
 		
-		assertFalse(hours.editObject((String)parent.getProperty("username"), properties).isEmpty());
+		assertFalse(hours.editObject(properties).isEmpty());
 		
 		assertFalse("9:06AM".equals(hours.getProperty("starttime")));
 		assertFalse("2:30PM".equals(hours.getProperty("endtime")));
 		
-		properties = Library.propertyMapBuilder("days", "MTR"
+		properties = PropertyHelper.propertyMapBuilder("days", "MTR"
 				,"starttime", "8:30AM"
 				,"endtime", "9:06AM");
 		
-		assertFalse(hours.editObject((String)parent.getProperty("username"), properties).isEmpty());
+		assertFalse(hours.editObject(properties).isEmpty());
 		
 		assertFalse("8:30AM".equals(hours.getProperty("starttime")));
 		assertFalse("9:06AM".equals(hours.getProperty("endtime")));
@@ -500,44 +501,44 @@ public class TestWrapperObjectInterface {
 		
 		WrapperObject<OfficeHours> hours = officeHours.get(0);
 		
-		Map<String,Object> properties = Library.propertyMapBuilder("days", "MTSF"
+		Map<String,Object> properties = PropertyHelper.propertyMapBuilder("days", "MTSF"
 				,"starttime", "11:15AM"
 				,"endtime", "2:35PM");		
 
 		try{
-			hours.editObject((String)parent.getProperty("username"), properties);
+			hours.editObject(properties);
 			fail("IllegalArgumentException expected!");
 		}catch(IllegalArgumentException iae){
 			assertFalse("MTSF".equals(hours.getProperty("days")));
 		}
 
-		properties = Library.propertyMapBuilder("days", "MTR"
+		properties = PropertyHelper.propertyMapBuilder("days", "MTR"
 				,"starttime", "11:65AM"
 				,"endtime", "12:30PM");
 
 		try{
-			hours.editObject((String)parent.getProperty("username"), properties);
+			hours.editObject(properties);
 			fail("IllegalArgumentException expected!");
 		}catch(IllegalArgumentException iae){
 			assertFalse("11:65AM".equals(hours.getProperty("starttime")));
 		}
 
-		properties = Library.propertyMapBuilder("days", "MTR"
+		properties = PropertyHelper.propertyMapBuilder("days", "MTR"
 				,"starttime", "11:15AM"
 				,"endtime", "12:30PW");
 
 		try{
-			hours.editObject((String)parent.getProperty("username"), properties);
+			hours.editObject(properties);
 			fail("IllegalArgumentException expected!");
 		}catch(IllegalArgumentException iae){
 			assertFalse("12:30PW".equals(hours.getProperty("endtime")));
 		}
 		
-		properties = Library.propertyMapBuilder("days", ""
+		properties = PropertyHelper.propertyMapBuilder("days", ""
 				,"starttime", "11:15AM"
 				,"endtime", "2:35PM");
 		
-		assertFalse(hours.editObject((String)parent.getProperty("username"), properties).isEmpty());
+		assertFalse(hours.editObject(properties).isEmpty());
 		assertFalse("".equals(hours.getProperty("days")));
 	}
 	
@@ -546,7 +547,7 @@ public class TestWrapperObjectInterface {
 		WrapperObject<Course> course = WrapperObjectFactory.getCourse();
 		String courseNum = "101";
 		String courseName = "Introduction to Programming";
-		Map<String,Object> properties = Library.propertyMapBuilder("coursename", courseName);
+		Map<String,Object> properties = PropertyHelper.propertyMapBuilder("coursename", courseName);
 		
 		assertTrue(course.addObject(courseNum, properties).isEmpty());
 		assertEquals(courseNum,course.getProperty("coursenum"));
@@ -563,8 +564,8 @@ public class TestWrapperObjectInterface {
 		String courseNum2 = "251";
 		String courseName2 = "Intermediate Programming";
 		
-		Map<String, Object> properties1 = Library.propertyMapBuilder("coursename", courseName1);
-		Map<String, Object> properties2 = Library.propertyMapBuilder("coursename", courseName2);
+		Map<String, Object> properties1 = PropertyHelper.propertyMapBuilder("coursename", courseName1);
+		Map<String, Object> properties2 = PropertyHelper.propertyMapBuilder("coursename", courseName2);
 		
 		assertTrue(course1.addObject(courseNum1, properties1).isEmpty());
 		assertTrue(course2.addObject(courseNum2, properties2).isEmpty());
@@ -585,7 +586,7 @@ public class TestWrapperObjectInterface {
 		
 		String courseName = "This is a course";
 		
-		Map<String, Object> properties = Library.propertyMapBuilder("coursename", courseName);
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("coursename", courseName);
 		
 		for(int i=0; i<5; ++i){
 			try{
@@ -620,7 +621,7 @@ public class TestWrapperObjectInterface {
 		
 		
 		
-		properties = Library.propertyMapBuilder("coursename"," ");
+		properties = PropertyHelper.propertyMapBuilder("coursename"," ");
 		
 		try{
 			course.addObject("101", properties);
@@ -633,7 +634,7 @@ public class TestWrapperObjectInterface {
 		
 		assertTrue(store.findEntities(course.getTable(), null, null, null).isEmpty());
 		
-		properties = Library.propertyMapBuilder("coursename", null);
+		properties = PropertyHelper.propertyMapBuilder("coursename", null);
 		
 		try{
 			course.addObject("101", properties);
@@ -652,18 +653,18 @@ public class TestWrapperObjectInterface {
 		addTwoCourses();
 		assertEquals(2, DataStore.getDataStore().findEntities(course1.getTable(), null, null, null).size());
 		String courseName = "This is a different course";
-		Map<String,Object>properties = Library.propertyMapBuilder("coursename",courseName);
+		Map<String,Object>properties = PropertyHelper.propertyMapBuilder("coursename",courseName);
 		assertEquals("This is a course",course1.getProperty("coursename"));
 		
-		assertTrue(course1.editObject("101", properties).isEmpty());
+		assertTrue(course1.editObject(properties).isEmpty());
 		
 		assertEquals(courseName, course1.getProperty("coursename"));
 		assertEquals(2, DataStore.getDataStore().findEntities(course1.getTable(), null, null, null).size());		
 	}
 	
 	private void addTwoCourses(){
-		Map<String,Object> properties1 = Library.propertyMapBuilder("coursename","This is a course");
-		Map<String,Object> properties2 = Library.propertyMapBuilder("coursename", "This is another course");
+		Map<String,Object> properties1 = PropertyHelper.propertyMapBuilder("coursename","This is a course");
+		Map<String,Object> properties2 = PropertyHelper.propertyMapBuilder("coursename", "This is another course");
 		course1 = WrapperObjectFactory.getCourse();
 		course1.addObject("101", properties1);
 		course2 = WrapperObjectFactory.getCourse();
@@ -675,27 +676,27 @@ public class TestWrapperObjectInterface {
 		parent2 = getPerson("admin2@uwm.edu");
 		WrapperObject<OfficeHours> officeHours = WrapperObjectFactory.getOfficeHours();
 
-		Map<String, Object> properties = Library.propertyMapBuilder("days", "MTR"
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("days", "MTR"
 				,"starttime", "11:15AM"
 				,"endtime", "2:35PM");
 
 		officeHours.addObject((String)parent.getProperty("username"), properties);
 
-		properties = Library.propertyMapBuilder("days", "MWF"
+		properties = PropertyHelper.propertyMapBuilder("days", "MWF"
 				,"starttime", "9:05AM"
 				,"endtime", "11:14AM");
 
 		WrapperObject<OfficeHours> officeHours2 = WrapperObjectFactory.getOfficeHours();
 		officeHours2.addObject((String)parent.getProperty("username"), properties);
 
-		properties = Library.propertyMapBuilder("days", "TRF"
+		properties = PropertyHelper.propertyMapBuilder("days", "TRF"
 				,"starttime", "2:36PM"
 				,"endtime", "4:14PM");
 
 		WrapperObject<OfficeHours> officeHours3 = WrapperObjectFactory.getOfficeHours();
 		officeHours3.addObject((String)parent.getProperty("username"), properties);
 		
-		properties = Library.propertyMapBuilder("days", "MTR"
+		properties = PropertyHelper.propertyMapBuilder("days", "MTR"
 				,"starttime", "11:15AM"
 				,"endtime", "2:35PM");
 
@@ -706,7 +707,7 @@ public class TestWrapperObjectInterface {
 	private WrapperObject<Person> getPerson(String userName){
 		WrapperObject<Person> person = WrapperObjectFactory.getPerson();
 
-		Map<String, Object> properties = Library.propertyMapBuilder("password", "owyh"
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("password", "owyh"
 				,"accesslevel", AccessLevel.ADMIN);
 
 		person.addObject(userName, properties);

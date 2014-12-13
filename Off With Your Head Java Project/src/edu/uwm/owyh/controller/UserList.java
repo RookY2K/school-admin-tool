@@ -19,7 +19,7 @@ import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.PropertyHelper;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Email;
 
@@ -70,7 +70,7 @@ public class UserList extends HttpServlet {
 		List<Map<String, Object>> clientList = new ArrayList<Map<String, Object>>();
 		
 		for (WrapperObject<Person> client : clients)
-			clientList.add(Library.makeUserProperties(client));
+			clientList.add(PropertyHelper.makeUserProperties(client));
 		
 		/* Filter By First or Last Name, Exclusively */
 		if (searchUser.get("name") != null && !searchUser.get("name").equals("") && searchUser.get("name").toLowerCase().indexOf("@uwm.edu") < 0) {
@@ -90,13 +90,13 @@ public class UserList extends HttpServlet {
 		if (request.getAttribute("modifyuser") != null)
 			username = (String) request.getAttribute("modifyuser");
 		if (username != null) {
-			Key id = Library.generateIdFromUserName(username);
+			Key id = WrapperObjectFactory.generateIdFromUserName(username);
 			WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
 			if (user != null) {
 				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory
 						.getOfficeHours().findObjects(null, user, null);
-				request.setAttribute("officehours", Library.makeWrapperProperties(officeHours));
-				request.setAttribute("modifyuser", Library.makeUserProperties(user));
+				request.setAttribute("officehours", PropertyHelper.makeOfficeHoursProperties(officeHours));
+				request.setAttribute("modifyuser", PropertyHelper.makeUserProperties(user));
 				
 				/* User Skills */
 				List<String> userSkills = (List<String>) user.getProperty("skills");
@@ -113,7 +113,7 @@ public class UserList extends HttpServlet {
 			}
 		}
 
-		request.setAttribute("self", Library.makeUserProperties(self));
+		request.setAttribute("self", PropertyHelper.makeUserProperties(self));
 		request.setAttribute("users", clientList);
 		request.getRequestDispatcher(request.getContextPath() + "userlist.jsp")
 				.forward(request, response);
@@ -149,7 +149,7 @@ public class UserList extends HttpServlet {
 		if (username == null)
 			errors.add("No username was posted!");
 		else {
-			Key id = Library.generateIdFromUserName(username);
+			Key id = WrapperObjectFactory.generateIdFromUserName(username);
 			user = WrapperObjectFactory.getPerson().findObjectById(id);
 			if (user == null)
 				errors.add("Username was not found!");
@@ -186,7 +186,7 @@ public class UserList extends HttpServlet {
 		}
 		
 		if (request.getParameter("edituserprofile") != null) {
-			properties = Library.propertyMapBuilder("firstname", request.getParameter("firstname")
+			properties = PropertyHelper.propertyMapBuilder("firstname", request.getParameter("firstname")
 					, "lastname", request.getParameter("lastname")
 					, "email", request.getParameter("email")
 					, "phone", request.getParameter("phone")
@@ -196,7 +196,7 @@ public class UserList extends HttpServlet {
 					, "zip", request.getParameter("zip")
 					, "accesslevel", accessLevel
 					);
-			errors = user.editObject(username, properties);
+			errors = user.editObject(properties);
 
 			request.setAttribute("modifyuser", username);
 			request.setAttribute("edituserprofileerrors", errors);
@@ -214,9 +214,9 @@ public class UserList extends HttpServlet {
 			if (!newPassword.equals(verifyNewPassword))
 				errors.add("Password did not match!");
 			else {
-				properties = Library
+				properties = PropertyHelper
 						.propertyMapBuilder("password", newPassword);
-				errors = user.editObject(username, properties);
+				errors = user.editObject(properties);
 			}
 
 			if (errors.isEmpty()) {
@@ -252,8 +252,8 @@ public class UserList extends HttpServlet {
 		}
 
 		if (request.getParameter("edituserskills") != null) {
-			properties = Library.propertyMapBuilder("skills", skillList);
-			errors = user.editObject(username, properties);
+			properties = PropertyHelper.propertyMapBuilder("skills", skillList);
+			errors = user.editObject(properties);
 
 			request.setAttribute("modifyuser", username);
 			request.setAttribute("edituserprofileerrors", errors);

@@ -14,8 +14,8 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.jdo.Section;
-import edu.uwm.owyh.library.Library;
 
 /**
  * The Course JDO class
@@ -54,7 +54,7 @@ public class Course implements Serializable, Cloneable{
 
 
 	private Course(String courseNum){
-		id = Library.generateIdFromCourseNum(courseNum);
+		id = WrapperObjectFactory.generateIdFromCourseNum(courseNum);
 
 		sections = new ArrayList<Section>();
 		eligibleTAKeys = new ArrayList<Key>();

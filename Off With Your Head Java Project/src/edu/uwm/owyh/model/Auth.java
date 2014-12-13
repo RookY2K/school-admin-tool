@@ -14,7 +14,7 @@ import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.PropertyHelper;
 
 /**
  * Class used to determine if users are authorized to view and/or interact with the 
@@ -92,7 +92,7 @@ public class Auth {
 		if(userName == null || password == null)return null;
 				
 		WrapperObject<Person> client = WrapperObjectFactory.getPerson();
-		Key id = Library.generateIdFromUserName(userName);
+		Key id = WrapperObjectFactory.generateIdFromUserName(userName);
 		WrapperObject<Person> user = client.findObjectById(id);
 		
 		if(user == null) return null;
@@ -116,7 +116,7 @@ public class Auth {
 		if(userName == null || password == null)return null;
 				
 		WrapperObject<Person> client = WrapperObjectFactory.getPerson();
-		Key id = Library.generateIdFromUserName(userName);
+		Key id = WrapperObjectFactory.generateIdFromUserName(userName);
 		WrapperObject<Person> user = client.findObjectById(id);
 		
 		if(user == null) return null;
@@ -125,8 +125,8 @@ public class Auth {
 		
 		if(!user.getProperty("temporarypassword").equals(password)) return null;
 		
-		Map<String, Object> properties = Library.propertyMapBuilder("password", password, "temporarypassword", "");
-		List<String >errors = WrapperObjectFactory.getPerson().editObject(userName, properties);
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("password", password, "temporarypassword", "");
+		List<String >errors = user.editObject(properties);
 		
 		if (!errors.isEmpty()) return null;
 		
@@ -185,6 +185,27 @@ public class Auth {
 		return true;
 	}
 	
+	/**
+	 * Utility method that restricts an action per user Session
+	 * @return boolean base on if action limit has been reached
+	 */
+	public static boolean setSessionActionLimit(HttpServletRequest request, String sessionID, int max) {
+		String limit = (String) getSessionVariable(request, sessionID);
+		
+		if (limit == null) {	
+			limit = "0";
+			setSessionVariable(request, sessionID, "1");
+		}
+		
+		int limitCount = Integer.parseInt(limit);
+		if (limitCount >= max) {
+			return true;
+		}
+		
+		setSessionVariable(request, sessionID, String.valueOf(limitCount + 1));
+		return false;
+	}
+
 	/**
 	 * Invalidates the current session which as a side-effect, destroys
 	 * the session variables.

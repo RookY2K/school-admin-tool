@@ -8,7 +8,7 @@ import javax.jdo.PersistenceManager;
  * @author Vince Maiuri
  *
  */
-public class PMF {
+public final class PMF {
 	private static PersistenceManager pmfInstance = null;
 	
 	private PMF(){

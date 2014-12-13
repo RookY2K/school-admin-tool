@@ -16,7 +16,7 @@ import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.PropertyHelper;
 import edu.uwm.owyh.model.Auth;
 
 public class TestAuthorizations{
@@ -36,7 +36,7 @@ public class TestAuthorizations{
 		
 		
 		WrapperObject<Person> user = WrapperObjectFactory.getPerson();
-		Map<String,Object> properties = Library.propertyMapBuilder("password", _password
+		Map<String,Object> properties = PropertyHelper.propertyMapBuilder("password", _password
 				                                                  ,"accesslevel", _level
 				                                                  );
 		user.addObject(_userName, properties);

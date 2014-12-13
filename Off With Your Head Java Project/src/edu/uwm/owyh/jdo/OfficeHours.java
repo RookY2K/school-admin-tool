@@ -9,7 +9,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
 
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.StringHelper;
 
 /**
  * OfficeHOurs jdo class
@@ -281,8 +281,8 @@ public class OfficeHours implements Serializable, Cloneable{
 	@Override
 	public String toString()
     {
-		String displayStartTime = Library.timeToString(startTime);
-		String displayEndTime = Library.timeToString(endTime);
+		String displayStartTime = StringHelper.timeToString(startTime);
+		String displayEndTime = StringHelper.timeToString(endTime);
 		
 	    return days+" " + displayStartTime + "-" + displayEndTime;
 	}
