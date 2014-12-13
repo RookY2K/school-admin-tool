@@ -18,7 +18,7 @@ import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
-import edu.uwm.owyh.library.Library;
+import edu.uwm.owyh.library.PropertyHelper;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Email;
 
@@ -31,7 +31,7 @@ public class Admin extends HttpServlet {
 		Auth auth = Auth.getAuth(request);
 		if (!auth.verifyAdmin(response))
 			return;
-
+		
 		request.getRequestDispatcher(
 				request.getContextPath() + "/admin/admin.jsp").forward(request,
 				response);
@@ -75,54 +75,58 @@ public class Admin extends HttpServlet {
 				errors.add("Bad Email input!");
 
 			if (errors.isEmpty()) {
-				properties = Library.propertyMapBuilder("firstname", "",
-						"lastname", "", "email", email, "phone", "",
-						"streetaddress", "", "city", "", "state", "", "zip",
-						"", "password", password, "accesslevel", accessLevel,
-						"officeroom", "", "skills", new ArrayList<String>());
+				properties = PropertyHelper.propertyMapBuilder("firstname", ""
+						,"lastname", ""
+						,"email", email
+						,"phone", "",
+						"streetaddress", "",
+						"city", "",
+						"state", "",
+						"zip", ""
+						,"password",password
+						,"accesslevel", accessLevel
+						,"officeroom", "",
+						"skills", new ArrayList<String>()
+					);
 				for (String key : properties.keySet())
 					if (properties.get(key) == null)
 						properties.put(key, "");
-
-				errors = WrapperObjectFactory.getPerson().addObject(email,
-						properties);
+				
+				errors = WrapperObjectFactory.getPerson().addObject(email, properties);
 				if (errors.isEmpty()) {
-					Key id = Library.generateIdFromUserName(email);
-					WrapperObject<Person> user = WrapperObjectFactory
-							.getPerson().findObjectById(id);
+					Key id = WrapperObjectFactory.generateIdFromUserName(email);
+					WrapperObject<Person> user = WrapperObjectFactory.getPerson().findObjectById(id);
 					if (user == null)
 						errors.add("Username was not found!");
 
-					String name = user.getProperty("firstname") + " "
-							+ user.getProperty("lastname");
+					String name = user.getProperty("firstname") + " " + user.getProperty("lastname");
 					String msg = "Off With Your Head \n Your Account has been created. \n Your username is: "
 							+ email + "\n Your password is: " + password;
-					errors = Email.sendMessage(email, name, "OWYH New Account",
-							msg);
+					errors = Email.sendMessage(email, name, "OWYH New Account",	msg);
 				}
 			}
 
 			request.setAttribute("addnewusererrors", errors);
 			request.setAttribute("newuser", properties);
-			request.getRequestDispatcher(
-					request.getContextPath() + "/admin/admin.jsp").forward(
-					request, response);
+			request.getRequestDispatcher(request.getContextPath() + "/admin/admin.jsp").forward(request, response);			
 			return;
 		}
 
 		// Add Contact Information
 		if (request.getParameter("addcontactinfo") != null) {
-			properties = Library.propertyMapBuilder("firstname",
-					request.getParameter("firstname"), "lastname",
-					request.getParameter("lastname"), "email",
-					request.getParameter("email"), "phone",
-					request.getParameter("phone"), "streetaddress",
-					request.getParameter("streetaddress"), "city",
-					request.getParameter("city"), "state",
-					request.getParameter("state"), "zip",
-					request.getParameter("zip"), "password", "", "accesslevel",
-					accessLevel, "officeroom", "", "skills",
-					new ArrayList<String>());
+			properties = PropertyHelper.propertyMapBuilder("firstname", request.getParameter("firstname")
+					, "lastname",request.getParameter("lastname")
+					, "email",request.getParameter("email")
+					, "phone",request.getParameter("phone")
+					, "streetaddress",	request.getParameter("streetaddress")
+					, "city",request.getParameter("city")
+					, "state",request.getParameter("state")
+					, "zip",request.getParameter("zip")
+					, "password", ""
+					, "accesslevel", accessLevel
+					,"officeroom", ""
+					,"skills", new ArrayList<String>()
+					);
 			for (String key : properties.keySet())
 				if (properties.get(key) == null)
 					properties.put(key, "");
@@ -156,7 +160,7 @@ public class Admin extends HttpServlet {
 
 			for (WrapperObject<Course> course : courses)
 				course.removeObject((String) course.getProperty("coursenum"));
-
+			
 			Auth.removeSessionVariable(request, "courses");
 			Auth.removeSessionVariable(request, "coursekeys");
 
