@@ -178,7 +178,19 @@ public class Admin extends HttpServlet {
 				for (WrapperObject<OfficeHours> officeHoursElement : officeHours)
 					officeHoursElement.removeObject((String) person
 							.getProperty("username"));
+
+				/* Remove all section/course assignments from people. */
+
+				/* Remove all schedule classes from people. */
+
 			}
+
+			/* Finally, scrape for a new semester */
+			String semester = request.getParameter("semester");
+
+			response.sendRedirect(request.getContextPath()
+					+ "/admin/scraper?semester=" + semester);
+			return;
 		}
 
 		response.sendRedirect(request.getContextPath() + "/admin#close");
