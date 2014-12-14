@@ -53,7 +53,7 @@ public class Index extends HttpServlet {
 				
 				UserSchedule schedule = new UserSchedule();
 				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(null, self, null);
-				//List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) self.getProperty("sections")
+				//List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) self.getProperty("sections");
 				if (officeHours != null) //|| sections != null)
 				{
 					String days;
