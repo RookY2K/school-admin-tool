@@ -102,13 +102,20 @@ public final class AdminHelper {
 	private static boolean checkTimeConflict(String startTime, String endTime,
 			List<WrapperObject<Section>> sections) {
 		boolean isConflict = false;
-		double newStart = StringHelper.parseTimeToDouble(startTime);
-		double newEnd = StringHelper.parseTimeToDouble(endTime);
+		double compStart = StringHelper.parseTimeToDouble(startTime);
+		double compEnd = StringHelper.parseTimeToDouble(endTime);
 		
-		
-		
-		
-		
+		for(WrapperObject<Section> section : sections){
+			if(isConflict) break;
+			
+			double start = 
+					StringHelper.parseTimeToDouble((String)section.getProperty("starttime"));
+			double end =
+					StringHelper.parseTimeToDouble((String)section.getProperty("endtime"));
+			
+			isConflict = (start >= compStart && start < compEnd) ||
+					     (end >= compStart && end < compEnd);
+		}
 		
 		return isConflict;
 	}

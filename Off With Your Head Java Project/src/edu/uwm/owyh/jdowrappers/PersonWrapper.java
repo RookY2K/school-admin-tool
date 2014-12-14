@@ -154,6 +154,11 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		case "zip":
 			return _person.getContactInfo().getZip();
 		case "officehours":
+			List<OfficeHours> officeHours = this.getPerson().getOfficeHours();
+			List<WrapperObject<OfficeHours>> officeHoursWrappers = new ArrayList<WrapperObject<OfficeHours>>();
+			for(OfficeHours officeHour : officeHours){
+				officeHoursWrappers.add(OfficeHoursWrapper.getOfficeHoursWrapper(officeHour));
+			}
 			return WrapperObjectFactory.getOfficeHours().findObjects(null, this, "startTime");
 		case "officeroom":
 			return _person.getOfficeRoom();
@@ -162,7 +167,12 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		case "skills":
 			return _person.getSkills();
 		case "sections":
-			return WrapperObjectFactory.getSection().findObjects(null, this, "sectionNum");
+			List<Section> sections = this.getPerson().getSections();
+			List<WrapperObject<Section>> sectionWrappers = new ArrayList<WrapperObject<Section>>();
+			for(Section section : sections){
+				sectionWrappers.add(SectionWrapper.getSectionWrapper(section));
+			}
+			return sectionWrappers;
 		default:
 			return null;
 		}

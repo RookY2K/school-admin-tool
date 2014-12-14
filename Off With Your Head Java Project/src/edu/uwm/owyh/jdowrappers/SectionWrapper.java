@@ -31,7 +31,7 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		//		_section = Section.getSection();
 	}
 
-	private static WrapperObject<Section> getSectionWrapper(
+	static WrapperObject<Section> getSectionWrapper(
 			Section item) {
 		SectionWrapper other = getSectionWrapper();
 		other._section = item;

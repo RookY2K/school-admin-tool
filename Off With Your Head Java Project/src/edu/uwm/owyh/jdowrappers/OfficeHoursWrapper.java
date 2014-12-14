@@ -35,8 +35,7 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 		_officeHours = OfficeHours.getOfficeHours();
 	}
 
-	private static WrapperObject<OfficeHours> getOfficeHoursWrapper(
-			OfficeHours item) {
+	static WrapperObject<OfficeHours> getOfficeHoursWrapper(OfficeHours item) {
 		OfficeHoursWrapper other = getOfficeHoursWrapper();
 		other._officeHours = item;
 		
