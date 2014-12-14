@@ -330,6 +330,22 @@ Start of CSS Pop Up
 			<li class="error-message">This will repopulate the class schedule!</li>
 		</ul>
 		<form action="/admin#triggernewsemester" method="post">
+			<p>
+			<table>
+				<tr>
+					<td class="cell">Next Semester:</td>
+					<td class="cell" colspan="3"> 
+					<select name="semester" required>
+					    <option value="">Please Select</option>
+						<option value="Spring">Spring</option>
+						<option value="Summer">Summer</option>
+						<option value="Fall">Fall</option>
+						<option value="UWinteriM ">UWinteriM</option>
+					</select> 
+					</td>
+				</tr>				
+		    </table>
+		    </p>
 			<p><input type="checkbox" name="agreetotrigger" required /> I Agree</p>
 			<p><input type="submit" class="submit" name="triggernewsemester" value="Start New Semester" /></p>
 		</form>
