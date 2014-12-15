@@ -71,7 +71,7 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		case "sections":
 			return WrapperObjectFactory.getSection().findObjects(null, this, "sectionNum");
 		case "eligibletakeys":
-			return new ArrayList<Key>().addAll(_course.getEligibleTAKeys());
+			return new ArrayList<Key>(_course.getEligibleTAKeys());
 		default:
 			return null;
 		}

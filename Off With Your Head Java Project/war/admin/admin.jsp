@@ -8,9 +8,7 @@
 </jsp:include>
 
 <jsp:include page="/WEB-INF/templates/navagation.jsp" />
-<jsp:include page="/WEB-INF/templates/genericnavagation.jsp">
-	<jsp:param name="content" value="Admin Control Panel" />
-</jsp:include>
+<jsp:include page="/WEB-INF/templates/adminnavation.jsp" />
 
 <% 	Map<String, Object> goodAddUser = (Map<String, Object>) request.getAttribute("newuser");
 	List<String> addNewUserErrors = (List<String>) request.getAttribute("addnewusererrors");
@@ -21,28 +19,28 @@
 	<a href="#addnewuser">
 		<div class="admin-tab">
 			<div class="admin-tab-box" style="background-image:url('/images/adduser.png');"></div>
-			Add A New User
+			<p>Add A New User</p>
 		</div>
 	</a>
 	
 	<a href="#addcontactinformation">
 		<div class="admin-tab">
 			<div class="admin-tab-box" style="background-image:url('/images/contactinfo.png');"></div>
-			Add Contact <br />Information
+			<p>Add Contact<br />Information</p>
 		</div>
 	</a>
 	
 	<a href="#reloadclassschedule">
 		<div class="admin-tab">
 			<div class="admin-tab-box"></div>
-			Reload Class List
+			<p>Reload Class List</p>
 		</div>
 	</a>
 	
 	<a href="#triggernewsemester">
 		<div class="admin-tab">
 			<div class="admin-tab-box"></div>
-			Trigger New Semester
+			<p>Trigger New Semester</p>
 		</div>
 	</a>
 	

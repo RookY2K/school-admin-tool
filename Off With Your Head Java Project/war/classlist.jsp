@@ -1,6 +1,7 @@
 <%@ page import="edu.uwm.owyh.interfaces.WrapperObject"%>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@ page import="edu.uwm.owyh.model.DataStore" %>
+<%@ page import="edu.uwm.owyh.jdo.Person" %>
 <%@ page import="edu.uwm.owyh.jdo.Course" %>
 <%@ page import="edu.uwm.owyh.jdo.Section" %>
 <%@ page import="java.util.Collections" %>
@@ -58,7 +59,7 @@
 						}
 %>
 					</select> &nbsp;	
-					<input type="submit" id="select_course" value="Select Course" />	
+					<input type="submit" class="submit" id="select_course" value="Select Course" />	
 				</td>
 			</tr>
 			</table>
@@ -73,9 +74,10 @@
 		List<WrapperObject<Section>>sections = (List<WrapperObject<Section>>)selectedCourse.getProperty("sections");
 
 %>	
-	<br />
-	<form method="post" action="/admin/editcourses">
+	<ul class="message"><li>Click on Edit or Instructor Name to change Instructor for a Section.</li></ul>
+	
 		<table id="course_info_table">
+		<form method="post" action="/admin/editcourses">
 		<thead>
 			<tr>
 				<th id="course_info_table_header" colspan="7">COMPSCI-<%=courseNum %>: <%=courseName %></th>
@@ -90,6 +92,7 @@
 				<th class="section_header_cell">Instructor</th>
 			</tr>
 		</thead>
+		</form>
 		<tbody>
   	<%
   			int row = -1;
@@ -111,6 +114,7 @@
 			String lastName = (String)section.getProperty("instructorlastname");
 			String instructor = lastName.trim().isEmpty() ? firstName : lastName + ", " + firstName;
 %>
+
 			<tr class="<%=className %>">
 				<td class="section_cell"><%=sectionNum %></td>
 				<td class="section_cell"><%=credits %></td>
@@ -118,18 +122,95 @@
 				<td class="section_cell"><%=days %></td>
 				<td class="section_cell"><%=hours %></td>
 				<td class="section_cell"><%=room %></td>
+				
+				<% if (isAdmin) { %>
+				<td class="section_cell">
+					<form action="#editsection" method="post">
+						<input type="hidden" name="viewsection" value="viewsection" />
+						<input type="hidden" name="courselist" value="<%=selectedCourse.getProperty("coursenum") %>" />
+						<input type="hidden" name="sectionnumber" value="<%=sectionNum %>" />
+						<% if (firstName == null || firstName.equals("")) { %>
+						<input type="submit" class="classlistedit" value="Edit" />
+						<% } else { %>
+						<input type="submit" class="classlistedit" value="<%=instructor %>" />
+						<% } %>
+					</form>
+				</td>
+				<% } else {%>
 				<td class="section_cell"><%=instructor %></td>
+				<% } %>
 			</tr>
 <%
   			}
 %>			
 		</tbody>
 		</table>
-	</form>
+
 <%
 	}
 %>	
 	
+
+	
 </div>
+
+<aside id="editsection" class="modal">
+    <div>
+    	
+    	<p><strong>Edit Section's User Instructing</strong></p>
+    	
+    	<% WrapperObject<Section> editSection =  (WrapperObject<Section>) request.getAttribute("editsection");
+    	List<WrapperObject<Person>> possiableUser = (List<WrapperObject<Person>>) request.getAttribute("editsectionusers");
+    	if (editSection != null) {
+    	List<String> editSectionErrors = (List<String>) request.getAttribute("editsectionerrors");
+    	List<String> editSectionMessages = (List<String>) request.getAttribute("editsectionmessages");
+		if (editSectionErrors != null) { %>
+				<ul class="message">
+		<%	for (String error : editSectionErrors) { %>
+			<li class="error-message"><%=error %></li>
+			<% } %>
+				</ul>
+		<% } 
+		if (editSectionMessages != null) { %>
+			<ul class="message">
+		<%	for (String message : editSectionMessages) { %>
+			<li class="good-message"><%=message %></li>
+			<% } %>
+				</ul>
+		<% } %>
+		
+		<ul class="message"><li>
+		<% if (editSection.getProperty("instructorFirstName") != null && !editSection.getProperty("instructorFirstName").equals("")) { %>
+		<strong><%=editSection.getProperty("instructorFirstName") %> <%=editSection.getProperty("instructorLastName") %></strong> is currently teaching this course.
+		<% } else { %>
+		No instructor currently teaching this course.
+		<% } %>
+		</li></ul>
+		
+		<% if (possiableUser == null || possiableUser.size() == 0) { %>
+			No User can be assign to this Course or Section.
+		<% } else { %>
+		
+ 		<form action="#editsection" method="post">
+ 			<input type="hidden" name="viewsection" value="viewsection" />
+ 			<input type="hidden" name="editsection" value="editsection" />
+			<input type="hidden" name="courselist" value="<%=selectedCourse.getProperty("coursenum")%>" />
+			<input type="hidden" name="sectionnumber" value="<%=editSection.getProperty("sectionnum") %>" />
+			<select name="changeinstructor" required>
+			<option value="">Change Section Instructor...</option>
+			<% for (WrapperObject<Person> user : possiableUser) { %>
+			<option><% if (user.getProperty("firstname") != null) { out.print(user.getProperty("firstname") + " "); } %> 
+			<% if (user.getProperty("lastname") != null) { out.print(user.getProperty("lastname") + " "); } %> 
+			(<%=user.getProperty("email") %>)</option>
+			<% } %>
+			</select>
+			<input type="submit" class="submit" value="Change" />
+		</form>
+		
+		<% } } %>
+    	
+		<a href="#close" title="Close" class="unselectable">Close</a>
+    </div>
+</aside>
 
 <jsp:include page="/WEB-INF/templates/footer.jsp" />

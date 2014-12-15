@@ -116,6 +116,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>TAManager</servlet-name>
+		<servlet-class>edu.uwm.owyh.controller.TAManager</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TAManager</servlet-name>
+		<url-pattern>/admin/tamanager</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>EmailAdmin</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.EmailAdmin</servlet-class>
 	</servlet>
