@@ -14,6 +14,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.datanucleus.annotations.Unowned;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 
@@ -39,6 +40,7 @@ public class Person implements Serializable,Cloneable{
 	private String parentKey;
 	
 	@Persistent
+	@Unowned
 	@Order(extensions = @Extension(vendorName="datanucleus",key="list-ordering", value="sectionNum asc"))
 	private List<Section> sections;
 	

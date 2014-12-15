@@ -9,7 +9,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.datanucleus.annotations.Unowned;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 
@@ -53,6 +53,7 @@ public class Section implements Serializable, Cloneable{
 	}
 	
 	@Persistent
+	@Unowned
 	private Person instructor;
 
 	@Persistent
@@ -98,20 +99,20 @@ public class Section implements Serializable, Cloneable{
 	private boolean onFriday;
 	
 	@Persistent
-	private boolean overwriteNames;
+	private boolean overwriteInstructor;
 	
 	/**
-	 * @return the overwriteNames
+	 * @return the overwriteInstructor
 	 */
-	public boolean isOverwriteNames() {
-		return overwriteNames;
+	public boolean isOverwriteInstructor() {
+		return overwriteInstructor;
 	}
 
 	/**
-	 * @param overwriteNames the overwriteNames to set
+	 * @param overwriteInstructor the overwriteInstructor to set
 	 */
-	public void setOverwriteNames(boolean overwriteNames) {
-		this.overwriteNames = overwriteNames;
+	public void setOverwriteInstructor(boolean overwriteInstructor) {
+		this.overwriteInstructor = overwriteInstructor;
 	}
 
 	/**
@@ -276,7 +277,7 @@ public class Section implements Serializable, Cloneable{
 		String num = sectionNum.trim().substring(3);
 		setStartTime(-1);
 		setEndTime(-1);
-		setOverwriteNames(false);
+		setOverwriteInstructor(true);
 		
 		setId(sectionKey);
 		
@@ -396,7 +397,7 @@ public class Section implements Serializable, Cloneable{
 		Section other = (Section) obj;
 		if(!this.getId().equals(other.getId())) return false;
 		
-		boolean isSameInstructor = !this.isOverwriteNames() || 
+		boolean isSameInstructor = !this.isOverwriteInstructor() || 
 				(this.getInstructorFirstName().equalsIgnoreCase(other.getInstructorFirstName())
 				&& this.getInstructorLastName().equalsIgnoreCase(other.getInstructorLastName()));
 		
@@ -413,5 +414,16 @@ public class Section implements Serializable, Cloneable{
 		boolean isSameCredits = this.getCredits().equals(other.getCredits());
 		
 		return isSameInstructor && isSameDays && isSameDateRange && isSameTimes && isSameRoom && isSameCredits;
+	}
+
+	public Person getInstructor() {
+		return instructor;
+	}
+
+	/**
+	 * @param instructor the instructor to set
+	 */
+	public void setInstructor(Person instructor) {
+		this.instructor = instructor;
 	}
 }

@@ -86,6 +86,7 @@ Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/jdowrappers/Per
 Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/library/Library.java.orig
 Off With Your Head Java Project/src/edu/uwm/owyh/controller/OfficeHoursManager.java.orig
 Off With Your Head Java Project/war/WEB-INF/classes/edu/uwm/owyh/controller/OfficeHoursManager.java.orig
+Off With Your Head Java Project/hs_err_pid7688.log
 syntax: regexp
 ^(.*[\\/])?gen[\\/].*
 ^(.*[\\/])?bin[\\/].*
