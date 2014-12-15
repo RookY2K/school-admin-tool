@@ -39,7 +39,7 @@ public final class AdminHelper {
 		List<WrapperObject<Person>> instructorList = new ArrayList<WrapperObject<Person>>();
 		
 		WrapperObject<Person> currentInstructor = (WrapperObject<Person>) section.getProperty("instructor");
-		instructorList.add(currentInstructor);
+		if(currentInstructor != null) instructorList.add(currentInstructor);
 		
 		try{
 			instructorList.addAll(getEligibleTAs(section, currentInstructor));
@@ -69,11 +69,13 @@ public final class AdminHelper {
 
 	private static List<WrapperObject<Person>> getAllInstructors(
 			WrapperObject<Person> currentInstructor) {
-		
-		String userName = (String) currentInstructor.getProperty("username");
+		String userName = " ";
+		if(currentInstructor != null){
+			userName = (String) currentInstructor.getProperty("username");
+		}
 		int accessLevel = AccessLevel.INSTRUCTOR.getVal();
 		
-		String filter = "accessLevel == " + accessLevel + " && userName != " + userName;
+		String filter = "accessLevel == " + accessLevel + " && userName != '" + userName + "'";
 		
 		return WrapperObjectFactory.getPerson().findObjects(filter, null, null);
 	}
@@ -106,7 +108,9 @@ public final class AdminHelper {
 			WrapperObject<Person> currentInstructor,
 			WrapperObject<Section> section) throws ParseException {
 		
-		if(taKey.equals(currentInstructor.getId())) return null;
+		if(currentInstructor != null){
+			if(taKey.equals(currentInstructor.getId())) return null;
+		}
 		
 		WrapperObject<Person> ta = 
 				WrapperObjectFactory.getPerson().findObjectById(taKey);
@@ -219,7 +223,7 @@ public final class AdminHelper {
 	private static boolean checkDateConflict(String startDate, String endDate,
 			List<WrapperObject<Section>> sections) throws ParseException {
 		Date compStart = StringHelper.stringToDate(startDate);
-		Date compEnd = StringHelper.stringToDate(startDate);
+		Date compEnd = StringHelper.stringToDate(endDate);
 		boolean isConflict = false;
 		
 		for(WrapperObject<Section> section : sections){

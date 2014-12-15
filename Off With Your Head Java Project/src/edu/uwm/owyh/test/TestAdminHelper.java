@@ -61,7 +61,7 @@ public class TestAdminHelper {
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testAssignNewInstructor(){
+	public void testAssignInstructorNew(){
 		List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) _i1.getProperty("sections");
 		assertTrue(sections.isEmpty());
 		
@@ -73,6 +73,71 @@ public class TestAdminHelper {
 		
 		assertEquals(1, sections.size());
 		assertEquals("LEC 201", sections.get(0).getProperty("sectionnum"));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testAssignInstructorReplace(){
+		testAssignInstructorNew();
+		
+		List<WrapperObject<Section>> sections1 = (List<WrapperObject<Section>>) _i1.getProperty("sections");
+		assertEquals(1, sections1.size());
+		
+		List<WrapperObject<Section>> sections2 = (List<WrapperObject<Section>>) _i2.getProperty("sections");
+		assertTrue(sections2.isEmpty());
+		
+		assertTrue(AdminHelper.assignInstructor(_i2, _s1, false));
+		
+		sections1 = (List<WrapperObject<Section>>)_i1.getProperty("sections");
+		sections2 = (List<WrapperObject<Section>>)_i2.getProperty("sections");
+		
+		assertTrue(sections1.isEmpty());
+		assertEquals(1, sections2.size());
+		
+		assertEquals(_s1, sections2.get(0));
+	}
+	
+	@Test
+	public void testGetInstructorListNoAssignments(){
+		List<WrapperObject<Person>> instructorList = AdminHelper.getInstructorList(_s3);
+		assertEquals(3, instructorList.size());
+		
+		List<WrapperObject<Person>> checkInstructorList = new ArrayList<WrapperObject<Person>>();
+		checkInstructorList.add(_i1);
+		checkInstructorList.add(_i2);
+		checkInstructorList.add(_t1);
+		
+		assertTrue(instructorList.containsAll(checkInstructorList));
+		assertFalse(instructorList.contains(_t2));		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testGetInstructorListWithConflict(){
+		List<WrapperObject<Person>> instructorList = AdminHelper.getInstructorList(_s4);
+		
+		assertEquals(3, instructorList.size());
+		assertTrue(instructorList.contains(_i2));
+		assertTrue(instructorList.contains(_t1));
+		assertTrue(instructorList.contains(_i1));	
+		
+		assertTrue(AdminHelper.assignInstructor(_i1, _s2, false)); //Creates conflict with _s4 for _i1
+		List<WrapperObject<Section>> sections1, sections2, sections3;
+		
+		sections1 = (List<WrapperObject<Section>>) _i1.getProperty("sections");
+		sections2 = (List<WrapperObject<Section>>) _i2.getProperty("sections");
+		sections3 = (List<WrapperObject<Section>>) _t1.getProperty("sections");
+		
+		assertEquals(1, sections1.size());
+		assertTrue(sections2.isEmpty());
+		assertTrue(sections3.isEmpty());
+		
+		instructorList = AdminHelper.getInstructorList(_s4);
+		
+		assertEquals(2, instructorList.size());
+		assertTrue(instructorList.contains(_i2));
+		assertTrue(instructorList.contains(_t1));
+		assertFalse(instructorList.contains(_i1));		
 	}
 
 

@@ -91,48 +91,6 @@ public class OfficeHours implements Serializable, Cloneable{
 		return onFriday;
 	}
 
-	/**
-	 * @param parent the parent to set
-	 */
-	public void setParentPerson(Person parentPerson) {
-		this.parent = parentPerson;
-	}
-
-	/**
-	 * @param onMonday Set to true if officehours are on a Monday 
-	 */
-	public void setOnMonday(boolean onMonday) {
-		this.onMonday = onMonday;
-	}
-
-	/**
-	 * @param onTuesday Set to true if officehours are on a Tuesday
-	 */
-	public void setOnTuesday(boolean onTuesday) {
-		this.onTuesday = onTuesday;
-	}
-
-	/**
-	 * @param onWednesday Set to true if officehours are on a Wednesday
-	 */
-	public void setOnWednesday(boolean onWednesday) {
-		this.onWednesday = onWednesday;
-	}
-
-	/**
-	 * @param onThursday Set to true if officehours are on a Thursday
-	 */
-	public void setOnThursday(boolean onThursday) {
-		this.onThursday = onThursday;
-	}
-
-	/**
-	 * @param onFriday Set to true if officehours are on a Friday
-	 */
-	public void setOnFriday(boolean onFriday) {
-		this.onFriday = onFriday;
-	}
-
 	private OfficeHours(){
 		//Default constructor
 		startTime = -1;
@@ -169,6 +127,19 @@ public class OfficeHours implements Serializable, Cloneable{
 	//Accessors
 	
 	/**
+	 * <pre>
+	 * The number of properties that are "settable" from outside jdo
+	 * -Days (String)
+	 * -StartTime (String)
+	 * -EndTime(String)
+	 * </pre>
+	 * @return the number of properties that should be in any PropertySetBuilder
+	 */
+	public static int numProperties(){
+		return NUM_PROPERTIES;
+	}
+
+	/**
 	 * Accessor for primary key of OfficeHours jdo
 	 * @return Key id
 	 */
@@ -183,19 +154,6 @@ public class OfficeHours implements Serializable, Cloneable{
 		return parent;
 	}
 	
-	/**
-	 * <pre>
-	 * The number of properties that are "settable" from outside jdo
-	 * -Days (String)
-	 * -StartTime (String)
-	 * -EndTime(String)
-	 * </pre>
-	 * @return the number of properties that should be in any PropertySetBuilder
-	 */
-	public static int numProperties(){
-		return NUM_PROPERTIES;
-	}
-
 	/**
 	 * @return the days
 	 */
@@ -240,6 +198,48 @@ public class OfficeHours implements Serializable, Cloneable{
 	
 	//Utility Methods
 	
+	/**
+	 * @param parent the parent to set
+	 */
+	public void setParentPerson(Person parentPerson) {
+		this.parent = parentPerson;
+	}
+
+	/**
+	 * @param onMonday Set to true if officehours are on a Monday 
+	 */
+	public void setOnMonday(boolean onMonday) {
+		this.onMonday = onMonday;
+	}
+
+	/**
+	 * @param onTuesday Set to true if officehours are on a Tuesday
+	 */
+	public void setOnTuesday(boolean onTuesday) {
+		this.onTuesday = onTuesday;
+	}
+
+	/**
+	 * @param onWednesday Set to true if officehours are on a Wednesday
+	 */
+	public void setOnWednesday(boolean onWednesday) {
+		this.onWednesday = onWednesday;
+	}
+
+	/**
+	 * @param onThursday Set to true if officehours are on a Thursday
+	 */
+	public void setOnThursday(boolean onThursday) {
+		this.onThursday = onThursday;
+	}
+
+	/**
+	 * @param onFriday Set to true if officehours are on a Friday
+	 */
+	public void setOnFriday(boolean onFriday) {
+		this.onFriday = onFriday;
+	}
+
 	/**
 	 * <pre>
 	 * Override object equals method to provide functionality for List Contains() method.
