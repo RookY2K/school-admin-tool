@@ -53,8 +53,8 @@ public class Index extends HttpServlet {
 				
 				UserSchedule schedule = new UserSchedule();
 				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(null, self, null);
-				//List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) self.getProperty("sections");
-				if (officeHours != null) //|| sections != null)
+				List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) self.getProperty("sections");
+				if (officeHours != null)
 				{
 					String days;
 					String startTime;
@@ -72,7 +72,7 @@ public class Index extends HttpServlet {
 					}
 				}
 				
-				/*if (sections != null)
+				if (sections != null)
 				{
 					for (WrapperObject<Section> course : sections)
 					{
@@ -90,7 +90,7 @@ public class Index extends HttpServlet {
 						UserScheduleElement element = new UserScheduleElement(days, startTime, endTime, room, title);
 						schedule.addElement(element);
 					}
-				}*/
+				}
 				request.setAttribute("userschedule", schedule);
 				request.setAttribute("self", PropertyHelper.makeUserProperties(self));
 				request.getRequestDispatcher(request.getContextPath() + "/home.jsp").forward(request, response);	
