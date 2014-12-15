@@ -71,7 +71,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		return  new PersonWrapper();
 	}
 
-	private static WrapperObject<Person> getPersonWrapper(Person client) {
+	static WrapperObject<Person> getPersonWrapper(Person client) {
 		return new PersonWrapper(client);
 	}
 
@@ -428,6 +428,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 				sections.add(section.getSection());
 			}
 			_person.setSections(sections);
+			break;
 		default:
 			throw new IllegalArgumentException(propertyKey + 
 					" is not a valid property of " + getClass().getSimpleName());
@@ -547,5 +548,21 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		}
 		
 		return DataStore.getDataStore().deleteAllEntities(personList);
+	}
+	
+	//Utility Methods
+	
+	@Override
+	public boolean equals(Object object){
+		if(!(object instanceof PersonWrapper)) return false;
+		
+		PersonWrapper other = (PersonWrapper) object;
+		
+		return other.getPerson().equals(this.getPerson());
+	}
+	
+	@Override
+	public int hashCode(){
+		return this.getPerson().hashCode();
 	}
 }

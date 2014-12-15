@@ -54,15 +54,6 @@ public class Course implements Serializable, Cloneable{
 
 
 
-	private Course(String courseNum){
-		id = WrapperObjectFactory.generateIdFromCourseNum(courseNum);
-
-		sections = new ArrayList<Section>();
-		eligibleTAKeys = new ArrayList<Key>();
-
-		setCourseNum(courseNum);
-	}
-
 	/**
 	 * Public accessor for the Course JDO
 	 * @param courseNum - course number to instantiate the Course JDO
@@ -130,11 +121,6 @@ public class Course implements Serializable, Cloneable{
 
 	//Mutators
 
-	//private mutator to set the course number
-	private void setCourseNum(String courseNum){
-		this.courseNum = courseNum;
-	}
-
 	/**
 	 * Sets the course name field
 	 * @param courseName
@@ -183,5 +169,21 @@ public class Course implements Serializable, Cloneable{
 	
 	public void setEligibleTAKeys(List<Key> eligibleTAKeys){
 		this.eligibleTAKeys = eligibleTAKeys;
+	}
+
+	//Mutators
+	
+	//private mutator to set the course number
+	private void setCourseNum(String courseNum){
+		this.courseNum = courseNum;
+	}
+
+	private Course(String courseNum){
+		id = WrapperObjectFactory.generateIdFromCourseNum(courseNum);
+	
+		sections = new ArrayList<Section>();
+		eligibleTAKeys = new ArrayList<Key>();
+	
+		setCourseNum(courseNum);
 	}
 }

@@ -9,7 +9,12 @@
 			<ul class="nav">
 				<% 	Auth auth = Auth.getAuth(request);
 					if(auth.verifyAdmin()) { %>
-				<li class="nav"><a href="/admin" class="navbar1-link">Admin</a></li>
+				<li class="nav"><a href="/admin" class="navbar1-link">Admin</a>
+					<ul class="nav">
+						<li class="nav"><a href="/admin" class="navbar1-link">Admin Console</a></li>
+						<li class="nav"><a href="/admin/tamanager" class="navbar1-link">TA Manager</a></li>
+					</ul>
+				</li>
 				<% }
 					else {
 				%>

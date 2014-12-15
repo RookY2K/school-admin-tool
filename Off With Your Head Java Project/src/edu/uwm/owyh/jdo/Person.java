@@ -14,6 +14,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.datanucleus.annotations.Unowned;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 
@@ -39,6 +40,7 @@ public class Person implements Serializable,Cloneable{
 	private String parentKey;
 	
 	@Persistent
+	@Unowned
 	@Order(extensions = @Extension(vendorName="datanucleus",key="list-ordering", value="sectionNum asc"))
 	private List<Section> sections;
 	
@@ -108,14 +110,6 @@ public class Person implements Serializable,Cloneable{
 	//Accessors	
 	
 	/**
-	 * Access for the Primary key
-	 * @return Primary key
-	 */
-	public Key getId(){
-		return id;
-	}
-	
-	/**
 	 * @return the classname
 	 */
 	public static Class<Person> getClassname() {
@@ -134,6 +128,16 @@ public class Person implements Serializable,Cloneable{
 	 */
 	public static String getKind() {
 		return KIND;
+	}
+
+	//Accessors	
+	
+	/**
+	 * Access for the Primary key
+	 * @return Primary key
+	 */
+	public Key getId(){
+		return id;
 	}
 
 	/**
@@ -272,14 +276,6 @@ public class Person implements Serializable,Cloneable{
 		this.tempPassword = password;
 	}
 	
-	private void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	private void setToUpperUserName(String userName){
-		toUpperUserName = userName.toUpperCase();
-	}
-	
 	/**
 	 * Adds the specified office hours to the list of office hours.
 	 * @param officeHours - Child OfficeHours jdo to add to the Person JDO list field.
@@ -305,6 +301,27 @@ public class Person implements Serializable,Cloneable{
 		return this.officeHours.remove(officeHours);
 	}
 
+	private void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	private void setToUpperUserName(String userName){
+		toUpperUserName = userName.toUpperCase();
+	}
+
 	//Utility Methods
+	@Override
+	public boolean equals(Object object){
+		if(!(object instanceof Person)) return false;
+		
+		Person other = (Person)object;
+		
+		return other.getUserName().equalsIgnoreCase(this.getUserName());		
+	}
+	
+	@Override
+	public int hashCode(){
+		return this.getId().hashCode();
+	}
 }
 

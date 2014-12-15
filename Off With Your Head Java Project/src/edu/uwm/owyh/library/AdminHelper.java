@@ -1,12 +1,19 @@
 package edu.uwm.owyh.library;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.google.appengine.api.datastore.Key;
+
+import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
+import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
+import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
 
 public final class AdminHelper {
 
@@ -15,25 +22,102 @@ public final class AdminHelper {
 	}
 	
 	public static boolean assignInstructor(WrapperObject<Person> instructor, WrapperObject<Section> section, boolean setOverwrite){
-		//TODO write test
-		//1) Check conflict with Instructors other sections (throw exception)
-		if(checkSectionConflicts(instructor, section)) return false;
-		
-		//2) Remove section from old instructors section list		
+		//TODO write test		
 		
 		removeOldInstructorFromSection(section);
 		
-		//3) Assign instructor to section if no conflicts
-		
-		assignNewInstructorToSection(instructor, section);
-
-		//4) Assign section to instructor section list
+		assignNewInstructorToSection(instructor, section, setOverwrite);
 		
 		addSectionToInstructor(instructor, section);
 		
-		//5) return true;
-		
 		return true;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public static List<WrapperObject<Person>> getInstructorList(WrapperObject<Section> section){
+		List<WrapperObject<Person>> instructorList = new ArrayList<WrapperObject<Person>>();
+		
+		WrapperObject<Person> currentInstructor = (WrapperObject<Person>) section.getProperty("instructor");
+		if(currentInstructor != null) instructorList.add(currentInstructor);
+		
+		try{
+			instructorList.addAll(getEligibleTAs(section, currentInstructor));
+			instructorList.addAll(getEligibleInstructors(section, currentInstructor));
+		}catch(ParseException pe){
+			throw new IllegalArgumentException("Illegal Date string format: " + pe.getMessage());
+		}
+		
+		return instructorList;
+	}
+
+	private static List<WrapperObject<Person>> getEligibleInstructors(
+			WrapperObject<Section> section,WrapperObject<Person> currentInstructor) throws ParseException {
+		
+		List<WrapperObject<Person>> eligibleInstructors = new ArrayList<WrapperObject<Person>>();
+		
+		List<WrapperObject<Person>> instructors = getAllInstructors(currentInstructor);
+		
+		for(WrapperObject<Person> instructor : instructors){
+			if(checkSectionConflicts(instructor, section)) continue;
+			
+			eligibleInstructors.add(instructor);
+		}
+		
+		return eligibleInstructors;
+	}
+
+	private static List<WrapperObject<Person>> getAllInstructors(
+			WrapperObject<Person> currentInstructor) {
+		String userName = " ";
+		if(currentInstructor != null){
+			userName = (String) currentInstructor.getProperty("username");
+		}
+		int accessLevel = AccessLevel.INSTRUCTOR.getVal();
+		
+		String filter = "accessLevel == " + accessLevel + " && userName != '" + userName + "'";
+		
+		return WrapperObjectFactory.getPerson().findObjects(filter, null, null);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static List<WrapperObject<Person>> getEligibleTAs(
+			WrapperObject<Section> section,
+			WrapperObject<Person> currentInstructor) throws ParseException {
+		
+		List<WrapperObject<Person>> eligibleTaList = new ArrayList<WrapperObject<Person>>();
+		
+		WrapperObject<Course> parentCourse = 
+				WrapperObjectFactory.getCourse().findObjectById(section.getId().getParent());
+		
+		List<Key> taKeys = (List<Key>) parentCourse.getProperty("eligibletakeys");
+		
+		for(Key taKey : taKeys){
+			WrapperObject<Person> ta = getEligibleTA(taKey, currentInstructor, section);
+			
+			if(ta == null) continue;
+			
+			eligibleTaList.add(ta);
+		}	
+		
+		return eligibleTaList;
+	}
+
+	private static WrapperObject<Person> getEligibleTA(
+			Key taKey, 
+			WrapperObject<Person> currentInstructor,
+			WrapperObject<Section> section) throws ParseException {
+		
+		if(currentInstructor != null){
+			if(taKey.equals(currentInstructor.getId())) return null;
+		}
+		
+		WrapperObject<Person> ta = 
+				WrapperObjectFactory.getPerson().findObjectById(taKey);
+		
+		if(checkSectionConflicts(ta, section)) return null;
+		
+		return ta;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -48,14 +132,15 @@ public final class AdminHelper {
 	}
 
 	private static void assignNewInstructorToSection(
-			WrapperObject<Person> instructor, WrapperObject<Section> section) {
+			WrapperObject<Person> instructor, WrapperObject<Section> section, boolean setOverwrite) {
 		
 		String instructorFirstName = (String)instructor.getProperty("firstname");
 		String instructorLastName = (String)instructor.getProperty("lastname");
 		
 		Map<String,Object> properties = PropertyHelper.propertyMapBuilder("instructorfirstname", instructorFirstName
 										 								 ,"instructorlastname", instructorLastName
-										 								 ,"instructor", instructor);
+										 								 ,"instructor", instructor
+										 								 ,"overwriteinstructor", setOverwrite);
 		
 		section.editObject(properties);
 	}
@@ -77,19 +162,18 @@ public final class AdminHelper {
 
 	@SuppressWarnings("unchecked")
 	public static boolean checkSectionConflicts(WrapperObject<Person> instructor,
-			WrapperObject<Section> section) {
+			WrapperObject<Section> section) throws ParseException {
 		List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) instructor.getProperty("sections");
-		// TODO Auto-generated method stub
 		//1) Check date conflicts
 		String startDate = (String)section.getProperty("startdate");
 		String endDate = (String)section.getProperty("enddate");
-		// A) If no conflict, return true
+		// A) If conflict, return true
 		if(checkDateConflict(startDate, endDate, sections)) return true;
 
 		// B) else, continue check
 		//2) check day conflicts
 		String days = (String)section.getProperty("days");
-		// A) If no conflict, return true
+		// A) If conflict, return true
 		if(checkDaysConflict(days, sections)) return true;
 		// B) else, continue check
 		//3) return timeConflicts
@@ -122,14 +206,40 @@ public final class AdminHelper {
 
 	private static boolean checkDaysConflict(String days,
 			List<WrapperObject<Section>> sections) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean isConflict = false;
+		char[] aDays = days.toCharArray();
+		
+		for(WrapperObject<Section> section : sections){
+			if(isConflict) break;
+			String compDays = (String)section.getProperty("days"); 
+			for(int i=0; i<aDays.length; ++i){
+				isConflict = compDays.indexOf(aDays[i]) > -1;
+				if(isConflict) break;
+			}			
+		}		
+		return isConflict;
 	}
 
 	private static boolean checkDateConflict(String startDate, String endDate,
-			List<WrapperObject<Section>> sections) {
-		// TODO Auto-generated method stub
-		return false;
+			List<WrapperObject<Section>> sections) throws ParseException {
+		Date compStart = StringHelper.stringToDate(startDate);
+		Date compEnd = StringHelper.stringToDate(endDate);
+		boolean isConflict = false;
+		
+		for(WrapperObject<Section> section : sections){
+			if(isConflict)break;
+			Date start =
+					StringHelper.stringToDate((String)section.getProperty("startdate"));
+			Date end =
+					StringHelper.stringToDate((String)section.getProperty("enddate"));
+			
+			isConflict = (!compStart.before(start) && !compStart.after(end)) ||
+					     (!compEnd.before(start) && !compEnd.after(end));
+			
+		}
+		return isConflict;
 	}
+	
+	
 
 }

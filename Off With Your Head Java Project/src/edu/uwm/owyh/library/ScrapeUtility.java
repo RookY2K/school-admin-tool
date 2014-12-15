@@ -126,8 +126,8 @@ public class ScrapeUtility {
 			return section;
 		}
 		else{
-			boolean overwriteNames = (boolean)editSection.getProperty("overwritenames");
-			if(!overwriteNames){
+			boolean overwriteInstructor = (boolean)editSection.getProperty("overwriteinstructor");
+			if(!overwriteInstructor){
 				properties.remove("instructorfirstname");
 				properties.remove("instructorlastname");
 			}

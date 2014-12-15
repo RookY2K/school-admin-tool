@@ -35,6 +35,11 @@
 	text-align:center;
 }
 
+.classlistedit {
+ background-color: transparent;
+ border-color: transparent;
+ cursor: pointer;	
+}
 
 
 

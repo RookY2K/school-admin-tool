@@ -14,6 +14,7 @@ import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.NonPersistedWrapperObject;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.library.StringHelper;
 import edu.uwm.owyh.model.DataStore;
@@ -21,7 +22,7 @@ import edu.uwm.owyh.model.DataStore;
 public class SectionWrapper implements WrapperObject<Section>, Serializable, NonPersistedWrapperObject<Section>{
 
 	public static final String SECTION_NUM_PATTERN = "^((LEC)|(DIS)|(LAB)|(IND)|(SEM)) \\d{3,4}$";
-	public static final String SECTION_DATE_PATTERN = "^((0?[1-9])|(1[0-2]))/(([0-2][1-9])|(3[01]))$";
+	public static final String SECTION_DATE_PATTERN = "^((0?[1-9])|(1[0-2]))/((0?[1-9])|([12][0-9])|(3[01]))$";
 	private static final long serialVersionUID = -7911639006979553905L;
 
 	private Section _section;
@@ -93,8 +94,12 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 			return _section.getCredits();
 		case "room":
 			return _section.getRoom();
-		case "overwritenames":
-			return _section.isOverwriteNames();
+		case "overwriteinstructor":
+			return _section.isOverwriteInstructor();
+		case "instructor":
+			Person instructor = _section.getInstructor();
+			if(instructor == null) return null;
+			return PersonWrapper.getPersonWrapper(instructor);
 		default:
 			return null;
 		}
@@ -277,32 +282,50 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		}
 		return errors;
 	}
+	
+	private static String checkString(String key, Object obj){
+		if(!(obj instanceof String)) 
+			throw new IllegalArgumentException(key + " must be of String type!");
+		
+		return (String) obj;
+	}
 
 	private String checkProperty(String key, Object object) {
-		if(!(object instanceof String)) return key + " should have a string value!";
-
-		String val = (String) object;
-
+		String val;
+		
 		switch(key.toLowerCase()){
 		case "sectionnum":
+			val = checkString(key,object);
 			if(!val.matches(SECTION_NUM_PATTERN))
 				throw new IllegalArgumentException("Section number does not match expected pattern: "
 						+ SECTION_NUM_PATTERN);
 			break;
 		case "enddate":case "startdate":
+			val = checkString(key,object);
 			if(!val.matches(SECTION_DATE_PATTERN))
 				throw new IllegalArgumentException("Start or end date does not match expected pattern: "
 						+ SECTION_DATE_PATTERN);
 			break;
 		case "starttime":case "endtime":
+			val = checkString(key,object);
 			if(!val.matches(OfficeHoursWrapper.HOURS_PATTERN)&& !val.trim().isEmpty())
 				throw new IllegalArgumentException("Start or end time does not match expected pattern: " 
 						+ OfficeHoursWrapper.HOURS_PATTERN);
 			break;
 		case "days":
+			val = checkString(key,object);
 			if(!val.matches(OfficeHoursWrapper.DAYS_PATTERN))
 				throw new IllegalArgumentException("Days does not match expected pattern: "
 						+ OfficeHoursWrapper.DAYS_PATTERN);
+			break;
+		case "instructor":
+			if(!(object instanceof PersonWrapper)) 
+				throw new IllegalArgumentException("Instructor must be a PersonWrapper object!");
+			break;
+		case "overwriteinstructor":
+			if(!(object instanceof Boolean))
+				throw new IllegalArgumentException("OverwriteInstructor must be of type Boolean!");
+			break;
 		}
 
 
@@ -338,7 +361,7 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 	}
 
 	private boolean setProperty(String propertyKey, Object object) throws ParseException {
-		String propertyValue = ((String) object).trim();
+		Object propertyValue = object;
 		double time;
 		Date date;
 		Section section = getSection();
@@ -347,43 +370,50 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		
 		switch(propertyKey.toLowerCase()){
 		case "days":
-			section.setDays(propertyValue);
-			setDayBooleans(propertyValue);
+			section.setDays((String) propertyValue);
+			setDayBooleans((String) propertyValue);
 			break;
 		case "starttime":
-			time = StringHelper.parseTimeToDouble(propertyValue);
+			time = StringHelper.parseTimeToDouble((String) propertyValue);
 			section.setStartTime(time);
 			break;
 		case "endtime":
-			time = StringHelper.parseTimeToDouble(propertyValue);
+			time = StringHelper.parseTimeToDouble((String) propertyValue);
 			section.setEndTime(time);
 			break;
 		case "startdate":
-			date = StringHelper.stringToDate(propertyValue);
+			date = StringHelper.stringToDate((String) propertyValue);
 			section.setStartDate(date);
 			break;
 		case "enddate":
-			date = StringHelper.stringToDate(propertyValue);
+			date = StringHelper.stringToDate((String) propertyValue);
 			section.setEndDate(date);
 			break;
 		case "credits":
-			section.setCredits(propertyValue);
+			section.setCredits((String) propertyValue);
 			break;
 		case "instructorfirstname":
-			section.setInstructorFirstName(propertyValue);
+			section.setInstructorFirstName((String) propertyValue);
 			break;
 		case "instructorlastname":
-			section.setInstructorLastName(propertyValue);
+			section.setInstructorLastName((String) propertyValue);
 			break;
 		case "room":
-			section.setRoom(propertyValue);
+			section.setRoom((String) propertyValue);
+			break;
+		case "overwriteinstructor":
+			section.setOverwriteInstructor((boolean) propertyValue);
+			break;
+		case "instructor":
+			PersonWrapper instructor = (PersonWrapper) propertyValue;
+			section.setInstructor(instructor.getPerson());
 			break;
 		}
 
 		return true;
 	}
 
-	private boolean checkNewInfo(String propertyKey, String propertyValue) throws ParseException {
+	private boolean checkNewInfo(String propertyKey, Object propertyValue) throws ParseException {
 		boolean isNewInfo = true;
 		Section section = getSection();
 		
@@ -394,28 +424,28 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		case "days":
 			String days = section.getDays();
 			if(days != null){
-				isNewInfo = !days.equalsIgnoreCase(propertyValue);
+				isNewInfo = !days.equalsIgnoreCase((String) propertyValue);
 			}
 			break;
 		case "starttime":
-			double newStartTime = StringHelper.parseTimeToDouble(propertyValue);
+			double newStartTime = StringHelper.parseTimeToDouble((String) propertyValue);
 			double oldStartTime = section.getStartTime(); 
 			isNewInfo = newStartTime != oldStartTime;
 			break;
 		case "endtime":
-			double newEndTime = StringHelper.parseTimeToDouble(propertyValue);
+			double newEndTime = StringHelper.parseTimeToDouble((String) propertyValue);
 			double oldEndTime = section.getEndTime();
 			isNewInfo = newEndTime != oldEndTime;
 			break;
 		case "startdate":
-			Date newStartDate = StringHelper.stringToDate(propertyValue);
+			Date newStartDate = StringHelper.stringToDate((String) propertyValue);
 			Date oldStartDate = section.getStartDate();
 			if(oldStartDate != null){
 				isNewInfo = !oldStartDate.equals(newStartDate);
 			}
 			break;
 		case "enddate":
-			Date newEndDate = StringHelper.stringToDate(propertyValue);
+			Date newEndDate = StringHelper.stringToDate((String) propertyValue);
 			Date oldEndDate = section.getEndDate();
 			if(oldEndDate != null){
 				isNewInfo = !oldEndDate.equals(newEndDate);
@@ -424,26 +454,39 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		case "credits":
 			String oldCredits = section.getCredits();
 			if(oldCredits != null){
-				isNewInfo = !oldCredits.equalsIgnoreCase(propertyValue);
+				isNewInfo = !oldCredits.equalsIgnoreCase((String) propertyValue);
 			}
 			break;
 		case "instructorfirstname":
 			String oldFirstName = section.getInstructorFirstName();
 			if(oldFirstName != null){
-				isNewInfo = !oldFirstName.equalsIgnoreCase(propertyValue);
+				isNewInfo = !oldFirstName.equalsIgnoreCase((String) propertyValue);
 			}
 			break;
 		case "instructorlastname":
 			String oldLastName = section.getInstructorLastName();
 			if(oldLastName != null){
-				isNewInfo = !oldLastName.equalsIgnoreCase(propertyValue);
+				isNewInfo = !oldLastName.equalsIgnoreCase((String) propertyValue);
 			}
 			break;
 		case "room":
 			String oldRoom = section.getRoom();
 			if(oldRoom != null){
-				isNewInfo = !oldRoom.equalsIgnoreCase(propertyValue);
+				isNewInfo = !oldRoom.equalsIgnoreCase((String) propertyValue);
 			}
+			break;
+		case "instructor":
+			Person oldInstructor = section.getInstructor();
+						
+			if(oldInstructor != null){
+				PersonWrapper newInstructor = (PersonWrapper)propertyValue;
+				isNewInfo = !oldInstructor.equals(newInstructor.getPerson());
+			}
+			break;
+		case "overwriteinstructor":
+			boolean oldOverwriteVal = section.isOverwriteInstructor();
+			
+			isNewInfo = oldOverwriteVal != (boolean)propertyValue;
 			break;
 		}
 		
@@ -563,5 +606,11 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 	@Override
 	public boolean addChild(WrapperObject<?> child) {
 		throw new UnsupportedOperationException("Section do not have any children entities");
+	}
+	
+	public static void main(String[] args){
+		String date1 = "12/20";
+		
+		System.out.println(date1.matches(SECTION_DATE_PATTERN));
 	}
 }
