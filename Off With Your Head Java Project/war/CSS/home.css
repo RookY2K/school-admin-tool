@@ -106,3 +106,44 @@ a:visited {
 a:link {
 	text-decoration: none;
 }
+
+.blank{
+	background-color: #fff;
+	font-size:0.9em;
+}
+
+.officehours{
+	border-style: solid;
+	border-top-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-right-width: 2px;
+	border-top-color: rgb(255,255,255);
+	border-bottom-color: rgb(128,128,128);
+	border-left-color: rgb(255,255,255);
+	border-right-color: rgb(128,128,128);	
+}
+
+.taclass{
+	border-style: solid;
+	border-top-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-right-width: 2px;
+	border-top-color: rgb(255,255,255);
+	border-bottom-color: rgb(128,128,128);
+	border-left-color: rgb(255,255,255);
+	border-right-color: rgb(128,128,128);	
+}
+
+.section{
+	border-style: solid;
+	border-top-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-right-width: 2px;
+	border-top-color: rgb(255,255,255);
+	border-bottom-color: rgb(128,128,128);
+	border-left-color: rgb(255,255,255);
+	border-right-color: rgb(128,128,128);	
+}

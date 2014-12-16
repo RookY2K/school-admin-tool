@@ -17,8 +17,10 @@ import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.library.PropertyHelper;
 import edu.uwm.owyh.model.Auth;
+import edu.uwm.owyh.model.CellObject;
 import edu.uwm.owyh.model.UserSchedule;
 import edu.uwm.owyh.model.UserScheduleElement;
+import edu.uwm.owyh.library.StringHelper;
 @SuppressWarnings("serial")
 public class Index extends HttpServlet {
 	
@@ -54,25 +56,63 @@ public class Index extends HttpServlet {
 				UserSchedule schedule = new UserSchedule();
 				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(null, self, null);
 				List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) self.getProperty("sections");
-				if (officeHours != null)
+				//UserScheduleElement[][] list = new UserScheduleElement[5][30];
+				CellObject[][] array = new CellObject[5][30];
+				
+				if(officeHours.size() != 0)
 				{
 					String days;
 					String startTime;
 					String endTime;
-					String room;
+					String room;	
+					String day = "";
+					double length;
 					
-					for (WrapperObject<OfficeHours> hours : officeHours) 
+					for(int k = 0; k < 5; k++)
 					{
-						days = (String) hours.getProperty("days");
-						startTime = (String) hours.getProperty("starttime");
-						endTime = (String) hours.getProperty("endtime");
-						room = (String) self.getProperty("officeroom");
-						UserScheduleElement element = new UserScheduleElement(days, startTime, endTime, room, "Office Hours");
-						schedule.addElement(element);
+						if(k == 0) day = "M";
+						if(k == 1) day = "T";
+						if(k == 2) day = "W";
+						if(k == 3) day = "R";
+						if(k == 4) day = "F";
+						
+						for (WrapperObject<OfficeHours> hours : officeHours)
+						{
+							days = (String) hours.getProperty("days");
+							startTime = (String) hours.getProperty("starttime");
+							endTime = (String) hours.getProperty("endtime");
+							room = (String) self.getProperty("officeroom");
+							length = StringHelper.parseTimeToDouble(endTime) - StringHelper.parseTimeToDouble(startTime);
+							
+							UserScheduleElement element = new UserScheduleElement(days, startTime, endTime, room, "Office Hours");
+							CellObject cell = new CellObject(element, "officehours", "office-hour", length);
+							int count = 0;
+							
+							for(double i = 0; i < 15; i = i + 0.5)
+							{
+								String stime = StringHelper.timeToString(i + 8);
+								String etime = StringHelper.timeToString(i + 8.5);
+								if(element.isPartOfElement(day, stime, etime))
+								{
+									array[k][count] = cell;
+								}
+								else
+								{
+									if(array[k][count] == null)
+									{
+										UserScheduleElement blankElement = new UserScheduleElement("","","","","");
+										CellObject blankCell = new CellObject(blankElement, "blank", "blank", 0.5);
+										array[k][count] = blankCell;										
+									}
+								}
+								++count;
+							}							
+						}							
 					}
+					
 				}
 				
-				if (sections != null)
+				if (sections.size() != 0)
 				{
 					for (WrapperObject<Section> course : sections)
 					{
@@ -91,7 +131,23 @@ public class Index extends HttpServlet {
 						schedule.addElement(element);
 					}
 				}
+				
+				else
+				{
+						for(int k = 0; k < 5; k++)
+						{	
+								int count = 0;	
+								for(double i = 0; i < 15; i = i + 0.5)
+								{
+									UserScheduleElement blankElement = new UserScheduleElement("","","","","");
+									CellObject blankCell = new CellObject(blankElement, "blank", "blank", 0.5);
+									array[k][count] = blankCell;										
+									++count;
+								}														
+						}											
+				}
 				request.setAttribute("userschedule", schedule);
+				request.setAttribute("array", array);
 				request.setAttribute("self", PropertyHelper.makeUserProperties(self));
 				request.getRequestDispatcher(request.getContextPath() + "/home.jsp").forward(request, response);	
 				return;
