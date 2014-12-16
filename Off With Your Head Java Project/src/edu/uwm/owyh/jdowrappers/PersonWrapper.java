@@ -11,6 +11,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.ContactInfo;
+import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
@@ -24,12 +25,6 @@ import edu.uwm.owyh.model.DataStore;
 public class PersonWrapper implements WrapperObject<Person>,Serializable{
 
 
-	private static final long serialVersionUID = -4561417175133189867L;
-	private Person _person;
-	private static final String PARENT = KeyFactory.keyToString(Person.getParentkey());
-	public static final String EMAILPATTERN = "^\\w+@uwm.edu$";
-	public static final String PHONEPATTERN = "^((\\(\\d{3}\\))|(\\d{3}))[-\\.\\s]{0,1}\\d{3}[-\\.\\s]{0,1}\\d{4}$";
-	
 	public enum AccessLevel {
 		TA(3), INSTRUCTOR(2), ADMIN(1);
 		private int value;
@@ -53,6 +48,12 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		}
 	}
 
+	private static final long serialVersionUID = -4561417175133189867L;
+	private Person _person;
+	private static final String PARENT = KeyFactory.keyToString(Person.getParentkey());
+	public static final String EMAILPATTERN = "^\\w+@uwm.edu$";
+	public static final String PHONEPATTERN = "^((\\(\\d{3}\\))|(\\d{3}))[-\\.\\s]{0,1}\\d{3}[-\\.\\s]{0,1}\\d{4}$";
+	
 	//Private constructors
 	private PersonWrapper(Person person) {
 		_person = person;	
@@ -73,6 +74,10 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 
 	static WrapperObject<Person> getPersonWrapper(Person client) {
 		return new PersonWrapper(client);
+	}
+
+	Person getPerson(){
+		return _person;
 	}
 
 	/* (non-Javadoc)
@@ -173,6 +178,8 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 				sectionWrappers.add(SectionWrapper.getSectionWrapper(section));
 			}
 			return sectionWrappers;
+		case "lecturecourses":
+			return new ArrayList<Key>(getPerson().getLectureCourses());
 		default:
 			return null;
 		}
@@ -275,6 +282,19 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		return store.deleteEntity(_person, _person.getId());		
 	}
 
+	@Override
+	public boolean removeObjects(List<WrapperObject<Person>> persons) {
+		List<Person> personList = new ArrayList<Person>();
+		
+		for(WrapperObject<Person> person : persons){
+			PersonWrapper personWrapper = (PersonWrapper) person;
+			
+			personList.add(personWrapper.getPerson());
+		}
+		
+		return DataStore.getDataStore().deleteAllEntities(personList);
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#findObjectById(com.google.appengine.api.datastore.Key)
 	 */
@@ -339,33 +359,6 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		}
 	}
 
-	/**
-	 * 
-	 * @param email
-	 * @return true if email is in proper format
-	 */
-	public static boolean checkEmail(String email){
-		return email.matches(EMAILPATTERN);
-	}
-
-	/**
-	 * Checks officehours for the proper format
-	 * @param formatString
-	 * @return true if the officehours are in the proper format string
-	 */
-	public static boolean checkOfficeHours(String formatString){
-		return formatString.matches(OfficeHoursWrapper.OFFICEHOURPATTERN);
-	}
-
-	/**
-	 * Checks the phone number for proper format
-	 * @param phone
-	 * @return true if the phone number is in the proper format
-	 */
-	public static boolean checkPhone(String phone){
-		return (phone.trim() == ""|| phone.trim().matches(PHONEPATTERN));
-	}
-
 	//private mutators
 	private void setPerson(String userName){
 		_person = getPerson(userName);		
@@ -379,44 +372,44 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 
 		switch(propertyKey){
 		case "password":
-			_person.setPassword((String) object);
+			getPerson().setPassword((String) object);
 			break;
 		case "accesslevel":
 			Integer accessLevel = ((AccessLevel)object).getVal();
-			_person.setAccessLevel(accessLevel);
+			getPerson().setAccessLevel(accessLevel);
 			break;
 		case "firstname":
-			_person.getContactInfo().setFirstName((String) object);
+			getPerson().getContactInfo().setFirstName((String) object);
 			break;
 		case "lastname":
-			_person.getContactInfo().setLastName((String) object);
+			getPerson().getContactInfo().setLastName((String) object);
 			break;
 		case "email":
-			_person.getContactInfo().setEmail((String) object);
+			getPerson().getContactInfo().setEmail((String) object);
 			break;
 		case "phone":
-			_person.getContactInfo().setPhone((String) object);
+			getPerson().getContactInfo().setPhone((String) object);
 			break;
 		case "streetaddress":
-			_person.getContactInfo().setStreetAddress((String)object);
+			getPerson().getContactInfo().setStreetAddress((String)object);
 			break;
 		case "city":
-			_person.getContactInfo().setCity((String) object);
+			getPerson().getContactInfo().setCity((String) object);
 			break;
 		case "state":
-			_person.getContactInfo().setState((String) object);
+			getPerson().getContactInfo().setState((String) object);
 			break;
 		case "zip":
-			_person.getContactInfo().setZip((String) object);
+			getPerson().getContactInfo().setZip((String) object);
 			break;
 		case "officeroom":
-			_person.setOfficeRoom((String) object);
+			getPerson().setOfficeRoom((String) object);
 			break;
 		case "temporarypassword":
-			_person.setTempPassword((String) object);
+			getPerson().setTempPassword((String) object);
 			break;
 		case "skills":
-			_person.setSkills((List<String>) object);
+			getPerson().setSkills((List<String>) object);
 			break;
 		case "sections":
 			List<Section> sections = new ArrayList<Section>();
@@ -427,7 +420,11 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 				
 				sections.add(section.getSection());
 			}
-			_person.setSections(sections);
+			getPerson().setSections(sections);
+			break;
+		case "lecturecourses":
+			List<Key> courses = new ArrayList<Key>((List<Key>)object);
+			getPerson().setLectureCourses(courses);
 			break;
 		default:
 			throw new IllegalArgumentException(propertyKey + 
@@ -452,10 +449,6 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		return user;
 	}
 	
-	Person getPerson(){
-		return _person;
-	}
-	
 	private List<WrapperObject<Person>> getPersonsFromList(List<Person> entities) {
 		List<WrapperObject<Person>> persons = new ArrayList<WrapperObject<Person>>();
 		for (Person item : entities)
@@ -477,6 +470,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 
 	private String checkProperty(String propertyKey, Object object) {
 		String error = "";
+		List<?>objects;
 
 		if(propertyKey == null){
 			throw new NullPointerException("Property Key is null!");
@@ -507,13 +501,6 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 				throw new IllegalArgumentException("Property must be of type AccessLevel");
 			}
 			break;
-
-		case "officehours":
-			checkObjectIsString(object);
-			if(!checkOfficeHours((String)object)){
-				error = "Error: Incorrectly Formatted Office Hours String!";
-			}
-			break;
 		case "skills":
 			if (! (object instanceof List<?>)) {
 				error = "Error: Incorrectly Formatted Skills, must be List<String>!";
@@ -522,13 +509,28 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		case "sections":
 			if(! (object instanceof List<?>))
 				throw new IllegalArgumentException("sections must be a List!");
-			List<?> objects = (List<?>)object;
+			objects = (List<?>)object;
 			for(Object obj : objects){
 				if(obj == null)
 					throw new NullPointerException("A section in Sections cannot be null!");
 				if(!(obj instanceof SectionWrapper))
 					throw new IllegalArgumentException("Sections must be a list of SectionWrappers!");
 			}
+			break;
+		case "lecturecourses":
+			if(! (object instanceof List<?>))
+				throw new IllegalArgumentException(propertyKey + " must be a List!");
+			objects = (List<?>)object;
+				for(Object obj : objects){
+					if(obj == null)
+						throw new NullPointerException("A key in lectureCourses cannot be null!");
+					if(!(obj instanceof Key))
+						throw new IllegalArgumentException(propertyKey + " must be a list of Keys!");
+					Key courseKey = (Key)obj;
+					
+					if(!Course.getKind().equalsIgnoreCase(courseKey.getKind()))
+						throw new IllegalArgumentException(propertyKey + " must be keys of kind Course");
+				}
 			break;
 		default:
 			checkObjectIsString(object);
@@ -537,21 +539,28 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		return error;
 	}
 
-	@Override
-	public boolean removeObjects(List<WrapperObject<Person>> persons) {
-		List<Person> personList = new ArrayList<Person>();
-		
-		for(WrapperObject<Person> person : persons){
-			PersonWrapper personWrapper = (PersonWrapper) person;
-			
-			personList.add(personWrapper.getPerson());
-		}
-		
-		return DataStore.getDataStore().deleteAllEntities(personList);
-	}
+	
 	
 	//Utility Methods
 	
+	/**
+	 * 
+	 * @param email
+	 * @return true if email is in proper format
+	 */
+	private boolean checkEmail(String email){
+		return email.matches(EMAILPATTERN);
+	}
+
+	/**
+	 * Checks the phone number for proper format
+	 * @param phone
+	 * @return true if the phone number is in the proper format
+	 */
+	private boolean checkPhone(String phone){
+		return (phone.trim() == ""|| phone.trim().matches(PHONEPATTERN));
+	}
+
 	@Override
 	public boolean equals(Object object){
 		if(!(object instanceof PersonWrapper)) return false;

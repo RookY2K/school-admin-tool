@@ -22,11 +22,12 @@ public final class AdminHelper {
 	}
 	
 	public static boolean assignInstructor(WrapperObject<Person> instructor, WrapperObject<Section> section, boolean setOverwrite){
-		//TODO write test		
+//		String sectionNum = (String) section.getProperty("sectionnum");
 		
-		removeOldInstructorFromSection(section);
+		removeOldInstructorFromSection(section);		
 		
 		assignNewInstructorToSection(instructor, section, setOverwrite);
+//		if(sectionNum.matches("lec*")) assignInstructorToCourse();
 		
 		addSectionToInstructor(instructor, section);
 		
@@ -34,6 +35,10 @@ public final class AdminHelper {
 	}
 	
 	
+//	private static void assignInstructorToCourse() {
+//				
+//	}
+
 	@SuppressWarnings("unchecked")
 	public static List<WrapperObject<Person>> getInstructorList(WrapperObject<Section> section){
 		List<WrapperObject<Person>> instructorList = new ArrayList<WrapperObject<Person>>();
@@ -152,12 +157,43 @@ public final class AdminHelper {
 
 		WrapperObject<Person> oldInstructor = (WrapperObject<Person>)section.getProperty("instructor");
 		
-		if(oldInstructor == null) return; 
+		if(oldInstructor == null) return;
+		String sectionNum = (String)section.getProperty("sectionnum");
+		List<Key> courses = null;
+		if(sectionNum.matches("lec*")){
+			removeInstructorFromCourse(oldInstructor, section);
+			courses = removeCourseFromInstructor(oldInstructor, section);
+		}
+		
 	
 		List<WrapperObject<Section>> oldInstructorSectionList = (List<WrapperObject<Section>>) oldInstructor.getProperty("sections");
 		oldInstructorSectionList.remove(section);
 		properties = PropertyHelper.propertyMapBuilder("sections", oldInstructorSectionList);
+		if(courses != null) properties.put("lecturecourses", courses);
 		oldInstructor.editObject(properties);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static List<Key> removeCourseFromInstructor(
+			WrapperObject<Person> oldInstructor, WrapperObject<Section> section) {		
+		List<Key> courses = (List<Key>) oldInstructor.getProperty("lecturecourses");
+		
+		courses.remove(section.getId().getParent());
+		
+		return courses;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void removeInstructorFromCourse(
+			WrapperObject<Person> oldInstructor, WrapperObject<Section> section) {
+		Key courseKey = section.getId().getParent();
+		WrapperObject<Course> course = WrapperObjectFactory.getCourse().findObjectById(courseKey);
+		
+		List<Key> instructorKeys = (List<Key>) course.getProperty("lectureinstructors");
+		instructorKeys.remove(oldInstructor.getId());
+		
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("lectureinstructors", instructorKeys);
+		course.editObject(properties);
 	}
 
 	@SuppressWarnings("unchecked")

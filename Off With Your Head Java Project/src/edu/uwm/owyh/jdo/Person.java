@@ -73,6 +73,9 @@ public class Person implements Serializable,Cloneable{
 	@Persistent
 	private List<String> skills;
 	
+	@Persistent
+	private List<Key> lectureCourses;
+	
 
 	//Private constructors
 	/*
@@ -89,7 +92,7 @@ public class Person implements Serializable,Cloneable{
 		
 		/* Create an empty array list */
 		officeHours = new ArrayList<OfficeHours>();
-		
+		lectureCourses = new ArrayList<Key>();
 		contactInfo = ContactInfo.getContactInfo();
 	}
 	
@@ -221,6 +224,13 @@ public class Person implements Serializable,Cloneable{
 	}
 
 	/**
+	 * @return the lectureCourses
+	 */
+	public List<Key> getLectureCourses() {
+		return lectureCourses;
+	}
+
+	/**
 	 * @param sections the sections to set
 	 */
 	public void setSections(List<Section> sections) {
@@ -276,6 +286,13 @@ public class Person implements Serializable,Cloneable{
 		this.tempPassword = password;
 	}
 	
+	/**
+	 * @param lectureCourses the lectureCourses to set
+	 */
+	public void setLectureCourses(List<Key> lectureCourses) {
+		this.lectureCourses = lectureCourses;
+	}
+
 	/**
 	 * Adds the specified office hours to the list of office hours.
 	 * @param officeHours - Child OfficeHours jdo to add to the Person JDO list field.

@@ -199,11 +199,11 @@ public class TestWrapperObjectInterface {
 		String userName4 = "vince@uwm.edu@";
 		String userName5 = "vinc3@uwm.edu";
 
-		assertTrue(PersonWrapper.checkEmail(userName1));
-		assertFalse(PersonWrapper.checkEmail(userName2));
-		assertFalse(PersonWrapper.checkEmail(userName3));
-		assertFalse(PersonWrapper.checkEmail(userName4));
-		assertTrue(PersonWrapper.checkEmail(userName5));		
+		assertTrue(userName1.matches(PersonWrapper.EMAILPATTERN));
+		assertFalse(userName2.matches(PersonWrapper.EMAILPATTERN));
+		assertFalse(userName3.matches(PersonWrapper.EMAILPATTERN));
+		assertFalse(userName4.matches(PersonWrapper.EMAILPATTERN));
+		assertTrue(userName5.matches(PersonWrapper.EMAILPATTERN));		
 	}
 
 	@Test
@@ -215,12 +215,12 @@ public class TestWrapperObjectInterface {
 		String phone5 = "[414]123-4545";
 		String phone6 = "abc-1C3-45b5";
 
-		assertTrue(PersonWrapper.checkPhone(phone1));
-		assertTrue(PersonWrapper.checkPhone(phone2));
-		assertTrue(PersonWrapper.checkPhone(phone3));
-		assertFalse(PersonWrapper.checkPhone(phone4));
-		assertFalse(PersonWrapper.checkPhone(phone5));
-		assertFalse(PersonWrapper.checkPhone(phone6));				
+		assertTrue(phone1.matches(PersonWrapper.PHONEPATTERN));
+		assertTrue(phone2.matches(PersonWrapper.PHONEPATTERN));
+		assertTrue(phone3.matches(PersonWrapper.PHONEPATTERN));
+		assertFalse(phone4.matches(PersonWrapper.PHONEPATTERN));
+		assertFalse(phone5.matches(PersonWrapper.PHONEPATTERN));
+		assertFalse(phone6.matches(PersonWrapper.PHONEPATTERN));				
 	}
 
 	@Test
