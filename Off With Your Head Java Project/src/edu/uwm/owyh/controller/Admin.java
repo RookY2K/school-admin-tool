@@ -17,6 +17,7 @@ import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
+import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
 import edu.uwm.owyh.library.PropertyHelper;
 import edu.uwm.owyh.model.Auth;
@@ -180,8 +181,16 @@ public class Admin extends HttpServlet {
 							.getProperty("username"));
 
 				/* Remove all section/course assignments from people. */
+				//Map<String, Object> clearedProperties = PropertyHelper.propertyMapBuilder(
+				//		"sections", null, "courses", null);
+				List<Section> emptySectionsList = new ArrayList<Section>();
+				
+				Map<String, Object> clearedProperties = PropertyHelper.propertyMapBuilder(
+								"sections", emptySectionsList );
+				
+				person.editObject(clearedProperties);
 
-				/* Remove all schedule classes from people. */
+				/* Remove all scheduled classes from people. */
 
 			}
 
