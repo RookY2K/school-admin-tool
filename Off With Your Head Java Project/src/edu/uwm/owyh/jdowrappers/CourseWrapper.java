@@ -27,7 +27,7 @@ import edu.uwm.owyh.model.DataStore;
 public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPersistedWrapperObject<Course> {
 
 	private static final long serialVersionUID = 6739430153706318925L;
-	public static final String PARENT = KeyFactory.keyToString(Course.getParentkey());
+	private static final String PARENT = KeyFactory.keyToString(Course.getParentkey());
 	
 	private Course _course;
 
@@ -38,6 +38,14 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 
 	private CourseWrapper() {
 		// Default constructor
+	}
+
+	private static WrapperObject<Course> getCourseWrapper(Course course) {
+		return new CourseWrapper(course);
+	}
+
+	public static WrapperObject<Course> getCourseWrapper() {
+		return new CourseWrapper();
 	}
 
 	/* (non-Javadoc)
@@ -71,7 +79,9 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		case "sections":
 			return WrapperObjectFactory.getSection().findObjects(null, this, "sectionNum");
 		case "eligibletakeys":
-			return new ArrayList<Key>(_course.getEligibleTAKeys());
+			return new ArrayList<Key>(getCourse().getEligibleTAKeys());
+		case "lectureinstructors":
+			return new ArrayList<Key>(getCourse().getLectureInstructors());
 		default:
 			return null;
 		}
@@ -95,105 +105,6 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		}
 	
 		return errors;
-	}
-
-	@SuppressWarnings("unchecked")
-	private boolean setProperty(String propertyKey, Object propertyValue) {
-		if(!checkNewInfo(propertyKey, propertyValue)) return false; 
-		switch(propertyKey.toLowerCase()){
-		case "coursename":
-			_course.setCourseName((String)propertyValue);
-			break;
-		case "eligibletakeys":
-			List<Key> taKeys = new ArrayList<Key>();
-			taKeys.addAll((List<Key>) propertyValue);
-			_course.setEligibleTAKeys(taKeys);
-		}
-		
-		return true;		
-	}
-
-	@SuppressWarnings("unchecked")
-	private boolean checkNewInfo(String propertyKey, Object propertyValue) {
-		boolean isNewInfo = true;
-		
-		switch(propertyKey.toLowerCase()){
-		case "coursename":
-			String oldCourseName = _course.getCourseName();
-			if(oldCourseName != null){
-				isNewInfo = !oldCourseName.equalsIgnoreCase((String) propertyValue);
-			}
-			break;
-		case "eligibletakeys":
-			List<Key> oldEligibleList = _course.getEligibleTAKeys();
-			List<Key> newEligibleList = (List<Key>)propertyValue;
-			if(oldEligibleList != null)
-				isNewInfo = !oldEligibleList.equals(newEligibleList);
-			break;			
-		}
-		return isNewInfo;
-	}
-
-	private void setCourse(String courseNum) {
-		_course = getCourse(courseNum);
-	}
-
-	private Course getCourse(String courseNum) {
-		Key id = WrapperObjectFactory.generateIdFromCourseNum(courseNum);
-		
-		Course course = (Course)DataStore.getDataStore().findEntityById(getTable(), id);
-		
-		if(course == null){
-			course = Course.getCourse(courseNum);
-		}
-		
-		return course;
-	}
-
-	private String checkProperty(String propertyKey, Object propertyValue ) {
-		String error = "";
-		if(propertyValue == null)
-			throw new NullPointerException("Property " + propertyKey + " cannot be null!");
-		
-		switch(propertyKey.toLowerCase()){
-		case "coursename":
-			if(!(propertyValue instanceof String))
-				throw new IllegalArgumentException(propertyKey + " is not a String!");
-			if(((String)propertyValue).trim().length() == 0)
-				throw new IllegalArgumentException(propertyKey + " cannot be an empty string!");
-			break;
-			
-		case "coursenum":
-			if(!(propertyValue instanceof String))
-				throw new IllegalArgumentException(propertyKey + " is not a String!");
-			String value = (String)propertyValue;
-			if(value.trim().length() != 3)
-				throw new IllegalArgumentException(propertyKey + " must be 3 digits long");
-			try{
-				Integer.parseInt(value);
-			}catch(NumberFormatException nfe){
-				throw new NumberFormatException("Course number could not be parsed to an Integer. "
-						+ "Check that scrape is working correctly");
-			}
-			break;
-		case "eligibletakeys":
-			if(!(propertyValue instanceof List<?>))
-				throw new IllegalArgumentException(propertyKey + " must be a List!");
-			List<?> objects = (List<?>)propertyValue;
-			for(Object obj : objects){
-				if(!(obj instanceof Key)){
-					throw new IllegalArgumentException(propertyKey + " must be a list of Keys!");
-				}
-				Key key = (Key)obj;
-				
-				String kind = key.getKind();
-				
-				if(!Person.getKind().equalsIgnoreCase(kind))
-					throw new IllegalArgumentException(propertyKey + " must be a list of Person Keys!");
-			}
-		}
-		
-		return error;
 	}
 
 	/* (non-Javadoc)
@@ -265,13 +176,6 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		return courses;
 	}
 	
-	private List<WrapperObject<Course>> getCoursesFromList(List<Course> entities) {
-		List<WrapperObject<Course>> courses = new ArrayList<WrapperObject<Course>>();
-		for (Course item : entities)
-			courses.add(CourseWrapper.getCourseWrapper(item));
-		return courses;
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#findObjectById(com.google.appengine.api.datastore.Key)
 	 */
@@ -283,10 +187,6 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		if(course == null) return null;
 		
 		return getCourseWrapper(course);
-	}
-
-	private static WrapperObject<Course> getCourseWrapper(Course course) {
-		return new CourseWrapper(course);
 	}
 
 	/* (non-Javadoc)
@@ -333,10 +233,6 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		return errors;
 	}
 
-	private Course getCourse() {
-		return _course;
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#removeChildObject(java.lang.Object)
 	 */
@@ -358,10 +254,6 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		}
 		
 		return DataStore.getDataStore().updateEntity(getCourse(), getCourse().getId());
-	}
-
-	public static WrapperObject<Course> getCourseWrapper() {
-		return new CourseWrapper();
 	}
 
 	@Override
@@ -401,6 +293,142 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		return DataStore.getDataStore().deleteAllEntities(courseList);
 	}
 	
+	@Override
+	public boolean addChild(WrapperObject<?> child) {
+		if(!(child instanceof SectionWrapper)) return false;
+		
+		SectionWrapper sectionChild = (SectionWrapper)child;
+		
+		if(this.getCourse().getSections().contains(sectionChild)) return false;
+		
+		this.getCourse().addSection(sectionChild.getSection());
+		
+		return true;		
+	}
+
+	@SuppressWarnings("unchecked")
+	private boolean setProperty(String propertyKey, Object propertyValue) {
+		if(!checkNewInfo(propertyKey, propertyValue)) return false; 
+		switch(propertyKey.toLowerCase()){
+		case "coursename":
+			getCourse().setCourseName((String)propertyValue);
+			break;
+		case "eligibletakeys":
+			List<Key> taKeys = new ArrayList<Key>((List<Key>) propertyValue);
+			getCourse().setEligibleTAKeys(taKeys);
+			break;
+		case "lectureinstructors":
+			List<Key> instructors = new ArrayList<Key>((List<Key>) propertyValue);
+			getCourse().setLectureInstructors(instructors);
+			break;
+		}
+		
+		return true;		
+	}
+
+	@SuppressWarnings("unchecked")
+	private boolean checkNewInfo(String propertyKey, Object propertyValue) {
+		boolean isNewInfo = true;
+		
+		switch(propertyKey.toLowerCase()){
+		case "coursename":
+			String oldCourseName = getCourse().getCourseName();
+			if(oldCourseName != null){
+				isNewInfo = !oldCourseName.equalsIgnoreCase((String) propertyValue);
+			}
+			break;
+		case "eligibletakeys":
+			List<Key> oldEligibleList = getCourse().getEligibleTAKeys();
+			List<Key> newEligibleList = (List<Key>)propertyValue;
+			if(oldEligibleList != null)
+				isNewInfo = !oldEligibleList.equals(newEligibleList);
+			break;	
+		case "lectureinstructors":
+			List<Key> oldInstructors = getCourse().getLectureInstructors();
+			List<Key> newInstructors = (List<Key>)propertyValue;
+			if(oldInstructors != null){
+				isNewInfo = !oldInstructors.equals(newInstructors);
+			}
+			break;
+		}
+		return isNewInfo;
+	}
+
+	private void setCourse(String courseNum) {
+		_course = getCourse(courseNum);
+	}
+
+	private Course getCourse(String courseNum) {
+		Key id = WrapperObjectFactory.generateIdFromCourseNum(courseNum);
+		
+		Course course = (Course)DataStore.getDataStore().findEntityById(getTable(), id);
+		
+		if(course == null){
+			course = Course.getCourse(courseNum);
+		}
+		
+		return course;
+	}
+
+	private String checkProperty(String propertyKey, Object propertyValue ) {
+		String error = "";
+		List<?> objects;
+		if(propertyValue == null)
+			throw new NullPointerException("Property " + propertyKey + " cannot be null!");
+		
+		switch(propertyKey.toLowerCase()){
+		case "coursename":
+			if(!(propertyValue instanceof String))
+				throw new IllegalArgumentException(propertyKey + " is not a String!");
+			if(((String)propertyValue).trim().length() == 0)
+				throw new IllegalArgumentException(propertyKey + " cannot be an empty string!");
+			break;
+			
+		case "coursenum":
+			if(!(propertyValue instanceof String))
+				throw new IllegalArgumentException(propertyKey + " is not a String!");
+			String value = (String)propertyValue;
+			if(value.trim().length() != 3)
+				throw new IllegalArgumentException(propertyKey + " must be 3 digits long");
+			try{
+				Integer.parseInt(value);
+			}catch(NumberFormatException nfe){
+				throw new NumberFormatException("Course number could not be parsed to an Integer. "
+						+ "Check that scrape is working correctly");
+			}
+			break;
+		case "eligibletakeys": case "lectureinstructors":
+			if(!(propertyValue instanceof List<?>))
+				throw new IllegalArgumentException(propertyKey + " must be a List!");
+			objects = (List<?>)propertyValue;
+			for(Object obj : objects){
+				if(!(obj instanceof Key)){
+					throw new IllegalArgumentException(propertyKey + " must be a list of Keys!");
+				}
+				Key key = (Key)obj;
+				
+				String kind = key.getKind();
+				
+				if(!Person.getKind().equalsIgnoreCase(kind))
+					throw new IllegalArgumentException(propertyKey + " must be a list of Person Keys!");
+			}
+			break;
+		}
+		
+		return error;
+	}
+
+	private List<WrapperObject<Course>> getCoursesFromList(List<Course> entities) {
+		List<WrapperObject<Course>> courses = new ArrayList<WrapperObject<Course>>();
+		for (Course item : entities)
+			courses.add(CourseWrapper.getCourseWrapper(item));
+		return courses;
+	}
+
+	private Course getCourse() {
+		return _course;
+	}
+
 	private List<String> buildNewCourseWrapper(String courseNum, Map<String, Object> properties){
 		if(courseNum == null || properties == null) 
 			throw new NullPointerException("Arguments are null!");
@@ -435,19 +463,6 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 		}
 		
 		return errors;
-	}
-
-	@Override
-	public boolean addChild(WrapperObject<?> child) {
-		if(!(child instanceof SectionWrapper)) return false;
-		
-		SectionWrapper sectionChild = (SectionWrapper)child;
-		
-		if(this.getCourse().getSections().contains(sectionChild)) return false;
-		
-		this.getCourse().addSection(sectionChild.getSection());
-		
-		return true;		
 	}
 
 }

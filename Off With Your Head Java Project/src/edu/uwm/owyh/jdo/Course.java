@@ -51,8 +51,28 @@ public class Course implements Serializable, Cloneable{
 	
 	@Persistent
 	private List<Key> eligibleTAKeys;
+	
+	@Persistent
+	private List<Key> lectureInstructors;
 
 
+
+	//Mutators
+	
+	//private mutator to set the course number
+	private void setCourseNum(String courseNum){
+		this.courseNum = courseNum;
+	}
+
+	private Course(String courseNum){
+		id = WrapperObjectFactory.generateIdFromCourseNum(courseNum);
+	
+		sections = new ArrayList<Section>();
+		eligibleTAKeys = new ArrayList<Key>();
+		lectureInstructors = new ArrayList<Key>();
+	
+		setCourseNum(courseNum);
+	}
 
 	/**
 	 * Public accessor for the Course JDO
@@ -64,14 +84,6 @@ public class Course implements Serializable, Cloneable{
 	}
 
 	//Accessors	
-
-	/**
-	 * Access for the Primary key
-	 * @return Primary key
-	 */
-	public Key getId(){
-		return id;
-	}
 
 	/**
 	 * @return the classname
@@ -92,6 +104,16 @@ public class Course implements Serializable, Cloneable{
 	 */
 	public static String getKind() {
 		return KIND;
+	}
+
+	//Accessors	
+	
+	/**
+	 * Access for the Primary key
+	 * @return Primary key
+	 */
+	public Key getId(){
+		return id;
 	}
 
 	/**
@@ -122,11 +144,10 @@ public class Course implements Serializable, Cloneable{
 	//Mutators
 
 	/**
-	 * Sets the course name field
-	 * @param courseName
+	 * @return the lectureInstructors
 	 */
-	public void setCourseName(String courseName){
-		this.courseName = courseName;
+	public List<Key> getLectureInstructors() {
+		return lectureInstructors;
 	}
 
 	/**
@@ -134,6 +155,45 @@ public class Course implements Serializable, Cloneable{
 	 */
 	public List<Key> getEligibleTAKeys() {
 		return eligibleTAKeys;
+	}
+
+	/**
+	 * Sets the course name field
+	 * @param courseName
+	 */
+	public void setCourseName(String courseName){
+		this.courseName = courseName;
+	}
+
+	public void setEligibleTAKeys(List<Key> eligibleTAKeys){
+		this.eligibleTAKeys = eligibleTAKeys;
+	}
+
+	//Mutators
+	
+	/**
+	 * @param lectureInstructors the lectureInstructors to set
+	 */
+	public void setLectureInstructors(List<Key> lectureInstructors) {
+		this.lectureInstructors = lectureInstructors;
+	}
+
+	/**
+	 * Adds a section jdo to the Sections List field
+	 * @param section
+	 */
+	public void addSection(Section section) {
+		if(section == null) 
+			throw new NullPointerException("Section cannot be null!");
+		if(getSections().contains(section))
+			throw new IllegalArgumentException("Duplicate section entry!");
+		this.sections.add(section);
+	}
+
+	public void removeSection(Section section) {
+		if(section == null)
+			throw new NullPointerException("Section cannot be null!");
+		this.getSections().remove(section);
 	}
 
 	//Utility methods
@@ -148,42 +208,9 @@ public class Course implements Serializable, Cloneable{
 		
 		return courseNum == otherCourseNum;
 	}
-
-	/**
-	 * Adds a section jdo to the Sections List field
-	 * @param section
-	 */
-	public void addSection(Section section) {
-		if(section == null) 
-			throw new NullPointerException("Section cannot be null!");
-		if(getSections().contains(section))
-			throw new IllegalArgumentException("Duplicate section entry!");
-		this.sections.add(section);
-	}
 	
-	public void removeSection(Section section) {
-		if(section == null)
-			throw new NullPointerException("Section cannot be null!");
-		this.getSections().remove(section);
-	}
-	
-	public void setEligibleTAKeys(List<Key> eligibleTAKeys){
-		this.eligibleTAKeys = eligibleTAKeys;
-	}
-
-	//Mutators
-	
-	//private mutator to set the course number
-	private void setCourseNum(String courseNum){
-		this.courseNum = courseNum;
-	}
-
-	private Course(String courseNum){
-		id = WrapperObjectFactory.generateIdFromCourseNum(courseNum);
-	
-		sections = new ArrayList<Section>();
-		eligibleTAKeys = new ArrayList<Key>();
-	
-		setCourseNum(courseNum);
+	@Override
+	public int hashCode(){
+		return Integer.parseInt(this.getCourseNum());
 	}
 }
