@@ -55,6 +55,21 @@ public class TAClass implements Serializable {
 	@Persistent
 	private double endTime;
 	
+	@Persistent
+	private boolean onMonday;
+	
+	@Persistent
+	private boolean onTuesday;
+	
+	@Persistent
+	private boolean onWednesday;
+	
+	@Persistent
+	private boolean onThursday;
+	
+	@Persistent
+	private boolean onFriday;
+	
 
 	private TAClass(String classNum, String classType, String taUserName){
 		setClassNum(classNum);
@@ -173,6 +188,41 @@ public class TAClass implements Serializable {
 
 
 	/**
+	 * @return the onMonday
+	 */
+	public boolean isOnMonday() {
+		return onMonday;
+	}
+
+	/**
+	 * @return the onTuesday
+	 */
+	public boolean isOnTuesday() {
+		return onTuesday;
+	}
+
+	/**
+	 * @return the onWednesday
+	 */
+	public boolean isOnWednesday() {
+		return onWednesday;
+	}
+
+	/**
+	 * @return the onThursday
+	 */
+	public boolean isOnThursday() {
+		return onThursday;
+	}
+
+	/**
+	 * @return the onFriday
+	 */
+	public boolean isOnFriday() {
+		return onFriday;
+	}
+
+	/**
 	 * @param id the id to set
 	 */
 	private void setId(Key id) {
@@ -245,6 +295,41 @@ public class TAClass implements Serializable {
 
 	//Utility Methods
 	
+	/**
+	 * @param onMonday the onMonday to set
+	 */
+	public void setOnMonday(boolean onMonday) {
+		this.onMonday = onMonday;
+	}
+
+	/**
+	 * @param onTuesday the onTuesday to set
+	 */
+	public void setOnTuesday(boolean onTuesday) {
+		this.onTuesday = onTuesday;
+	}
+
+	/**
+	 * @param onWednesday the onWednesday to set
+	 */
+	public void setOnWednesday(boolean onWednesday) {
+		this.onWednesday = onWednesday;
+	}
+
+	/**
+	 * @param onThursday the onThursday to set
+	 */
+	public void setOnThursday(boolean onThursday) {
+		this.onThursday = onThursday;
+	}
+
+	/**
+	 * @param onFriday the onFriday to set
+	 */
+	public void setOnFriday(boolean onFriday) {
+		this.onFriday = onFriday;
+	}
+
 	@Override
 	public boolean equals(Object object){
 		if(!(object instanceof TAClass)) return false;

@@ -340,25 +340,151 @@ public class TAClassWrapper implements WrapperObject<TAClass>, Serializable {
 		default:
 			throw new IllegalArgumentException(propertyKey + " is not a valid property of TAClass");
 		}	
-		
-		
+				
 		return "";
 	}
 
-	private String checkString(Object propertyValue, Object propertyValue2) {
-		// TODO Auto-generated method stub
-		return null;
+	private String checkString(String propertyKey, Object propertyValue) {
+		if(!(propertyValue instanceof String)) 
+			throw new IllegalArgumentException(propertyKey + " must be of String type!");
+		
+		return (String) propertyValue;
 	}
 
 	private boolean setAllProperties(Map<String, Object> properties) {
-		// TODO Auto-generated method stub
-		return false;
+		if(properties == null) throw new NullPointerException("Properties argument is null!");
+		boolean newInfo = false;
+		for(String propertyKey : properties.keySet()){
+			try{
+				newInfo |= setProperty(propertyKey, properties.get(propertyKey));
+			}catch(ParseException pe){
+				throw new IllegalArgumentException(pe.getMessage());
+			}
+		}
+		
+		return newInfo;
+	}
+
+	private boolean setProperty(String propertyKey, Object propertyValue) throws ParseException {
+		double time;
+		Date date;
+		TAClass taClass = getTAClass();
+		
+		if(!checkNewInfo(propertyKey, propertyValue)) return false;
+		
+		switch(propertyKey.toLowerCase()){
+		case "classname":
+			taClass.setClassName((String)propertyValue);
+			break;
+		case "days":
+			taClass.setDays((String) propertyValue);
+			setDayBooleans((String) propertyValue);
+			break;
+		case "starttime":
+			time = StringHelper.parseTimeToDouble((String) propertyValue);
+			taClass.setStartTime(time);
+			break;
+		case "endtime":
+			time = StringHelper.parseTimeToDouble((String) propertyValue);
+			taClass.setEndTime(time);
+			break;
+		case "startdate":
+			date = StringHelper.stringToDate((String) propertyValue);
+			taClass.setStartDate(date);
+			break;
+		case "enddate":
+			date = StringHelper.stringToDate((String) propertyValue);
+			taClass.setEndDate(date);
+			break;
+		}
+	
+		return true;
+	}
+
+	private void setDayBooleans(String propertyValue) {
+		TAClass taClass = getTAClass();
+		resetOnDays(taClass);
+		for(int i=0; i<propertyValue.length(); ++i){
+			switch(propertyValue.charAt(i)){
+			case 'M':
+				taClass.setOnMonday(true);
+				break;
+			case 'T':
+				taClass.setOnTuesday(true);
+				break;
+			case 'W':
+				taClass.setOnWednesday(true);
+				break;
+			case 'R':
+				taClass.setOnThursday(true);
+				break;
+			case 'F':
+				taClass.setOnFriday(true);
+				break;
+			}
+		}
+	}
+
+	private void resetOnDays(TAClass taClass) {
+		taClass.setOnMonday(false);
+		taClass.setOnTuesday(false);
+		taClass.setOnWednesday(false);
+		taClass.setOnThursday(false);
+		taClass.setOnFriday(false);
+	}
+
+	private boolean checkNewInfo(String propertyKey, Object propertyValue) throws ParseException {
+		boolean isNewInfo = true;
+		TAClass taClass = getTAClass();
+		
+		switch(propertyKey.toLowerCase()){
+		case "classname":
+			String className = taClass.getClassName();
+			if(className != null){
+				isNewInfo = !className.equalsIgnoreCase((String) propertyValue);
+			}
+			break;
+		case "days":
+			String days = taClass.getDays();
+			if(days != null){
+				isNewInfo = !days.equalsIgnoreCase((String) propertyValue);
+			}
+			break;
+		case "starttime":
+			double newStartTime = StringHelper.parseTimeToDouble((String) propertyValue);
+			double oldStartTime = taClass.getStartTime(); 
+			isNewInfo = newStartTime != oldStartTime;
+			break;
+		case "endtime":
+			double newEndTime = StringHelper.parseTimeToDouble((String) propertyValue);
+			double oldEndTime = taClass.getEndTime();
+			isNewInfo = newEndTime != oldEndTime;
+			break;
+		case "startdate":
+			Date newStartDate = StringHelper.stringToDate((String) propertyValue);
+			Date oldStartDate = taClass.getStartDate();
+			if(oldStartDate != null){
+				isNewInfo = !oldStartDate.equals(newStartDate);
+			}
+			break;
+		case "enddate":
+			Date newEndDate = StringHelper.stringToDate((String) propertyValue);
+			Date oldEndDate = taClass.getEndDate();
+			if(oldEndDate != null){
+				isNewInfo = !oldEndDate.equals(newEndDate);
+			}
+			break;
+		}
+		
+		return isNewInfo;
 	}
 
 	private List<WrapperObject<TAClass>> getTAClassFromList(
 			List<TAClass> entities) {
-		// TODO Auto-generated method stub
-		return null;
+		List<WrapperObject<TAClass>> taClasses = new ArrayList<WrapperObject<TAClass>>();
+		for (TAClass item : entities)
+			taClasses.add(TAClassWrapper.getTAClassWrapper(item));
+		return taClasses;
 	}
 
 }

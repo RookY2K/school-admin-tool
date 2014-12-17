@@ -551,33 +551,33 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		return true;
 	}
 
-	private static void resetOnDays(Section officeHours){
-		officeHours.setOnMonday(false);
-		officeHours.setOnTuesday(false);
-		officeHours.setOnWednesday(false);
-		officeHours.setOnThursday(false);
-		officeHours.setOnFriday(false);
+	private static void resetOnDays(Section section){
+		section.setOnMonday(false);
+		section.setOnTuesday(false);
+		section.setOnWednesday(false);
+		section.setOnThursday(false);
+		section.setOnFriday(false);
 	}
 
 	private void setDayBooleans(String propertyValue) {
-		Section officeHours = getSection();
-		resetOnDays(officeHours);
+		Section section = getSection();
+		resetOnDays(section);
 		for(int i=0; i<propertyValue.length(); ++i){
 			switch(propertyValue.charAt(i)){
 			case 'M':
-				officeHours.setOnMonday(true);
+				section.setOnMonday(true);
 				break;
 			case 'T':
-				officeHours.setOnTuesday(true);
+				section.setOnTuesday(true);
 				break;
 			case 'W':
-				officeHours.setOnWednesday(true);
+				section.setOnWednesday(true);
 				break;
 			case 'R':
-				officeHours.setOnThursday(true);
+				section.setOnThursday(true);
 				break;
 			case 'F':
-				officeHours.setOnFriday(true);
+				section.setOnFriday(true);
 				break;
 			}
 		}
@@ -586,10 +586,10 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 
 	private List<WrapperObject<Section>> getSectionFromList(
 			List<Section> entities) {
-		List<WrapperObject<Section>> officeHours = new ArrayList<WrapperObject<Section>>();
+		List<WrapperObject<Section>> sections = new ArrayList<WrapperObject<Section>>();
 		for (Section item : entities)
-			officeHours.add(SectionWrapper.getSectionWrapper(item));
-		return officeHours;
+			sections.add(SectionWrapper.getSectionWrapper(item));
+		return sections;
 	}
 
 	@Override
