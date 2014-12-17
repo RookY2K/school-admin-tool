@@ -81,6 +81,7 @@ public final class PropertyHelper {
 	                                       ,"accesslevel",user.getProperty("accesslevel")
 	                                       ,"officeroom", user.getProperty("officeroom")
 	                                       ,"skills", user.getProperty("skills")
+	                                       ,"sections", user.getProperty("sections")
 	                                       );
 		for(String key : properties.keySet())
 			if(properties.get(key) == null) properties.put(key, "");

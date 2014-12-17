@@ -196,6 +196,11 @@ public class UserList extends HttpServlet {
 					, "zip", request.getParameter("zip")
 					, "accesslevel", accessLevel
 					);
+			for (String key : properties.keySet())
+				if (properties.get(key) == null)
+					properties.put(key, "");
+			if (properties.get("accesslevel").equals(""))
+				properties.remove("accesslevel");
 			errors = user.editObject(properties);
 
 			request.setAttribute("modifyuser", username);

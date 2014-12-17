@@ -112,7 +112,7 @@
 			String room = (String)section.getProperty("room");
 			String firstName = (String)section.getProperty("instructorfirstname");
 			String lastName = (String)section.getProperty("instructorlastname");
-			String instructor = lastName.trim().isEmpty() ? firstName : lastName + ", " + firstName;
+			String instructor = (lastName != null && lastName.trim().isEmpty()) ? firstName : lastName + ", " + firstName;
 %>
 
 			<tr class="<%=className %>">
@@ -122,23 +122,22 @@
 				<td class="section_cell"><%=days %></td>
 				<td class="section_cell"><%=hours %></td>
 				<td class="section_cell"><%=room %></td>
-				
-				<% if (isAdmin) { %>
 				<td class="section_cell">
+				<% if (isAdmin || (!isAdmin && sectionNum.indexOf("LEC") < 0)) { %>
 					<form action="#editsection" method="post">
 						<input type="hidden" name="viewsection" value="viewsection" />
 						<input type="hidden" name="courselist" value="<%=selectedCourse.getProperty("coursenum") %>" />
 						<input type="hidden" name="sectionnumber" value="<%=sectionNum %>" />
 						<% if (firstName == null || firstName.equals("")) { %>
-						<input type="submit" class="classlistedit" value="Edit" />
+						<input type="submit" class="classlistedit" value="Edit" style="color:#3c6c91;" />
 						<% } else { %>
-						<input type="submit" class="classlistedit" value="<%=instructor %>" />
+						<input type="submit" class="classlistedit" value="<%=instructor %>" style="color:#3c6c91;"  />
 						<% } %>
 					</form>
-				</td>
-				<% } else {%>
-				<td class="section_cell"><%=instructor %></td>
+				<% } else { %>
+				<input type="submit" class="classlistedit" value="<%=instructor %>" style="cursor: default;" />
 				<% } %>
+				</td>
 			</tr>
 <%
   			}
@@ -165,18 +164,18 @@
     	List<String> editSectionErrors = (List<String>) request.getAttribute("editsectionerrors");
     	List<String> editSectionMessages = (List<String>) request.getAttribute("editsectionmessages");
 		if (editSectionErrors != null) { %>
-				<ul class="message">
+		<ul class="message">
 		<%	for (String error : editSectionErrors) { %>
 			<li class="error-message"><%=error %></li>
 			<% } %>
-				</ul>
+		</ul>
 		<% } 
 		if (editSectionMessages != null) { %>
-			<ul class="message">
+		<ul class="message">
 		<%	for (String message : editSectionMessages) { %>
 			<li class="good-message"><%=message %></li>
 			<% } %>
-				</ul>
+		</ul>
 		<% } %>
 		
 		<ul class="message"><li>
@@ -188,7 +187,7 @@
 		</li></ul>
 		
 		<% if (possiableUser == null || possiableUser.size() == 0) { %>
-			No User can be assign to this Course or Section.
+			You can assign no User to this Course or Section.
 		<% } else { %>
 		
  		<form action="#editsection" method="post">
@@ -199,9 +198,10 @@
 			<select name="changeinstructor" required>
 			<option value="">Change Section Instructor...</option>
 			<% for (WrapperObject<Person> user : possiableUser) { %>
-			<option><% if (user.getProperty("firstname") != null) { out.print(user.getProperty("firstname") + " "); } %> 
-			<% if (user.getProperty("lastname") != null) { out.print(user.getProperty("lastname") + " "); } %> 
-			(<%=user.getProperty("email") %>)</option>
+			<option value="<%=user.getProperty("email") %>">
+			<% if (user.getProperty("firstname") != null && user.getProperty("lastname") != null) out.print(user.getProperty("lastname") + ", " + user.getProperty("firstname")); 
+			else out.print(user.getProperty("email")); %>
+			</option>
 			<% } %>
 			</select>
 			<input type="submit" class="submit" value="Change" />
