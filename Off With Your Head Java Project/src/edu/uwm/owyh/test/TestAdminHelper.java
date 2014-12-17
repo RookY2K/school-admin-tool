@@ -61,7 +61,7 @@ public class TestAdminHelper {
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testAssignInstructorNew(){
+	public void testAssignInstructorNewLecture(){
 		List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) _i1.getProperty("sections");
 		assertTrue(sections.isEmpty());
 		
@@ -73,12 +73,23 @@ public class TestAdminHelper {
 		
 		assertEquals(1, sections.size());
 		assertEquals("LEC 201", sections.get(0).getProperty("sectionnum"));
+		
+		List<Key> lectureCourses = (List<Key>) _i1.getProperty("lecturecourses");
+		
+		assertEquals(1, lectureCourses.size());
+		assertEquals(_s1.getId().getParent(), lectureCourses.get(0));
+		
+		WrapperObject<Course> lectureCourse = WrapperObjectFactory.getCourse().findObjectById(lectureCourses.get(0));
+		List<Key> lectureInstructors = (List<Key>) lectureCourse.getProperty("lectureinstructors");
+		
+		assertEquals(1, lectureInstructors.size());
+		assertEquals(_i1.getId(), lectureInstructors.get(0));
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testAssignInstructorReplace(){
-		testAssignInstructorNew();
+	public void testAssignInstructorReplaceLecture(){
+		testAssignInstructorNewLecture();
 		
 		List<WrapperObject<Section>> sections1 = (List<WrapperObject<Section>>) _i1.getProperty("sections");
 		assertEquals(1, sections1.size());

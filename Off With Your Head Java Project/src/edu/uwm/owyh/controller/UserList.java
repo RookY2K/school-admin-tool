@@ -162,7 +162,7 @@ public class UserList extends HttpServlet {
 
 		/* Admin delete a User */
 		if (request.getParameter("deleteuserconfirm") != null) {
-			if (WrapperObjectFactory.getPerson().removeObject(username)) {
+			if (WrapperObjectFactory.getPerson().removeObject()) {
 				response.sendRedirect(request.getContextPath()
 						+ "/userlist#deleteuser");
 				return;

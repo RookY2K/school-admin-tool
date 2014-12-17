@@ -160,7 +160,7 @@ public class Admin extends HttpServlet {
 					.getAllObjects();
 
 			for (WrapperObject<Course> course : courses)
-				course.removeObject((String) course.getProperty("coursenum"));
+				course.removeObject();
 			
 			Auth.removeSessionVariable(request, "courses");
 			Auth.removeSessionVariable(request, "coursekeys");
@@ -177,8 +177,7 @@ public class Admin extends HttpServlet {
 						.getOfficeHours().findObjects(null, person, null);
 
 				for (WrapperObject<OfficeHours> officeHoursElement : officeHours)
-					officeHoursElement.removeObject((String) person
-							.getProperty("username"));
+					officeHoursElement.removeObject();
 
 				/* Remove all section/course assignments from people. */
 				//Map<String, Object> clearedProperties = PropertyHelper.propertyMapBuilder(

@@ -151,11 +151,9 @@ public class CourseWrapper implements Serializable, WrapperObject<Course>, NonPe
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#removeObject(java.lang.String)
 	 */
 	@Override
-	public boolean removeObject(String courseNum) {
+	public boolean removeObject() {
 		DataStore store = DataStore.getDataStore();
-		
-		setCourse(courseNum);
-	
+			
 		return store.deleteEntity(_course, _course.getId());		
 	}
 

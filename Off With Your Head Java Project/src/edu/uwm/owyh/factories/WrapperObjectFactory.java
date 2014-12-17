@@ -9,6 +9,7 @@ import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
+import edu.uwm.owyh.jdo.TAClass;
 import edu.uwm.owyh.jdowrappers.OfficeHoursWrapper;
 import edu.uwm.owyh.jdowrappers.PersonWrapper;
 import edu.uwm.owyh.jdowrappers.SectionWrapper;
@@ -66,7 +67,6 @@ public class WrapperObjectFactory {
 	 * @return Key - Person JDO primary key
 	 */
 	public static Key generateIdFromUserName(String userName){
-		//TODO move into WrapperObjectFactory
 		if(userName == null) return null;
 		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(Person.getParentkey());
 	
@@ -80,7 +80,7 @@ public class WrapperObjectFactory {
 	 * @return Key - Course JDO primary key
 	 */
 	public static Key generateIdFromCourseNum(String courseNum) {
-		//TODO move into WrapperObjectFactory
+
 		if(courseNum == null) return null;
 		
 		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(Course.getParentkey());
@@ -88,7 +88,7 @@ public class WrapperObjectFactory {
 	}
 
 	public static Key generateSectionIdFromSectionAndCourseNum(String sectionNum, String courseNum){
-		//TODO move into WrapperObjectFactory
+
 		if(courseNum == null || sectionNum == null) return null;
 		
 		Key parentKey = generateIdFromCourseNum(courseNum);
@@ -96,5 +96,16 @@ public class WrapperObjectFactory {
 		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(parentKey);
 		
 		return keyBuilder.addChild(Section.getKind(), sectionNum.toLowerCase()).getKey();
+	}
+
+	public static Key generateIdFromClassNumAndType(String classNum,
+			String classType, String taUserName) {
+		if(classNum == null || classType == null || taUserName == null) return null;
+		
+		Key parentKey = generateIdFromUserName(taUserName);
+		
+		KeyFactory.Builder keyBuilder = new KeyFactory.Builder(parentKey);
+		
+		return keyBuilder.addChild(TAClass.getKind(), classNum.toLowerCase() + ":" + classType.toLowerCase()).getKey();
 	}
 }

@@ -22,22 +22,20 @@ public final class AdminHelper {
 	}
 	
 	public static boolean assignInstructor(WrapperObject<Person> instructor, WrapperObject<Section> section, boolean setOverwrite){
-//		String sectionNum = (String) section.getProperty("sectionnum");
+		String sectionNum = (String)section.getProperty("sectionnum");
 		
 		removeOldInstructorFromSection(section);		
 		
 		assignNewInstructorToSection(instructor, section, setOverwrite);
-//		if(sectionNum.matches("lec*")) assignInstructorToCourse();
+		
+		if(sectionNum.toLowerCase().startsWith("lec")) {
+			assignNewInstructorToCourse(instructor, section);
+		}
 		
 		addSectionToInstructor(instructor, section);
 		
 		return true;
 	}
-	
-	
-//	private static void assignInstructorToCourse() {
-//				
-//	}
 
 	@SuppressWarnings("unchecked")
 	public static List<WrapperObject<Person>> getInstructorList(WrapperObject<Section> section){
@@ -128,12 +126,29 @@ public final class AdminHelper {
 	@SuppressWarnings("unchecked")
 	private static void addSectionToInstructor(
 			WrapperObject<Person> instructor, WrapperObject<Section> section) {
+		String sectionNum = (String)section.getProperty("sectionnum");
+		List<Key> lectureCourses = null;
+		if(sectionNum.toLowerCase().startsWith("lec")) lectureCourses = assignCourseToLecturer(instructor, section);
+		
 		List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>)instructor.getProperty("sections");
+				
 		sections.add(section);
 		
 		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("sections", sections);
+		if(lectureCourses != null)properties.put("lecturecourses", lectureCourses);
 		
 		instructor.editObject(properties);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static List<Key> assignCourseToLecturer(
+			WrapperObject<Person> instructor, WrapperObject<Section> section) {
+		Key courseKey = section.getId().getParent();
+		List<Key> lectureCourses = (List<Key>) instructor.getProperty("lecturecourses");
+		
+		lectureCourses.add(courseKey);
+		
+		return lectureCourses;
 	}
 
 	private static void assignNewInstructorToSection(
@@ -141,13 +156,30 @@ public final class AdminHelper {
 		
 		String instructorFirstName = (String)instructor.getProperty("firstname");
 		String instructorLastName = (String)instructor.getProperty("lastname");
-		
+				
 		Map<String,Object> properties = PropertyHelper.propertyMapBuilder("instructorfirstname", instructorFirstName
 										 								 ,"instructorlastname", instructorLastName
 										 								 ,"instructor", instructor
 										 								 ,"overwriteinstructor", setOverwrite);
 		
+	
+		
 		section.editObject(properties);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void assignNewInstructorToCourse(
+			WrapperObject<Person> instructor, WrapperObject<Section> section) {
+		
+		WrapperObject<Course> course = WrapperObjectFactory.getCourse().findObjectById(section.getId().getParent());
+		
+		List<Key> lectureInstructors = (List<Key>) course.getProperty("lectureinstructors");
+		
+		lectureInstructors.add(instructor.getId());
+		
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("lectureinstructors", lectureInstructors);
+		
+		course.editObject(properties);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -200,19 +232,16 @@ public final class AdminHelper {
 	public static boolean checkSectionConflicts(WrapperObject<Person> instructor,
 			WrapperObject<Section> section) throws ParseException {
 		List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) instructor.getProperty("sections");
-		//1) Check date conflicts
+		
 		String startDate = (String)section.getProperty("startdate");
 		String endDate = (String)section.getProperty("enddate");
-		// A) If conflict, return true
+		
 		if(checkDateConflict(startDate, endDate, sections)) return true;
 
-		// B) else, continue check
-		//2) check day conflicts
 		String days = (String)section.getProperty("days");
-		// A) If conflict, return true
+		
 		if(checkDaysConflict(days, sections)) return true;
-		// B) else, continue check
-		//3) return timeConflicts
+		
 		String startTime = (String)section.getProperty("starttime");
 		String endTime = (String)section.getProperty("endtime");
 		

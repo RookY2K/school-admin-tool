@@ -274,11 +274,9 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#removeObject(java.lang.String)
 	 */
 	@Override
-	public boolean removeObject(String userName) {
+	public boolean removeObject() {
 		DataStore store = DataStore.getDataStore();
 		
-		setPerson(userName);
-	
 		return store.deleteEntity(_person, _person.getId());		
 	}
 
