@@ -13,6 +13,7 @@ import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
+import edu.uwm.owyh.jdo.TAClass;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
 
 public final class AdminHelper {
@@ -22,22 +23,20 @@ public final class AdminHelper {
 	}
 	
 	public static boolean assignInstructor(WrapperObject<Person> instructor, WrapperObject<Section> section, boolean setOverwrite){
-//		String sectionNum = (String) section.getProperty("sectionnum");
+		String sectionNum = (String)section.getProperty("sectionnum");
 		
 		removeOldInstructorFromSection(section);		
 		
 		assignNewInstructorToSection(instructor, section, setOverwrite);
-//		if(sectionNum.matches("lec*")) assignInstructorToCourse();
+		
+		if(sectionNum.toLowerCase().startsWith("lec")) {
+			assignNewInstructorToCourse(instructor, section);
+		}
 		
 		addSectionToInstructor(instructor, section);
 		
 		return true;
 	}
-	
-	
-//	private static void assignInstructorToCourse() {
-//				
-//	}
 
 	@SuppressWarnings("unchecked")
 	public static List<WrapperObject<Person>> getInstructorList(WrapperObject<Section> section){
@@ -64,7 +63,7 @@ public final class AdminHelper {
 		List<WrapperObject<Person>> instructors = getAllInstructors(currentInstructor);
 		
 		for(WrapperObject<Person> instructor : instructors){
-			if(checkSectionConflicts(instructor, section)) continue;
+			if(checkScheduleConflicts(instructor, section)) continue;
 			
 			eligibleInstructors.add(instructor);
 		}
@@ -120,20 +119,51 @@ public final class AdminHelper {
 		WrapperObject<Person> ta = 
 				WrapperObjectFactory.getPerson().findObjectById(taKey);
 		
-		if(checkSectionConflicts(ta, section)) return null;
+		if(checkScheduleConflicts(ta, section)) return null;
+		if(checkTAClassConflicts(ta)) return null;
 		
 		return ta;
 	}
 
 	@SuppressWarnings("unchecked")
+	private static boolean checkTAClassConflicts(WrapperObject<Person> ta) throws ParseException {
+		boolean isConflict = false;
+		List<WrapperObject<TAClass>> taClasses = (List<WrapperObject<TAClass>>) ta.getProperty("taclasses");
+		
+		for(WrapperObject<TAClass> taClass : taClasses){
+			if(isConflict) break;
+			isConflict = checkScheduleConflicts(ta, taClass);
+		}
+		
+		return isConflict;
+	}
+
+	@SuppressWarnings("unchecked")
 	private static void addSectionToInstructor(
 			WrapperObject<Person> instructor, WrapperObject<Section> section) {
+		String sectionNum = (String)section.getProperty("sectionnum");
+		List<Key> lectureCourses = null;
+		if(sectionNum.toLowerCase().startsWith("lec")) lectureCourses = assignCourseToLecturer(instructor, section);
+		
 		List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>)instructor.getProperty("sections");
+				
 		sections.add(section);
 		
 		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("sections", sections);
+		if(lectureCourses != null)properties.put("lecturecourses", lectureCourses);
 		
 		instructor.editObject(properties);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static List<Key> assignCourseToLecturer(
+			WrapperObject<Person> instructor, WrapperObject<Section> section) {
+		Key courseKey = section.getId().getParent();
+		List<Key> lectureCourses = (List<Key>) instructor.getProperty("lecturecourses");
+		
+		lectureCourses.add(courseKey);
+		
+		return lectureCourses;
 	}
 
 	private static void assignNewInstructorToSection(
@@ -141,13 +171,27 @@ public final class AdminHelper {
 		
 		String instructorFirstName = (String)instructor.getProperty("firstname");
 		String instructorLastName = (String)instructor.getProperty("lastname");
-		
+				
 		Map<String,Object> properties = PropertyHelper.propertyMapBuilder("instructorfirstname", instructorFirstName
 										 								 ,"instructorlastname", instructorLastName
 										 								 ,"instructor", instructor
 										 								 ,"overwriteinstructor", setOverwrite);
-		
 		section.editObject(properties);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void assignNewInstructorToCourse(
+			WrapperObject<Person> instructor, WrapperObject<Section> section) {
+		
+		WrapperObject<Course> course = WrapperObjectFactory.getCourse().findObjectById(section.getId().getParent());
+		
+		List<Key> lectureInstructors = (List<Key>) course.getProperty("lectureinstructors");
+		
+		lectureInstructors.add(instructor.getId());
+		
+		Map<String, Object> properties = PropertyHelper.propertyMapBuilder("lectureinstructors", lectureInstructors);
+		
+		course.editObject(properties);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -160,7 +204,7 @@ public final class AdminHelper {
 		if(oldInstructor == null) return;
 		String sectionNum = (String)section.getProperty("sectionnum");
 		List<Key> courses = null;
-		if(sectionNum.matches("lec*")){
+		if(sectionNum.toLowerCase().startsWith("lec")){
 			removeInstructorFromCourse(oldInstructor, section);
 			courses = removeCourseFromInstructor(oldInstructor, section);
 		}
@@ -196,42 +240,56 @@ public final class AdminHelper {
 		course.editObject(properties);
 	}
 
-	@SuppressWarnings("unchecked")
-	public static boolean checkSectionConflicts(WrapperObject<Person> instructor,
-			WrapperObject<Section> section) throws ParseException {
-		List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) instructor.getProperty("sections");
-		//1) Check date conflicts
-		String startDate = (String)section.getProperty("startdate");
-		String endDate = (String)section.getProperty("enddate");
-		// A) If conflict, return true
-		if(checkDateConflict(startDate, endDate, sections)) return true;
-
-		// B) else, continue check
-		//2) check day conflicts
-		String days = (String)section.getProperty("days");
-		// A) If conflict, return true
-		if(checkDaysConflict(days, sections)) return true;
-		// B) else, continue check
-		//3) return timeConflicts
-		String startTime = (String)section.getProperty("starttime");
-		String endTime = (String)section.getProperty("endtime");
+	
+	public static <T> boolean checkScheduleConflicts(WrapperObject<Person> instructor,
+			WrapperObject<T> conflict) throws ParseException {
 		
-		return checkTimeConflict(startTime, endTime, sections);
+		List<WrapperObject<T>> conflicts = getConflictList(conflict, instructor);
+		
+		String startDate = (String)conflict.getProperty("startdate");
+		String endDate = (String)conflict.getProperty("enddate");
+		
+		if(checkDateConflict(startDate, endDate, conflicts)) return true;
+
+		String days = (String)conflict.getProperty("days");
+		
+		if(checkDaysConflict(days, conflicts)) return true;
+		
+		String startTime = (String)conflict.getProperty("starttime");
+		String endTime = (String)conflict.getProperty("endtime");
+		
+		return checkTimeConflict(startTime, endTime, conflicts);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static <T> List<WrapperObject<T>> getConflictList(WrapperObject<T> conflict, WrapperObject<Person> instructor){
+		String kind = conflict.getTable().getSimpleName();
+		
+		switch(kind.toLowerCase()){
+		case "section":
+			return (List<WrapperObject<T>>) instructor.getProperty("sections");
+		case "officehours":
+			return (List<WrapperObject<T>>) instructor.getProperty("officehours");
+		case "taclass":
+			return (List<WrapperObject<T>>) instructor.getProperty("taclasses");
+		default:
+			throw new IllegalArgumentException(kind + " does not have date-time values to check conflicts against!");
+		}
 	}
 
-	private static boolean checkTimeConflict(String startTime, String endTime,
-			List<WrapperObject<Section>> sections) {
+	private static <T> boolean checkTimeConflict(String startTime, String endTime,
+			List<WrapperObject<T>> conflicts) {
 		boolean isConflict = false;
 		double compStart = StringHelper.parseTimeToDouble(startTime);
 		double compEnd = StringHelper.parseTimeToDouble(endTime);
 		
-		for(WrapperObject<Section> section : sections){
+		for(WrapperObject<T> conflict : conflicts){
 			if(isConflict) break;
 			
 			double start = 
-					StringHelper.parseTimeToDouble((String)section.getProperty("starttime"));
+					StringHelper.parseTimeToDouble((String)conflict.getProperty("starttime"));
 			double end =
-					StringHelper.parseTimeToDouble((String)section.getProperty("endtime"));
+					StringHelper.parseTimeToDouble((String)conflict.getProperty("endtime"));
 			
 			isConflict = (start >= compStart && start < compEnd) ||
 					     (end >= compStart && end < compEnd);
@@ -240,14 +298,14 @@ public final class AdminHelper {
 		return isConflict;
 	}
 
-	private static boolean checkDaysConflict(String days,
-			List<WrapperObject<Section>> sections) {
+	private static <T> boolean checkDaysConflict(String days,
+			List<WrapperObject<T>> conflicts) {
 		boolean isConflict = false;
 		char[] aDays = days.toCharArray();
 		
-		for(WrapperObject<Section> section : sections){
+		for(WrapperObject<T> conflict : conflicts){
 			if(isConflict) break;
-			String compDays = (String)section.getProperty("days"); 
+			String compDays = (String)conflict.getProperty("days"); 
 			for(int i=0; i<aDays.length; ++i){
 				isConflict = compDays.indexOf(aDays[i]) > -1;
 				if(isConflict) break;
@@ -256,18 +314,18 @@ public final class AdminHelper {
 		return isConflict;
 	}
 
-	private static boolean checkDateConflict(String startDate, String endDate,
-			List<WrapperObject<Section>> sections) throws ParseException {
+	private static <T> boolean checkDateConflict(String startDate, String endDate,
+			List<WrapperObject<T>> conflicts) throws ParseException {
 		Date compStart = StringHelper.stringToDate(startDate);
 		Date compEnd = StringHelper.stringToDate(endDate);
 		boolean isConflict = false;
 		
-		for(WrapperObject<Section> section : sections){
+		for(WrapperObject<T> conflict : conflicts){
 			if(isConflict)break;
 			Date start =
-					StringHelper.stringToDate((String)section.getProperty("startdate"));
+					StringHelper.stringToDate((String)conflict.getProperty("startdate"));
 			Date end =
-					StringHelper.stringToDate((String)section.getProperty("enddate"));
+					StringHelper.stringToDate((String)conflict.getProperty("enddate"));
 			
 			isConflict = (!compStart.before(start) && !compStart.after(end)) ||
 					     (!compEnd.before(start) && !compEnd.after(end));

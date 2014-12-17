@@ -66,6 +66,8 @@ public class Admin extends HttpServlet {
 			String password = request.getParameter("password");
 			String verifyPassword = request.getParameter("verifypassword");
 			String email = request.getParameter("email");
+			String firstname = request.getParameter("firstname");
+			String lastname = request.getParameter("lastname");
 
 			if (password == null || password.equals("")
 					|| verifyPassword == null)
@@ -76,8 +78,8 @@ public class Admin extends HttpServlet {
 				errors.add("Bad Email input!");
 
 			if (errors.isEmpty()) {
-				properties = PropertyHelper.propertyMapBuilder("firstname", ""
-						,"lastname", ""
+				properties = PropertyHelper.propertyMapBuilder("firstname", firstname
+						,"lastname", lastname
 						,"email", email
 						,"phone", "",
 						"streetaddress", "",
@@ -131,6 +133,8 @@ public class Admin extends HttpServlet {
 			for (String key : properties.keySet())
 				if (properties.get(key) == null)
 					properties.put(key, "");
+			if (properties.get("accesslevel").equals(""))
+				properties.remove("accesslevel");
 			errors = WrapperObjectFactory.getPerson().addObject(
 					request.getParameter("email"), properties);
 
@@ -160,7 +164,7 @@ public class Admin extends HttpServlet {
 					.getAllObjects();
 
 			for (WrapperObject<Course> course : courses)
-				course.removeObject((String) course.getProperty("coursenum"));
+				course.removeObject();
 			
 			Auth.removeSessionVariable(request, "courses");
 			Auth.removeSessionVariable(request, "coursekeys");
@@ -177,8 +181,7 @@ public class Admin extends HttpServlet {
 						.getOfficeHours().findObjects(null, person, null);
 
 				for (WrapperObject<OfficeHours> officeHoursElement : officeHours)
-					officeHoursElement.removeObject((String) person
-							.getProperty("username"));
+					officeHoursElement.removeObject();
 
 				/* Remove all section/course assignments from people. */
 				//Map<String, Object> clearedProperties = PropertyHelper.propertyMapBuilder(

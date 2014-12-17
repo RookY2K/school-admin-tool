@@ -162,7 +162,7 @@ public class UserList extends HttpServlet {
 
 		/* Admin delete a User */
 		if (request.getParameter("deleteuserconfirm") != null) {
-			if (WrapperObjectFactory.getPerson().removeObject(username)) {
+			if (user.removeObject()) {
 				response.sendRedirect(request.getContextPath()
 						+ "/userlist#deleteuser");
 				return;
@@ -196,6 +196,11 @@ public class UserList extends HttpServlet {
 					, "zip", request.getParameter("zip")
 					, "accesslevel", accessLevel
 					);
+			for (String key : properties.keySet())
+				if (properties.get(key) == null)
+					properties.put(key, "");
+			if (properties.get("accesslevel").equals(""))
+				properties.remove("accesslevel");
 			errors = user.editObject(properties);
 
 			request.setAttribute("modifyuser", username);

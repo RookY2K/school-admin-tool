@@ -22,14 +22,13 @@ import edu.uwm.owyh.model.DataStore;
 public class SectionWrapper implements WrapperObject<Section>, Serializable, NonPersistedWrapperObject<Section>{
 
 	public static final String SECTION_NUM_PATTERN = "^((LEC)|(DIS)|(LAB)|(IND)|(SEM)) \\d{3,4}$";
-	public static final String SECTION_DATE_PATTERN = "^((0?[1-9])|(1[0-2]))/((0?[1-9])|([12][0-9])|(3[01]))$";
+	public static final String DATE_PATTERN = "^((0?[1-9])|(1[0-2]))/((0?[1-9])|([12][0-9])|(3[01]))$";
 	private static final long serialVersionUID = -7911639006979553905L;
 
 	private Section _section;
 
 	private SectionWrapper(){
 		//default constructor
-		//		_section = Section.getSection();
 	}
 
 	static WrapperObject<Section> getSectionWrapper(
@@ -42,6 +41,28 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 
 	public static SectionWrapper getSectionWrapper(){
 		return new SectionWrapper();
+	}
+
+	Section getSection() {
+		if(_section == null) _section= Section.getSection();
+	
+		return _section;
+	}
+
+	private Section getSection(String courseNum, String sectionNum) {
+		Key sectionKey = WrapperObjectFactory.generateSectionIdFromSectionAndCourseNum(sectionNum, courseNum);
+		
+		Section section = DataStore.getDataStore().findEntityById(getTable(), sectionKey);
+		
+		if(section == null){
+			section = Section.getSection(sectionNum, courseNum);
+		}
+		
+		return section;
+	}
+
+	private void setSection(String courseNum, String sectionNum) {
+		_section = getSection(courseNum, sectionNum);		
 	}
 
 	/* (non-Javadoc)
@@ -126,23 +147,6 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		return parent.addChildObject(getSection());
 	}
 
-	private void setSection(String courseNum, String sectionNum) {
-		_section = getSection(courseNum, sectionNum);
-		
-	}
-
-	private Section getSection(String courseNum, String sectionNum) {
-		Key sectionKey = WrapperObjectFactory.generateSectionIdFromSectionAndCourseNum(sectionNum, courseNum);
-		
-		Section section = DataStore.getDataStore().findEntityById(getTable(), sectionKey);
-		
-		if(section == null){
-			section = Section.getSection(sectionNum, courseNum);
-		}
-		
-		return section;
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#editObject(java.lang.String, java.util.Map)
 	 */
@@ -185,15 +189,28 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#removeObject(java.lang.String)
 	 */
 	@Override
-	public boolean removeObject(String id) {
+	public boolean removeObject() {
 		Section childJDO = getSection();		
 		if(childJDO.getId() == null) throw new IllegalStateException("Calling object is not a Persisted JDO!");
 
-		Key parentKey = WrapperObjectFactory.generateIdFromCourseNum(id);
+		Key parentKey = childJDO.getId().getParent();
 
 		WrapperObject<Course> parent = WrapperObjectFactory.getCourse().findObjectById(parentKey);
 
 		return parent.removeChildObject(childJDO);
+	}
+
+	@Override
+	public boolean removeObjects(List<WrapperObject<Section>> sections) {
+		List<Section> sectionList = new ArrayList<Section>();
+		
+		for(WrapperObject<Section> sectionWrapper : sections){
+			SectionWrapper section = (SectionWrapper)sectionWrapper;
+			
+			sectionList.add(section.getSection());
+		}
+		
+		return DataStore.getDataStore().deleteAllEntities(sections);
 	}
 
 	/* (non-Javadoc)
@@ -250,9 +267,64 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		throw new UnsupportedOperationException("Section do not have any children entities");
 	}
 
+	@Override
+	public WrapperObject<Section> buildObject(String courseNum, Map<String, Object> properties) throws BuildJDOException {
+		List<String> errors = buildNewSectionWrapper(courseNum, properties);
+		
+		if(!errors.isEmpty()) throw new BuildJDOException(errors);
+		
+		return getSectionWrapper(_section);
+	}
+
+	@Override
+	public boolean saveAllObjects(List<WrapperObject<Section>> objects) {
+		List<Section> sections = new ArrayList<Section>();
+		
+		for(WrapperObject<Section> object : objects){
+			if(!(object instanceof SectionWrapper)) continue;
+			
+			SectionWrapper section = (SectionWrapper)object;
+			
+			sections.add(section.getSection());
+		}
+		
+		return DataStore.getDataStore().insertEntities(sections);
+	}
+
+	@Override
+	public boolean addChild(WrapperObject<?> child) {
+		throw new UnsupportedOperationException("Section do not have any children entities");
+	}
+
+	private List<String> buildNewSectionWrapper(String courseNum, Map<String,Object> properties){
+		List<String> errors = new ArrayList<String>();	
+		
+		try{
+			errors = checkAllProperties(properties);
+		}catch(ParseException pe){
+			throw new IllegalArgumentException(pe.getMessage());
+		}
+	
+		if(!errors.isEmpty()) return errors;
+		
+		String sectionNum = (String)properties.get("sectionnum");
+		
+		Key sectionKey = WrapperObjectFactory.generateSectionIdFromSectionAndCourseNum(sectionNum, courseNum);
+		
+		if(findObjectById(sectionKey) != null){
+			throw new IllegalArgumentException("COMPSCI-" + courseNum + ":" + sectionNum + "- Duplicate Section exists!");
+		}		
+		
+		setSection(courseNum, sectionNum);
+	
+		setAllProperties(properties);
+		
+		return errors;
+	}
+
 	private List<String> checkAllProperties(Map<String, Object> properties) throws ParseException {
 		List<String> errors = new ArrayList<String>();
-
+	
 		String sectionNum = (String) properties.get("sectionnum");
 		Date startDate = StringHelper.stringToDate((String) properties.get("startdate"));
 		Date endDate = StringHelper.stringToDate((String) properties.get("enddate"));
@@ -263,17 +335,17 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 				throw new NullPointerException("Section number is missing!");
 			}
 		}
-
+	
 		if(startDate != null && endDate != null){
 			if(!startDate.before(endDate))
 				errors.add("Start date must be before end date!");				
 		}
-
+	
 		if(startTime != -1 && endTime != -1){
 			if(startTime > endTime)
 				errors.add("Start time must be before end time!");			
 		}		
-
+	
 		for(String key : properties.keySet()){
 			String error = checkProperty(key, properties.get(key));
 			if(!error.trim().isEmpty()){
@@ -281,13 +353,6 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 			}
 		}
 		return errors;
-	}
-	
-	private static String checkString(String key, Object obj){
-		if(!(obj instanceof String)) 
-			throw new IllegalArgumentException(key + " must be of String type!");
-		
-		return (String) obj;
 	}
 
 	private String checkProperty(String key, Object object) {
@@ -302,9 +367,9 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 			break;
 		case "enddate":case "startdate":
 			val = checkString(key,object);
-			if(!val.matches(SECTION_DATE_PATTERN))
+			if(!val.matches(DATE_PATTERN))
 				throw new IllegalArgumentException("Start or end date does not match expected pattern: "
-						+ SECTION_DATE_PATTERN);
+						+ DATE_PATTERN);
 			break;
 		case "starttime":case "endtime":
 			val = checkString(key,object);
@@ -327,90 +392,9 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 				throw new IllegalArgumentException("OverwriteInstructor must be of type Boolean!");
 			break;
 		}
-
-
-		return "";
-	}
-
-	private boolean setAllProperties(Map<String, Object> properties) {
-		if(properties == null) throw new NullPointerException("Properties argument is null!");
-		boolean newInfo = false;
-		for(String propertyKey : properties.keySet()){
-			try{
-				newInfo |= setProperty(propertyKey, properties.get(propertyKey));
-			}catch(ParseException pe){
-				throw new IllegalArgumentException(pe.getMessage());
-			}
-		}
-		
-		return newInfo;
-	}
 	
-	private List<WrapperObject<Section>> getSectionFromList(
-			List<Section> entities) {
-		List<WrapperObject<Section>> officeHours = new ArrayList<WrapperObject<Section>>();
-		for (Section item : entities)
-			officeHours.add(SectionWrapper.getSectionWrapper(item));
-		return officeHours;
-	}
-
-	Section getSection() {
-		if(_section == null) _section= Section.getSection();
-
-		return _section;
-	}
-
-	private boolean setProperty(String propertyKey, Object object) throws ParseException {
-		Object propertyValue = object;
-		double time;
-		Date date;
-		Section section = getSection();
-		
-		if(!checkNewInfo(propertyKey, propertyValue)) return false;
-		
-		switch(propertyKey.toLowerCase()){
-		case "days":
-			section.setDays((String) propertyValue);
-			setDayBooleans((String) propertyValue);
-			break;
-		case "starttime":
-			time = StringHelper.parseTimeToDouble((String) propertyValue);
-			section.setStartTime(time);
-			break;
-		case "endtime":
-			time = StringHelper.parseTimeToDouble((String) propertyValue);
-			section.setEndTime(time);
-			break;
-		case "startdate":
-			date = StringHelper.stringToDate((String) propertyValue);
-			section.setStartDate(date);
-			break;
-		case "enddate":
-			date = StringHelper.stringToDate((String) propertyValue);
-			section.setEndDate(date);
-			break;
-		case "credits":
-			section.setCredits((String) propertyValue);
-			break;
-		case "instructorfirstname":
-			section.setInstructorFirstName((String) propertyValue);
-			break;
-		case "instructorlastname":
-			section.setInstructorLastName((String) propertyValue);
-			break;
-		case "room":
-			section.setRoom((String) propertyValue);
-			break;
-		case "overwriteinstructor":
-			section.setOverwriteInstructor((boolean) propertyValue);
-			break;
-		case "instructor":
-			PersonWrapper instructor = (PersonWrapper) propertyValue;
-			section.setInstructor(instructor.getPerson());
-			break;
-		}
-
-		return true;
+	
+		return "";
 	}
 
 	private boolean checkNewInfo(String propertyKey, Object propertyValue) throws ParseException {
@@ -493,37 +477,119 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 		return isNewInfo;
 	}
 
+	private static String checkString(String key, Object obj){
+		if(!(obj instanceof String)) 
+			throw new IllegalArgumentException(key + " must be of String type!");
+		
+		return (String) obj;
+	}
+
+	private boolean setAllProperties(Map<String, Object> properties) {
+		if(properties == null) throw new NullPointerException("Properties argument is null!");
+		boolean newInfo = false;
+		for(String propertyKey : properties.keySet()){
+			try{
+				newInfo |= setProperty(propertyKey, properties.get(propertyKey));
+			}catch(ParseException pe){
+				throw new IllegalArgumentException(pe.getMessage());
+			}
+		}
+		
+		return newInfo;
+	}
+
+	private boolean setProperty(String propertyKey, Object object) throws ParseException {
+		Object propertyValue = object;
+		double time;
+		Date date;
+		Section section = getSection();
+		
+		if(!checkNewInfo(propertyKey, propertyValue)) return false;
+		
+		switch(propertyKey.toLowerCase()){
+		case "days":
+			section.setDays((String) propertyValue);
+			setDayBooleans((String) propertyValue);
+			break;
+		case "starttime":
+			time = StringHelper.parseTimeToDouble((String) propertyValue);
+			section.setStartTime(time);
+			break;
+		case "endtime":
+			time = StringHelper.parseTimeToDouble((String) propertyValue);
+			section.setEndTime(time);
+			break;
+		case "startdate":
+			date = StringHelper.stringToDate((String) propertyValue);
+			section.setStartDate(date);
+			break;
+		case "enddate":
+			date = StringHelper.stringToDate((String) propertyValue);
+			section.setEndDate(date);
+			break;
+		case "credits":
+			section.setCredits((String) propertyValue);
+			break;
+		case "instructorfirstname":
+			section.setInstructorFirstName((String) propertyValue);
+			break;
+		case "instructorlastname":
+			section.setInstructorLastName((String) propertyValue);
+			break;
+		case "room":
+			section.setRoom((String) propertyValue);
+			break;
+		case "overwriteinstructor":
+			section.setOverwriteInstructor((boolean) propertyValue);
+			break;
+		case "instructor":
+			PersonWrapper instructor = (PersonWrapper) propertyValue;
+			section.setInstructor(instructor.getPerson());
+			break;
+		}
+	
+		return true;
+	}
+
+	private static void resetOnDays(Section section){
+		section.setOnMonday(false);
+		section.setOnTuesday(false);
+		section.setOnWednesday(false);
+		section.setOnThursday(false);
+		section.setOnFriday(false);
+	}
+
 	private void setDayBooleans(String propertyValue) {
-		Section officeHours = getSection();
-		resetOnDays(officeHours);
+		Section section = getSection();
+		resetOnDays(section);
 		for(int i=0; i<propertyValue.length(); ++i){
 			switch(propertyValue.charAt(i)){
 			case 'M':
-				officeHours.setOnMonday(true);
+				section.setOnMonday(true);
 				break;
 			case 'T':
-				officeHours.setOnTuesday(true);
+				section.setOnTuesday(true);
 				break;
 			case 'W':
-				officeHours.setOnWednesday(true);
+				section.setOnWednesday(true);
 				break;
 			case 'R':
-				officeHours.setOnThursday(true);
+				section.setOnThursday(true);
 				break;
 			case 'F':
-				officeHours.setOnFriday(true);
+				section.setOnFriday(true);
 				break;
 			}
 		}
-
+	
 	}
 
-	private static void resetOnDays(Section officeHours){
-		officeHours.setOnMonday(false);
-		officeHours.setOnTuesday(false);
-		officeHours.setOnWednesday(false);
-		officeHours.setOnThursday(false);
-		officeHours.setOnFriday(false);
+	private List<WrapperObject<Section>> getSectionFromList(
+			List<Section> entities) {
+		List<WrapperObject<Section>> sections = new ArrayList<WrapperObject<Section>>();
+		for (Section item : entities)
+			sections.add(SectionWrapper.getSectionWrapper(item));
+		return sections;
 	}
 
 	@Override
@@ -538,79 +604,5 @@ public class SectionWrapper implements WrapperObject<Section>, Serializable, Non
 	@Override 
 	public int hashCode(){
 		return this.getSection().hashCode();
-	}
-
-	@Override
-	public WrapperObject<Section> buildObject(String courseNum, Map<String, Object> properties) throws BuildJDOException {
-		List<String> errors = buildNewSectionWrapper(courseNum, properties);
-		
-		if(!errors.isEmpty()) throw new BuildJDOException(errors);
-		
-		return getSectionWrapper(_section);
-	}
-
-	@Override
-	public boolean saveAllObjects(List<WrapperObject<Section>> objects) {
-		List<Section> sections = new ArrayList<Section>();
-		
-		for(WrapperObject<Section> object : objects){
-			if(!(object instanceof SectionWrapper)) continue;
-			
-			SectionWrapper section = (SectionWrapper)object;
-			
-			sections.add(section.getSection());
-		}
-		
-		return DataStore.getDataStore().insertEntities(sections);
-	}
-
-	@Override
-	public boolean removeObjects(List<WrapperObject<Section>> sections) {
-		List<Section> sectionList = new ArrayList<Section>();
-		
-		for(WrapperObject<Section> sectionWrapper : sections){
-			SectionWrapper section = (SectionWrapper)sectionWrapper;
-			
-			sectionList.add(section.getSection());
-		}
-		
-		return DataStore.getDataStore().deleteAllEntities(sections);
-	}
-
-	private List<String> buildNewSectionWrapper(String courseNum, Map<String,Object> properties){
-		List<String> errors = new ArrayList<String>();	
-		
-		try{
-			errors = checkAllProperties(properties);
-		}catch(ParseException pe){
-			throw new IllegalArgumentException(pe.getMessage());
-		}
-
-		if(!errors.isEmpty()) return errors;
-		
-		String sectionNum = (String)properties.get("sectionnum");
-		
-		Key sectionKey = WrapperObjectFactory.generateSectionIdFromSectionAndCourseNum(sectionNum, courseNum);
-		
-		if(findObjectById(sectionKey) != null){
-			throw new IllegalArgumentException("COMPSCI-" + courseNum + ":" + sectionNum + "- Duplicate Section exists!");
-		}		
-		
-		setSection(courseNum, sectionNum);
-
-		setAllProperties(properties);
-		
-		return errors;
-	}
-
-	@Override
-	public boolean addChild(WrapperObject<?> child) {
-		throw new UnsupportedOperationException("Section do not have any children entities");
-	}
-	
-	public static void main(String[] args){
-		String date1 = "12/20";
-		
-		System.out.println(date1.matches(SECTION_DATE_PATTERN));
 	}
 }

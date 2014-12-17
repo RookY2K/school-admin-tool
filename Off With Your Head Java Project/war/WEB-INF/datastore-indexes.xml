@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <datastore-indexes
-  autoGenerate="true">
+  autoGenerate="true">  
+  <!-- Used 1 time in query history -->
+    <datastore-index kind="OfficeHours" ancestor="true" source="auto">
+        <property name="startTime" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 16 times in query history -->
+    <datastore-index kind="Person" ancestor="true" source="auto">
+        <property name="userName" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 231 times in query history -->
+    <datastore-index kind="Section" ancestor="true" source="auto">
+        <property name="sectionNum" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 5 times in query history -->
+    <datastore-index kind="Person" ancestor="true" source="auto">
+        <property name="accessLevel" direction="asc"/>
+        <property name="userName" direction="asc"/>
+    </datastore-index>
+    
 </datastore-indexes>

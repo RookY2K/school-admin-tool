@@ -80,7 +80,7 @@ public final class StringHelper {
 	public static Date stringToDate(String date) throws ParseException{
 		if(date == null) return null;
 	
-		if(!date.matches(SectionWrapper.SECTION_DATE_PATTERN)) 
+		if(!date.matches(SectionWrapper.DATE_PATTERN)) 
 			throw new IllegalArgumentException("Date does not match pattern: MM/DD");
 		
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");

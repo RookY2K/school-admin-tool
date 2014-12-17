@@ -69,10 +69,9 @@ public interface WrapperObject<E> extends Serializable{
 
 	/**
 	 * Removes calling object from the datastore.
-	 * @param id - The identifying property of the object, if it hs one, else equal to its parent's identifying property.
 	 * @return true if the object was removed
 	 */
-	abstract boolean removeObject(String id);
+	abstract boolean removeObject();
 	
 	abstract boolean removeObjects(List<WrapperObject<E>> objects);
 	

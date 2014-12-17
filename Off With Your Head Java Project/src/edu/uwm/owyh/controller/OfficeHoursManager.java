@@ -150,7 +150,7 @@ public class OfficeHoursManager extends HttpServlet {
 					errors.add("Edit ID error!");
 				} else {
 					if (request.getParameter("deleteofficehour") != null) {
-						if (!officeHours.get(officeHourID).removeObject(email))
+						if (!officeHours.get(officeHourID).removeObject())
 							errors.add("Could not Delete Hours");
 						else
 							messages.add("Office Hours was successfully deleted.");

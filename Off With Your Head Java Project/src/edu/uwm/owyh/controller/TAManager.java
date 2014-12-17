@@ -36,8 +36,10 @@ public class TAManager extends HttpServlet {
 		List<WrapperObject<Person>> taPersonList =  WrapperObjectFactory.getPerson().findObjects(filterTA, null, null);
 		List<Map<String, Object>> taList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> taSkillList = new HashMap<String, Object>();
-		List<String> skillSelectedList = (List<String>) request.getAttribute("skillSelectList");
+		List<String> skillSelectedList = (List<String>) Auth.getSessionVariable(request, "skillSelectList");
 		List<Map<String, Object>>  taFromSelectedCourseList = (List<Map<String, Object>>) request.getAttribute("taFromSelectedCourseList");
+		
+		/* triple for loop get TA list from selected Course */
 		for (WrapperObject<Person> ta : taPersonList) {
 			List<String> skills = (List<String>) ta.getProperty("skills");
 			for (String skill : skills) 
@@ -95,6 +97,7 @@ public class TAManager extends HttpServlet {
 		/* Get TA List based on Selected Course */
 		String courseNumString = (String) request.getParameter("courselist");
 		
+		/* TA Skill Filtering*/
 		if (request.getParameter("skillcount") != null) {
 			List<String> skillSelectList = new ArrayList<String>();
 			int skillSelectCount = Integer.parseInt(request.getParameter("skillcount"));
@@ -102,7 +105,11 @@ public class TAManager extends HttpServlet {
 				if (request.getParameter("skill" + i) != null)
 					skillSelectList.add(request.getParameter("skill" + i));
 			}
-			request.setAttribute("skillSelectList", skillSelectList);
+			Auth.setSessionVariable(request, "skillSelectList", skillSelectList);
+		}
+		
+		if (request.getParameter("skillclear") != null) {
+			Auth.removeSessionVariable(request, "skillSelectList");
 		}
 		
 		if (courseNumString != null) {
@@ -118,8 +125,9 @@ public class TAManager extends HttpServlet {
 					taKeyList = (List<Key>) selectedCourse.getProperty("eligibletakeys");
 				}
 				
-				if (request.getParameter("addTAtoCourse") != null && request.getParameter("taEmail") != null) {
-					String email = (String) request.getParameter("taEmail");
+				/* Add a TA to a Course */
+				String email = (String) request.getParameter("taEmail");
+				if (request.getParameter("addTAtoCourse") != null) {
 					List<WrapperObject<Person>> taFindList = WrapperObjectFactory.getPerson().findObjects("toUpperUserName == '" + email.toUpperCase() + "'" , null, null);
 					if (taFindList != null && !taFindList.isEmpty()) {
 						taKeyList.add(taFindList.get(0).getId());
@@ -132,6 +140,28 @@ public class TAManager extends HttpServlet {
 						errors.add("Could not find TA to add to Course!");
 					}
 				}
+				
+				/* Remove a TA from a Couse */
+				if (request.getParameter("removeTAfromCourse") != null) {
+					List<WrapperObject<Person>> taFindList = WrapperObjectFactory.getPerson().findObjects("toUpperUserName == '" + email.toUpperCase() + "'" , null, null);
+					if (taFindList != null && !taFindList.isEmpty()) {
+						for (int i = 0; i < taKeyList.size();) {
+							if (taKeyList.get(i).equals(taFindList.get(0).getId()))
+								taKeyList.remove(i);
+							else
+								i++;
+						}
+						
+						Map<String, Object> properties = PropertyHelper.propertyMapBuilder("eligibletakeys", taKeyList);
+						errors =selectedCourse.editObject(properties);
+						if (errors.isEmpty())
+							messages.add("TA was removed to Course!");
+					}
+					else {
+						errors.add("Could not find TA to remove from Course!");
+					}
+				}
+				
 				for (Key key : taKeyList) {
 					WrapperObject<Person> ta = WrapperObjectFactory.getPerson().findObjectById(key);
 					taFromSelectedCourseList.add(PropertyHelper.makeUserProperties(ta));

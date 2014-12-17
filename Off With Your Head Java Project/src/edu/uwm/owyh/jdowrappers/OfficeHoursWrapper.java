@@ -156,11 +156,11 @@ public class OfficeHoursWrapper implements WrapperObject<OfficeHours>, Serializa
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#removeObject(java.lang.String)
 	 */
 	@Override
-	public boolean removeObject(String id) {
+	public boolean removeObject() {
 		OfficeHours childJDO = getOfficeHours();		
 		if(childJDO.getId() == null) throw new IllegalStateException("Calling object is not a Persisted JDO!");
 	
-		Key parentKey = WrapperObjectFactory.generateIdFromUserName(id);
+		Key parentKey = childJDO.getId().getParent();
 	
 		WrapperObject<Person> parent = WrapperObjectFactory.getPerson().findObjectById(parentKey);
 	

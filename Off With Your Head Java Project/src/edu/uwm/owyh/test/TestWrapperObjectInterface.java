@@ -103,7 +103,7 @@ public class TestWrapperObjectInterface {
 		List<?> search = datastore.findEntities(user.getTable(), null, null, null);
 		assertFalse("User Was Not Saved!", (search.size() == 0));
 
-		user.removeObject("admin@uwm.edu");
+		user.removeObject();
 		search = datastore.findEntities(user.getTable(), null, null, null);
 		assertTrue("User Was Not Removed", (search.size() == 0));	
 	}

@@ -52,6 +52,11 @@ public class Person implements Serializable,Cloneable{
 	@Order(extensions = @Extension(vendorName="datanucleus",key="list-ordering", value="startTime asc"))
 	private List<OfficeHours> officeHours;
 	
+	@Persistent(mappedBy = "parent")
+	@Element(dependent = "true")
+	@Order(extensions = @Extension(vendorName="datanucleus",key="list-ordering", value="startDate asc, startTime asc"))
+	private List<TAClass> taClasses;
+	
 	@Persistent
 	private String userName;
 	
@@ -92,6 +97,7 @@ public class Person implements Serializable,Cloneable{
 		
 		/* Create an empty array list */
 		officeHours = new ArrayList<OfficeHours>();
+		taClasses = new ArrayList<TAClass>();
 		lectureCourses = new ArrayList<Key>();
 		contactInfo = ContactInfo.getContactInfo();
 	}
@@ -192,6 +198,10 @@ public class Person implements Serializable,Cloneable{
 	public List<OfficeHours> getOfficeHours()
 	{
 		return officeHours;
+	}
+	
+	public List<TAClass> getTAClasses(){
+		return taClasses;
 	}
 	
 	/**
@@ -316,6 +326,22 @@ public class Person implements Serializable,Cloneable{
 			throw new NullPointerException("officeHours cannot be null!");
 		
 		return this.officeHours.remove(officeHours);
+	}
+	
+	public void addTAClass(TAClass taClass){
+		if(taClass == null)
+			throw new NullPointerException("taClass cannot be null!");
+		if(getTAClasses().contains(taClass))
+			throw new IllegalArgumentException("Duplicate TAClass entry");
+		this.getTAClasses().add(taClass);
+	}
+	
+	public boolean removeTAClass(TAClass taClass){
+		if(taClass == null){
+			throw new NullPointerException("taClass cannot be null!");
+		}
+		
+		return this.getTAClasses().remove(taClass);
 	}
 
 	private void setUserName(String userName) {

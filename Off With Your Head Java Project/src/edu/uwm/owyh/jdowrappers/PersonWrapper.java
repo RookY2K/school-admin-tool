@@ -15,6 +15,7 @@ import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
+import edu.uwm.owyh.jdo.TAClass;
 import edu.uwm.owyh.model.DataStore;
 
 /**
@@ -274,11 +275,9 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#removeObject(java.lang.String)
 	 */
 	@Override
-	public boolean removeObject(String userName) {
+	public boolean removeObject() {
 		DataStore store = DataStore.getDataStore();
 		
-		setPerson(userName);
-	
 		return store.deleteEntity(_person, _person.getId());		
 	}
 
@@ -312,24 +311,30 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 	 * @see edu.uwm.owyh.jdowrappers.WrapperObject#addChildObject(java.lang.Object)
 	 */
 	@Override
-	public List<String> addChildObject(Object ChildJDO) throws UnsupportedOperationException {
-		String kind = ChildJDO.getClass().getSimpleName();
+	public List<String> addChildObject(Object childJDO) throws UnsupportedOperationException {
+		String kind = childJDO.getClass().getSimpleName();
 		List<String> errors = new ArrayList<String>();
 		switch(kind.toLowerCase()){
 		case "officehours":
-			if(getPerson().getOfficeHours().contains(ChildJDO)){
+			if(getPerson().getOfficeHours().contains(childJDO)){
 				errors.add("Duplicate office hours!");
 			}else{
-				getPerson().addOfficeHours((OfficeHours) ChildJDO);
+				getPerson().addOfficeHours((OfficeHours) childJDO);
 			}
 			break;			
 		case "contactinfo":
 			if(getPerson().getContactInfo() != null){
 				throw new IllegalStateException("ContactInfo child jdo already exists!");
 			}else{
-				getPerson().setContactInfo((ContactInfo) ChildJDO);
+				getPerson().setContactInfo((ContactInfo) childJDO);
 			}
 			break;
+		case "taclass":
+			if(getPerson().getTAClasses().contains(childJDO)){
+				errors.add("Duplicate Class Info!");
+			}else{
+				getPerson().addTAClass((TAClass) childJDO);
+			}
 		default: 
 			throw new IllegalArgumentException("Person jdo does not have " + kind + " as a child jdo!");
 		}
@@ -354,6 +359,8 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 		case "contactinfo":
 			_person.setContactInfo(null);
 			return true;
+		case "taclass":
+			return getPerson().removeTAClass((TAClass)childJDO);
 		default:
 			return false;
 		}
