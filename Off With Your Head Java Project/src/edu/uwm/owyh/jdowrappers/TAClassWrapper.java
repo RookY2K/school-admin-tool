@@ -6,7 +6,6 @@ package edu.uwm.owyh.jdowrappers;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +14,7 @@ import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
-import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.Person;
-import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.jdo.TAClass;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
 import edu.uwm.owyh.library.StringHelper;
