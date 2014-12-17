@@ -1,4 +1,5 @@
 <%@ page import="edu.uwm.owyh.interfaces.WrapperObject"%>
+<%@ page import="edu.uwm.owyh.factories.WrapperObjectFactory"%>
 <%@ page import="edu.uwm.owyh.model.Auth" %>
 <%@ page import="edu.uwm.owyh.jdo.Person" %>
 <%@ page import="edu.uwm.owyh.jdo.Course" %>
@@ -31,7 +32,7 @@ List<String> messages =  (List<String>) request.getAttribute("messages");
 Map<Integer, WrapperObject<Course>> courses = (Map<Integer, WrapperObject<Course>>)Auth.getSessionVariable(request, "courses");
 List<Integer> courseKeyList = (List<Integer>) Auth.getSessionVariable(request, "coursekeys");
 Integer selectedCourseNumber = (Integer) request.getAttribute("selectedCourseNumber");
-List<String> skillSelectList = (List<String>) request.getAttribute("skillSelectList");
+List<String> skillSelectList = (List<String>) Auth.getSessionVariable(request, "skillSelectList");
 %>
 
 <% if (errors != null) { %>
@@ -90,7 +91,10 @@ There is currently no skills listed for any TA. You should go to <a href="/userl
 <% } %>					
 	<input type="submit" class="submit" value="Filter TA"/>  &nbsp; 
 </form>
-<form action="/admin/tamanager" method="get" style="display:inline"><input type="submit" class="submit" value="Clear Filter"/></form>
+<form action="/admin/tamanager" method="post" style="display:inline">
+	<input type="hidden" name="skillclear" />
+	<input type="submit" class="submit" value="Clear Filter"/>	
+</form>
 
 <ul class="message">
 	<li>Checking no skills will select every skills, same as checking every skills.</li>
@@ -130,10 +134,26 @@ for (Map<String, Object> ta : taFromSelectedCourseList) {
 		<td class="cell"><%=ta.get("firstname") %></td>
 		<td class="cell"><%=ta.get("email") %></td>
 		<td class="cell"><%=skills %></td>
-		<td class="cell"></td>
-		<td class="cell"></td>
 		<td class="cell">
-		<input type="submit" name="submit" class="submit" value="Remove" /><br /><br />
+		<% List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) ta.get("sections");
+			if ( sections  != null) {
+				for (WrapperObject<Section> section : sections) { %>
+					<%=section.getProperty("days") %>
+					<%=section.getProperty("starttime") %>
+					<%=section.getProperty("endtime") %>
+					<br />
+				<% }
+		} %>
+		</td>
+		<td class="cell">
+		</td>
+		<td class="cell">
+		<form action="/admin/tamanager" method="post">
+			<input type="hidden" name="removeTAfromCourse" value="<%=selectedCourseNumber %>" />
+			<input type="hidden" name="taEmail" value="<%=ta.get("email") %>" />
+			<input type="hidden" name="courselist" value="<%=selectedCourseNumber %>" />
+			<input type="submit" name="submit" class="submit" value="Remove From" />
+		</form><br />
 		<input type="submit" name="submit" class="submit" value="Edit SKills" />
 		</td>
 	</tr>
@@ -174,7 +194,17 @@ for (Map<String, Object> ta : taList) {
 		<td class="cell"><%=ta.get("firstname") %></td>
 		<td class="cell"><%=ta.get("email") %></td>
 		<td class="cell"><%=skills %></td>
-		<td class="cell"></td>
+		<td class="cell">
+		<% List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) ta.get("sections");
+			if (sections  != null) {
+				for (WrapperObject<Section> section : sections) { %>
+					<%=section.getProperty("days") %>
+					<%=section.getProperty("starttime") %>
+					<%=section.getProperty("endtime") %>
+					<br />
+				<% }
+		} %>
+		</td>
 		<td class="cell"></td>
 		<td class="cell">
 			<% if (selectedCourseNumber != null && selectedCourseNumber != -72) { %>

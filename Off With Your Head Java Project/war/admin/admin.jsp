@@ -26,7 +26,7 @@
 	<a href="#addcontactinformation">
 		<div class="admin-tab">
 			<div class="admin-tab-box" style="background-image:url('/images/contactinfo.png');"></div>
-			<p>Add Contact<br />Information</p>
+			<p>Add Contact Information</p>
 		</div>
 	</a>
 	
@@ -46,6 +46,36 @@
 	
 	<br class="clear" />
 	
+	<a href="#close">
+		<div class="admin-tab">
+			<div class="admin-tab-box"></div>
+			<p>Email All User Reminder To Update Profile</p>
+		</div>
+	</a>
+	
+	<a href="#close">
+		<div class="admin-tab">
+			<div class="admin-tab-box"></div>
+			<p>Email Instructor Reminder to assign TA to Labs for courses they are instructing</p>
+		</div>
+	</a>
+	
+	<a href="#close">
+		<div class="admin-tab">
+			<div class="admin-tab-box"></div>
+			<p>Do SOmething</p>
+		</div>
+	</a>
+	
+	<a href="#close">
+		<div class="admin-tab">
+			<div class="admin-tab-box"></div>
+			<p>Do SOmething</p>
+		</div>
+	</a>
+	
+	<br class="clear" />
+	
 </div>
 
 <!--
@@ -59,6 +89,14 @@ Start of CSS Pop Up
 		<form action="/admin#addnewuserconfirm" method="post">
 			<input type="hidden" name="addnewuser" value="addnewuser" />
 			<table>
+				<tr>
+					<td class="user-label">First Name:</td>
+		      		<td class="cell" colspan="3"><input type = "text" name="firstname" value="" required/></td>
+				</tr>
+				<tr>
+					<td class="user-label">Last Name:</td>
+					<td class="user-data" colspan="3"><input type = "text" name="lastname" value="" required/></td>
+				</tr>
 				<tr>
 					<td class="user-label">Email:</td>
 					<td class="user-data"><input type="text" name="email" value="" placeholder="someone@uwm.edu" pattern="^\w+@uwm.edu$" required /></td>
@@ -87,7 +125,10 @@ Start of CSS Pop Up
 				</tr>
 			</table>
 		</form>
-		<ul class="message"><li class="list-message">Email must be an UWM email in the format "someone@uwm.edu"</li></ul>
+		<ul class="message">
+			<li class="list-message">All Fields are required to add a new user account.</li>
+			<li class="list-message">Email must be an UWM email in the format "someone@uwm.edu"</li>
+		</ul>
         <a href="#close" title="Close" class="unselectable">Close</a>
     </div>
 </aside>
@@ -99,23 +140,23 @@ Start of CSS Pop Up
 			<table>
 			<tr>
 				<td class="cell">First Name:</td>
-	      		<td class="cell" colspan="3"><input type = "text" name="firstname" id="firstname" value="" required/></td>
+	      		<td class="cell" colspan="3"><input type = "text" name="firstname" value="" required/></td>
 			</tr>
 			<tr>
 				<td class="cell">Last Name:</td>
-				<td class="cell" colspan="3"><input type = "text" name="lastname" id="lastname" value="" required/></td>
+				<td class="cell" colspan="3"><input type = "text" name="lastname" value="" required/></td>
 			</tr>
 			<tr>
 				<td class="cell">Email:</td>
-				<td class="cell" colspan="3"><input type = "email" name="email" id="email" placeholder="somename@uwm.edu" value="" pattern="^\w+@uwm.edu$" required /></td>
+				<td class="cell" colspan="3"><input type = "email" name="email" placeholder="somename@uwm.edu" value="" pattern="^\w+@uwm.edu$" required /></td>
 			</tr>
 			<tr>
 				<td class="cell">Street Address:</td>
-				<td class="cell" colspan="3"><input type = "text" name="streetaddress" id="streetaddress" value="" /></td>
+				<td class="cell" colspan="3"><input type = "text" name="streetaddress" value="" /></td>
 			</tr>
 			<tr>
 				<td class="cell">City:</td>
-				<td class="cell"><input type = "text" name="city" id="city" value="" /></td>
+				<td class="cell"><input type = "text" name="city" value="" /></td>
 				<td class="cell" style="padding-left:10px;">State:</td>
 				<td class="cell">
 						<jsp:include page="/WEB-INF/templates/stateselect.jsp">
@@ -125,11 +166,11 @@ Start of CSS Pop Up
 			</tr>
 			<tr>
 				<td class="cell">Zip Code:</td>
-				<td class="cell" colspan="3"><input type = "text" name="zip" id="zip" value="" /></td>	
+				<td class="cell" colspan="3"><input type = "text" name="zip" value="" /></td>	
 			</tr>
 			<tr>
 				<td class="cell">Phone Number:</td>
-				<td class="cell" colspan="3"><input type = "text" name="phone" id="phone" value="" /></td>
+				<td class="cell" colspan="3"><input type = "text" name="phone" value="" /></td>
 			</tr>
 			<tr>
 				<td class="cell">Role:</td>
@@ -185,6 +226,14 @@ Start of CSS Pop Up
 			<input type="hidden" name="addnewuser" value="addnewuser" />
 			<table>
 				<tr>
+					<td class="user-label">First Name:</td>
+		      		<td class="cell" colspan="3"><input type = "text" name="firstname" value="" required/></td>
+				</tr>
+				<tr>
+					<td class="user-label">Last Name:</td>
+					<td class="user-data" colspan="3"><input type = "text" name="lastname" value="" required/></td>
+				</tr>
+				<tr>
 					<td class="user-label">Email:</td>
 					<td class="user-data"><input type="text" name="email" value="" placeholder="someone@uwm.edu" required /></td>
 				</tr>
@@ -212,7 +261,10 @@ Start of CSS Pop Up
 				</tr>
 			</table>
 		</form>
-		<ul class="message"><li class="list-message">Email must be an UWM email in the format "someone@uwm.edu"</li></ul>
+		<ul class="message">
+			<li class="list-message">All Fields are required to add a new user account.</li>
+			<li class="list-message">Email must be an UWM email in the format "someone@uwm.edu"</li>
+		</ul>
         <a href="#close" title="Close" class="unselectable">Close</a>
     </div>
 </aside>
@@ -245,23 +297,23 @@ Start of CSS Pop Up
 			<table>
 			<tr>
 				<td class="cell">First Name:</td>
-				<td class="cell" colspan="3"><input type = "text" name="firstname" id="firstname" value="<% if (user != null) out.print(user.get("firstname")); %>" required/></td>
+				<td class="cell" colspan="3"><input type = "text" name="firstname" value="<% if (user != null) out.print(user.get("firstname")); %>" required/></td>
 			</tr>
 			<tr>
 				<td class="cell">Last Name:</td>
-				<td class="cell" colspan="3"><input type = "text" name="lastname" id="lastname" value="<% if (user != null) out.print(user.get("lastname")); %>" required/></td>
+				<td class="cell" colspan="3"><input type = "text" name="lastname"  value="<% if (user != null) out.print(user.get("lastname")); %>" required/></td>
 			</tr>
 			<tr>
 				<td class="cell">Email:</td>
-				<td class="cell" colspan="3"><input type = "email" name="email" id="email" placeholder="somename@uwm.edu" value="<% if (user != null) out.print(user.get("email")); %>" pattern="^\w+@uwm.edu$" required /></td>
+				<td class="cell" colspan="3"><input type = "email" name="email" placeholder="somename@uwm.edu" value="<% if (user != null) out.print(user.get("email")); %>" pattern="^\w+@uwm.edu$" required /></td>
 			</tr>
 			<tr>
 				<td class="cell">Street Address:</td>
-				<td class="cell" colspan="3"><input type = "text" name="streetaddress" id="streetaddress" value="<% if (user != null) out.print(user.get("streetaddress")); %>" /></td>
+				<td class="cell" colspan="3"><input type = "text" name="streetaddress" value="<% if (user != null) out.print(user.get("streetaddress")); %>" /></td>
 			</tr>
 			<tr>
 				<td class="cell">City:</td>
-				<td class="cell"><input type = "text" name="city" id="city" value="<% if (user != null) out.print(user.get("city")); %>" /></td>
+				<td class="cell"><input type = "text" name="city" value="<% if (user != null) out.print(user.get("city")); %>" /></td>
 				<td class="cell" style="padding-left:10px;">State:</td>
 				<td class="cell">
 						<jsp:include page="/WEB-INF/templates/stateselect.jsp">
@@ -271,11 +323,11 @@ Start of CSS Pop Up
 			</tr>
 			<tr>
 				<td class="cell">Zip Code:</td>
-				<td class="cell" colspan="3"><input type = "text" name="zip" id="zip" value="<% if (user != null) out.print(user.get("zip")); %>" /></td>	
+				<td class="cell" colspan="3"><input type = "text" name="zip" value="<% if (user != null) out.print(user.get("zip")); %>" /></td>	
 			</tr>
 			<tr>
 				<td class="cell">Phone Number:</td>
-				<td class="cell" colspan="3"><input type = "text" name="phone" id="phone" value="<% if (user != null) out.print(user.get("phone")); %>" /></td>
+				<td class="cell" colspan="3"><input type = "text" name="phone" value="<% if (user != null) out.print(user.get("phone")); %>" /></td>
 			</tr>
 			<tr>
 				<td class="cell">Role:</td>

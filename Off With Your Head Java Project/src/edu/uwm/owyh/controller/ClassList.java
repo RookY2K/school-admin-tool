@@ -12,15 +12,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.datastore.Key;
-
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
-import edu.uwm.owyh.library.PropertyHelper;
+import edu.uwm.owyh.library.AdminHelper;
 import edu.uwm.owyh.model.Auth;
 
 @SuppressWarnings("serial")
@@ -81,6 +79,9 @@ public class ClassList extends HttpServlet{
 		
 		if(!auth.verifyUser(response)) return;
 		
+		List<String> errors = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
+		
 		Map<Integer, WrapperObject<Course>> courses = (Map<Integer, WrapperObject<Course>>) Auth.getSessionVariable(request, "courses");
 		int courseNum = Integer.parseInt(request.getParameter("courselist"));
 		
@@ -95,16 +96,25 @@ public class ClassList extends HttpServlet{
 			sectionNumber = sectionNumber.substring(4);
 			List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) WrapperObjectFactory.getSection().findObjects("sectionNum == '" + sectionNumber + "'", selectedCourse, null);			
 
+			// Make sure section was actually correct
 			if (sections.size() == 1) {
 				WrapperObject<Section> section = sections.get(0);
+				
+				/* Change Section's Insructor */
 				if (request.getParameter("editsection") != null) {
-					Map<String, Object> properties = 
-							PropertyHelper.propertyMapBuilder("instructorfirstname",request.getParameter("firstname")
-							  ,"instructorlastname",request.getParameter("lastname")
-							  ,"overwritenames",request.getParameter("email")
-				             );
-					section.editObject(properties);
+					String nameInfo = request.getParameter("changeinstructor");
+					if (nameInfo == null) 
+						errors.add("Error on Input Data for Instructor");
+					else {
+						List<WrapperObject<Person>> addingPerson = WrapperObjectFactory.getPerson().findObjects("toUpperUserName == '" + nameInfo.toUpperCase() + "'", null, null);
 					
+						if (addingPerson == null || addingPerson.size() != 1) {
+							errors.add("Could not find Instructor to Add to Section");
+						}
+						else {
+							AdminHelper.assignInstructor(addingPerson.get(0), section, false);
+						}
+					}
 				}
 				
 				request.setAttribute("editsection", section);
@@ -117,16 +127,14 @@ public class ClassList extends HttpServlet{
 					editSectionUsers =  WrapperObjectFactory.getPerson().findObjects(filterUser, null, null);
 				}
 				else if (self.getProperty("accesslevel") == AccessLevel.INSTRUCTOR) { 
-					List<Key> editSectionTA = (List<Key>) selectedCourse.getProperty("eligibletakeys");
-					editSectionUsers = new ArrayList<WrapperObject<Person>>();
-					for (Key key : editSectionTA) {
-						editSectionUsers.add(WrapperObjectFactory.getPerson().findObjectById(key));
-					}
+					editSectionUsers = AdminHelper.getInstructorList(section);
 				}			
 				request.setAttribute("editsectionusers", editSectionUsers);
 			}
 		}
 		
+		request.setAttribute("editsectionerrors", errors);
+		request.setAttribute("editsectionmessages", messages);
 		request.getRequestDispatcher(request.getContextPath() + "/classlist.jsp").forward(request, response);		 
 	}
 
