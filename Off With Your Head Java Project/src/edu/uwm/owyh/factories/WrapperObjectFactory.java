@@ -14,6 +14,7 @@ import edu.uwm.owyh.jdowrappers.OfficeHoursWrapper;
 import edu.uwm.owyh.jdowrappers.PersonWrapper;
 import edu.uwm.owyh.jdowrappers.SectionWrapper;
 import edu.uwm.owyh.jdowrappers.CourseWrapper;
+import edu.uwm.owyh.jdowrappers.TAClassWrapper;
 
 /**
  * Factories for instantiation of WrapperObjects.
@@ -59,9 +60,13 @@ public class WrapperObjectFactory {
 	public static WrapperObject<Section> getSection() {
 		return SectionWrapper.getSectionWrapper();
 	}
+	
+	public static WrapperObject<TAClass> getTAClass(){
+		return TAClassWrapper.getTAClassWrapper();
+	}
 
 	/**
-	 * <pre>Utility method to build a Person JDO primary key from the inputted userName. Will
+	 * <pre>Utility method to build a Person JDO primary key from the inputed userName. Will
 	 * always return a Key, even if the Person does not exist in the Datastore. </pre>
 	 * @param userName - uwm email address
 	 * @return Key - Person JDO primary key
