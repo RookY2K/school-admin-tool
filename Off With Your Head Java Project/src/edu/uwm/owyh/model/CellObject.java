@@ -1,6 +1,12 @@
 package edu.uwm.owyh.model;
 import edu.uwm.owyh.library.StringHelper;
 
+/**
+ * 
+ * @author Mitchell
+ *
+ */
+
 public class CellObject{
 	UserScheduleElement element;
 	String cellType;
@@ -15,16 +21,28 @@ public class CellObject{
 		rowSpan = Double.toString(rowS * 2);
 	}
 	
+	/**
+	 * 
+	 * @return the title
+	 */
 	public String getTitle()
 	{
 		return element.getTitle();
 	}
 	
+	/**
+	 * 
+	 * @return the room
+	 */
 	public String getRoom()
 	{
 		return element.getRoom();
 	}
 	
+	/**
+	 * 
+	 * @return the hours
+	 */
 	public String getHours()
 	{
 		String hours;
@@ -35,21 +53,38 @@ public class CellObject{
 		return hours;
 	}
 	
+	/**
+	 * 
+	 * @return the type
+	 */
 	public String getType()
 	{
 		return cellType;
 	}
 	
+	/**
+	 * 
+	 * @return the spanType
+	 */
 	public String getSpanType()
 	{
 		return spanType;
 	}
 	
+	/**
+	 * 
+	 * @return the rowSpan
+	 */
 	public String getRowSpan()
 	{
 		return rowSpan;
 	}
 	
+	/**
+	 * Utility method to configure array using correct rowSpans from CellObjects.
+	 * @param array
+	 * @return A new array with correct elements in each index.
+	 */
 	public CellObject[][] configure(CellObject[][] array)
 	{
 		CellObject[][] newArray = array.clone();

@@ -86,7 +86,7 @@ public class Index extends HttpServlet {
 							length = StringHelper.parseTimeToDouble(endTime) - StringHelper.parseTimeToDouble(startTime);
 							if((Math.round(length) - length) < 0.5) length = Math.round(length);
 							else length = Math.floor(length + .25) + 0.5;
-							//(Math.floor(length) != length)
+
 							UserScheduleElement element = new UserScheduleElement(days, startTime, endTime, room, "Office Hours");
 							CellObject cell = new CellObject(element, "officehours", "office-hour", length);
 							int count = 0;

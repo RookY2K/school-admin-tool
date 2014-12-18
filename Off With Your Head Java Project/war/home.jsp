@@ -360,8 +360,9 @@ if (self == null) { out.print("No Correct Attribute Was Passed Into JSP!"); retu
 				</tr>
 			</table>
 			<p>
-				<span class="class-key">*Classes</span> <br />
-				<span class="office-key">*Office Hours</span> 
+				<span class="class-key">*Classes Taught</span> <br />
+				<span class="office-key">*Office Hours</span> <br />
+				<span class="course-key">*Classes Taken</span> <br /> 
 			</p>
 		</div>
 	

@@ -75,6 +75,11 @@ td.hours {
 	color: #6f649e;
 }
 
+.course-key {
+	font-weight: bold;
+	color: #ff0000;	
+}
+
 a:visited {
 	color: #000;
 	text-decoration: none;
@@ -104,7 +109,7 @@ a:link {
 }
 
 .taclass{
-	color: #66984b;
+	color: #ff0000;
 	border-style: solid;
 	border-top-width: 1px;
 	border-bottom-width: 2px;
