@@ -84,8 +84,9 @@ public class Index extends HttpServlet {
 							endTime = (String) hours.getProperty("endtime");
 							room = (String) self.getProperty("officeroom");
 							length = StringHelper.parseTimeToDouble(endTime) - StringHelper.parseTimeToDouble(startTime);
-							if(Math.floor(length) != length) length = Math.floor(length + .25) + 0.5;
-							
+							if((Math.round(length) - length) < 0.5) length = Math.round(length);
+							else length = Math.floor(length + .25) + 0.5;
+							//(Math.floor(length) != length)
 							UserScheduleElement element = new UserScheduleElement(days, startTime, endTime, room, "Office Hours");
 							CellObject cell = new CellObject(element, "officehours", "office-hour", length);
 							int count = 0;
@@ -139,7 +140,8 @@ public class Index extends HttpServlet {
 							room = (String) course.getProperty("room");
 							title = (String) course.getProperty("sectionNum");
 							length = StringHelper.parseTimeToDouble(endTime) - StringHelper.parseTimeToDouble(startTime);				
-							if(Math.floor(length) != length) length = Math.floor(length + .25) + 0.5;
+							if((Math.round(length) - length) < 0.5) length = Math.round(length);
+							else length = Math.floor(length + .25) + 0.5;
 			
 							UserScheduleElement element = new UserScheduleElement(days, startTime, endTime, room, title);
 							CellObject cell = new CellObject(element, "section", "class-hour", length);							
@@ -194,7 +196,8 @@ public class Index extends HttpServlet {
 							room = (String) classes.getProperty("classNum");
 							title = (String) classes.getProperty("className");
 							length = StringHelper.parseTimeToDouble(endTime) - StringHelper.parseTimeToDouble(startTime);
-							if(Math.floor(length) != length) length = Math.floor(length + .25) + 0.5;
+							if((Math.round(length) - length) < 0.5) length = Math.round(length);
+							else length = Math.floor(length + .25) + 0.5;
 							
 							UserScheduleElement element = new UserScheduleElement(days, startTime, endTime, room, title);
 							CellObject cell = new CellObject(element, "section", "class-hour", length);							
