@@ -22,7 +22,12 @@ public final class AdminHelper {
 		// prevents instantiation
 	}
 	
-//	public static boolean assignPerson
+	public static boolean assignPersonToScrapedSection(WrapperObject<Course> course){
+		
+		
+		
+		return false;
+	}
 	
 	public static boolean assignInstructor(WrapperObject<Person> instructor, WrapperObject<Section> section, boolean setOverwrite){
 		String sectionNum = (String)section.getProperty("sectionnum");
