@@ -128,7 +128,7 @@ public class TAClass implements Serializable {
 	/**
 	 * @return the classNum
 	 */
-	public String getClassNum() {
+	public String getTAClassNum() {
 		return classNum;
 	}
 	
@@ -136,7 +136,7 @@ public class TAClass implements Serializable {
 	/**
 	 * @return the classType
 	 */
-	public String getClassType() {
+	public String getTAClassType() {
 		return classType;
 	}
 
@@ -144,7 +144,7 @@ public class TAClass implements Serializable {
 	/**
 	 * @return the className
 	 */
-	public String getClassName() {
+	public String getTAClassName() {
 		return className;
 	}
 
