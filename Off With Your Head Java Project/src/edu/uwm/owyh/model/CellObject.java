@@ -25,10 +25,22 @@ public class CellObject{
 		rowSpan = Double.toString(rowS * 2);
 	}
 	
+	/**
+	 * 
+	 * @return a new CellObject with empty fields.
+	 */
 	public static CellObject getCellObject(){
 		return new CellObject();
 	}
 	
+	/**
+	 * 
+	 * @param e
+	 * @param type
+	 * @param span
+	 * @param rowS
+	 * @return a new CellObject with given params.
+	 */
 	public static CellObject getCellObject(UserScheduleElement e, String type, String span, double rowS){
 		return new CellObject(e, type, span, rowS);
 	}

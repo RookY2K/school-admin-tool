@@ -29,7 +29,11 @@ public final class CalendarHelper {
 		
 	}
 
-	
+	/**
+	 * 
+	 * @param user
+	 * @return a CellObject array.
+	 */
 	@SuppressWarnings("unchecked")
 	public static CellObject[][] getCellObjectArray(WrapperObject<Person> user){
 		List<WrapperObject<OfficeHours>> officeHours = (List<WrapperObject<OfficeHours>>) user.getProperty("officehours");
@@ -48,6 +52,10 @@ public final class CalendarHelper {
 	}
 	
 	
+	/**
+	 * 
+	 * @param aSchedule
+	 */
 	private static void initializeSchedule(CellObject[][] aSchedule){
 		int width = aSchedule.length;
 		int height = aSchedule[0].length;
@@ -60,6 +68,12 @@ public final class CalendarHelper {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param aSchedule
+	 * @param scheduleObjects
+	 * @param user
+	 */
 	private static <E> void fillSchedule(CellObject[][] aSchedule,
 			List<WrapperObject<E>> scheduleObjects, WrapperObject<Person> user) {
 		
@@ -99,6 +113,12 @@ public final class CalendarHelper {
 	}
 
 
+	/**
+	 * 
+	 * @param scheduleObject
+	 * @param user
+	 * @return the room.
+	 */
 	private static <T> String getRoom(WrapperObject<T> scheduleObject, WrapperObject<Person> user) {
 		String type = scheduleObject.getTable().getSimpleName();
 		String room = "";
@@ -117,7 +137,11 @@ public final class CalendarHelper {
 		return room;
 	}
 
-
+	/**
+	 * 
+	 * @param type
+	 * @return the span class type.
+	 */
 	private static String getSpan(String type) {
 		String span = "";
 		
@@ -133,7 +157,11 @@ public final class CalendarHelper {
 		return span;
 	}
 
-
+	/**
+	 * 
+	 * @param scheduleObject
+	 * @return the Title
+	 */
 	private static <T> String getTitle(WrapperObject<T> scheduleObject) {
 		String type = scheduleObject.getTable().getSimpleName();
 		String title = "";
@@ -153,6 +181,11 @@ public final class CalendarHelper {
 	}
 
 
+	/**
+	 * 
+	 * @param k
+	 * @return the Day according to param k.
+	 */
 	private static String getDay(int k) {
 		String day = "";
 		switch(k){
@@ -177,6 +210,11 @@ public final class CalendarHelper {
 	}
 
 
+	/**
+	 * 
+	 * @param l
+	 * @return the correct rounded length
+	 */
 	private static double roundLength(double l)
 	{
 		double length = l;
