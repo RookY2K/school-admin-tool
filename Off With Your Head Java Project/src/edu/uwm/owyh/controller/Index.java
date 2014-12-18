@@ -139,9 +139,11 @@ public class Index extends HttpServlet {
 							endTime = (String) course.getProperty("endtime");
 							room = (String) course.getProperty("room");
 							title = (String) course.getProperty("sectionNum");
-							length = StringHelper.parseTimeToDouble(endTime) - StringHelper.parseTimeToDouble(startTime);				
-							if((Math.round(length) - length) < 0.5) length = Math.round(length);
-							else length = Math.floor(length + .25) + 0.5;
+							length = StringHelper.parseTimeToDouble(endTime) - StringHelper.parseTimeToDouble(startTime);
+							double decimalPortion = length % 1;
+							
+							if(decimalPortion > 0.5) length = Math.floor(length + .5);
+							else if (decimalPortion > 0.0) length = Math.floor(length) + .5;
 			
 							UserScheduleElement element = new UserScheduleElement(days, startTime, endTime, room, title);
 							CellObject cell = new CellObject(element, "section", "class-hour", length);							
