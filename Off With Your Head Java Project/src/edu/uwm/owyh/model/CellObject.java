@@ -13,12 +13,24 @@ public class CellObject{
 	String spanType;
 	String rowSpan;
 	
-	public CellObject(UserScheduleElement e, String type, String span, double rowS)
+	private CellObject(){
+		//default constructor
+	}
+	
+	private CellObject(UserScheduleElement e, String type, String span, double rowS)
 	{
 		element = e;
 		cellType = type;
 		spanType = span;
 		rowSpan = Double.toString(rowS * 2);
+	}
+	
+	public static CellObject getCellObject(){
+		return new CellObject();
+	}
+	
+	public static CellObject getCellObject(UserScheduleElement e, String type, String span, double rowS){
+		return new CellObject(e, type, span, rowS);
 	}
 	
 	/**
@@ -85,7 +97,7 @@ public class CellObject{
 	 * @param array
 	 * @return A new array with correct elements in each index.
 	 */
-	public CellObject[][] configure(CellObject[][] array)
+	public static CellObject[][] configure(CellObject[][] array)
 	{
 		CellObject[][] newArray = array.clone();
 		for(int i = 0; i < 5; i++)
