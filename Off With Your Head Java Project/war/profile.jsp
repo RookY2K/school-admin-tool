@@ -237,5 +237,5 @@
 		</form>
     </div>
 </aside>
-        
+<jsp:include page="/WEB-INF/templates/Calendar.jsp"/>        
 <jsp:include page="/WEB-INF/templates/footer.jsp" />

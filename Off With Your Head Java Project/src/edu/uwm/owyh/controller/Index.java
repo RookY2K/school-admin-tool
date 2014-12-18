@@ -54,7 +54,6 @@ public class Index extends HttpServlet {
 				Key myId = WrapperObjectFactory.generateIdFromUserName((String) self.getProperty("username"));
 				self = WrapperObjectFactory.getPerson().findObjectById(myId);
 				
-				UserSchedule schedule = new UserSchedule();
 				List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(null, self, null);
 				List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) self.getProperty("sections");
 				List<WrapperObject<TAClass>> taClasses = (List<WrapperObject<TAClass>>) self.getProperty("taclasses");
@@ -244,7 +243,6 @@ public class Index extends HttpServlet {
 				CellObject dummy = new CellObject(blankElement, "blank", "blank", 0.5);
 				CellObject[][] newArray = dummy.configure(array);
 				
-				request.setAttribute("userschedule", schedule);
 				request.setAttribute("array", newArray);
 				request.setAttribute("self", PropertyHelper.makeUserProperties(self));
 				request.getRequestDispatcher(request.getContextPath() + "/home.jsp").forward(request, response);	
