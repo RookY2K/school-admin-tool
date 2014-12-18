@@ -8,6 +8,7 @@ import java.util.Map;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
+import edu.uwm.owyh.jdo.TAClass;
 
 public final class PropertyHelper {
 
@@ -82,6 +83,7 @@ public final class PropertyHelper {
 	                                       ,"officeroom", user.getProperty("officeroom")
 	                                       ,"skills", user.getProperty("skills")
 	                                       ,"sections", user.getProperty("sections")
+	                                       ,"taclasses", user.getProperty("taclasses")
 	                                       );
 		for(String key : properties.keySet())
 			if(properties.get(key) == null) properties.put(key, "");
@@ -109,6 +111,25 @@ public final class PropertyHelper {
 		return officeHours;
 	}
 	
+	/**
+	 * Utility Method to build a person's Property map. 
+	 * @param user - WrapperObject<OfficeHours> object
+	 * @return A map of properties.
+	 */
+	public static List<Map<String, Object>> makeTAClassProperties(List<WrapperObject<TAClass>> taClasses) {
+		if (taClasses == null) return null;
+		List<Map<String, Object>> taClassList = new ArrayList<Map<String, Object>>();
+		for (WrapperObject<TAClass> taClass : taClasses) {
+			Map<String, Object> properties =
+					propertyMapBuilder("starttime", taClass.getProperty("starttime")
+	                                           ,"endtime", taClass.getProperty("endtime")
+	                                           ,"days", taClass.getProperty("days")
+	                                           );
+			for(String key : properties.keySet())
+				if(properties.get(key) == null) properties.put(key, "");
+			taClassList.add(properties);
+		}
+		return taClassList;
+	}
 	
-
 }

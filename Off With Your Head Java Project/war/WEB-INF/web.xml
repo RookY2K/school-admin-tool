@@ -125,6 +125,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>TAClassSchedule</servlet-name>
+		<servlet-class>edu.uwm.owyh.controller.TAClassSchedule</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TAClassSchedule</servlet-name>
+		<url-pattern>/taclass</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
 		<servlet-name>EmailAdmin</servlet-name>
 		<servlet-class>edu.uwm.owyh.controller.EmailAdmin</servlet-class>
 	</servlet>
