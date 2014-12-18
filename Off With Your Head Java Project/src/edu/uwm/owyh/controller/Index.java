@@ -168,7 +168,7 @@ public class Index extends HttpServlet {
 
 				}
 				
-				/*if (taClasses.size() != 0)
+				if (taClasses.size() != 0)
 				{
 					String days;
 					String startTime;
@@ -194,7 +194,7 @@ public class Index extends HttpServlet {
 							room = (String) classes.getProperty("classNum");
 							title = (String) classes.getProperty("className");
 							length = StringHelper.parseTimeToDouble(endTime) - StringHelper.parseTimeToDouble(startTime);
-							length = Math.floor(length + .25) + 0.5;
+							if(Math.floor(length) != length) length = Math.floor(length + .25) + 0.5;
 							
 							UserScheduleElement element = new UserScheduleElement(days, startTime, endTime, room, title);
 							CellObject cell = new CellObject(element, "section", "class-hour", length);							
@@ -222,7 +222,7 @@ public class Index extends HttpServlet {
 						}
 					}	
 
-				}*/
+				}
 				
 				else if(officeHours.size() == 0 && sections.size() == 0 && taClasses.size() == 0)
 				{

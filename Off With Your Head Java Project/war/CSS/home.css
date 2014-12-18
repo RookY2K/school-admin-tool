@@ -104,6 +104,7 @@ a:link {
 }
 
 .taclass{
+	color: #66984b;
 	border-style: solid;
 	border-top-width: 1px;
 	border-bottom-width: 2px;
@@ -116,6 +117,7 @@ a:link {
 }
 
 .section{
+	color: #66984b;
 	border-style: solid;
 	border-top-width: 1px;
 	border-bottom-width: 2px;
