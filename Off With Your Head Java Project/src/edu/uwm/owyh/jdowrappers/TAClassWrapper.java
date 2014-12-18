@@ -33,7 +33,6 @@ public class TAClassWrapper implements WrapperObject<TAClass>, Serializable {
 
 	
 	private TAClassWrapper() {
-		//default constructor
 	}
 	
 	static TAClassWrapper getTAClassWrapper(TAClass taClass){
@@ -80,15 +79,16 @@ public class TAClassWrapper implements WrapperObject<TAClass>, Serializable {
 
 	@Override
 	public Object getProperty(String propertyKey) {
-		if(propertyKey == null) return null;
+		if(propertyKey == null)
+			return new NullPointerException("Property Key for getProperty cannot be null!");
 		
 		switch(propertyKey.toLowerCase()){
 		case "classnum":
-			return getTAClass().getClassNum();
+			return getTAClass().getTAClassNum();
 		case "classname":
-			return getTAClass().getClassName();
+			return getTAClass().getTAClassName();
 		case "classtype":
-			return getTAClass().getClassType();
+			return getTAClass().getTAClassType();
 		case "days":
 			return getTAClass().getDays();
 		case "startdate":
@@ -264,13 +264,13 @@ public class TAClassWrapper implements WrapperObject<TAClass>, Serializable {
 		double startTime = StringHelper.parseTimeToDouble((String) properties.get("starttime"));
 		double endTime = StringHelper.parseTimeToDouble((String)properties.get("endtime"));
 		if(taClassNum == null){
-			if(getTAClass() == null || getTAClass().getClassNum() == null){
+			if(getTAClass() == null || getTAClass().getTAClassNum() == null){
 				throw new NullPointerException("Class number is missing for addObject operation!");
 			}
 		}
 		
 		if(taClassType == null){
-			if(getTAClass() == null || getTAClass().getClassType() == null){
+			if(getTAClass() == null || getTAClass().getTAClassType() == null){
 				throw new NullPointerException("Class type is missing for addObject operation!");
 			}
 		}
@@ -436,7 +436,7 @@ public class TAClassWrapper implements WrapperObject<TAClass>, Serializable {
 		
 		switch(propertyKey.toLowerCase()){
 		case "classname":
-			String className = taClass.getClassName();
+			String className = taClass.getTAClassName();
 			if(className != null){
 				isNewInfo = !className.equalsIgnoreCase((String) propertyValue);
 			}
