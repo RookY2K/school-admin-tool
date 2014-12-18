@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="edu.uwm.owyh.model.UserSchedule"%>
+<%@ page import="edu.uwm.owyh.model.UserScheduleElement"%>
+<%@ page import="edu.uwm.owyh.model.CellObject"%>
 
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-</head>
-<body>
+
+<%CellObject[][] array = (CellObject[][]) request.getAttribute("array");
+CellObject cell; %>
 		<div id="calender">
 			<table id="schedule">
 				<tr>
@@ -333,8 +335,8 @@
 				</tr>
 			</table>
 			<p>
-				<span class="class-key">*Classes</span> <br />
-				<span class="office-key">*Office Hours</span> 
+				<span class="class-key">*Classes Taught</span> <br />
+				<span class="office-key">*Office Hours</span> <br />
+				<span class="course-key">*Classes Taken</span> <br /> 
 			</p>
 		</div>
-</body>

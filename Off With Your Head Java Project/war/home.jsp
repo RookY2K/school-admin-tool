@@ -20,10 +20,8 @@
 </jsp:include>
 
 <% Map<String, Object> self = (Map<String, Object>)request.getAttribute("self");
-UserSchedule schedule = (UserSchedule) request.getAttribute("userschedule");
 CellObject[][] array = (CellObject[][]) request.getAttribute("array");
 CellObject cell;
-int count = 0;
 if (self == null) { out.print("No Correct Attribute Was Passed Into JSP!"); return; }
 %>
 	
