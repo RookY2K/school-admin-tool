@@ -75,6 +75,7 @@ public class TAClassSchedule extends HttpServlet {
 				String sectionNumType= (String) section.getProperty("sectionnum");
 				String classtype = sectionNumType.substring(0, sectionNumType.indexOf(" "));
 				String classnum = "COMPSCI " + selectedCourse.getProperty("coursenum");
+				String days = (String) section.getProperty("days");
 				
 				Map<String, Object> properties = PropertyHelper.propertyMapBuilder(
 						"days", section.getProperty("days")
@@ -89,11 +90,22 @@ public class TAClassSchedule extends HttpServlet {
 				for (String key : properties.keySet())
 					if (properties.get(key) == null)
 						properties.put(key, "");
-							
-				errors = WrapperObjectFactory.getTAClass().addObject((String)self.getProperty("username"), properties);
-				if (errors.isEmpty()) {
-					messages.add("New class was added to schedule.");
+				
+				List<WrapperObject<TAClass>> taClassList = (List<WrapperObject<TAClass>>) self.getProperty("taclasses");
+				for (WrapperObject<TAClass> taClass : taClassList) {
+					String taClassNum = (String) taClass.getProperty("classnum");
+					String taClassType = (String) taClass.getProperty("classtype");
+					String taClassDay = (String) taClass.getProperty("classtype");
+					if (taClassNum.equalsIgnoreCase(classnum) && taClassType.equalsIgnoreCase(classtype)) {
+						errors.add("You already have this class in your schedule and you can only take one Lecuture and Lab per Course.");
+					}
+						
 				}
+				if (errors.isEmpty())
+					errors = WrapperObjectFactory.getTAClass().addObject((String)self.getProperty("username"), properties);
+				if (errors.isEmpty())
+					messages.add("New class was added to schedule.");
+
 			}
 			else
 				errors.add("Could not find section to add");

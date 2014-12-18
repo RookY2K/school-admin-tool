@@ -121,9 +121,14 @@ public final class PropertyHelper {
 		List<Map<String, Object>> taClassList = new ArrayList<Map<String, Object>>();
 		for (WrapperObject<TAClass> taClass : taClasses) {
 			Map<String, Object> properties =
-					propertyMapBuilder("starttime", taClass.getProperty("starttime")
-	                                           ,"endtime", taClass.getProperty("endtime")
-	                                           ,"days", taClass.getProperty("days")
+					propertyMapBuilder("classnum", taClass.getProperty("classnum")
+												,"classname", taClass.getProperty("classname")
+												,"classtype", taClass.getProperty("classtype")
+												,"days", taClass.getProperty("days")
+												,"startdate", taClass.getProperty("startdate")
+												,"enddate", taClass.getProperty("enddate")
+												,"starttime", taClass.getProperty("starttime")
+												,"endtime", taClass.getProperty("endtime")
 	                                           );
 			for(String key : properties.keySet())
 				if(properties.get(key) == null) properties.put(key, "");
@@ -131,5 +136,4 @@ public final class PropertyHelper {
 		}
 		return taClassList;
 	}
-	
 }

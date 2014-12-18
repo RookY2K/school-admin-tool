@@ -342,6 +342,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 			}else{
 				getPerson().addTAClass((TAClass) childJDO);
 			}
+			break;
 		default: 
 			throw new IllegalArgumentException("Person jdo does not have " + kind + " as a child jdo!");
 		}

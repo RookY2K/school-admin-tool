@@ -66,7 +66,7 @@ Integer selectedCourseNumber = (Integer) request.getAttribute("selectedCourseNum
 	 		<tr>  
 		 		<td>Class Number:</td>
 		 		<td colspan="2"><input type="text" name="classnum1" value="" pattern="^[a-zA-Z]+"  size="5" title="At least one letter, must contain no numbers." required /> 
-		 		<input type="text" name="classnum2" value="" pattern="[0-9]{3}"  size="5" title="3 digit or 4 digit number" required /></td>
+		 		<input type="text" name="classnum2" value="" pattern="[0-9]{3,4}"  size="5" title="3 digit or 4 digit number" required /></td>
 	 		</tr>	
 	 		<tr>  
 		 		<td>Class Type:</td>
@@ -172,7 +172,7 @@ Integer selectedCourseNumber = (Integer) request.getAttribute("selectedCourseNum
 
 	</div>
 
-	<div style="float:right;width:35%;">
+	<div style="float:right;width:38%;">
 		<div class="officehour-tab"  style="min-height:220px; height:100%">
 			<p><strong>My Class Schedule</strong></p>
 			<table class="officehour-table">
@@ -187,7 +187,7 @@ Integer selectedCourseNumber = (Integer) request.getAttribute("selectedCourseNum
 				<% } %>				
 				<% for (Map<String, Object> taclass : taclasses) { %>
 				<tr>
-					<td><%=taclass.get("classname") %> <%=taclass.get("classnum") %></td>
+					<td><%=taclass.get("classnum") %></td>
 					<td><%=taclass.get("days") %></td>
 					<td><%=taclass.get("starttime") %> - <%=taclass.get("endtime") %></td>
 				</tr>
