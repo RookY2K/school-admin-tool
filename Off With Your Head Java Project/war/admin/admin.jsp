@@ -46,28 +46,28 @@
 	
 	<br class="clear" />
 	
-	<a href="#close">
+	<a href="#emailupdateprofile">
 		<div class="admin-tab">
 			<div class="admin-tab-box" style="background-image:url('/images/emailreminderprofile.png');"></div>
 			<p>Email All User Reminder To Update Profile</p>
 		</div>
 	</a>
 	
-	<a href="#close">
+	<a href="#emailtalabs">
 		<div class="admin-tab">
 			<div class="admin-tab-box" style="background-image:url('/images/emailreminderlabs.png');"></div>
 			<p>Email Instructor Reminder to assign TA to Labs for courses they are instructing</p>
 		</div>
 	</a>
 	
-	<a href="#close">
+	<a href="#emailtaschedule">
 		<div class="admin-tab">
 			<div class="admin-tab-box" style="background-image:url('/images/emailremindertaclasses.png');"></div>
 			<p>Email All TA Reminder to Fill Out There Class Schedule</p>
 		</div>
 	</a>
 	
-	<a href="#close">
+	<a href="#emailofficehour">
 		<div class="admin-tab">
 			<div class="admin-tab-box" style="background-image:url('/images/emailreminderofficehours.png');"></div>
 			<p>Email All User Reminder To Update Office Information</p>
@@ -402,6 +402,72 @@ Start of CSS Pop Up
        <a href="#close" title="Close" class="unselectable">Close</a>
     </div>
 </aside>
+
+<aside id="emailupdateprofile" class="modal">
+    <div>
+        <p><strong>Email All User Reminder To Update Profile</strong></p>
+		<ul class="message">
+			<li>This will mass email all users and ask them to update there Profile.</li>
+		</ul>
+		<form action="/admin#emailsent" method="post">
+			<p><input type="checkbox" name="agreetotrigger" required /> I Agree</p>
+			<p><input type="submit" class="submit" name="emailupdateprofile" value="Email Users" /></p>
+		</form>
+       <a href="#close" title="Close" class="unselectable">Close</a>
+    </div>
+</aside>
+
+<aside id="emailtalabs" class="modal">
+    <div>
+        <p><strong>Email Instructor Reminder to assign TA to Labs for courses they are instructing</strong></p>
+		<ul class="message">
+			<li>This will mass email all Instructor and ask them to add TA to the labs for the course they are instructing.</li>
+		</ul>
+		<form action="/admin#emailsent" method="post">
+			<p><input type="checkbox" name="agreetotrigger" required /> I Agree</p>
+			<p><input type="submit" class="submit" name="emailtalabs" value="Email Users" /></p>
+		</form>
+       <a href="#close" title="Close" class="unselectable">Close</a>
+    </div>
+</aside>
+
+<aside id="emailtaschedule" class="modal">
+    <div>
+        <p><strong>Email All TA Reminder to Fill Out Their Class Schedule</strong></p>
+		<ul class="message">
+			<li>This will mass email all TA and ask fill out their class schedule.</li>
+		</ul>
+		<form action="/admin#emailsent" method="post">
+			<p><input type="checkbox" name="agreetotrigger" required /> I Agree</p>
+			<p><input type="submit" class="submit" name="emailtaschedule" value="Email Users" /></p>
+		</form>
+       <a href="#close" title="Close" class="unselectable">Close</a>
+    </div>
+</aside>
+
+<aside id="emailofficehour" class="modal">
+    <div>
+        <p><strong>Email All User Reminder To Update Office Information</strong></p>
+		<ul class="message">
+			<li>This will mass email all users and ask them to update there office hours.</li>
+		</ul>
+		<form action="/admin#emailsent" method="post">
+			<p><input type="checkbox" name="agreetotrigger" required /> I Agree</p>
+			<p><input type="submit" class="submit" name="emailofficehour" value="Email Users" /></p>
+		</form>
+       <a href="#close" title="Close" class="unselectable">Close</a>
+    </div>
+</aside>
+<aside id="emailsent" class="modal">
+    <div>
+        <p><strong>Email</strong></p>
+		<ul class="message">
+			<li class="good-message">Your Email has been sent.</li>
+		</ul>
+       <a href="#close" title="Close" class="unselectable">Close</a>
+    </div>
+</aside>
+
 <!--
 **************************
 End of CSS Pop Up
