@@ -193,6 +193,13 @@ Integer selectedCourseNumber = (Integer) request.getAttribute("selectedCourseNum
 				</tr>
 				
 				<% } %>
+				<% if (!taclasses.isEmpty()) { %>
+				<tr><td><br />
+					<form action="/taclass#removeclass" method="post">
+						<input type="submit" class="submit" value="Remove Class" />
+					</form>
+				</td></tr>
+				<% } %>	
 			</table>
 		</div>
 	</div>
@@ -288,10 +295,28 @@ Integer selectedCourseNumber = (Integer) request.getAttribute("selectedCourseNum
 <%
 	}
 %>	
-	
-	
 	<br class="clear" />
 	
 </div>
+
+<!-- CSS Modal Start Here -->
+
+<aside id="removeclass" class="modal">
+    <div>
+		<a href="#close" title="Close" class="unselectable">Close</a>
+		<p><strong>Remove A Class From Your Schedule</strong></p>
+		<form action="/taclass#close" method="post">
+			<input type="hidden" name="removeClass" value="removeClass" />
+			<select name="removeClassName" required>
+				<option value="">Select a Class...</option>
+				<% for (Map<String, Object> taclass : taclasses) { %>
+				<option value="<%=taclass.get("classnum") %> <%=taclass.get("classtype") %>"><%=taclass.get("classnum") %> : <%=taclass.get("days") %> : <%=taclass.get("starttime") %> - <%=taclass.get("endtime") %>
+				</option>
+				<% } %>
+			</select>
+			<input type="submit" class="submit" value="Confirm"/>
+		</form>
+    </div>
+</aside>
 
 <jsp:include page="/WEB-INF/templates/footer.jsp" />
