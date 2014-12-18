@@ -6,8 +6,14 @@
 <%@ page import="edu.uwm.owyh.model.CellObject"%>
 
 
-<%CellObject[][] array = (CellObject[][]) request.getAttribute("array");
-CellObject cell; %>
+<%
+String role = request.getParameter("role");
+if(!role.equalsIgnoreCase("admin")){
+	CellObject[][] array = (CellObject[][]) request.getAttribute("array");
+	CellObject cell; 
+
+
+%>
 		<div id="calender">
 			<table id="schedule">
 				<tr>
@@ -340,3 +346,6 @@ CellObject cell; %>
 				<span class="course-key">*Classes Taken</span> <br /> 
 			</p>
 		</div>
+<%
+}
+%>

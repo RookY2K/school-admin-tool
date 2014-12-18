@@ -72,7 +72,9 @@
 			</tr>
 		</table>
 		<br /><ul class="message"><li>Contact information is private and only viewable by you and the Administrators.</li></ul>
-	<jsp:include page="/WEB-INF/templates/Calendar.jsp"/>
+	<jsp:include page="/WEB-INF/templates/Calendar.jsp">
+		<jsp:param name="role" value='<%=self.get("accesslevel") %>'/>
+	</jsp:include>
 	</div>
 
 	<div style="float:right;width:35%;">

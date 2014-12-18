@@ -141,7 +141,9 @@ public final class DataStore{
 		if(_service.isClosed()) getDataStore();
 		try{
 			E result = _service.getObjectById(cls, id);
-			boolean isDeleted = JDOHelper.getObjectState(result).equals(ObjectState.PERSISTENT_DELETED);
+			ObjectState state = JDOHelper.getObjectState(result);
+			boolean isDeleted = state.equals(ObjectState.PERSISTENT_DELETED)
+					||state.equals(ObjectState.PERSISTENT_NEW_DELETED);
 			if(isDeleted) result = null;
 			return result;
 		}catch(JDOObjectNotFoundException nfe){
