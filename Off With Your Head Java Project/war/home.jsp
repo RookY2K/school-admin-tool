@@ -30,7 +30,9 @@ if (self == null) { out.print("No Correct Attribute Was Passed Into JSP!"); retu
 				<a href="print.html" target="_blank">Print Schedule</a>
 			</div>
 		</div>
-			<jsp:include page="/WEB-INF/templates/Calendar.jsp"/>
+			<jsp:include page="/WEB-INF/templates/Calendar.jsp">
+				<jsp:param name="role" value='<%=self.get("accesslevel") %>'/>
+			</jsp:include>
 	<br />
 
 	</div>

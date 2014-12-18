@@ -219,7 +219,9 @@
 				</tr>
 			</table>
 			<div id = "scrollModal">
-			<jsp:include page="/WEB-INF/templates/Calendar.jsp"/>	
+			<jsp:include page="/WEB-INF/templates/Calendar.jsp">
+				<jsp:param name="role" value='<%=modifyUser.get("accesslevel") %>'/>
+			</jsp:include>
 			</div>
 			
 		<a href="#close" title="Close"  class="unselectable">Close</a>
