@@ -19,8 +19,10 @@ import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
+import edu.uwm.owyh.library.CalendarHelper;
 import edu.uwm.owyh.library.PropertyHelper;
 import edu.uwm.owyh.model.Auth;
+import edu.uwm.owyh.model.CellObject;
 import edu.uwm.owyh.model.Email;
 
 @SuppressWarnings("serial")
@@ -109,6 +111,8 @@ public class UserList extends HttpServlet {
 					if (userSkillString.endsWith(", "))
 						userSkillString = userSkillString.substring(0, userSkillString.length() - 2);
 				}
+				CellObject[][] newArray = CalendarHelper.getCellObjectArray(user);
+				request.setAttribute("array", newArray);
 				request.setAttribute("skills", userSkillString);
 			}
 		}
@@ -135,7 +139,7 @@ public class UserList extends HttpServlet {
 			doGet(request, response);
 			return;
 		}
-
+		
 		/* Only Admin can Edit Users, and go beyond this point */
 		if (!auth.verifyAdmin(response))
 			return;
@@ -159,7 +163,7 @@ public class UserList extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "/userlist");
 			return;
 		}
-
+		
 		/* Admin delete a User */
 		if (request.getParameter("deleteuserconfirm") != null) {
 			if (user.removeObject()) {

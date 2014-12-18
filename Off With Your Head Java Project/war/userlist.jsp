@@ -7,6 +7,7 @@
     <jsp:param name="title" value="User List" />
     <jsp:param name="stylesheet" value="main.css" />
     <jsp:param name="stylesheet" value="userlist.css" />
+    <jsp:param name="stylesheet" value="calendar.css"/>
 </jsp:include>
 
 <jsp:include page="/WEB-INF/templates/navagation.jsp" />
@@ -216,7 +217,11 @@
 				   </td>
 				   <% } %>
 				</tr>
-			</table>	
+			</table>
+			<div id = "scrollModal">
+			<jsp:include page="/WEB-INF/templates/Calendar.jsp"/>	
+			</div>
+			
 		<a href="#close" title="Close"  class="unselectable">Close</a>
     </div>
 </aside>

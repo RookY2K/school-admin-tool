@@ -7,6 +7,7 @@
     <jsp:param name="title" value="Profile Manager" />
     <jsp:param name="stylesheet" value="main.css" />
     <jsp:param name="stylesheet" value="officehour.css" />
+    <jsp:param name="stylesheet" value="calendar.css"/>
 </jsp:include>
 
 <jsp:include page="/WEB-INF/templates/navagation.jsp" />
@@ -71,6 +72,7 @@
 			</tr>
 		</table>
 		<br /><ul class="message"><li>Contact information is private and only viewable by you and the Administrators.</li></ul>
+	<jsp:include page="/WEB-INF/templates/Calendar.jsp"/>
 	</div>
 
 	<div style="float:right;width:35%;">

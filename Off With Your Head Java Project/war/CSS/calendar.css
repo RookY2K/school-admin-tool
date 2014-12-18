@@ -1,11 +1,3 @@
-#welcome{
-	font-family: helvetica; 
-	margin-left: 10px;
-	background-color: #fff;
-	padding: 2px;
-	font-size:0.8em;
-}
-
 #calender {
 	margin: 0px;
 	font-family: helvetica; 
@@ -43,11 +35,6 @@ td.hours {
 	font-size:0.9em;
 }
 
-.large-title {
-	font-size: 1.4em;
-	font-weight: bold;
-}
-
 .office-hour {
 	font-weight: bold;
 	color: #6f649e;
@@ -77,11 +64,6 @@ td.hours {
 .course-key {
 	font-weight: bold;
 	color: #ff0000;	
-}
-
-a:visited {
-	color: #000;
-	text-decoration: none;
 }
 
 a:link {
