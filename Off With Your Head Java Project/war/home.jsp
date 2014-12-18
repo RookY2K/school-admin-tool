@@ -299,7 +299,7 @@ if (self == null) { out.print("No Correct Attribute Was Passed Into JSP!"); retu
 					<td class="time" rowspan = "2">8:00 PM</td>	
 					<%for(int i = 0; i < 5; i++)
 						{%>
-							<%cell = array[i][24];
+							<% cell = array[i][24];
 							if(cell != null)
 							{%>							
 								<td class = "<%=cell.getType()%>" rowspan = "<%=cell.getRowSpan()%>"><span><%=cell.getTitle()%> <br> <%=cell.getHours()%> <br> <%=cell.getRoom()%></span></td>
@@ -318,14 +318,14 @@ if (self == null) { out.print("No Correct Attribute Was Passed Into JSP!"); retu
 				</tr>				
 				<tr>
 					<td class="time" rowspan = "2">9:00 PM</td>
-					<%for(int i = 0; i < 5; i++)
-						{%>
-							<%cell = array[i][26];
+					<% for(int i = 0; i < 5; i++)
+						{ %>
+							<% cell = array[i][26];
 							if(cell != null)
-							{%>							
+							{ %>							
 								<td class = "<%=cell.getType()%>" rowspan = "<%=cell.getRowSpan()%>"><span><%=cell.getTitle()%> <br> <%=cell.getHours()%> <br> <%=cell.getRoom()%></span></td>
 							<%}
-						}%>
+						} %>
 				</tr>
 				<tr>
 					<%for(int i = 0; i < 5; i++)

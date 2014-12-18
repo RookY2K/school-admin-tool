@@ -18,6 +18,7 @@
     border-collapse: seperated;
 	background-color: #d1d1d1;
 	text-align: center;
+	
 }
 
 td.days  { 
@@ -41,30 +42,6 @@ td.time {
 td.hours {
 	background-color: #fff;
 	font-size:0.9em;
-}
-
-td.hours-background {
-	border-style: solid;
-	border-top-width: 1px;
-	border-bottom-width: 2px;
-	border-left-width: 1px;
-	border-right-width: 2px;
-	border-top-color: rgb(255,255,255);
-	border-bottom-color: rgb(128,128,128);
-	border-left-color: rgb(255,255,255);
-	border-right-color: rgb(128,128,128);
-}
-
-td.office-background {
-	border-style: solid;
-	border-top-width: 1px;
-	border-bottom-width: 2px;
-	border-left-width: 1px;
-	border-right-width: 2px;
-	border-top-color: rgb(255,255,255);
-	border-bottom-color: rgb(128,128,128);
-	border-left-color: rgb(255,255,255);
-	border-right-color: rgb(128,128,128);
 }
 
 .large-title {
@@ -108,6 +85,7 @@ a:link {
 }
 
 .blank{
+	border-top-color: #ffffff;
 	background-color: #fff;
 	font-size:0.9em;
 }
