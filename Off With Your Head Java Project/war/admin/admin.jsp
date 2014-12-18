@@ -32,14 +32,14 @@
 	
 	<a href="#reloadclassschedule">
 		<div class="admin-tab">
-			<div class="admin-tab-box"></div>
+			<div class="admin-tab-box" style="background-image:url('/images/reloadclasslist.png');"></div>
 			<p>Reload Class List</p>
 		</div>
 	</a>
 	
 	<a href="#triggernewsemester">
 		<div class="admin-tab">
-			<div class="admin-tab-box"></div>
+			<div class="admin-tab-box" style="background-image:url('/images/triggernewsemester.png');"></div>
 			<p>Trigger New Semester</p>
 		</div>
 	</a>
@@ -48,29 +48,29 @@
 	
 	<a href="#close">
 		<div class="admin-tab">
-			<div class="admin-tab-box"></div>
+			<div class="admin-tab-box" style="background-image:url('/images/emailreminderprofile.png');"></div>
 			<p>Email All User Reminder To Update Profile</p>
 		</div>
 	</a>
 	
 	<a href="#close">
 		<div class="admin-tab">
-			<div class="admin-tab-box"></div>
+			<div class="admin-tab-box" style="background-image:url('/images/emailreminderlabs.png');"></div>
 			<p>Email Instructor Reminder to assign TA to Labs for courses they are instructing</p>
 		</div>
 	</a>
 	
 	<a href="#close">
 		<div class="admin-tab">
-			<div class="admin-tab-box"></div>
-			<p>Do SOmething</p>
+			<div class="admin-tab-box" style="background-image:url('/images/emailremindertaclasses.png');"></div>
+			<p>Email All TA Reminder to Fill Out There Class Schedule</p>
 		</div>
 	</a>
 	
 	<a href="#close">
 		<div class="admin-tab">
-			<div class="admin-tab-box"></div>
-			<p>Do SOmething</p>
+			<div class="admin-tab-box" style="background-image:url('/images/emailreminderofficehours.png');"></div>
+			<p>Email All User Reminder To Update Office Information</p>
 		</div>
 	</a>
 	
