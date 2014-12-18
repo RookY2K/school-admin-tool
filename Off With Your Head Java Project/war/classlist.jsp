@@ -74,7 +74,9 @@
 		List<WrapperObject<Section>>sections = (List<WrapperObject<Section>>)selectedCourse.getProperty("sections");
 
 %>	
-	<ul class="message"><li>Click on Edit or Instructor Name to change Instructor for a Section.</li></ul>
+	<ul class="message"><li>Click on Edit or Instructor Name to change Instructor for a Section.</li>
+	<li>Instructor can only change LAB TA if they are assign to a LEC.</li>
+	</ul>
 	
 		<table id="course_info_table">
 		<form method="post" action="/admin/editcourses">
@@ -123,7 +125,7 @@
 				<td class="section_cell"><%=hours %></td>
 				<td class="section_cell"><%=room %></td>
 				<td class="section_cell">
-				<% if (isAdmin || (!isAdmin && sectionNum.indexOf("LEC") < 0)) { %>
+				<% if (isAdmin || (request.getAttribute("isInstructorOfSection") != null && !isAdmin && sectionNum.indexOf("LEC") < 0)) { %>
 					<form action="#editsection" method="post">
 						<input type="hidden" name="viewsection" value="viewsection" />
 						<input type="hidden" name="courselist" value="<%=selectedCourse.getProperty("coursenum") %>" />
@@ -148,8 +150,6 @@
 <%
 	}
 %>	
-	
-
 	
 </div>
 

@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
@@ -18,6 +19,7 @@ import edu.uwm.owyh.factories.WrapperObjectFactory;
  * @author Vince Maiuri
  *
  */
+@PersistenceCapable
 public class TAClass implements Serializable {
 
 	private static final long serialVersionUID = -6686305816196655441L;

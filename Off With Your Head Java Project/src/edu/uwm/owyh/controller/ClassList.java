@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.datastore.Key;
+
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
@@ -81,6 +83,7 @@ public class ClassList extends HttpServlet{
 		
 		List<String> errors = new ArrayList<String>();
 		List<String> messages = new ArrayList<String>();
+		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
 		
 		Map<Integer, WrapperObject<Course>> courses = (Map<Integer, WrapperObject<Course>>) Auth.getSessionVariable(request, "courses");
 		int courseNum = Integer.parseInt(request.getParameter("courselist"));
@@ -88,6 +91,15 @@ public class ClassList extends HttpServlet{
 		WrapperObject<Course> selectedCourse = courses.get(courseNum);
 				
 		request.setAttribute("selectedcourse", selectedCourse);
+		
+		/* Test For Instructor Teaching This Class */
+		if (self.getProperty("accesslevel") == AccessLevel.INSTRUCTOR) {
+			List<Key> courseInstructor = (List<Key>) selectedCourse.getProperty("lectureinstructors");
+			for (Key key : courseInstructor) {
+				if (self.getId().equals(key))
+					request.setAttribute("isInstructorOfSection", "true");
+			}
+		}
 		
 		/* Edit and View Section Instructors */
 		if (request.getParameter("viewsection") != null) {
@@ -106,13 +118,14 @@ public class ClassList extends HttpServlet{
 					if (nameInfo == null) 
 						errors.add("Error on Input Data for Instructor");
 					else {
-						List<WrapperObject<Person>> addingPerson = WrapperObjectFactory.getPerson().findObjects("toUpperUserName == '" + nameInfo.toUpperCase() + "'", null, null);
+						List<WrapperObject<Person>> addingPersonList = WrapperObjectFactory.getPerson().findObjects("toUpperUserName == '" + nameInfo.toUpperCase() + "'", null, null);
 					
-						if (addingPerson == null || addingPerson.size() != 1) {
+						if (addingPersonList == null || addingPersonList.size() != 1) {
 							errors.add("Could not find Instructor to Add to Section");
 						}
 						else {
-							AdminHelper.assignInstructor(addingPerson.get(0), section, false);
+							WrapperObject<Person> addingPerson = addingPersonList.get(0);
+							AdminHelper.assignInstructor(addingPerson, section, false);
 						}
 					}
 				}
@@ -121,7 +134,6 @@ public class ClassList extends HttpServlet{
 				
 				// get possible user to change section instructor to
 				List<WrapperObject<Person>> editSectionUsers = null;
-				WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
 				if (self.getProperty("accesslevel") == AccessLevel.ADMIN) {
 					String filterUser = "(accessLevel == " + AccessLevel.INSTRUCTOR.getVal() + " || accessLevel == " + AccessLevel.TA.getVal() + ")";
 					editSectionUsers =  WrapperObjectFactory.getPerson().findObjects(filterUser, null, null);

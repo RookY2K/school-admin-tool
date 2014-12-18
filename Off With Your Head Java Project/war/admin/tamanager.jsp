@@ -153,8 +153,7 @@ for (Map<String, Object> ta : taFromSelectedCourseList) {
 			<input type="hidden" name="taEmail" value="<%=ta.get("email") %>" />
 			<input type="hidden" name="courselist" value="<%=selectedCourseNumber %>" />
 			<input type="submit" name="submit" class="submit" value="Remove From" />
-		</form><br />
-		<input type="submit" name="submit" class="submit" value="Edit SKills" />
+		</form>
 		</td>
 	</tr>
 
@@ -197,7 +196,10 @@ for (Map<String, Object> ta : taList) {
 		<td class="cell">
 		<% List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) ta.get("sections");
 			if (sections  != null) {
-				for (WrapperObject<Section> section : sections) { %>
+				for (WrapperObject<Section> section : sections) {
+					WrapperObject<Course> course = WrapperObjectFactory.getCourse().findObjectById(section.getId().getParent());
+				%>
+					COMPSCI-<%=course.getProperty("coursenum") %><br />
 					<%=section.getProperty("days") %>
 					<%=section.getProperty("starttime") %>
 					<%=section.getProperty("endtime") %>
@@ -213,9 +215,8 @@ for (Map<String, Object> ta : taList) {
 				<input type="hidden" name="taEmail" value="<%=ta.get("email") %>" />
 				<input type="hidden" name="courselist" value="<%=selectedCourseNumber %>" />
 				<input type="submit" name="submit" class="submit" value="Add To" />
-			</form><br />
+			</form>
 			<% } %>
-			<input type="submit" name="submit" class="submit" value="Edit SKills" />
 		</td>
 	</tr>
 

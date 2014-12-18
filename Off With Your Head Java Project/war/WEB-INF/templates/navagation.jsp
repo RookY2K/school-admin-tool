@@ -1,4 +1,10 @@
 <%@ page import="edu.uwm.owyh.model.Auth" %>
+<%@ page import="edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel" %>
+<%@ page import="edu.uwm.owyh.interfaces.WrapperObject"%>
+<%@ page import="edu.uwm.owyh.jdo.Person" %>
+<%! @SuppressWarnings("unchecked") %>
+
+<% WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user"); %>
 
 	<div id="main">
 		<div id="top">
@@ -28,6 +34,9 @@
 				<ul class="nav">
 					<li class="nav"><a href="/profile" class="navbar1-link">Profile Manager</a></li>
 					<li class="nav"><a href="/officehours" class="navbar1-link">Office Hour Manager</a></li>
+					<% if (self != null && self.getProperty("accesslevel") == AccessLevel.TA){ %>
+					<li class="nav"><a href="/taclass" class="navbar1-link">TA Class Schedule</a></li>
+					<% } %>
 				</ul>
 				<li class="nav"><a href="/userlist" class="navbar1-link">User List</a></li>
 				<li class="nav"><a href="/classlist" class="navbar1-link">Class List</a></li>

@@ -165,7 +165,7 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 			for(OfficeHours officeHour : officeHours){
 				officeHoursWrappers.add(OfficeHoursWrapper.getOfficeHoursWrapper(officeHour));
 			}
-			return WrapperObjectFactory.getOfficeHours().findObjects(null, this, "startTime");
+			return officeHoursWrappers;
 		case "officeroom":
 			return _person.getOfficeRoom();
 		case "temporarypassword":
@@ -181,6 +181,13 @@ public class PersonWrapper implements WrapperObject<Person>,Serializable{
 			return sectionWrappers;
 		case "lecturecourses":
 			return new ArrayList<Key>(getPerson().getLectureCourses());
+		case "taclasses":
+			List<TAClass> taClasses = this.getPerson().getTAClasses();
+			List<WrapperObject<TAClass>> taClassWrappers = new ArrayList<WrapperObject<TAClass>>();
+			for(TAClass taClass : taClasses){
+				taClassWrappers.add(TAClassWrapper.getTAClassWrapper(taClass));
+			}
+			return taClassWrappers;
 		default:
 			return null;
 		}
