@@ -23,7 +23,8 @@ public final class AdminHelper {
 	}
 	
 	public static boolean assignPersonToScrapedSection(WrapperObject<Course> course){
-		
+		String filter;
+		List<WrapperObject<Section>> sections;
 		
 		
 		return false;
