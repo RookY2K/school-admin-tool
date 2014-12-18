@@ -40,3 +40,8 @@
 #user-search {
 	width: 100%;
 }
+#scrollModal
+{
+	overflow: scroll;
+	height: 400px;
+}

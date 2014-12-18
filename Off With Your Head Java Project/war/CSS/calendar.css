@@ -1,0 +1,116 @@
+#calender {
+	margin: 0px;
+	font-family: helvetica; 
+	font-size: 0.8em;
+}
+
+#schedule {
+	padding:0px;
+	border-spacing: 1px;
+    border-collapse: seperated;
+	background-color: #d1d1d1;
+	text-align: center;
+}
+
+td.days  { 
+	width: 12.5%;
+	text-align: center;
+	background-color: #e7e7e7;
+	padding: 3px;
+}
+
+td.empty-cell {
+	background-color: #fff;
+}
+
+td.time {
+	width: 10%;
+	text-align: center;
+	background-color: #e7e7e7;
+	padding:  10px 4px;
+}
+
+td.hours {
+	background-color: #fff;
+	font-size:0.9em;
+}
+
+.office-hour {
+	font-weight: bold;
+	color: #6f649e;
+	display: block;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+.class-hour {
+	font-weight: bold;
+	color: #66984b;
+	display: block;
+	padding-top: 1px;
+	padding-bottom: 1px; 
+}
+
+.class-key {
+	font-weight: bold;
+	color: #66984b;
+}
+
+.office-key {
+	font-weight: bold;
+	color: #6f649e;
+}
+
+.course-key {
+	font-weight: bold;
+	color: #ff0000;	
+}
+
+a:link {
+	text-decoration: none;
+}
+
+.blank{
+	border-top-color: #ffffff;
+	background-color: #fff;
+	font-size:0.9em;
+}
+
+.officehours{
+	color: #6f649e;
+	border-style: solid;
+	border-top-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-right-width: 2px;
+	border-top-color: rgb(255,255,255);
+	border-bottom-color: rgb(128,128,128);
+	border-left-color: rgb(255,255,255);
+	border-right-color: rgb(128,128,128);	
+}
+
+.taclass{
+	color: #ff0000;
+	border-style: solid;
+	border-top-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-right-width: 2px;
+	border-top-color: rgb(255,255,255);
+	border-bottom-color: rgb(128,128,128);
+	border-left-color: rgb(255,255,255);
+	border-right-color: rgb(128,128,128);	
+}
+
+.section{
+	color: #66984b;
+	border-style: solid;
+	border-top-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-right-width: 2px;
+	border-top-color: rgb(255,255,255);
+	border-bottom-color: rgb(128,128,128);
+	border-left-color: rgb(255,255,255);
+	border-right-color: rgb(128,128,128);	
+}

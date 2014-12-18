@@ -5,6 +5,8 @@ package edu.uwm.owyh.library;
 
 import java.util.List;
 
+import com.google.appengine.api.datastore.Key;
+
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
@@ -113,7 +115,8 @@ public final class CalendarHelper {
 					startTime = (String) course.getProperty("starttime");
 					endTime = (String) course.getProperty("endtime");
 					room = (String) course.getProperty("room");
-					title = (String) course.getProperty("sectionNum");
+					Key parentKey = course.getId().getParent();
+					title = "COMP SCI " + parentKey.getName();
 					length = StringHelper.parseTimeToDouble(endTime) - StringHelper.parseTimeToDouble(startTime);
 					length = roundLength(length);
 					

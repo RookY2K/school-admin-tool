@@ -16,8 +16,10 @@ import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
+import edu.uwm.owyh.library.CalendarHelper;
 import edu.uwm.owyh.library.PropertyHelper;
 import edu.uwm.owyh.model.Auth;
+import edu.uwm.owyh.model.CellObject;
 
 @SuppressWarnings("serial")
 public class Profile extends HttpServlet {
@@ -37,9 +39,11 @@ public class Profile extends HttpServlet {
 		WrapperObject<Person> user = self;
 		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(null, self, null);
 		request.setAttribute("officehours", PropertyHelper.makeOfficeHoursProperties(officeHours));
+		CellObject[][] newArray = CalendarHelper.getCellObjectArray(self);
 		
 		if (user != null)
 		{
+			request.setAttribute("array", newArray);
 			request.setAttribute("user", PropertyHelper.makeUserProperties(user));
 			request.setAttribute("self", PropertyHelper.makeUserProperties(self));
 			request.getRequestDispatcher(request.getContextPath() + "/profile.jsp").forward(request, response);		
