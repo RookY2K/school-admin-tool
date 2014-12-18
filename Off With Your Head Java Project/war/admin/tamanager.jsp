@@ -4,6 +4,7 @@
 <%@ page import="edu.uwm.owyh.jdo.Person" %>
 <%@ page import="edu.uwm.owyh.jdo.Course" %>
 <%@ page import="edu.uwm.owyh.jdo.Section" %>
+<%@ page import="edu.uwm.owyh.jdo.TAClass" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
 <%! @SuppressWarnings("unchecked") %>
@@ -207,7 +208,19 @@ for (Map<String, Object> ta : taList) {
 				<% }
 		} %>
 		</td>
-		<td class="cell"></td>
+		<td class="cell">
+			<% List<WrapperObject<TAClass>> taClasses = (List<WrapperObject<TAClass>>) ta.get("taclasses");
+			if (taClasses  != null) {
+				for (WrapperObject<TAClass> taClass : taClasses) {
+				%>
+					<%=taClass.getProperty("classnum") %><br />
+					<%=taClass.getProperty("days") %>
+					<%=taClass.getProperty("starttime") %>
+					<%=taClass.getProperty("endtime") %>
+					<br />
+				<% }
+		} %>
+		</td>
 		<td class="cell">
 			<% if (selectedCourseNumber != null && selectedCourseNumber != -72) { %>
 			<form action="/admin/tamanager" method="post">
