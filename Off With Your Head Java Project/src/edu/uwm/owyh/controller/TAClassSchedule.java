@@ -52,6 +52,7 @@ public class TAClassSchedule extends HttpServlet {
 		List<String> messages = new ArrayList<String>();
 		WrapperObject<Course> selectedCourse = null;
 		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");	
+		List<WrapperObject<TAClass>> taClassList = (List<WrapperObject<TAClass>>) self.getProperty("taclasses");
 		
 		String courseNumString = (String) request.getParameter("courselist");
 		if (courseNumString != null) {
@@ -91,7 +92,6 @@ public class TAClassSchedule extends HttpServlet {
 					if (properties.get(key) == null)
 						properties.put(key, "");
 				
-				List<WrapperObject<TAClass>> taClassList = (List<WrapperObject<TAClass>>) self.getProperty("taclasses");
 				for (WrapperObject<TAClass> taClass : taClassList) {
 					String taClassNum = (String) taClass.getProperty("classnum");
 					String taClassType = (String) taClass.getProperty("classtype");
@@ -166,7 +166,30 @@ public class TAClassSchedule extends HttpServlet {
 		
 		/* Remove a Class From Schedule */
 		if (request.getParameter("removeClass") != null) {
-			
+			String removeClass = request.getParameter("removeClassName");
+			String[] removeClassNumAndType = removeClass.split(" ");
+			if (removeClassNumAndType.length == 3) {
+				String removeClassNum = removeClassNumAndType[0] + " " + removeClassNumAndType[1];
+				String removeClassType = removeClassNumAndType[2];
+				WrapperObject<TAClass> removeTaClass = null;
+				for (WrapperObject<TAClass> taClass : taClassList) {
+					String taClassNum = (String) taClass.getProperty("classnum");
+					String taClassType = (String) taClass.getProperty("classtype");
+					if (removeClassNum.equalsIgnoreCase(taClassNum) && removeClassType.equalsIgnoreCase(taClassType)) {
+						removeTaClass = taClass;
+						break;
+					}
+				}
+				if (removeTaClass != null)
+					removeTaClass.removeObject();
+				else
+					errors.add("Could not find requested class to delete");
+			}
+			else
+				errors.add("Invalid Class Name or Type, Could not remove.");
+		
+			if (errors.isEmpty())
+				messages.add("A class was removed from your schedule");
 		}
 		
 		request.setAttribute("errors", errors);
