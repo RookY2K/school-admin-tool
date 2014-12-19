@@ -10,6 +10,7 @@ import com.google.appengine.api.datastore.Key;
 
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
+import edu.uwm.owyh.jdo.ContactInfo;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
@@ -20,14 +21,6 @@ public final class AdminHelper {
 
 	private AdminHelper() {
 		// prevents instantiation
-	}
-	
-	public static boolean assignPersonToScrapedSection(WrapperObject<Course> course){
-		String filter;
-		List<WrapperObject<Section>> sections;
-		
-		
-		return false;
 	}
 	
 	public static boolean assignInstructor(WrapperObject<Person> instructor, WrapperObject<Section> section, boolean setOverwrite){
@@ -267,6 +260,22 @@ public final class AdminHelper {
 		String endTime = (String)conflict.getProperty("endtime");
 		
 		return checkTimeConflict(startTime, endTime, conflicts);
+	}
+	
+	public static WrapperObject<Person> getInstructorFromName(
+			String firstName, String lastName) {
+		if(firstName.isEmpty() && lastName.isEmpty())
+			return null;
+		
+		String filter = "firstName == '" + firstName +
+				        "' && lastName == '" + lastName + "'";
+		
+		List<WrapperObject<ContactInfo>> contacts = 
+				(List<WrapperObject<ContactInfo>>) WrapperObjectFactory.getContactInfo().findObjects(filter, null, null);
+		
+		if(contacts.isEmpty()) return null;
+		
+		return WrapperObjectFactory.getPerson().findObjectById(contacts.get(0).getId().getParent());		
 	}
 	
 	@SuppressWarnings("unchecked")

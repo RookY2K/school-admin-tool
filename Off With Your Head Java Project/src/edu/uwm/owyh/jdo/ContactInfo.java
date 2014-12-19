@@ -17,6 +17,8 @@ import com.google.appengine.api.datastore.Key;
 public class ContactInfo implements Serializable, Cloneable{
 
 	private static final long serialVersionUID = -8986408783610416695L;
+	private static final String KIND = ContactInfo.class.getSimpleName();
+	private static final Class<ContactInfo> CLASSNAME = ContactInfo.class;
 
 	@PrimaryKey
 	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY)
@@ -64,6 +66,20 @@ public class ContactInfo implements Serializable, Cloneable{
 	
 	//accessors
 	
+	/**
+	 * @return the kind
+	 */
+	public static String getKind() {
+		return KIND;
+	}
+
+	/**
+	 * @return the classname
+	 */
+	public static Class<ContactInfo> getClassname() {
+		return CLASSNAME;
+	}
+
 	/**
 	 * Returns the primary key for ContactInfo jdo
 	 * @return Key id

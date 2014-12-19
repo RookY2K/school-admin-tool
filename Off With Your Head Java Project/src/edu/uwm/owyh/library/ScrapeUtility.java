@@ -17,6 +17,7 @@ import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.NonPersistedWrapperObject;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.Course;
+import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
 
 public class ScrapeUtility {
@@ -49,23 +50,6 @@ public class ScrapeUtility {
 			}
 			course.saveAllObjects(courseList);
 		}	
-	}
-	
-	private static WrapperObject<Course> parseLineToCourseOrSectionJdo(String line, WrapperObject<Course> course, 
-			List<WrapperObject<Course>> courseList) throws BuildJDOException{
-		String[] split = line.split(";");
-		if(split[0].equals("COURSE")){
-			course = setCourseJdo(split, courseList);
-		}else{
-			if(split.length == 7){ 
-				WrapperObject<Section> section = setSectionJdo(split, course);
-				if(section != null){
-					((NonPersistedWrapperObject<Course>)course).addChild(section);
-					if(!courseList.contains(course)) courseList.add(course);
-				}
-			}
-		}
-		return course;
 	}
 	
 	public static WrapperObject<Course> setCourseJdo(String[] courseInfo, List<WrapperObject<Course>> courseList) throws BuildJDOException{
@@ -102,6 +86,9 @@ public class ScrapeUtility {
 		String lastName = instructorNames.get("lastname");
 		String room = sectionInfo[5];
 		String sectionNum = sectionInfo[6];
+		
+		WrapperObject<Person> instructor = AdminHelper.getInstructorFromName(firstName, lastName);
+		
 		NonPersistedWrapperObject<Section> section = (NonPersistedWrapperObject<Section>)WrapperObjectFactory.getSection();
 		WrapperObject<Section> editSection = null;
 		
@@ -113,6 +100,7 @@ public class ScrapeUtility {
 																  ,"endtime", endTime
 																  ,"instructorfirstname", firstName
 																  ,"instructorlastname", lastName
+																  ,"instructor", instructor
 																  ,"room", room
 																  ,"sectionnum", sectionNum
 																  );
@@ -130,10 +118,28 @@ public class ScrapeUtility {
 			if(!overwriteInstructor){
 				properties.remove("instructorfirstname");
 				properties.remove("instructorlastname");
+				properties.remove("instructor");
 			}
 			editSection.editObject(properties);
 			return null; 
 		}
+	}
+
+	private static WrapperObject<Course> parseLineToCourseOrSectionJdo(String line, WrapperObject<Course> course, 
+			List<WrapperObject<Course>> courseList) throws BuildJDOException{
+		String[] split = line.split(";");
+		if(split[0].equals("COURSE")){
+			course = setCourseJdo(split, courseList);
+		}else{
+			if(split.length == 7){ 
+				WrapperObject<Section> section = setSectionJdo(split, course);
+				if(section != null){
+					((NonPersistedWrapperObject<Course>)course).addChild(section);
+					if(!courseList.contains(course)) courseList.add(course);
+				}
+			}
+		}
+		return course;
 	}
 
 	private static Map<String, String> splitHours(String hours){
