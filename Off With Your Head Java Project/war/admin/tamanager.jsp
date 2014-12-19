@@ -138,15 +138,27 @@ for (Map<String, Object> ta : taFromSelectedCourseList) {
 		<td class="cell">
 		<% List<WrapperObject<Section>> sections = (List<WrapperObject<Section>>) ta.get("sections");
 			if ( sections  != null) {
-				for (WrapperObject<Section> section : sections) { %>
+				for (WrapperObject<Section> section : sections) { 					
+					WrapperObject<Course> course = WrapperObjectFactory.getCourse().findObjectById(section.getId().getParent());
+				%>
+				COMPSCI-<%=course.getProperty("coursenum") %><br />
 					<%=section.getProperty("days") %>
-					<%=section.getProperty("starttime") %>
-					<%=section.getProperty("endtime") %>
-					<br />
+					<%=section.getProperty("starttime") %>-<%=section.getProperty("endtime") %>
+					<br /><br />
 				<% }
 		} %>
 		</td>
 		<td class="cell">
+					<% List<WrapperObject<TAClass>> taClasses = (List<WrapperObject<TAClass>>) ta.get("taclasses");
+			if (taClasses  != null) {
+				for (WrapperObject<TAClass> taClass : taClasses) {
+				%>
+					<%=taClass.getProperty("classnum") %><br />
+					<%=taClass.getProperty("days") %>
+					<%=taClass.getProperty("starttime") %>-<%=taClass.getProperty("endtime") %>
+					<br /><br />
+				<% }
+		} %>
 		</td>
 		<td class="cell">
 		<form action="/admin/tamanager" method="post">
@@ -202,9 +214,8 @@ for (Map<String, Object> ta : taList) {
 				%>
 					COMPSCI-<%=course.getProperty("coursenum") %><br />
 					<%=section.getProperty("days") %>
-					<%=section.getProperty("starttime") %>
-					<%=section.getProperty("endtime") %>
-					<br />
+					<%=section.getProperty("starttime") %>-<%=section.getProperty("endtime") %>
+					<br /><br />
 				<% }
 		} %>
 		</td>
@@ -215,9 +226,8 @@ for (Map<String, Object> ta : taList) {
 				%>
 					<%=taClass.getProperty("classnum") %><br />
 					<%=taClass.getProperty("days") %>
-					<%=taClass.getProperty("starttime") %>
-					<%=taClass.getProperty("endtime") %>
-					<br />
+					<%=taClass.getProperty("starttime") %>-<%=taClass.getProperty("endtime") %>
+					<br /><br />
 				<% }
 		} %>
 		</td>

@@ -32,6 +32,7 @@ public class TAClassSchedule extends HttpServlet {
 		if (!Auth.getAuth(request).verifyUser(response)) return;
 		
 		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
+		self = WrapperObjectFactory.getPerson().findObjectById(self.getId());
 		
 		List<WrapperObject<TAClass>> classes = (List<WrapperObject<TAClass>>) self.getProperty("taclasses");
 		
@@ -52,8 +53,8 @@ public class TAClassSchedule extends HttpServlet {
 		List<String> messages = new ArrayList<String>();
 		WrapperObject<Course> selectedCourse = null;
 		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");	
-		/* Update Class Info */
 		self = WrapperObjectFactory.getPerson().findObjectById(self.getId());
+		
 		List<WrapperObject<TAClass>> taClassList = (List<WrapperObject<TAClass>>) self.getProperty("taclasses");
 		
 		String courseNumString = (String) request.getParameter("courselist");

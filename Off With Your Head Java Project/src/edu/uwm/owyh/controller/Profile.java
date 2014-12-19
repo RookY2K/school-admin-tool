@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.datastore.Key;
-
 import edu.uwm.owyh.factories.WrapperObjectFactory;
 import edu.uwm.owyh.interfaces.WrapperObject;
 import edu.uwm.owyh.jdo.OfficeHours;
@@ -34,8 +32,7 @@ public class Profile extends HttpServlet {
 		
 		/* Find the logged in user. They're the only ones who can view their profile. */
 		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
-		Key myId = WrapperObjectFactory.generateIdFromUserName((String) self.getProperty("username"));
-		self = WrapperObjectFactory.getPerson().findObjectById(myId);
+		self = WrapperObjectFactory.getPerson().findObjectById(self.getId());
 		WrapperObject<Person> user = self;
 		List<WrapperObject<OfficeHours>> officeHours = WrapperObjectFactory.getOfficeHours().findObjects(null, self, null);
 		request.setAttribute("officehours", PropertyHelper.makeOfficeHoursProperties(officeHours));
@@ -67,9 +64,7 @@ public class Profile extends HttpServlet {
 		
 		/* Stuff to get User Profile Information */
 		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");
-		String username = (String) self.getProperty("email");
-		Key myId = WrapperObjectFactory.generateIdFromUserName(username);
-		self = WrapperObjectFactory.getPerson().findObjectById(myId);
+		self = WrapperObjectFactory.getPerson().findObjectById(self.getId());
 		request.setAttribute("self", PropertyHelper.makeUserProperties(self));
 		
 		Map<String, Object> properties;
