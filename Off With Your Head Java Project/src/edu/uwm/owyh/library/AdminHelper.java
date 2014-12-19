@@ -23,6 +23,13 @@ public final class AdminHelper {
 		// prevents instantiation
 	}
 	
+	/**
+	 * Utility Method to Help assign Instructor to a section
+	 * @param instructor - WrapperObject<Person> object
+	 * @param section - WrapperObject<Section> object
+	 * @param setOverwrite - boolean, allow for scrape to overwrite data if set to true
+	 * @return boolean if assignment was successful
+	 */
 	public static boolean assignInstructor(WrapperObject<Person> instructor, WrapperObject<Section> section, boolean setOverwrite){
 		String sectionNum = (String)section.getProperty("sectionnum");
 		
@@ -39,6 +46,11 @@ public final class AdminHelper {
 		return true;
 	}
 
+	/**
+	 * Utility Method to get the Person who is instructing a Section
+	 * @param section - WrapperObject<Section> object
+	 * @return List<WrapperObject<Person>> - if assignment was successful
+	 */
 	@SuppressWarnings("unchecked")
 	public static List<WrapperObject<Person>> getInstructorList(WrapperObject<Section> section){
 		List<WrapperObject<Person>> instructorList = new ArrayList<WrapperObject<Person>>();
@@ -241,7 +253,12 @@ public final class AdminHelper {
 		course.editObject(properties);
 	}
 
-	
+	/**
+	 * Check for Schedule Conflict base of a Person instructor and any type of Schedule Object
+	 * @param instructor - WrapperObject<Person> 
+	 * @param conflict - WrapperObject<T> conflict can be of many types
+	 * @return boolean - return true if no conflict is found
+	 */
 	public static <T> boolean checkScheduleConflicts(WrapperObject<Person> instructor,
 			WrapperObject<T> conflict) throws ParseException {
 		
@@ -262,6 +279,12 @@ public final class AdminHelper {
 		return checkTimeConflict(startTime, endTime, conflicts);
 	}
 	
+	/**
+	 * Utility Method to get a Person who is a instructor from there first and last name
+	 * @param firstname - instructor's first name
+	 * @param lastname - instructor's last name
+	 * @return WrapperObject<Person> if Person is found
+	 */
 	public static WrapperObject<Person> getInstructorFromName(
 			String firstName, String lastName) {
 		if(firstName.isEmpty() && lastName.isEmpty())

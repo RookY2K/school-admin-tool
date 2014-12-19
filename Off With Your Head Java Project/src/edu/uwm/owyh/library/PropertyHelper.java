@@ -112,8 +112,8 @@ public final class PropertyHelper {
 	}
 	
 	/**
-	 * Utility Method to build a person's Property map. 
-	 * @param user - WrapperObject<OfficeHours> object
+	 * Utility Method to build a person's TAClass Property map. 
+	 * @param user - WrapperObject<TAClass> object
 	 * @return A map of properties.
 	 */
 	public static List<Map<String, Object>> makeTAClassProperties(List<WrapperObject<TAClass>> taClasses) {

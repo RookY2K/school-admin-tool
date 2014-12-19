@@ -20,6 +20,10 @@ public final class EmailHelper {
 	
 	}
 	
+	/**
+	 * Email Utility to get all user's email who is missing contact information
+	 * @return List<String> - list of email
+	 */
 	public static List<String> getUsersWithMissingContactInfo(){
 		List<WrapperObject<Person>> users = WrapperObjectFactory.getPerson().getAllObjects();
 		List<String> emails = new ArrayList<String>();
@@ -32,6 +36,10 @@ public final class EmailHelper {
 		return emails;
 	}
 	
+	/**
+	 * Email Utility to get TA who has no TAClass
+	 * @return List<String> - list of email
+	 */
 	public static List<String> getTAsWithMissingClassSchedules(){
 		String filter = "accessLevel == " + AccessLevel.TA.getVal();
 		List<WrapperObject<Person>> tas = WrapperObjectFactory.getPerson().findObjects(filter, null, null);
@@ -45,6 +53,10 @@ public final class EmailHelper {
 		return emails;
 	}
 	
+	/**
+	 * Email Utility to get all user's who have no OFfice Hours
+	 * @return List<String> - list of email
+	 */
 	public static List<String> getUsersWithMissingOfficeHours(){
 		List<WrapperObject<Person>> users = WrapperObjectFactory.getPerson().getAllObjects();
 		List<String> emails = new ArrayList<String>();
@@ -57,6 +69,10 @@ public final class EmailHelper {
 		return emails;
 	}
 	
+	/**
+	 * Email Utility to get all instructor who have unassigned TA in courses they lecture
+	 * @return List<String> - list of email
+	 */
 	public static List<String> getLectureInstructorsWithoutTAsAssigned(){
 		List<WrapperObject<Person>> users = WrapperObjectFactory.getPerson().getAllObjects();
 		List<String> emails = new ArrayList<String>();
