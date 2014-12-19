@@ -178,8 +178,7 @@ public class TAManager extends HttpServlet {
 		request.setAttribute("messages", messages);
 		
 		doGet(request, response);
-		
-		//request.getRequestDispatcher(request.getContextPath() + "tamanager.jsp").forward(request, response);
+
 	}
 	
 	@SuppressWarnings("unchecked")

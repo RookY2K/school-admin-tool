@@ -19,6 +19,7 @@ import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.jdowrappers.PersonWrapper.AccessLevel;
+import edu.uwm.owyh.library.EmailHelper;
 import edu.uwm.owyh.library.PropertyHelper;
 import edu.uwm.owyh.model.Auth;
 import edu.uwm.owyh.model.Email;
@@ -204,7 +205,40 @@ public class Admin extends HttpServlet {
 					+ "/admin/scraper?semester=" + semester);
 			return;
 		}
+		
+		/* Mass Emailing */
+		if (request.getParameter("emailupdateprofile") != null) {
+			List<String> emailList = EmailHelper.getUsersWithMissingContactInfo();
+			String msg = "Off With Your Head \n Profile Update Request \n You are missing information in your Profile, please got to OWYH's website and update your Profile.";
+			for (String email : emailList) {
+				Email.sendMessage(email, "OWYH User", "OWYH: Account Update Request", msg);
+			}
+		}
+		
+		if (request.getParameter("emailtalabs") != null) {
+			List<String> emailList = EmailHelper.getLectureInstructorsWithoutTAsAssigned();
+			String msg = "Off With Your Head \n Profile Update Request \n You current have TA you need to assign to Labs for Lecture you are teaching, please got to OWYH's website and Add TA to your Labs.";
+			for (String email : emailList) {
+				Email.sendMessage(email, "OWYH User", "OWYH: Account Update Request", msg);
+			}
+		}
 
-		response.sendRedirect(request.getContextPath() + "/admin#close");
+		if (request.getParameter("emailtaschedule") != null) {
+			List<String> emailList = EmailHelper.getTAsWithMissingClassSchedules();
+			String msg = "Off With Your Head \n TA Class Schedule Update Request \n Your Class Schedule is currently empty, please go to OWYH's website and make sure you have add all the class you are taking.";
+			for (String email : emailList) {
+				Email.sendMessage(email, "OWYH User", "OWYH: Account Update Request", msg);
+			}
+		}
+
+		if (request.getParameter("emailofficehour") != null) {
+			List<String> emailList = EmailHelper.getUsersWithMissingOfficeHours();
+			String msg = "Off With Your Head \n Office Hours Update Request \n You currently do not have any office hours, please go to OWYH's website and update your Office Hours.";
+			for (String email : emailList) {
+				Email.sendMessage(email, "OWYH User", "OWYH: Account Update Request", msg);
+			}
+		}
+
+		request.getRequestDispatcher(request.getContextPath() + "/admin/admin.jsp").forward(request, response);		
 	}
 }

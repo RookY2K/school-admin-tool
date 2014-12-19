@@ -52,6 +52,8 @@ public class TAClassSchedule extends HttpServlet {
 		List<String> messages = new ArrayList<String>();
 		WrapperObject<Course> selectedCourse = null;
 		WrapperObject<Person> self = (WrapperObject<Person>) Auth.getSessionVariable(request, "user");	
+		/* Update Class Info */
+		self = WrapperObjectFactory.getPerson().findObjectById(self.getId());
 		List<WrapperObject<TAClass>> taClassList = (List<WrapperObject<TAClass>>) self.getProperty("taclasses");
 		
 		String courseNumString = (String) request.getParameter("courselist");
