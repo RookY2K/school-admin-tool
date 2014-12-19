@@ -110,7 +110,7 @@ public final class CalendarHelper {
 			room = (String) scheduleObject.getProperty("room");
 			break;
 		case "taclass":
-			room = (String) scheduleObject.getProperty("classnum");
+			room = "";
 			break;
 		}
 		
@@ -146,7 +146,7 @@ public final class CalendarHelper {
 			title = "COMPSI-" + parentKey.getName();
 			break;
 		case "taclass":
-			title = (String) scheduleObject.getProperty("classname");
+			title = (String) scheduleObject.getProperty("classnum");
 			break;
 		}
 		return title;

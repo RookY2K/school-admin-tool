@@ -2,18 +2,19 @@ package edu.uwm.owyh.factories;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.KeyFactory.Builder;
 
 import edu.uwm.owyh.interfaces.WrapperObject;
+import edu.uwm.owyh.jdo.ContactInfo;
 import edu.uwm.owyh.jdo.Course;
 import edu.uwm.owyh.jdo.OfficeHours;
 import edu.uwm.owyh.jdo.Person;
 import edu.uwm.owyh.jdo.Section;
 import edu.uwm.owyh.jdo.TAClass;
+import edu.uwm.owyh.jdowrappers.ContactInfoWrapper;
+import edu.uwm.owyh.jdowrappers.CourseWrapper;
 import edu.uwm.owyh.jdowrappers.OfficeHoursWrapper;
 import edu.uwm.owyh.jdowrappers.PersonWrapper;
 import edu.uwm.owyh.jdowrappers.SectionWrapper;
-import edu.uwm.owyh.jdowrappers.CourseWrapper;
 import edu.uwm.owyh.jdowrappers.TAClassWrapper;
 
 /**
@@ -63,6 +64,10 @@ public class WrapperObjectFactory {
 	
 	public static WrapperObject<TAClass> getTAClass(){
 		return TAClassWrapper.getTAClassWrapper();
+	}
+	
+	public static WrapperObject<ContactInfo> getContactInfo(){
+		return ContactInfoWrapper.getContactInfoWrapper();
 	}
 
 	/**
