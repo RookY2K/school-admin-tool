@@ -39,7 +39,7 @@ public class CellObject{
 	 * @param type
 	 * @param span
 	 * @param rowS
-	 * @return a new CellObject with given params.
+	 * @return a new CellObject with given parameters.
 	 */
 	public static CellObject getCellObject(UserScheduleElement e, String type, String span, double rowS){
 		return new CellObject(e, type, span, rowS);

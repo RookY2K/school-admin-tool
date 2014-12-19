@@ -51,6 +51,13 @@ public class TAClassWrapper implements WrapperObject<TAClass>, Serializable {
 		return _taClass;
 	}
 	
+	/**
+	 * 
+	 * @param classNum
+	 * @param classType
+	 * @param taUserName
+	 * @return the TAClass
+	 */
 	private TAClass getTAClass(String classNum, String classType, String taUserName){
 		Key taClassKey = WrapperObjectFactory.generateIdFromClassNumAndType(classNum, classType, taUserName);
 		
@@ -63,6 +70,12 @@ public class TAClassWrapper implements WrapperObject<TAClass>, Serializable {
 		return taClass;
 	}
 	
+	/**
+	 * 
+	 * @param classNum
+	 * @param classType
+	 * @param taUserName
+	 */
 	private void setTAClass(String classNum, String classType, String taUserName){
 		_taClass = getTAClass(classNum, classType, taUserName);
 	}
